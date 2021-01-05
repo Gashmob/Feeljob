@@ -1,4 +1,7 @@
 {
+    "clue/stream-filter": {
+        "version": "v1.5.0"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
@@ -93,6 +96,9 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.1.1"
     },
+    "laudis/neo4j-php-client": {
+        "version": "1.1.1"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
@@ -101,6 +107,18 @@
     },
     "php": {
         "version": "7.4"
+    },
+    "php-ds/php-ds": {
+        "version": "v1.3.0"
+    },
+    "php-http/discovery": {
+        "version": "1.13.0"
+    },
+    "php-http/message": {
+        "version": "1.10.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -120,6 +138,15 @@
     "psr/event-dispatcher": {
         "version": "1.0.0"
     },
+    "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-factory": {
+        "version": "1.0.1"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/link": {
         "version": "1.0.0"
     },
@@ -137,6 +164,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "stefanak-michal/bolt": {
+        "version": "v2.1"
     },
     "symfony/asset": {
         "version": "v5.2.1"
@@ -516,5 +546,8 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "youngsource/typed-enum": {
+        "version": "v1.3.0"
     }
 }
