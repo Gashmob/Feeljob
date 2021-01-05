@@ -4,29 +4,13 @@
 namespace App\Entity;
 
 
-use App\database\Connection;
-
 /**
  * Class EntityManager
  * @package App\Entity
  */
-class EntityManager
+abstract class EntityManager
 {
-    /**
-     * @var Connection
-     */
-    private Connection $connection;
-
-    /**
-     * EntityManager constructor.
-     */
-    public function __construct()
-    {
-        $this->connection = new Connection();
-    }
-
-    /* _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-    -- Example --
+    /* -- Example --
 
     public function getUserFromUsername(string $username)
     {
