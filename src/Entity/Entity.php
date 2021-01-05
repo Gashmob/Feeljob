@@ -14,7 +14,24 @@ abstract class Entity
     /**
      * @var int
      */
-    protected int $id;
+    private int $id;
+
+    /**
+     * Entity constructor.
+     * @param int $id
+     */
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     /**
      * Push the modification to the database
