@@ -12,8 +12,11 @@ class Connection
     /**
      * @var ClientInterface
      */
-    private $connection;
+    private ClientInterface $connection;
 
+    /**
+     * Connection constructor.
+     */
     public function __construct()
     {
         $this->connection = ClientBuilder::create()
