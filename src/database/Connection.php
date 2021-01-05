@@ -4,6 +4,7 @@
 namespace App\database;
 
 
+use App\database\exceptions\ConnectionFailedException;
 use Laudis\Neo4j\ClientBuilder;
 use Laudis\Neo4j\Contracts\ClientInterface;
 
@@ -16,6 +17,7 @@ class Connection
 
     /**
      * Connection constructor.
+     * @throws ConnectionFailedException
      */
     public function __construct()
     {
@@ -23,6 +25,8 @@ class Connection
             ->addBoltConnection('default', 'neo4j://feal:feal@localhost:7687')
             ->setDefaultConnection('default')
             ->build();
+
+        if ($this->connection === null) throw new ConnectionFailedException();
     }
 
     /**
