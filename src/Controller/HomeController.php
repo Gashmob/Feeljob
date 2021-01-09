@@ -4,15 +4,19 @@
 namespace App\Controller;
 
 
+use App\Entity\EntityManager;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Exception;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -44,9 +48,11 @@ class HomeController extends AbstractController
      * @Route("/inscription/{tab}", defaults={"tab"="chercheur"}, name="inscription")
      * @param string $tab
      * @param Request $request
+     * @param MailerInterface $mailer
      * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function inscription(string $tab, Request $request): Response
+    public function inscription(string $tab, Request $request, MailerInterface $mailer): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('homepage'); // TODO : Changer plus tard pour mettre vers l'espace utilisateur
@@ -109,8 +115,10 @@ class HomeController extends AbstractController
                     if (!$validator->isValid($mail, $multipleValidations)) {
                         $mailB = false;
                         $this->addFlash('fail', 'Merci de renseigner une adresse mail valide');
-                    } // TODO : Vérifier si mail déjà utilisé
-                    // TODO : Envoyer un mail de validation
+                    } elseif (EntityManager::isMailUsed($mail)) {
+                        $mailB = false;
+                        $this->addFlash('fail', 'Cet email est déjà utilisé');
+                    }
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
@@ -130,6 +138,17 @@ class HomeController extends AbstractController
 
                     if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB && $adresseB) {
                         // TODO : Create Employeur and flush
+                        $email = (new TemplatedEmail())
+                            ->from('no-reply@fealjob.com')
+                            ->to($mail)
+                            ->htmlTemplate('emails/verification.html.twig')
+                            ->context([
+                                'nom' => $nom,
+                                'prenom' => $prenom,
+                                'nomEntreprise' => $nomEntreprise
+                            ]);
+                        $mailer->send($email);
+
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
                         $this->redirectToRoute('homepage'); // TODO : Vers page vérification mail
                     }
@@ -145,7 +164,7 @@ class HomeController extends AbstractController
 
         return $this->render('home/inscription.html.twig', [
             'tab' => $tab,
-            'activites' => ['example1', 'example2'] // TODO : récupérer toutes les activités
+            'secteurActivites' => ['example1', 'example2'] // TODO : récupérer tous les secteurs activités
         ]);
     }
 
