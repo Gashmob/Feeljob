@@ -4,6 +4,8 @@
 namespace App\database;
 
 
+use Ds\Map;
+
 /**
  * Class Query
  * Usage :
@@ -14,6 +16,11 @@ namespace App\database;
  */
 class Query
 {
+    /**
+     * @var string
+     */
+    private static string $graph = 'fealjob';
+
     /**
      * @var string
      */
@@ -33,7 +40,7 @@ class Query
      */
     public function __construct(string $query)
     {
-        $this->query = $query;
+        $this->query = 'USE ' . self::$graph . ' ' . $query;
         $this->connection = new Connection();
     }
 
@@ -44,7 +51,10 @@ class Query
     public function run(): Query
     {
         $results = $this->connection->getConnection()->run($this->query);
-        $this->result = $results->toArray();
+        for ($i = 0; $i < $results->count(); $i++) {
+            $result = $results->get($i);
+            $this->result[] = $result->toArray();
+        }
 
         return $this;
     }
