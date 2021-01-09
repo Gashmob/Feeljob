@@ -12,6 +12,7 @@
         <meta name="keywords" content="Fealjob, Feal, Job">
 
         <link rel='stylesheet' id='main-css'  href="{{ asset('css/main.css') }}" type='text/css' media='all' />
+        <link rel='stylesheet' id='main-css'  href="{{ asset('css/semantic.min.css') }}" type='text/css' media='all' />
 
         <title>{% block title %}Bienvenue sur FealJob{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
@@ -19,21 +20,46 @@
     <body>
         <header>
             <nav>
-                <ul>
-                    <li>Elem 1</li>
-                    <li>Elem 2</li>
-                    <li>Elem 3</li>
-                </ul>
+                <div class="ui menu">
+                    <div class="header item">Brand</div>
+                    <a class="active item">Link</a>
+                    <a class="item">Link</a>
+                    <div class="ui dropdown item">
+                        Dropdown
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="item">Action</div>
+                            <div class="item">Another Action</div>
+                            <div class="item">Something else here</div>
+                            <div class="divider"></div>
+                            <div class="item">Separated Link</div>
+                            <div class="divider"></div>
+                            <div class="item">One more separated link</div>
+                        </div>
+                    </div>
+                    <div class="right menu">
+                        <div class="item">
+                            <div class="ui action left icon input">
+                                <i class="search icon"></i>
+                                <input type="text" placeholder="Search">
+                                <button class="ui button">Submit</button>
+                            </div>
+                        </div>
+                        <a class="item">Link</a>
+                    </div>
+                </div>
             </nav>
         </header>
         {% block body %}{% endblock %}
         <footer>
             <div>
-                footer ici
+                footer ici test
             </div>
             {% block javascripts %}{% endblock %}
         </footer>
 
+        <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
         <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
+        <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
     </body>
 </html>
