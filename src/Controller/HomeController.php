@@ -166,7 +166,7 @@ class HomeController extends AbstractController
 
         return $this->render('home/inscription.html.twig', [
             'tab' => $tab,
-            'secteurActivites' => ['example1', 'example2'] // TODO : récupérer tous les secteurs activités
+            'secteurActivites' => EntityManager::getAllActivitySectorName()
         ]);
     }
 
