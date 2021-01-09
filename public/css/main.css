@@ -350,6 +350,11 @@ template {
 
 /*_______________________________________END NORMALIZE_______________________________________*/
 
-nav {
-    background-color: red;
+.footer .footer__content {
+    padding: 5em;
+}
+
+.footer .footer__content .footer__content__container {
+    width: auto;
+    margin: auto;
 }

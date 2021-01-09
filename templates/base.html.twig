@@ -1,71 +1,110 @@
 <!DOCTYPE html>
 <html lang="FR">
-    <head>
-        <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
 
-        <!-- Authors -->
-        <meta name="author" content="Kevin Traini, Luca Ciampi, Florian Deschenaux, Kevin Martins Gomes, Brunelle Cordier" />
-        <meta property='article:author' content='' />
-        <meta property='article:publisher' content='' />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta http-equiv="Content-Language" content="fr">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta name="rating" content="safe for kids">
-        <meta name="keywords" content="Fealjob, Feal, Job">
+    <!-- Authors -->
+    <meta name="author" content="Kevin Traini, Luca Ciampi, Florian Deschenaux, Kevin Martins Gomes, Brunelle Cordier"/>
+    <meta property='article:author' content=''/>
+    <meta property='article:publisher' content=''/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="fr">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="rating" content="safe for kids">
+    <meta name="keywords" content="Fealjob, Feal, Job">
 
-        <!-- Favicon -->
+    <!-- Favicon -->
 
-        <!-- CSS -->
-        <link rel='stylesheet' id='main-css'  href="{{ asset('css/main.css') }}" type='text/css' media='all' />
-        <link rel='stylesheet' id='main-css'  href="{{ asset('css/semantic.min.css') }}" type='text/css' media='all' />
+    <!-- CSS -->
+    <link rel='stylesheet' id='main-css' href="{{ asset('css/semantic.min.css') }}" type='text/css' media='all'/>
+    <link rel='stylesheet' id='main-css' href="{{ asset('css/main.css') }}" type='text/css' media='all'/>
 
-        <title>{% block title %}Bienvenue sur FealJob{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        <header>
-            <nav>
-                <div class="ui menu">
-                    <div class="header item">Brand</div>
-                    <a class="active item">Link</a>
-                    <a class="item">Link</a>
-                    <div class="ui dropdown item">
-                        Dropdown
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <div class="item">Action</div>
-                            <div class="item">Another Action</div>
-                            <div class="item">Something else here</div>
-                            <div class="divider"></div>
-                            <div class="item">Separated Link</div>
-                            <div class="divider"></div>
-                            <div class="item">One more separated link</div>
-                        </div>
-                    </div>
-                    <div class="right menu">
-                        <div class="item">
-                            <div class="ui action left icon input">
-                                <i class="search icon"></i>
-                                <input type="text" placeholder="Search">
-                                <button class="ui button">Submit</button>
-                            </div>
-                        </div>
-                        <a class="item">Link</a>
+    <title>{% block title %}Bienvenue sur FealJob{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<header>
+    <nav>
+        <div class="ui menu">
+            <div class="header item">Brand</div>
+            <a class="active item">Link</a>
+            <a class="item">Link</a>
+            <div class="ui dropdown item">
+                Dropdown
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">Action</div>
+                    <div class="item">Another Action</div>
+                    <div class="item">Something else here</div>
+                    <div class="divider"></div>
+                    <div class="item">Separated Link</div>
+                    <div class="divider"></div>
+                    <div class="item">One more separated link</div>
+                </div>
+            </div>
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui action left icon input">
+                        <i class="search icon"></i>
+                        <input type="text" placeholder="Search">
+                        <button class="ui button">Submit</button>
                     </div>
                 </div>
-            </nav>
-        </header>
-        {% block body %}{% endblock %}
-        <footer>
-            <div>
-                footer ici test
+                <a class="item">Link</a>
             </div>
-            {% block javascripts %}{% endblock %}
-        </footer>
+        </div>
+    </nav>
+</header>
+{% block body %}{% endblock %}
+<footer class="footer">
+    <div style="padding:5em 0em" class="ui inverted vertical segment">
+        <div class="ui container">
+            <div class="ui inverted stackable divided grid">
+                <div class="row">
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">About</h4>
+                        <div role="list" class="ui inverted link list">
+                            <a role="listitem" class="item">Sitemap</a>
+                            <a role="listitem" class="item">Contact Us</a>
+                            <a role="listitem" class="item">Religious Ceremonies</a>
+                            <a role="listitem" class="item">Gazebo Plans</a>
+                        </div>
+                    </div>
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">Services</h4>
+                        <div role="list" class="ui inverted link list">
+                            <a role="listitem" class="item">Banana Pre-Order</a>
+                            <a role="listitem" class="item">DNA FAQ</a>
+                            <a role="listitem" class="item">How To Access</a>
+                            <a role="listitem" class="item">Favorite X-Men</a>
+                        </div>
+                    </div>
+                    <div class="seven wide column">
+                        <h4 class="ui inverted header">Footer Header</h4>
+                        <p>User ID : {% for message in app.flashes('success') %}
+                                {{ message }}
+                            {% endfor %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Scripts -->
-        <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
-        <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
-        <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
-    </body>
+    <div style="position:fixed;margin:2em;bottom:0;left:0;animation:back-to-docs 1.5s ease-in-out infinite;z-index:6">
+        <a aria-current="page" class="ui teal button active" role="button" href="https://react.semantic-ui.com/layouts">
+            <i aria-hidden="true" class="left arrow icon"></i>
+            Layouts</a>
+        <a target="_blank" class="ui secondary button" role="button"
+           href="https://github.com/Semantic-Org/Semantic-UI-React/blob/master/docs/src/layouts/HomepageLayout.js">
+            <i aria-hidden="true" class="github icon"></i>
+            Source</a>
+    </div>
+    {% block javascripts %}{% endblock %}
+</footer>
+
+<!-- Scripts -->
+<script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
+<script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
+<script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
+</body>
 </html>
