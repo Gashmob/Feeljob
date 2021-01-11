@@ -138,7 +138,7 @@ class HomeController extends AbstractController
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
-                    if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB && $adresseB) {
+                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
                         // TODO : Create Employeur and flush
                         $email = (new TemplatedEmail())
                             ->from('no-reply@fealjob.com')
