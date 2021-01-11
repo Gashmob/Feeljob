@@ -26,20 +26,18 @@
 <header>
     <nav>
         <div class="ui menu">
-            <div class="header item">Brand</div>
-            <a class="active item">Link</a>
-            <a class="item">Link</a>
+            <div class="header item"><img src="{{ asset('img/FJ200.png') }}" />Accueil</div>
+            <a class="active item">Employeur</a>
+            <a class="item">Candidat</a>
             <div class="ui dropdown item">
-                Dropdown
+                Auto-entrepreneurs
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <div class="item">Action</div>
-                    <div class="item">Another Action</div>
-                    <div class="item">Something else here</div>
+                    <div class="item">Déposer sa carte</div>
+                    <div class="item">Accéder aux offres</div>
                     <div class="divider"></div>
-                    <div class="item">Separated Link</div>
-                    <div class="divider"></div>
-                    <div class="item">One more separated link</div>
+                    <div class="item">Accéder aux cartes</div>
+                    <div class="item">Proposer une offre</div>
                 </div>
             </div>
             <div class="right menu">
@@ -62,12 +60,15 @@
             <div class="ui inverted stackable divided grid">
                 <div class="row">
                     <div class="three wide column">
-                        <h4 class="ui inverted header">About</h4>
+                        <h4 class="ui inverted header">À propos</h4>
                         <div role="list" class="ui inverted link list">
-                            <a role="listitem" class="item">Sitemap</a>
-                            <a role="listitem" class="item">Contact Us</a>
-                            <a role="listitem" class="item">Religious Ceremonies</a>
-                            <a role="listitem" class="item">Gazebo Plans</a>
+                            <a role="listitem" class="item">Nous contacter</a>
+                            <a role="listitem" class="item">Plan du site</a>
+                            <a role="listitem" class="item">Auteurs</a>
+                            <a role="listitem" class="item">Conditions d'utilisation</a>
+                            <a role="listitem" class="item">Confidentialité</a>
+                            <a role="listitem" class="item">Cookies</a>
+                            <a role="listitem" class="item">Mentions légales</a>
                         </div>
                     </div>
                     <div class="three wide column">
@@ -81,7 +82,7 @@
                     </div>
                     <div class="seven wide column">
                         <h4 class="ui inverted header">Footer Header</h4>
-                        <p>User ID : {% for message in app.flashes('success') %}
+                        <p>Messages flash :<br> {% for message in app.flashes('success') %}
                                 {{ message }}
                             {% endfor %}</p>
                     </div>
