@@ -26,8 +26,8 @@
 <header>
     <nav>
         <div class="ui menu">
-            <div class="header item"><img src="{{ asset('img/FJ200.png') }}" />Accueil</div>
-            <a class="active item">Employeur</a>
+            <a href="{{ path('homepage') }}" class="header item"><img src="{{ asset('img/FJ200.png') }}" />Accueil</a>
+            <a href="{{ path('inscription', {'tab': 'x'}) }}" class="active item">Employeur</a>
             <a class="item">Candidat</a>
             <div class="ui dropdown item">
                 Auto-entrepreneurs
