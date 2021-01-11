@@ -1,1 +1,11 @@
 {# For all errors including 500 #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Oups !</h1>
+
+    <p>
+        Une erreur s'est produite.
+        <a href="{{ path('homepage') }}">Retourner à la page d'accueil</a>.
+    </p>
+{% endblock %}
