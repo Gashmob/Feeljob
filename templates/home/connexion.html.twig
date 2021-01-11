@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="ui vertical center segment form--segment">
+        <div class="ui container stackable middle aligned grid">
+            <div>
+                <h3>Connexion</h3>
+                <form class="ui form">
+                    <div class="field">
+                        <div class="field">
+                            <label>Adresse e-mail</label>
+                            <input type="text" name="adresse-email">
+                        </div>
+                        <div class="field">
+                            <label>Mot de passe</label>
+                            <input type="password" name="mot-de-passe">
+                        </div>
+
+                        <div class="field">
+                            <label><a>J'ai oublié mon mot de passe</a></label>
+                        </div>
+                        <button class="ui button" type="submit">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
