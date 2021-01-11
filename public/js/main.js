@@ -12,5 +12,8 @@ $(document)
                 ;
             })
         ;
+        $('.ui.checkbox')
+            .checkbox()
+        ;
     })
 ;

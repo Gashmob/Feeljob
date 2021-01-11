@@ -350,6 +350,10 @@ template {
 
 /*_______________________________________END NORMALIZE_______________________________________*/
 
+.segment.form--segment {
+    padding: 4em;
+}
+
 .footer .footer__content {
     padding: 5em;
 }
@@ -357,4 +361,8 @@ template {
 .footer .footer__content .footer__content__container {
     width: auto;
     margin: auto;
+}
+
+.ui.inverted.segment.footer__additional {
+    background: #0e0f10;
 }

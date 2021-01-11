@@ -1,23 +1,280 @@
-<div>
-    <div>
-        <div>
-            <form class="ui form">
-                <div class="field">
-                    <label>First Name</label>
-                    <input type="text" name="first-name" placeholder="First Name">
-                </div>
-                <div class="field">
-                    <label>Last Name</label>
-                    <input type="text" name="last-name" placeholder="Last Name">
-                </div>
-                <div class="field">
-                    <div class="ui checkbox">
-                        <input type="checkbox" tabindex="0" class="hidden">
-                        <label>I agree to the Terms and Conditions</label>
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="ui vertical segment form--segment">
+        <div class="ui container stackable middle aligned grid">
+            <div>
+                <h3>Création compte employeur & auto-entrepreneur</h3>
+                <form class="ui form">
+                    <div class="field">
+                        <label>Nom</label>
+                        <input type="text" name="nom" placeholder="Nom">
                     </div>
-                </div>
-                <button class="ui button" type="submit">Submit</button>
-            </form>
+                    <div class="field">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" placeholder="Prénom">
+                    </div>
+                    <div class="field">
+                        <label>Nom de l'entreprise</label>
+                        <input type="text" name="nom-entreprise" placeholder="Nom entreprise">
+                    </div>
+                    <div class="field">
+                        <label>Adresse de l'entreprise</label>
+                        <input type="text" name="adresse-entreprise" placeholder="Adresse entreprise">
+                    </div>
+                    <Button class="ui button"><i class="paperclip icon"></i>Logo de l'entreprise</Button>
+                    <div class="field">
+                        <label>N° de Siret</label>
+                        <input type="text" name="siret" placeholder="N° Siret">
+                    </div>
+                    <div class="field">
+                        <label>Secteur d'activité</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="secteur-activite">
+                            <div class="default text">Secteur</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item" data-value="visa">
+                                    <i class="visa icon"></i>
+                                    Visa
+                                </div>
+                                <div class="item" data-value="amex">
+                                    <i class="amex icon"></i>
+                                    American Express
+                                </div>
+                                <div class="item" data-value="discover">
+                                    <i class="discover icon"></i>
+                                    Discover
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Descriptif de l'entreprise</label>
+                        <textarea rows="2" placeholder="Une description de votre entreprise"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Zone géographique</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="zone-geographique">
+                            <div class="default text">Zone</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item" data-value="visa">
+                                    <i class="visa icon"></i>
+                                    Visa
+                                </div>
+                                <div class="item" data-value="amex">
+                                    <i class="amex icon"></i>
+                                    American Express
+                                </div>
+                                <div class="item" data-value="discover">
+                                    <i class="discover icon"></i>
+                                    Discover
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Adresse e-mail</label>
+                        <input type="text" name="adresse-email" placeholder="@mail.fr">
+                    </div>
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <input type="text" name="telephone" placeholder="Téléphone">
+                    </div>
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden">
+                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                        </div>
+                    </div>
+                    <button class="ui button" type="submit">Valider</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="ui vertical segment form--segment">
+        <div class="ui container stackable middle aligned grid">
+            <div>
+                <h3>Création offre d'emploi</h3>
+                <form class="ui form">
+                    <div class="field">
+                        <label>Intitulé du poste</label>
+                        <div class="ui left icon input">
+                            <i class="search icon"></i>
+                            <input type="text" name="intitule-poste" placeholder="Rechercher...">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Type de contrat</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="type-contrat">
+                            <div class="default text">Type</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item" data-value="CDD">
+                                    <i class="visa icon"></i>
+                                    CDD
+                                </div>
+                                <div class="item" data-value="CDI">
+                                    <i class="amex icon"></i>
+                                    CDI
+                                </div>
+                                <div class="item" data-value="saisonier">
+                                    <i class="discover icon"></i>
+                                    saisonier
+                                </div>
+                                <div class="item" data-value="interim">
+                                    <i class="discover icon"></i>
+                                    Interim
+                                </div>
+                                <div class="item" data-value="appoint">
+                                    <i class="discover icon"></i>
+                                    Contrat d'appoint
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="disabled field">
+                            <label>Date début</label>
+                            <input placeholder="Si CDD ou saisonier" type="text" disabled="" tabindex="-1">
+                        </div>
+                        <div class="disabled field">
+                            <label>Date fin</label>
+                            <input placeholder="uniquement" type="text" disabled="" tabindex="-1">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Emploi logé</label>
+                        <div class="ui two column stackable center aligned grid segment">
+                            <div class="column">
+                                <div class="teal ui button">Non</div>
+                            </div>
+                            <div class="column">
+                                <div class="ui button">Oui</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Nombre d'heures travaillées</label>
+                        <input type="text" name="nb-heures" placeholder="Nombre">
+                    </div>
+                    <div class="field">
+                        <label>Montant du salaire</label>
+                        <div class="ui right labeled input">
+                            <label for="montant" class="ui label">€</label>
+                            <input type="text" placeholder="Montant" id="montant">
+                            <div class="ui basic label">.00</div>
+                        </div>
+                    </div>
+                    <div class="inline field">
+                        <label>Emploi rattaché à un lieu précis</label>
+                        <div class="">
+                            <label>Non</label>
+                            <div class="ui slider checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden">
+                                <label>Oui</label>
+                            </div>
+                            <label></label>
+                        </div>
+                    </div>
+                    <div class="ui toggle checkbox field">
+                        <input type="checkbox" name="public" tabindex="0" class="hidden">
+                        <label>Éligible au télétravail</label>
+                    </div>
+                    <div class="field">
+                        <label>Nombre de postes à pourvoir</label>
+                        <input type="text" name="nb-postes" placeholder="#">
+                    </div>
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden">
+                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                        </div>
+                    </div>
+                    <button class="ui button" type="submit">Valider</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui vertical segment form--segment">
+        <div class="ui container stackable middle aligned grid">
+            <div>
+                <h3>Création compte candidat</h3>
+                <form class="ui form">
+                    <div class="field">
+                        <label>Nom</label>
+                        <input type="text" name="nom" placeholder="Nom">
+                    </div>
+                    <div class="field">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" placeholder="Prénom">
+                    </div>
+                    <div class="field">
+                        <label>Adresse e-mail</label>
+                        <input type="text" name="adresse-email" placeholder="@mail.fr">
+                    </div>
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <input type="text" name="telephone" placeholder="Téléphone">
+                    </div>
+                    <div class="field">
+                        <label>Mot de passe</label>
+                        <input type="password" name="mot-de-passe">
+                    </div>
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden">
+                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                        </div>
+                    </div>
+                    <button class="ui button" type="submit">Valider</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui vertical segment form--segment">
+        <div class="ui container stackable middle aligned grid">
+            <div>
+                <h3>Création annonce chantier/service</h3>
+                <form class="ui form">
+                    <div class="field">
+                        <label>Secteurs visés</label>
+                        <input type="text" name="nom" placeholder="Nom">
+                    </div>
+                    <div class="field">
+                        <label>Date début</label>
+                        <input type="text" name="prenom" placeholder="Prénom">
+                    </div>
+                    <div class="field">
+                        <label>Adresse e-mail</label>
+                        <input type="text" name="adresse-email" placeholder="@mail.fr">
+                    </div>
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <input type="text" name="telephone" placeholder="Téléphone">
+                    </div>
+                    <div class="field">
+                        <label>Mot de passe</label>
+                        <input type="password" name="mot-de-passe">
+                    </div>
+
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden">
+                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                        </div>
+                    </div>
+                    <button class="ui button" type="submit">Valider</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
