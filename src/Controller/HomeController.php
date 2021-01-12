@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Employeur;
 use App\Entity\EntityManager;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
@@ -139,7 +140,10 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
-                        // TODO : Create Employeur and flush
+                        $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, "logo", $siret,
+                            $description, $mail, $telephone, false, $motdepasse, $salt);
+                        $employeur->flush();
+
                         $email = (new TemplatedEmail())
                             ->from('no-reply@fealjob.com')
                             ->to($mail)
@@ -152,7 +156,7 @@ class HomeController extends AbstractController
                         $mailer->send($email);
 
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => 2]); // TODO : récupérer l'id depuis l'instance d'employeur
+                        return $this->redirectToRoute('waitVerifEmail', ['id' => $employeur->getId()]);
                     }
                     break;
 
