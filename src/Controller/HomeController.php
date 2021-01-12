@@ -8,6 +8,7 @@ use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
 use App\Entity\Employeur;
 use App\Entity\EntityManager;
+use App\Entity\GenericUser;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -156,18 +157,7 @@ class HomeController extends AbstractController
                         $candidat = new Candidat($prenom, $nom, $mail, false, $telephone, "", $motdepasse, $salt);
                         $candidat->flush();
 
-                        $email = (new TemplatedEmail())
-                            ->from('no-reply@fealjob.com')
-                            ->to($mail)
-                            ->htmlTemplate('emails/verification.html.twig')
-                            ->context([
-                                'nom' => $nom,
-                                'prenom' => $prenom
-                            ]);
-                        $mailer->send($email);
-
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $candidat->getId()]);
+                        return $this->sendMailAndWait($mailer, $candidat);
                     }
                     break;
 
@@ -251,18 +241,7 @@ class HomeController extends AbstractController
                             $description, $mail, $telephone, false, $motdepasse, $salt, $activite);
                         $employeur->flush();
 
-                        $email = (new TemplatedEmail())
-                            ->from('no-reply@fealjob.com')
-                            ->to($mail)
-                            ->htmlTemplate('emails/verification.html.twig')
-                            ->context([
-                                'nom' => $nom,
-                                'prenom' => $prenom
-                            ]);
-                        $mailer->send($email);
-
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $employeur->getId()]);
+                        return $this->sendMailAndWait($mailer, $employeur);
                     }
                     break;
 
@@ -345,18 +324,7 @@ class HomeController extends AbstractController
                         $auto = new AutoEntrepreneur($prenom, $nom, $mail, false, $motdepasse, $salt, $nomEntreprise, $adresse, $logo, $siret, $description, $telephone, "", false, $activite);
                         $auto->flush();
 
-                        $email = (new TemplatedEmail()) // TODO : Mettre ce qui suit dans une méthode sendMail()
-                            ->from('no-reply@fealjob.com')
-                            ->to($mail)
-                            ->htmlTemplate('emails/verification.html.twig')
-                            ->context([
-                                'nom' => $nom,
-                                'prenom' => $prenom
-                            ]);
-                        $mailer->send($email);
-
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $auto->getId()]);
+                        return $this->sendMailAndWait($mailer, $auto);
                     }
                     break;
 
@@ -480,5 +448,27 @@ class HomeController extends AbstractController
         }
 
         return "";
+    }
+
+    /**
+     * @param MailerInterface $mailer
+     * @param GenericUser $user
+     * @return RedirectResponse
+     * @throws TransportExceptionInterface
+     */
+    private function sendMailAndWait(MailerInterface $mailer, GenericUser $user): RedirectResponse
+    {
+        $email = (new TemplatedEmail())
+        ->from('no-reply@fealjob.com')
+            ->to($user->getMail())
+            ->htmlTemplate('emails/verification.html.twig')
+            ->context([
+                'nom' => $user->getNom(),
+                'prenom' => $user->getPrenom()
+            ]);
+        $mailer->send($email);
+
+        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+        return $this->redirectToRoute('waitVerifEmail', ['id' => $user->getId()]);
     }
 }
