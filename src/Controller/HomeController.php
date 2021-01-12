@@ -176,7 +176,7 @@ class HomeController extends AbstractController
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
                         $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, $logo, $siret,
-                            $description, $mail, $telephone, false, $motdepasse, $salt);
+                            $description, $mail, $telephone, false, $motdepasse, $salt, $activite);
                         $employeur->flush();
 
                         $email = (new TemplatedEmail())
@@ -255,7 +255,7 @@ class HomeController extends AbstractController
         $user = EntityManager::getGenericUserFromId($id);
         if ($user) {
             $user->setVerification(true);
-            return $this->redirectToRoute('connection');    
+            return $this->redirectToRoute('connection');
         }
 
         return $this->redirectToRoute('homepage');

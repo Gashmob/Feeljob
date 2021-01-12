@@ -32,6 +32,11 @@ class Employeur extends GenericUser
      * @var string
      */
     private string $telephone;
+    /**
+     * Array of strings
+     * @var array
+     */
+    private array $activitees;
 
     /**
      * Employeur constructor.
@@ -47,11 +52,12 @@ class Employeur extends GenericUser
      * @param bool $verification
      * @param string $motdepasse
      * @param string $sel
+     * @param array $activitees
      * @param int|null $id
      */
     public function __construct(string $nom, string $prenom, string $nom_entreprise, string $adresse, string $logo,
                                 string $siret, string $description, string $mail, string $telephone, bool $verification,
-                                string $motdepasse, string $sel, int $id = null)
+                                string $motdepasse, string $sel, array $activitees, int $id = null)
     {
         parent::__construct($prenom, $nom, $mail, $verification, $motdepasse, $sel, $id);
         $this->nom_entreprise = $nom_entreprise;
@@ -60,6 +66,7 @@ class Employeur extends GenericUser
         $this->siret = $siret;
         $this->description = $description;
         $this->telephone = $telephone;
+        $this->activitees = $activitees;
     }
 
     public function flush(): void
@@ -178,5 +185,39 @@ class Employeur extends GenericUser
     public function getTelephone(): string
     {
         return $this->telephone;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActivitees(): array
+    {
+        return $this->activitees;
+    }
+
+    /**
+     * @param string $activite
+     * @return $this
+     */
+    public function addActivite(string $activite): Employeur
+    {
+        if (!in_array($activite, $this->activitees)) {
+            $this->activitees[] = $activite;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $activite
+     * @return $this
+     */
+    public function removeActivite(string $activite): Employeur
+    {
+        if (in_array($activite, $this->activitees)) {
+            unset($this->activitees[array_search($activite, $this->activitees)]);
+        }
+
+        return $this;
     }
 }
