@@ -5,10 +5,10 @@
         <div style="min-height:300px;padding:1em 0em" class="ui inverted vertical center aligned segment">
             <div class="ui large inverted pointing secondary menu">
                 <div class="ui container">
-                    <a class="active item">Accueil</a>
-                    <a class="item">Employeur</a>
-                    <a class="item">Candidat</a>
-                    <div class="ui dropdown item">
+                    <a href="{{ path('homepage') }}" class="active item">Accueil</a>
+                    <a href="{{ path('showEmployeur') }}" class="item">Employeur</a>
+                    <a href="{{ path('showCandidat') }}" class="item">Candidat</a>
+                    <a href="{{ path('showAuto') }}" class="ui dropdown item">
                         Auto-entrepreneurs
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -18,10 +18,10 @@
                             <div class="item">Accéder aux cartes</div>
                             <div class="item">Proposer une offre</div>
                         </div>
-                    </div>
+                    </a>
                     <div class="right item">
-                        <a class="ui inverted button" role="button">Connexion</a>
-                        <a href="{{ path('inscription', {'tab': 'x'}) }}" style="margin-left:0.5em" class="ui inverted button" role="button">Inscription</a>
+                        <a href="{{ path('connection') }}" class="ui inverted button" role="button">Connexion</a>
+                        <a href="{{ path('inscription', {'tab': 'candidat'}) }}" style="margin-left:0.5em" class="ui inverted button" role="button">Inscription</a>
                     </div>
                 </div>
             </div>

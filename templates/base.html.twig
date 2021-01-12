@@ -27,9 +27,9 @@
     <nav>
         <div class="ui menu">
             <a href="{{ path('homepage') }}" class="header item"><img src="{{ asset('img/FJ200.png') }}" />Accueil</a>
-            <a href="{{ path('inscription', {'tab': 'x'}) }}" class="active item">Employeur</a>
-            <a class="item">Candidat</a>
-            <div class="ui dropdown item">
+            <a href="{{ path('showEmployeur') }}" class="active item">Employeur</a>
+            <a href="{{ path('showCandidat') }}" class="item">Candidat</a>
+            <a href="{{ path('showAuto') }}" class="ui dropdown item">
                 Auto-entrepreneurs
                 <i class="dropdown icon"></i>
                 <div class="menu">
@@ -39,7 +39,7 @@
                     <div class="item">Accéder aux cartes</div>
                     <div class="item">Proposer une offre</div>
                 </div>
-            </div>
+            </a>
         </div>
     </nav>
 </header>
