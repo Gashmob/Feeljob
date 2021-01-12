@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function Sodium\add;
 
 class HomeController extends AbstractController
 {
@@ -95,7 +96,7 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner une adresse');
                     }
 
-                    // TODO : logo
+                    $logo = $this->uploadImage();
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -140,7 +141,7 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
-                        $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, "logo", $siret,
+                        $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, $logo, $siret,
                             $description, $mail, $telephone, false, $motdepasse, $salt);
                         $employeur->flush();
 
@@ -150,8 +151,7 @@ class HomeController extends AbstractController
                             ->htmlTemplate('emails/verification.html.twig')
                             ->context([
                                 'nom' => $nom,
-                                'prenom' => $prenom,
-                                'nomEntreprise' => $nomEntreprise
+                                'prenom' => $prenom
                             ]);
                         $mailer->send($email);
 
@@ -227,7 +227,7 @@ class HomeController extends AbstractController
      * @param int $n
      * @return string
      */
-    function randomString(int $n): string
+    private function randomString(int $n): string
     {
         $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $charactersLength = strlen($characters);
@@ -239,5 +239,44 @@ class HomeController extends AbstractController
             }
         }
         return $randomString;
+    }
+
+    /**
+     * @return string
+     */
+    private function uploadImage(): string
+    {
+        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+            // Infos sur le fichier téléchargé
+            $fileTmpPath = $_FILES['logo']['tmp_name'];
+            $fileName = $_FILES['logo']['name'];
+            $fileSize = $_FILES['logo']['size'];
+            $fileType = $_FILES['logo']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+
+            // Changement du nom par quelque chose qui ne se répétera pas
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+
+            // Les extensions autorisées
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'svg');
+
+            if (in_array($fileExtension, $allowedfileExtensions)) {
+                $uploadFileDir = './uploads/';
+                $dest_path = $uploadFileDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    return $newFileName;
+                } else {
+                    $this->addFlash('fail', 'L\'image n\'a pas pu être téléchargée, les droits d\'écriture ne sont pas accordés');
+                }
+            } else {
+                $this->addFlash('fail', 'L\'image n\'a pas pu être téléchargée, l\'extension doit être : ' . implode(',', $allowedfileExtensions));
+            }
+        } else {
+            $this->addFlash('fail', 'Il y eu a une erreur lors du téléchargement : ' . $_FILES['uploadedFile']['error']);
+        }
+
+        return "";
     }
 }
