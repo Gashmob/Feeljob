@@ -62,10 +62,13 @@ class GenericUser extends Entity
 
     /**
      * @param string $prenom
+     * @return GenericUser
      */
-    public function setPrenom(string $prenom): void
+    public function setPrenom(string $prenom): GenericUser
     {
         $this->prenom = $prenom;
+
+        return $this;
     }
 
     /**
@@ -78,10 +81,13 @@ class GenericUser extends Entity
 
     /**
      * @param string $nom
+     * @return GenericUser
      */
-    public function setNom(string $nom): void
+    public function setNom(string $nom): GenericUser
     {
         $this->nom = $nom;
+
+        return $this;
     }
 
     /**
@@ -94,10 +100,13 @@ class GenericUser extends Entity
 
     /**
      * @param string $mail
+     * @return GenericUser
      */
-    public function setMail(string $mail): void
+    public function setMail(string $mail): GenericUser
     {
         $this->mail = $mail;
+
+        return $this;
     }
 
     /**
@@ -110,10 +119,13 @@ class GenericUser extends Entity
 
     /**
      * @param bool $verification
+     * @return GenericUser
      */
-    public function setVerification(bool $verification): void
+    public function setVerification(bool $verification): GenericUser
     {
         $this->verification = $verification;
+
+        return $this;
     }
 
     /**
@@ -126,10 +138,13 @@ class GenericUser extends Entity
 
     /**
      * @param string $motdepasse
+     * @return GenericUser
      */
-    public function setMotdepasse(string $motdepasse): void
+    public function setMotdepasse(string $motdepasse): GenericUser
     {
         $this->motdepasse = $motdepasse;
+
+        return $this;
     }
 
     /**
@@ -142,10 +157,13 @@ class GenericUser extends Entity
 
     /**
      * @param string $sel
+     * @return GenericUser
      */
-    public function setSel(string $sel): void
+    public function setSel(string $sel): GenericUser
     {
         $this->sel = $sel;
+
+        return $this;
     }
 
     public function flush(): void

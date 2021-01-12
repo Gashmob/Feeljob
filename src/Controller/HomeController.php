@@ -242,7 +242,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""})
+     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""}, methods={"POST"})
      * @param $id
      * @return RedirectResponse
      */
@@ -252,9 +252,13 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        // TODO : Récupérer l'utilisateur et mettre son compte en vérifier et flush
+        $user = EntityManager::getGenericUserFromId($id);
+        if ($user) {
+            $user->setVerification(true);
+            return $this->redirectToRoute('connection');    
+        }
 
-        return $this->redirectToRoute('homepage'); // TODO : rediriger vers la connexion
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
