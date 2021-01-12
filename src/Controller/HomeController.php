@@ -176,7 +176,7 @@ class HomeController extends AbstractController
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
                         $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, $logo, $siret,
-                            $description, $mail, $telephone, false, $motdepasse, $salt);
+                            $description, $mail, $telephone, false, $motdepasse, $salt, $activite);
                         $employeur->flush();
 
                         $email = (new TemplatedEmail())
@@ -214,6 +214,7 @@ class HomeController extends AbstractController
      * @param Request $request
      * @param MailerInterface $mailer
      * @return RedirectResponse|Response
+     * @throws TransportExceptionInterface
      */
     public function waitVerifEmail($id, Request $request, MailerInterface $mailer)
     {
@@ -222,25 +223,26 @@ class HomeController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            // TODO : Récupérer l'utilisateur
-            /*$email = (new TemplatedEmail())
-                ->from('no-reply@fealjob.com')
-                ->to($mail)
-                ->htmlTemplate('emails/verification.html.twig')
-                ->context([
-                    'nom' => $nom,
-                    'prenom' => $prenom,
-                    'nomEntreprise' => $nomEntreprise
-                ]);
-            $mailer->send($email);*/
-            $this->addFlash('success', 'Email envoyé !');
+            $user = EntityManager::getGenericUserFromId($id);
+            if ($user) {
+                $email = (new TemplatedEmail())
+                    ->from('no-reply@fealjob.com')
+                    ->to($user->getMail())
+                    ->htmlTemplate('emails/verification.html.twig')
+                    ->context([
+                        'nom' => $user->getNom(),
+                        'prenom' => $user->getPrenom()
+                    ]);
+                $mailer->send($email);
+                $this->addFlash('success', 'Email envoyé !');
+            }
         }
 
         return $this->render('home/waitVerifEmail.html.twig');
     }
 
     /**
-     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""})
+     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""}, methods={"POST"})
      * @param $id
      * @return RedirectResponse
      */
@@ -250,9 +252,13 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        // TODO : Récupérer l'utilisateur et mettre son compte en vérifier et flush
+        $user = EntityManager::getGenericUserFromId($id);
+        if ($user) {
+            $user->setVerification(true);
+            return $this->redirectToRoute('connection');
+        }
 
-        return $this->redirectToRoute('homepage'); // TODO : rediriger vers la connexion
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

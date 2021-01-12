@@ -6,16 +6,8 @@ namespace App\Entity;
  * Class Employeur
  * @package App\Entity
  */
-class Employeur extends Entity
+class Employeur extends GenericUser
 {
-    /**
-     * @var string
-     */
-    private string $nom;
-    /**
-     * @var string
-     */
-    private string $prenom;
     /**
      * @var string
      */
@@ -39,23 +31,12 @@ class Employeur extends Entity
     /**
      * @var string
      */
-    private string $mail;
-    /**
-     * @var string
-     */
     private string $telephone;
     /**
-     * @var bool
+     * Array of strings
+     * @var array
      */
-    private bool $verification;
-    /**
-     * @var string
-     */
-    private string $motdepasse;
-    /**
-     * @var string
-     */
-    private string $sel;
+    private array $activitees;
 
     /**
      * Employeur constructor.
@@ -71,51 +52,25 @@ class Employeur extends Entity
      * @param bool $verification
      * @param string $motdepasse
      * @param string $sel
+     * @param array $activitees
      * @param int|null $id
      */
     public function __construct(string $nom, string $prenom, string $nom_entreprise, string $adresse, string $logo,
                                 string $siret, string $description, string $mail, string $telephone, bool $verification,
-                                string $motdepasse, string $sel, int $id = null)
+                                string $motdepasse, string $sel, array $activitees, int $id = null)
     {
-        parent::__construct($id);
-        $this->nom = $nom;
-        $this->prenom = $prenom;
+        parent::__construct($prenom, $nom, $mail, $verification, $motdepasse, $sel, $id);
         $this->nom_entreprise = $nom_entreprise;
         $this->adresse = $adresse;
         $this->logo = $logo;
         $this->siret = $siret;
         $this->description = $description;
-        $this->mail = $mail;
         $this->telephone = $telephone;
-        $this->verification = $verification;
-        $this->motdepasse = $motdepasse;
-        $this->sel = $sel;
+        $this->activitees = $activitees;
     }
 
     public function flush(): void
     {
-    }
-
-    /**
-     * @param string $nom
-     * @return $this
-     */
-    public function setNom(string $nom): Employeur
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * @param string $prenom
-     * @return $this
-     */
-    public function setPrenom(string $prenom): Employeur
-    {
-        $this->prenom = $prenom;
-
-        return $this;
     }
 
     /**
@@ -174,17 +129,6 @@ class Employeur extends Entity
     }
 
     /**
-     * @param string $mail
-     * @return $this
-     */
-    public function setMail(string $mail): Employeur
-    {
-        $this->mail = $mail;
-
-        return $this;
-    }
-
-    /**
      * @param string $telephone
      * @return $this
      */
@@ -193,44 +137,6 @@ class Employeur extends Entity
         $this->telephone = $telephone;
 
         return $this;
-    }
-
-    /**
-     * @param bool $verification
-     * @return $this
-     */
-    public function setVerification(bool $verification): Employeur
-    {
-        $this->verification = $verification;
-
-        return $this;
-    }
-
-    /**
-     * @param string $motdepasse
-     * @return $this
-     */
-    public function setMotdepasse(string $motdepasse): Employeur
-    {
-        $this->motdepasse = $motdepasse;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNom(): string
-    {
-        return $this->nom;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrenom(): string
-    {
-        return $this->prenom;
     }
 
     /**
@@ -276,32 +182,42 @@ class Employeur extends Entity
     /**
      * @return string
      */
-    public function getMail(): string
-    {
-        return $this->mail;
-    }
-
-    /**
-     * @return string
-     */
     public function getTelephone(): string
     {
         return $this->telephone;
     }
 
     /**
-     * @return bool
+     * @return array
      */
-    public function isVerification(): bool
+    public function getActivitees(): array
     {
-        return $this->verification;
+        return $this->activitees;
     }
 
     /**
-     * @return string
+     * @param string $activite
+     * @return $this
      */
-    public function getSel(): string
+    public function addActivite(string $activite): Employeur
     {
-        return $this->sel;
+        if (!in_array($activite, $this->activitees)) {
+            $this->activitees[] = $activite;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $activite
+     * @return $this
+     */
+    public function removeActivite(string $activite): Employeur
+    {
+        if (in_array($activite, $this->activitees)) {
+            unset($this->activitees[array_search($activite, $this->activitees)]);
+        }
+
+        return $this;
     }
 }
