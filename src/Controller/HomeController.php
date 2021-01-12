@@ -48,6 +48,33 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/candidats", name="showCandidat")
+     * @return Response
+     */
+    public function showCandidat(): Response
+    {
+        return $this->render('home/candidat.html.twig');
+    }
+
+    /**
+     * @Route("/employeurs", name="showEmployeur")
+     * @return Response
+     */
+    public function showEmployeur(): Response
+    {
+        return $this->render('home/employeur.html.twig');
+    }
+
+    /**
+     * @Route("/auto-entrepreneur", name="showAuto")
+     * @return Response
+     */
+    public function showAuto(): Response
+    {
+        return $this->render('home/autoEntrepreneurs.html.twig');
+    }
+
+    /**
      * @Route("/inscription/{tab}", defaults={"tab"="chercheur"}, name="inscription")
      * @param string $tab
      * @param Request $request
