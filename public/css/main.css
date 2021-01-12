@@ -350,6 +350,10 @@ template {
 
 /*_______________________________________END NORMALIZE_______________________________________*/
 
+.right.menu .item .content.person-summary {
+    padding-left: .5em;
+}
+
 .segment.form--segment {
     padding: 4em;
 }
