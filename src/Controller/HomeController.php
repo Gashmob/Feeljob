@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Candidat;
 use App\Entity\Employeur;
 use App\Entity\EntityManager;
 use Egulias\EmailValidator\EmailValidator;
@@ -78,6 +79,10 @@ class HomeController extends AbstractController
      */
     public function connection(): Response
     {
+        if ($this->session->get('user')) {
+            return $this->redirectToRoute('homepage'); // TODO : Changer plus tard pour mettre vers l'espace utilisateur
+        }
+
         return $this->render('home/connexion.html.twig');
     }
 
@@ -96,6 +101,7 @@ class HomeController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            //$request->get('tab');
             switch ($tab) {
                 case 'chercheur':
                     $nom = $request->get('nom');
@@ -146,7 +152,8 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB) {
-                        // TODO : Créer l'instance de candidat et la flush
+                        $candidat = new Candidat($prenom, $nom, $mail, false, $telephone, "", $motdepasse, $salt);
+                        $candidat->flush();
 
                         $email = (new TemplatedEmail())
                             ->from('no-reply@fealjob.com')
@@ -159,7 +166,7 @@ class HomeController extends AbstractController
                         $mailer->send($email);
 
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => 2]); // TODO : Récupérer l'id du candidat sur l'instance
+                        return $this->redirectToRoute('waitVerifEmail', ['id' => $candidat->getId()]);
                     }
                     break;
 

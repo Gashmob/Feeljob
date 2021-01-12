@@ -4,6 +4,10 @@
 namespace App\Entity;
 
 
+/**
+ * Class GenericUser
+ * @package App\Entity
+ */
 class GenericUser extends Entity
 {
     /**

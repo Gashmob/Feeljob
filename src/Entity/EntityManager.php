@@ -4,7 +4,6 @@
 namespace App\Entity;
 
 
-use App\database\Connection;
 use App\database\PreparedQuery;
 use App\database\Query;
 
