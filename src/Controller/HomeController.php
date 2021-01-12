@@ -98,7 +98,69 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             switch ($tab) {
                 case 'chercheur':
-                    // TODO : formulaire candidat
+                    $nom = $request->get('nom');
+                    $nomB = true;
+                    if ($nom === '') {
+                        $nomB = false;
+                        $this->addFlash('form', 'Merci de renseigner un nom');
+                    }
+
+                    $prenom = $request->get('prenom');
+                    $prenomB = true;
+                    if ($prenom === '') {
+                        $prenomB = false;
+                        $this->addFlash('form', 'Merci de renseigner un prénom');
+                    }
+
+                    $telephone = $request->get('telephone');
+                    $telephoneB = true;
+                    if (!preg_match('^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$', $telephone)) {
+                        $telephoneB = false;
+                        $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
+                    }
+
+                    $mail = $request->get('mail');
+                    $mailB = true;
+                    $validator = new EmailValidator();
+                    $multipleValidations = new MultipleValidationWithAnd([
+                        new RFCValidation(),
+                        new DNSCheckValidation()
+                    ]);
+                    if (!$validator->isValid($mail, $multipleValidations)) {
+                        $mailB = false;
+                        $this->addFlash('form', 'Merci de renseigner une adresse mail valide');
+                    } elseif (EntityManager::isMailUsed($mail)) {
+                        $mailB = false;
+                        $this->addFlash('form', 'Cet email est déjà utilisé');
+                    }
+
+                    $motdepasse = $request->get('motdepasse');
+                    $motdepasse2 = $request->get('motdepasse2');
+                    $motdepasseB = true;
+                    if ($motdepasse != $motdepasse2 ||
+                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                        $motdepasseB = false;
+                        $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
+                    }
+                    $salt = $this->randomString(16);
+                    $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
+
+                    if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB) {
+                        // TODO : Créer l'instance de candidat et la flush
+
+                        $email = (new TemplatedEmail())
+                            ->from('no-reply@fealjob.com')
+                            ->to($mail)
+                            ->htmlTemplate('emails/verification.html.twig')
+                            ->context([
+                                'nom' => $nom,
+                                'prenom' => $prenom
+                            ]);
+                        $mailer->send($email);
+
+                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+                        return $this->redirectToRoute('waitVerifEmail', ['id' => 2]); // TODO : Récupérer l'id du candidat sur l'instance
+                    }
                     break;
 
                 case 'entreprise':
@@ -166,8 +228,10 @@ class HomeController extends AbstractController
                     }
 
                     $motdepasse = $request->get('motdepasse');
+                    $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
-                    if (!preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                    if ($motdepasse != $motdepasse2 ||
+                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
                         $motdepasseB = false;
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
