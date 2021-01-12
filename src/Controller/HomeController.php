@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use function Sodium\add;
 
 class HomeController extends AbstractController
 {
@@ -72,6 +71,14 @@ class HomeController extends AbstractController
     public function showAuto(): Response
     {
         return $this->render('home/autoEntrepreneurs.html.twig');
+    }
+
+    /**
+     * @Route("/connexion", name="connection")
+     */
+    public function connection(): Response
+    {
+        return $this->render('home/connexion.html.twig');
     }
 
     /**
