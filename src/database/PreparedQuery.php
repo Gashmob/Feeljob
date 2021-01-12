@@ -66,7 +66,10 @@ class PreparedQuery extends Query
     public function run(): PreparedQuery
     {
         $results = $this->connection->getConnection()->run($this->query, $this->settings);
-        $this->result = $results->toArray();
+        for ($i = 0; $i < $results->count(); $i++) {
+            $result = $results->get($i);
+            $this->result[] = $result->toArray();
+        }
 
         return $this;
     }
