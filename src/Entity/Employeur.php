@@ -6,16 +6,8 @@ namespace App\Entity;
  * Class Employeur
  * @package App\Entity
  */
-class Employeur extends Entity
+class Employeur extends GenericUser
 {
-    /**
-     * @var string
-     */
-    private string $nom;
-    /**
-     * @var string
-     */
-    private string $prenom;
     /**
      * @var string
      */
@@ -39,23 +31,7 @@ class Employeur extends Entity
     /**
      * @var string
      */
-    private string $mail;
-    /**
-     * @var string
-     */
     private string $telephone;
-    /**
-     * @var bool
-     */
-    private bool $verification;
-    /**
-     * @var string
-     */
-    private string $motdepasse;
-    /**
-     * @var string
-     */
-    private string $sel;
 
     /**
      * Employeur constructor.
@@ -77,45 +53,17 @@ class Employeur extends Entity
                                 string $siret, string $description, string $mail, string $telephone, bool $verification,
                                 string $motdepasse, string $sel, int $id = null)
     {
-        parent::__construct($id);
-        $this->nom = $nom;
-        $this->prenom = $prenom;
+        parent::__construct($prenom, $nom, $mail, $verification, $motdepasse, $sel, $id);
         $this->nom_entreprise = $nom_entreprise;
         $this->adresse = $adresse;
         $this->logo = $logo;
         $this->siret = $siret;
         $this->description = $description;
-        $this->mail = $mail;
         $this->telephone = $telephone;
-        $this->verification = $verification;
-        $this->motdepasse = $motdepasse;
-        $this->sel = $sel;
     }
 
     public function flush(): void
     {
-    }
-
-    /**
-     * @param string $nom
-     * @return $this
-     */
-    public function setNom(string $nom): Employeur
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * @param string $prenom
-     * @return $this
-     */
-    public function setPrenom(string $prenom): Employeur
-    {
-        $this->prenom = $prenom;
-
-        return $this;
     }
 
     /**
@@ -174,17 +122,6 @@ class Employeur extends Entity
     }
 
     /**
-     * @param string $mail
-     * @return $this
-     */
-    public function setMail(string $mail): Employeur
-    {
-        $this->mail = $mail;
-
-        return $this;
-    }
-
-    /**
      * @param string $telephone
      * @return $this
      */
@@ -193,44 +130,6 @@ class Employeur extends Entity
         $this->telephone = $telephone;
 
         return $this;
-    }
-
-    /**
-     * @param bool $verification
-     * @return $this
-     */
-    public function setVerification(bool $verification): Employeur
-    {
-        $this->verification = $verification;
-
-        return $this;
-    }
-
-    /**
-     * @param string $motdepasse
-     * @return $this
-     */
-    public function setMotdepasse(string $motdepasse): Employeur
-    {
-        $this->motdepasse = $motdepasse;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNom(): string
-    {
-        return $this->nom;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrenom(): string
-    {
-        return $this->prenom;
     }
 
     /**
@@ -276,32 +175,8 @@ class Employeur extends Entity
     /**
      * @return string
      */
-    public function getMail(): string
-    {
-        return $this->mail;
-    }
-
-    /**
-     * @return string
-     */
     public function getTelephone(): string
     {
         return $this->telephone;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVerification(): bool
-    {
-        return $this->verification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSel(): string
-    {
-        return $this->sel;
     }
 }

@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 
+use App\database\Connection;
 use App\database\PreparedQuery;
 use App\database\Query;
 
@@ -36,6 +37,28 @@ abstract class EntityManager
         }
 
         return $res;
+    }
+
+    /**
+     * @param int $id
+     * @return GenericUser|null
+     */
+    public static function getGenericUserFromId(int $id): ?GenericUser
+    {
+        $result = (new PreparedQuery('MATCH (u) WHERE ID(u) = $id RETURN u'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : new GenericUser(
+            $result['u']['prenom'],
+            $result['u']['nom'],
+            $result['u']['mail'],
+            $result['u']['verification'],
+            $result['u']['motdepasse'],
+            $result['u']['sel'],
+            $id
+        );
     }
 
     /* -- Example --

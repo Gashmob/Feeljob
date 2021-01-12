@@ -70,10 +70,10 @@ class Query
 
     /**
      * Return the first result of the query or null if there is no result
-     * @return null|mixed
+     * @return mixed|null
      */
     public function getOneOrNullResult()
     {
-        return $this->result[0];
+        return isset($this->result[0]) ? $this->result[0] : null;
     }
 }
