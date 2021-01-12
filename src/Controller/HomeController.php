@@ -266,7 +266,96 @@ class HomeController extends AbstractController
                     break;
 
                 case 'auto':
-                    // TODO : formulaire auto-entrepreneur
+                    $nom = $request->get('nom');
+                    $nomB = true;
+                    if ($nom === '') {
+                        $nomB = false;
+                        $this->addFlash('form', 'Merci de renseigner un nom');
+                    }
+
+                    $prenom = $request->get('prenom');
+                    $prenomB = true;
+                    if ($prenom === '') {
+                        $prenomB = false;
+                        $this->addFlash('form', 'Merci de renseigner un prénom');
+                    }
+
+                    $nomEntreprise = $request->get('nomEntreprise');
+                    $nomEntrepriseB = true;
+                    if ($nomEntreprise === '') {
+                        $nomEntrepriseB = false;
+                        $this->addFlash('form', 'Merci de renseigner un nom d\'entreprise');
+                    }
+
+                    $adresse = $request->get('adresse');
+                    $adresseB = true;
+                    if ($adresse === '') {
+                        $adresseB = false;
+                        $this->addFlash('form', 'Merci de renseigner une adresse pour l\'entreprise');
+                    }
+
+                    $logo = $this->uploadImage();
+
+                    $siret = $request->get('siret');
+                    $siretB = true;
+                    if ($siret === '') {
+                        $siretB = false;
+                        $this->addFlash('form', 'Merci de renseigner un siret');
+                    }
+
+                    $activite = $request->get('activite');
+
+                    $description = $request->get('description');
+
+                    $mail = $request->get('mail');
+                    $mailB = true;
+                    $validator = new EmailValidator();
+                    $multipleValidations = new MultipleValidationWithAnd([
+                        new RFCValidation(),
+                        new DNSCheckValidation()
+                    ]);
+                    if (!$validator->isValid($mail, $multipleValidations)) {
+                        $mailB = false;
+                        $this->addFlash('form', 'Merci de renseigner une adresse mail valide');
+                    } elseif (EntityManager::isMailUsed($mail)) {
+                        $mailB = false;
+                        $this->addFlash('form', 'Cet email est déjà utilisé');
+                    }
+
+                    $telephone = $request->get('telephone');
+                    $telephoneB = true;
+                    if (!preg_match('^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$', $telephone)) {
+                        $telephoneB = false;
+                        $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
+                    }
+
+                    $motdepasse = $request->get('motdepasse');
+                    $motdepasse2 = $request->get('motdepasse2');
+                    $motdepasseB = true;
+                    if ($motdepasse != $motdepasse2 ||
+                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                        $motdepasseB = false;
+                        $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
+                    }
+                    $salt = $this->randomString(16);
+                    $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
+
+                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
+                        // TODO : Créer instance AutoEntrepreneur et la flush
+
+                        $email = (new TemplatedEmail()) // TODO : Mettre ce qui suit dans une méthode sendMail()
+                            ->from('no-reply@fealjob.com')
+                            ->to($mail)
+                            ->htmlTemplate('emails/verification.html.twig')
+                            ->context([
+                                'nom' => $nom,
+                                'prenom' => $prenom
+                            ]);
+                        $mailer->send($email);
+
+                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+                        return $this->redirectToRoute('waitVerifEmail', ['id' => 2]); // TODO : Récupérer l'id de l'instance
+                    }
                     break;
 
                 default:
