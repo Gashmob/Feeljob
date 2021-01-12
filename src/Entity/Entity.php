@@ -3,6 +3,7 @@
 
 namespace App\Entity;
 
+use App\database\PreparedQuery;
 
 /**
  * Class Entity
@@ -14,7 +15,7 @@ abstract class Entity
     /**
      * @var int
      */
-    private int $id;
+    protected int $id;
 
     /**
      * Entity constructor.
@@ -41,5 +42,8 @@ abstract class Entity
     /**
      * Erase the entity from the database
      */
-    public abstract function erase(): void;
+    public function erase(): void
+    {
+        (new PreparedQuery('MATCH (n)-[r]-() WHERE ID(n) == $id DELETE r, n'))->setInteger('id',$this->id)->run();
+    }
 }
