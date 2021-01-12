@@ -15,5 +15,11 @@ $(document)
         $('.ui.checkbox')
             .checkbox()
         ;
+        $('.menu .item')
+            .tab()
+        ;
+        $('.ui.accordion')
+            .accordion()
+        ;
     })
 ;
