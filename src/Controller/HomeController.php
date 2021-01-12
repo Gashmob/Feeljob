@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
 use App\Entity\Employeur;
 use App\Entity\EntityManager;
@@ -341,7 +342,8 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
-                        // TODO : Créer instance AutoEntrepreneur et la flush
+                        $auto = new AutoEntrepreneur($prenom, $nom, $mail, false, $motdepasse, $salt, $nomEntreprise, $adresse, $logo, $siret, $description, $telephone, "", false, $activite);
+                        $auto->flush();
 
                         $email = (new TemplatedEmail()) // TODO : Mettre ce qui suit dans une méthode sendMail()
                             ->from('no-reply@fealjob.com')
@@ -354,7 +356,7 @@ class HomeController extends AbstractController
                         $mailer->send($email);
 
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => 2]); // TODO : Récupérer l'id de l'instance
+                        return $this->redirectToRoute('waitVerifEmail', ['id' => $auto->getId()]);
                     }
                     break;
 

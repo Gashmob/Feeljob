@@ -39,10 +39,13 @@ class Candidat extends GenericUser
 
     /**
      * @param string $telephone
+     * @return Candidat
      */
-    public function setTelephone(string $telephone): void
+    public function setTelephone(string $telephone): Candidat
     {
         $this->telephone = $telephone;
+
+        return $this;
     }
 
     /**
@@ -55,10 +58,13 @@ class Candidat extends GenericUser
 
     /**
      * @param string $adresse
+     * @return Candidat
      */
-    public function setAdresse(string $adresse): void
+    public function setAdresse(string $adresse): Candidat
     {
         $this->adresse = $adresse;
+
+        return $this;
     }
 
     public function flush(): void
@@ -71,8 +77,8 @@ class Candidat extends GenericUser
             ->setBoolean('verification', $this->isVerification())
             ->setString('motdepasse', $this->getMotdepasse())
             ->setString('sel', $this->getSel())
-            ->run()
-            ->getOneOrNullResult();
+
+            ->run()->getOneOrNullResult();
 
         $this->id = $result['id'];
     }
