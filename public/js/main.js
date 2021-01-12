@@ -21,5 +21,8 @@ $(document)
         $('.ui.accordion')
             .accordion()
         ;
+        $('.ui.form .ui.dropdown')
+            .dropdown()
+        ;
     })
 ;

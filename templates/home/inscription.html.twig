@@ -12,7 +12,7 @@
             <div class="ui container stackable middle aligned grid">
                 <div>
                     <h3>Création compte candidat</h3>
-                    <form class="ui form">
+                    <form class="ui form" method="post">
                         <div class="field">
                             <label>Nom</label>
                             <input type="text" name="nom" placeholder="Nom">
@@ -33,6 +33,10 @@
                             <label>Mot de passe</label>
                             <input type="password" name="mot-de-passe">
                         </div>
+                        <div class="field">
+                            <label>Répéter le mot de passe</label>
+                            <input type="password" name="mot-de-passe-r">
+                        </div>
 
                         <div class="field">
                             <div class="ui checkbox">
@@ -51,7 +55,7 @@
             <div class="ui container stackable middle aligned grid">
                 <div>
                     <h3>Création compte employeur</h3>
-                    <form class="ui form">
+                    <form class="ui form" method="post">
                         <div class="field">
                             <label>Nom</label>
                             <input type="text" name="nom" placeholder="Nom">
@@ -68,7 +72,13 @@
                             <label>Adresse de l'entreprise</label>
                             <input type="text" name="adresse-entreprise" placeholder="Adresse entreprise">
                         </div>
-                        <Button class="ui button"><i class="paperclip icon"></i>Logo de l'entreprise</Button>
+                        <div class="field">
+                            <label class="ui button" for="employeur-logo">
+                                <i class="paperclip icon"></i>
+                                Logo de l'entreprise
+                                <input type="file" style="display: none;" id="employeur-logo" name="logo-entreprise">
+                            </label>
+                        </div>
                         <div class="field">
                             <label>N° de Siret</label>
                             <input type="text" name="siret" placeholder="N° Siret">
@@ -128,6 +138,14 @@
                         <div class="field">
                             <label>Téléphone</label>
                             <input type="text" name="telephone" placeholder="Téléphone">
+                        </div>
+                        <div class="field">
+                            <label>Mot de passe</label>
+                            <input type="password" name="mot-de-passe">
+                        </div>
+                        <div class="field">
+                            <label>Répéter le mot de passe</label>
+                            <input type="password" name="mot-de-passe-r">
                         </div>
 
                         <div class="field">
@@ -147,7 +165,7 @@
             <div class="ui container stackable middle aligned grid">
                 <div>
                     <h3>Création compte auto-entrepreneur</h3>
-                    <form class="ui form">
+                    <form class="ui form" method="post">
                         <div class="field">
                             <label>Nom</label>
                             <input type="text" name="nom" placeholder="Nom">
@@ -164,7 +182,13 @@
                             <label>Adresse de l'entreprise</label>
                             <input type="text" name="adresse-entreprise" placeholder="Adresse entreprise">
                         </div>
-                        <Button class="ui button"><i class="paperclip icon"></i>Logo de l'entreprise</Button>
+                        <div class="field">
+                            <label class="ui button" for="ae-logo">
+                                <i class="paperclip icon"></i>
+                                Logo de l'entreprise
+                                <input type="file" style="display: none;" id="ae-logo" name="logo-entreprise">
+                            </label>
+                        </div>
                         <div class="field">
                             <label>N° de Siret</label>
                             <input type="text" name="siret" placeholder="N° Siret">
@@ -224,6 +248,14 @@
                         <div class="field">
                             <label>Téléphone</label>
                             <input type="text" name="telephone" placeholder="Téléphone">
+                        </div>
+                        <div class="field">
+                            <label>Mot de passe</label>
+                            <input type="password" name="mot-de-passe">
+                        </div>
+                        <div class="field">
+                            <label>Répéter le mot de passe</label>
+                            <input type="password" name="mot-de-passe-r">
                         </div>
 
                         <div class="field">
