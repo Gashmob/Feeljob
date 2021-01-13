@@ -70,11 +70,12 @@ class Candidat extends GenericUser
     public function flush(): void
     {
         if ($this->id != null) { // Si l'id est déjà set
-            if ((new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = $id RETURN c')) // Si le node existe déjà
-                ->setInteger('id', $this->id)
-                    ->run()->getOneOrNullResult() != null) {
+            if ((new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = $id RETURN c'))
+                    ->setInteger('id', $this->id)
+                    ->run()->getOneOrNullResult() != null) { // Si le node existe déjà
                 // Update les valeurs
-                (new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = 36 SET c.nom=$nom, c.prenom=$prenom, c.telephone=$telephone, c.adresse=$adresse, c.mail=$mail, c.verification=$verification, c.motdepasse=$motdepasse, c.sel=$sel'))
+                (new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = $id SET c.nom=$nom, c.prenom=$prenom, c.telephone=$telephone, c.adresse=$adresse, c.mail=$mail, c.verification=$verification, c.motdepasse=$motdepasse, c.sel=$sel'))
+                    ->setInteger('id', $this->id)
                     ->setString('nom', $this->getNom())
                     ->setString('prenom', $this->getPrenom())
                     ->setString('telephone', $this->telephone)

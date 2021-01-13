@@ -254,7 +254,33 @@ class AutoEntrepreneur extends GenericUser
 
     public function flush(): void // TODO : redo this
     {
-        $result = (new PreparedQuery('MERGE (a:AutoEntrepreneur {nom:$nom, prenom:$prenom, nomEntreprise:$nomEntreprise, adresse:$adresse, logo:$logo, carte:$carte, description:$description, mail:$mail, verification:$verification, motdepasse:$motepasse, sel:$sel, abonne:$abonne, siret:$siret, telephone:$telephone}) RETURN ID(a) as id'))
+        if ($this->id != null) { // Si l'id est déjà set
+            if ((new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE ID(a) = $id RETURN a'))
+                    ->setInteger('id', $this->id)
+                    ->run()->getOneOrNullResult() != null) { // Si le node existe déjà
+                // Update les valeurs
+                (new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE ID(a) = $id SET a.nom=$nom, a.prenom=$prenom, a.nomEntreprise=$nomEntreprise, a.adresse=$adresse, a.logo=$logo, a.carte=$carte, a.description=$description, a.mail=$mail, a.verification=$verification, a.motdepasse=$motdepasse, a.sel=$sel, a.abonne=$abonne, a.siret=$siret, a.telephone=$telephone'))
+                    ->setInteger('id', $this->id)
+                    ->setString('nom', $this->getNom())
+                    ->setString('prenom', $this->getPrenom())
+                    ->setString('nomEntreprise', $this->nom_entreprise)
+                    ->setString('adresse', $this->adresse)
+                    ->setString('logo', $this->logo)
+                    ->setString('carte', $this->carte)
+                    ->setString('description', $this->description)
+                    ->setString('mail', $this->getMail())
+                    ->setBoolean('verification', $this->isVerification())
+                    ->setString('motdepasse', $this->getMotdepasse())
+                    ->setString('sel', $this->getSel())
+                    ->setBoolean('abonne', $this->abonne)
+                    ->setString('siret', $this->siret)
+                    ->setString('telephone', $this->telephone)
+                    ->run();
+                return;
+            }
+        }
+
+        $result = (new PreparedQuery('CREATE (a:AutoEntrepreneur {nom:$nom, prenom:$prenom, nomEntreprise:$nomEntreprise, adresse:$adresse, logo:$logo, carte:$carte, description:$description, mail:$mail, verification:$verification, motdepasse:$motdepasse, sel:$sel, abonne:$abonne, siret:$siret, telephone:$telephone}) RETURN ID(a) as id'))
             ->setString('nom', $this->getNom())
             ->setString('prenom', $this->getPrenom())
             ->setString('nomEntreprise', $this->nom_entreprise)
@@ -269,7 +295,6 @@ class AutoEntrepreneur extends GenericUser
             ->setBoolean('abonne', $this->abonne)
             ->setString('siret', $this->siret)
             ->setString('telephone', $this->telephone)
-
             ->run()->getOneOrNullResult();
 
         $this->id = $result['id'];
