@@ -82,7 +82,7 @@ class HomeController extends AbstractController
     public function connection(): Response
     {
         if ($this->session->get('user')) {
-            return $this->redirectToRoute('homepage'); // TODO : Changer plus tard pour mettre vers l'espace utilisateur
+            return $this->redirectToRoute('userSpace');
         }
 
         return $this->render('home/connexion.html.twig');
@@ -99,7 +99,7 @@ class HomeController extends AbstractController
     public function inscription(string $tab, Request $request, MailerInterface $mailer): Response
     {
         if ($this->session->get('user')) {
-            return $this->redirectToRoute('homepage'); // TODO : Changer plus tard pour mettre vers l'espace utilisateur
+            return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {

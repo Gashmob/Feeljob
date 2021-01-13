@@ -252,7 +252,7 @@ class AutoEntrepreneur extends GenericUser
         return $this;
     }
 
-    public function flush(): void // TODO : redo this
+    public function flush(): void
     {
         if ($this->id != null) { // Si l'id est déjà set
             if ((new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE ID(a) = $id RETURN a'))
