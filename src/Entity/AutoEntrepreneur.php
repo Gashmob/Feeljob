@@ -252,7 +252,7 @@ class AutoEntrepreneur extends GenericUser
         return $this;
     }
 
-    public function flush(): void
+    public function flush(): void // TODO : redo this
     {
         $result = (new PreparedQuery('MERGE (a:AutoEntrepreneur {nom:$nom, prenom:$prenom, nomEntreprise:$nomEntreprise, adresse:$adresse, logo:$logo, carte:$carte, description:$description, mail:$mail, verification:$verification, motdepasse:$motepasse, sel:$sel, abonne:$abonne, siret:$siret, telephone:$telephone}) RETURN ID(a) as id'))
             ->setString('nom', $this->getNom())

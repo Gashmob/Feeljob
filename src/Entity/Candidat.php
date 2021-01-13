@@ -69,7 +69,27 @@ class Candidat extends GenericUser
 
     public function flush(): void
     {
-        $result = (new PreparedQuery('MERGE (c:Candidat {nom:$nom, prenom:$prenom, telephone:$telephone, mail:$mail, verification:$verification, motdepasse:$motdepasse, sel:$sel}) RETURN id(c) AS id'))
+        if ($this->id != null) { // Si l'id est déjà set
+            if ((new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = $id RETURN c')) // Si le node existe déjà
+                ->setInteger('id', $this->id)
+                    ->run()->getOneOrNullResult() != null) {
+                // Update les valeurs
+                (new PreparedQuery('MATCH (c:Candidat) WHERE ID(c) = 36 SET c.nom=$nom, c.prenom=$prenom, c.telephone=$telephone, c.adresse=$adresse, c.mail=$mail, c.verification=$verification, c.motdepasse=$motdepasse, c.sel=$sel'))
+                    ->setString('nom', $this->getNom())
+                    ->setString('prenom', $this->getPrenom())
+                    ->setString('telephone', $this->telephone)
+                    ->setString('adresse', $this->adresse)
+                    ->setString('mail', $this->getMail())
+                    ->setBoolean('verification', $this->isVerification())
+                    ->setString('motdepasse', $this->getMotdepasse())
+                    ->setString('sel', $this->getSel())
+                    ->run();
+
+                return;
+            }
+        }
+        // Sinon création du nouveau node
+        $result = (new PreparedQuery('CREATE (c:Candidat {nom:$nom, prenom:$prenom, telephone:$telephone, mail:$mail, verification:$verification, motdepasse:$motdepasse, sel:$sel}) RETURN id(c) AS id'))
             ->setString('nom', $this->getNom())
             ->setString('prenom', $this->getPrenom())
             ->setString('telephone', $this->telephone)
@@ -77,7 +97,6 @@ class Candidat extends GenericUser
             ->setBoolean('verification', $this->isVerification())
             ->setString('motdepasse', $this->getMotdepasse())
             ->setString('sel', $this->getSel())
-
             ->run()->getOneOrNullResult();
 
         $this->id = $result['id'];
