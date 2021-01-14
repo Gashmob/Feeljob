@@ -6,9 +6,9 @@
             <div class="ui large inverted pointing secondary menu">
                 <div class="ui container">
                     <a href="{{ path('homepage') }}" class="active item">Accueil</a>
-                    <a href="{{ path('showEmployeur') }}" class="item">Employeur</a>
-                    <a href="{{ path('showCandidat') }}" class="item">Candidat</a>
-                    <a href="{{ path('showAuto') }}" class="ui dropdown item">
+                    <a href="{{ path('show', {type:'entreprise'}) }}" class="active item">Employeur</a>
+                    <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidat</a>
+                    <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="ui dropdown item">
                         Auto-entrepreneurs
                         <i class="dropdown icon"></i>
                         <div class="menu">

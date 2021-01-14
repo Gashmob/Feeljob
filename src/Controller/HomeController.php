@@ -50,30 +50,25 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/candidats", name="showCandidat")
+     * @Route("/show/{type}", name="show")
+     * @param $type
      * @return Response
      */
-    public function showCandidat(): Response
+    public function show($type): Response
     {
-        return $this->render('home/candidat.html.twig');
-    }
+        switch ($type) {
+            case 'candidat':
+                return $this->render('home/candidat.html.twig');
 
-    /**
-     * @Route("/employeurs", name="showEmployeur")
-     * @return Response
-     */
-    public function showEmployeur(): Response
-    {
-        return $this->render('home/employeur.html.twig');
-    }
+            case 'entreprise':
+                return $this->render('home/employeur.html.twig');
 
-    /**
-     * @Route("/auto-entrepreneur", name="showAuto")
-     * @return Response
-     */
-    public function showAuto(): Response
-    {
-        return $this->render('home/autoEntrepreneurs.html.twig');
+            case 'autoEntrepreneur':
+                return $this->render('home/autoEntrepreneurs.html.twig');
+
+            default:
+                return $this->render('@Twig/Exception/error404.html.twig');
+        }
     }
 
     /**
