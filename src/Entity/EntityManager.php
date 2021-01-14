@@ -60,6 +60,42 @@ abstract class EntityManager
         );
     }
 
+    /**
+     * @param string $mail
+     * @return GenericUser|null
+     */
+    public static function getGenericUserFromMail(string $mail): ?GenericUser
+    {
+        $result = (new PreparedQuery('MATCH (u) WHERE u.mail=$mail RETURN u, ID(u) as id'))
+            ->setString('mail', $mail)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : new GenericUser(
+            $result['u']['prenom'],
+            $result['u']['nom'],
+            $result['u']['mail'],
+            $result['u']['verification'],
+            $result['u']['motdepasse'],
+            $result['u']['sel'],
+            $result['id'][0]
+        );
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public static function getUserTypeFromId(int $id): string
+    {
+        $result = (new PreparedQuery('MATCH (u) WHERE ID(u)=$id RETURN LABELS(u) as label'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result['label'][0];
+    }
+
     /* -- Example --
 
     public static function getUserFromUsername(string $username)

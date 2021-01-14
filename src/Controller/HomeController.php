@@ -77,12 +77,36 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/connexion", name="connection")
+     * @Route("/connection", name="connection")
+     * @param Request $request
+     * @return Response
      */
-    public function connection(): Response
+    public function connection(Request $request): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $mail = $request->get('mail');
+
+            $user = EntityManager::getGenericUserFromMail($mail);
+            if ($user) {
+                $motdepasse = $request->get('motdepasse');
+
+                if (password_verify(hash('sha512', hash('sha512', $motdepasse . $user->getSel())), $user->getMotdepasse())) {
+                    $this->session->set('user', $user->getId());
+                    $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
+
+                    $this->addFlash('success', 'Vous êtes connecté !');
+
+                    return $this->redirectToRoute('userSpace');
+                } else {
+                    $this->addFlash('form', 'Identifiants incorrects');
+                }
+            } else {
+                $this->addFlash('form', 'Identifiants incorrects');
+            }
         }
 
         return $this->render('home/connexion.html.twig');
@@ -459,7 +483,7 @@ class HomeController extends AbstractController
     private function sendMailAndWait(MailerInterface $mailer, GenericUser $user): RedirectResponse
     {
         $email = (new TemplatedEmail())
-        ->from('no-reply@fealjob.com')
+            ->from('no-reply@fealjob.com')
             ->to($user->getMail())
             ->htmlTemplate('emails/verification.html.twig')
             ->context([
