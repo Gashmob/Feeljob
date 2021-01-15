@@ -71,6 +71,7 @@ class Employeur extends GenericUser
 
     public function flush(): void
     {
+        (new PreparedQuery(''))->run();
     }
 
     /**
