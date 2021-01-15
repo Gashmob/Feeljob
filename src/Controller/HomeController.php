@@ -4,11 +4,12 @@
 namespace App\Controller;
 
 
+use App\database\EntityManager;
+use App\database\exceptions\UserNotFoundException;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
-use App\Entity\Employeur;
-use App\Entity\EntityManager;
-use App\Entity\GenericUser;
+use App\Entity\Entreprise;
+use Doctrine\ORM\EntityManagerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -112,10 +113,11 @@ class HomeController extends AbstractController
      * @param string $tab
      * @param Request $request
      * @param MailerInterface $mailer
+     * @param EntityManagerInterface $em
      * @return Response
      * @throws TransportExceptionInterface
      */
-    public function inscription(string $tab, Request $request, MailerInterface $mailer): Response
+    public function inscription(string $tab, Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -173,10 +175,13 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB) {
-                        $candidat = new Candidat($prenom, $nom, $mail, false, $telephone, "", $motdepasse, $salt);
-                        $candidat->flush();
+                        $candidat = new Candidat();
+                        $candidat->setPrenom($prenom)
+                            ->setNom($nom)
+                            ->setTelephone($telephone);
+                        EntityManager::createCandidat($candidat, $em, $motdepasse, $salt, $mail);
 
-                        return $this->sendMailAndWait($mailer, $candidat);
+                        return $this->sendMailAndWait($mailer, $mail, $candidat->getPrenom(), $candidat->getNom(), $candidat->getId());
                     }
                     break;
 
@@ -256,11 +261,17 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
-                        $employeur = new Employeur($nom, $prenom, $nomEntreprise, $adresse, $logo, $siret,
-                            $description, $mail, $telephone, false, $motdepasse, $salt, $activite);
-                        $employeur->flush();
+                        $entreprise = new Entreprise();
+                        $entreprise->setNom($nom)
+                            ->setPrenom($prenom)
+                            ->setNomEntreprise($nomEntreprise)
+                            ->setLogo($logo)
+                            ->setSiret($siret)
+                            ->setDescription($description)
+                            ->setTelephone($telephone);
+                        EntityManager::createEntreprise($entreprise, $em, $motdepasse, $salt, $mail, $activite);
 
-                        return $this->sendMailAndWait($mailer, $employeur);
+                        return $this->sendMailAndWait($mailer, $mail, $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getId());
                     }
                     break;
 
@@ -340,10 +351,18 @@ class HomeController extends AbstractController
                     $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
-                        $auto = new AutoEntrepreneur($prenom, $nom, $mail, false, $motdepasse, $salt, $nomEntreprise, $adresse, $logo, $siret, $description, $telephone, "", false, $activite);
-                        $auto->flush();
+                        $autoEntrepreneur = new AutoEntrepreneur();
+                        $autoEntrepreneur->setPrenom($prenom)
+                            ->setNom($nom)
+                            ->setTelephone($telephone)
+                            ->setDescription($description)
+                            ->setSiret($siret)
+                            ->setLogo($logo)
+                            ->setNomEntreprise($nomEntreprise)
+                            ->setAbonne(false);
+                        EntityManager::createAutoEntrepreneur($autoEntrepreneur, $em, $motdepasse, $salt, $mail, $activite);
 
-                        return $this->sendMailAndWait($mailer, $auto);
+                        return $this->sendMailAndWait($mailer, $mail, $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getId());
                     }
                     break;
 
@@ -362,10 +381,12 @@ class HomeController extends AbstractController
      * @param $id
      * @param Request $request
      * @param MailerInterface $mailer
+     * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws TransportExceptionInterface
+     * @throws UserNotFoundException
      */
-    public function waitVerifEmail($id, Request $request, MailerInterface $mailer)
+    public function waitVerifEmail($id, Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
         if ($id === '') {
             return $this->redirectToRoute('homepage');
@@ -373,14 +394,15 @@ class HomeController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $user = EntityManager::getGenericUserFromId($id);
+            $nomPrenom = EntityManager::getNomPrenomFromId($id, $em);
             if ($user) {
                 $email = (new TemplatedEmail())
                     ->from('no-reply@fealjob.com')
-                    ->to($user->getMail())
+                    ->to($user->getEmail())
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([
-                        'nom' => $user->getNom(),
-                        'prenom' => $user->getPrenom()
+                        'nom' => $nomPrenom['nom'],
+                        'prenom' => $nomPrenom['prenom']
                     ]);
                 $mailer->send($email);
                 $this->addFlash('success', 'Email envoyé !');
@@ -403,7 +425,8 @@ class HomeController extends AbstractController
 
         $user = EntityManager::getGenericUserFromId($id);
         if ($user) {
-            $user->setVerification(true);
+            $user->setVerifie(true);
+
             return $this->redirectToRoute('connection');
         }
 
@@ -471,23 +494,26 @@ class HomeController extends AbstractController
 
     /**
      * @param MailerInterface $mailer
-     * @param GenericUser $user
+     * @param string $email
+     * @param string $prenom
+     * @param string $nom
+     * @param int $id
      * @return RedirectResponse
      * @throws TransportExceptionInterface
      */
-    private function sendMailAndWait(MailerInterface $mailer, GenericUser $user): RedirectResponse
+    private function sendMailAndWait(MailerInterface $mailer, string $email, string $prenom, string $nom, int $id): RedirectResponse
     {
         $email = (new TemplatedEmail())
             ->from('no-reply@fealjob.com')
-            ->to($user->getMail())
+            ->to($email)
             ->htmlTemplate('emails/verification.html.twig')
             ->context([
-                'nom' => $user->getNom(),
-                'prenom' => $user->getPrenom()
+                'nom' => $nom,
+                'prenom' => $prenom
             ]);
         $mailer->send($email);
 
         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-        return $this->redirectToRoute('waitVerifEmail', ['id' => $user->getId()]);
+        return $this->redirectToRoute('waitVerifEmail', ['id' => $id]);
     }
 }

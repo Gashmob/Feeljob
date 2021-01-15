@@ -38,26 +38,6 @@ class AutoEntrepreneur
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $verifie;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $motdepasse;
-
-    /**
-     * @ORM\Column(type="string", length=16)
-     */
-    private $sel;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $logo;
@@ -131,54 +111,6 @@ class AutoEntrepreneur
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getVerifie(): ?bool
-    {
-        return $this->verifie;
-    }
-
-    public function setVerifie(bool $verifie): self
-    {
-        $this->verifie = $verifie;
-
-        return $this;
-    }
-
-    public function getMotdepasse(): ?string
-    {
-        return $this->motdepasse;
-    }
-
-    public function setMotdepasse(string $motdepasse): self
-    {
-        $this->motdepasse = $motdepasse;
-
-        return $this;
-    }
-
-    public function getSel(): ?string
-    {
-        return $this->sel;
-    }
-
-    public function setSel(string $sel): self
-    {
-        $this->sel = $sel;
 
         return $this;
     }
