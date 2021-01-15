@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CandidatRepository;
+use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CandidatRepository::class)
+ * @ORM\Entity(repositoryClass=EntrepriseRepository::class)
  */
-class Candidat
+class Entreprise
 {
     /**
      * @ORM\Id
@@ -26,6 +26,11 @@ class Candidat
      * @ORM\Column(type="string", length=50)
      */
     private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nomEntreprise;
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
@@ -53,14 +58,19 @@ class Candidat
     private $sel;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $naissance;
+    private $logo;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $permis;
+    private $siret;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     public function getId(): ?int
     {
@@ -87,6 +97,18 @@ class Candidat
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getNomEntreprise(): ?string
+    {
+        return $this->nomEntreprise;
+    }
+
+    public function setNomEntreprise(string $nomEntreprise): self
+    {
+        $this->nomEntreprise = $nomEntreprise;
 
         return $this;
     }
@@ -151,26 +173,38 @@ class Candidat
         return $this;
     }
 
-    public function getNaissance(): ?string
+    public function getLogo(): ?string
     {
-        return $this->naissance;
+        return $this->logo;
     }
 
-    public function setNaissance(?string $naissance): self
+    public function setLogo(?string $logo): self
     {
-        $this->naissance = $naissance;
+        $this->logo = $logo;
 
         return $this;
     }
 
-    public function getPermis(): ?bool
+    public function getSiret(): ?string
     {
-        return $this->permis;
+        return $this->siret;
     }
 
-    public function setPermis(?bool $permis): self
+    public function setSiret(string $siret): self
     {
-        $this->permis = $permis;
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
