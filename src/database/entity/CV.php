@@ -20,10 +20,6 @@ class CV
      * @var string
      */
     private string $photo;
-    /**
-     * @var bool
-     */
-    private bool $permis;
 
     /**
      * @return int
@@ -82,31 +78,11 @@ class CV
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPermis(): bool
-    {
-        return $this->permis;
-    }
-
-    /**
-     * @param bool $permis
-     * @return CV
-     */
-    public function setPermis(bool $permis): self
-    {
-        $this->permis = $permis;
-
-        return $this;
-    }
-
     public function flush()
     {
-        $result = (new PreparedQuery('CREATE (c:CV {nom:$nom, photo:$photo, permis:$permis}) RETURN id(c) AS id'))
+        $result = (new PreparedQuery('CREATE (c:CV {nom:$nom, photo:$photo}) RETURN id(c) AS id'))
             ->setString('nom', $this->nom)
             ->setString('photo', $this->photo)
-            ->setBoolean('permis', $this->permis)
             ->run()
             ->getOneOrNullResult();
 

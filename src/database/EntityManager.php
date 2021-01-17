@@ -436,4 +436,109 @@ abstract class EntityManager
             ->setInteger('id', $cv->getId())
             ->run();
     }
+
+    /**
+     * @param int $id
+     * @param EntityManagerInterface $em
+     * @return array
+     */
+    public static function getCVArrayFromId(int $id, EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        // Données génériques
+        $cv = (new PreparedQuery('MATCH (c:CV) WHERE id(c)=$id RETURN c'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+        $res['intitule'] = $cv['c']['nom'];
+        $res['photo'] = $cv['c']['photo'];
+
+        // Données candidat
+        $user = (new PreparedQuery('MATCH (c:CV)--(ca:Candidat) WHERE id(c)=$id RETURN ca, id(ca) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+        $res['email'] = $user['ca']['email'];
+        $candidat = $em->getRepository(Candidat::class)->findOneBy(['identity' => $user['id'][0]]);
+        $res['nom'] = $candidat->getNom();
+        $res['prenom'] = $candidat->getPrenom();
+        $res['permis'] = $candidat->getPermis();
+        $res['telephone'] = $candidat->getTelephone();
+        $res['naissance'] = $candidat->getNaissance();
+
+        // Donnée métier
+        $metier = (new PreparedQuery('MATCH (c:CV)--(m:Metier) WHERE id(c)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+        $res['metier'] = $metier['m']['nom'];
+
+        // Donnée famille
+        $famille = (new PreparedQuery('MATCH (c:CV)--(f:Famille) WHERE id(c)=$id RETURN f'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+        $res['famille'] = $famille['f']['nom'];
+
+        // Données diplomes
+        $diplomes = (new PreparedQuery('MATCH (c:CV)-[r]-(d:Diplome) WHERE id(c)=$id RETURN r, d'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+        $d = [];
+        for ($i = 0; $i < sizeof($diplomes); $i++) {
+            $diplome['nom'] = $diplomes[$i]['d']['nom'];
+            $diplome['date'] = $diplomes[$i]['r']['date'];
+
+            $d[] = $diplome;
+        }
+        $res['diplomes'] = $d;
+
+        // Données expériences
+        $experiences = (new PreparedQuery('MATCH (c:CV)-[r]-(e:Experience) WHERE id(c)=$id RETURN r, e'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+        $e = [];
+        for ($i = 0; $i < sizeof($experiences); $i++) {
+            $experience['nomEntreprise'] = $experiences[$i]['e']['nom'];
+            $experience['duree'] = $experiences[$i]['r']['duree'];
+            $experience['poste'] = $experiences[$i]['r']['poste'];
+
+            $e[] = $experience;
+        }
+        $res['experiences'] = $e;
+
+        // Données langues
+        $langues = (new PreparedQuery('MATCH (c:CV)--(l:Langue) WHERE id(c)=$id RETURN l'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+        $l = [];
+        foreach ($langues as $langue) {
+            $l[] = $langue['l']['nom'];
+        }
+        $res['langues'] = $l;
+
+        // Données déplacements
+        $deplacements = (new PreparedQuery('MATCH (c:CV)--(d:Deplacement) WHERE id(c)=$id RETURN d'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+        $d = [];
+        foreach ($deplacements as $deplacement) {
+            $d[] = $deplacement['d']['nom'];
+        }
+        $res['deplacement'] = $d;
+
+        // Donnée contrat
+        $contrat = (new PreparedQuery('MATCH (c:CV)--(t:TypeContrat) WHERE id(c)=$id RETURN t'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+        $res['contrat'] = $contrat['t']['nom'];
+
+        return $res;
+    }
 }

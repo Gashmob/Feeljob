@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\entity\CV;
 use App\database\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,19 @@ class CandidatController extends AbstractController
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
+    }
+
+    /**
+     * @Route("/cv/{id}", name="show_cv")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function showCV($id, EntityManagerInterface $em): Response
+    {
+        return $this->render('candidat/showCV.html.twig', [
+            'cv' => EntityManager::getCVArrayFromId($id, $em)
+        ]);
     }
 
     /**
@@ -72,8 +86,6 @@ class CandidatController extends AbstractController
 
             $langues = $request->get('langues');
 
-            $permis = $request->get('permis');
-
             $deplacements = $request->get('deplacements');
 
             $typeContrat = $request->get('typeContrat');
@@ -81,7 +93,6 @@ class CandidatController extends AbstractController
             if ($nomB && $diplomesB && $experiencesB) {
                 $cv = new CV();
                 $cv->setNom($nom)
-                    ->setPermis($permis)
                     ->setPhoto($photo);
                 EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat);
 
