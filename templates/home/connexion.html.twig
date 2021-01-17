@@ -1,43 +1,62 @@
-{% extends 'base.html.twig' %}
+{% extends 'init.html.twig' %}
 {% block title %}FealJob - Connexion{% endblock %}
 {% block body %}
-    <div class="ui placeholder segment">
-        <div class="ui two column very relaxed stackable grid">
-            <div class="column">
-                <div class="ui form">
+    <style type="text/css">
+        body {
+            background-color: #fafbfc;
+        }
+
+        body > .grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+    </style>
+    <svg style="position:absolute; top: -30px; right: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#21ba45" fill-opacity="1" d="M0,64L48,85.3C96,107,192,149,288,138.7C384,128,480,64,576,48C672,32,768,64,864,106.7C960,149,1056,203,1152,229.3C1248,256,1344,256,1392,256L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+    <a href="{{ path('homepage') }}" class="ui compact labeled icon button"
+       style="position: fixed; top: 20px; left: 20px;">
+        <i class="left arrow icon"></i>
+        Retour à l'accueil
+    </a>
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui green image header">
+                <img src="{{ asset('img/FJ200.png') }}" class="image">
+                <div class="content">
+                    Connexion
+                </div>
+            </h2>
+            <form class="ui large form">
+                <div class="ui stacked segment">
                     <div class="field">
-                        <label>Identifiant</label>
                         <div class="ui left icon input">
-                            <input type="text" placeholder="Identifiant">
                             <i class="user icon"></i>
+                            <input type="text" name="email" placeholder="Adresse e-mail">
                         </div>
                     </div>
                     <div class="field">
-                        <label>Mot de passe</label>
                         <div class="ui left icon input">
-                            <input type="password">
                             <i class="lock icon"></i>
+                            <input type="password" name="password" placeholder="Mot de passe">
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="ui blue submit button">Connexion</div>
-                    </div>
-                    <div class="field">
-                        <label><a>J'ai oublié mon mot de passe</a></label>
+                    <div class="ui fluid large green submit button">Se connecter</div>
+                    <div class="ui error message"></div>
+                    <div class="ui divider"></div>
+                    <div>
+                        Vous ne possédez pas de compte? <a
+                                href="{{ path('inscription', {'tab': 'candidat'}) }}">Inscrivez-vous</a>
+                        <br>
+                        <a href="">J'ai oublié mon mot de passe.</a>
                     </div>
                 </div>
-            </div>
-            <div class="middle aligned column">
-                <a href="{{ path('inscription', {'tab': 'candidat'}) }}" class="ui green big button">
-                    <div>
-                        <i class="signup icon"></i>
-                        S'inscrire
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="ui vertical divider">
-            Ou
+            </form>
         </div>
     </div>
 {% endblock %}

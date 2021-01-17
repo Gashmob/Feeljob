@@ -1,7 +1,24 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div>
-        <div class="ui vertical center aligned segment">
+    <style type="text/css">
+        body {
+            background-color: #fafbfc;
+        }
+
+        body > .grid {
+            min-height: 60%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+    </style>
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
             <h2 class="ui icon header">
                 <i class="icon at"></i>
                 <div class="content">

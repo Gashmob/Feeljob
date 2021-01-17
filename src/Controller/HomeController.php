@@ -73,11 +73,11 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/connection", name="connection")
+     * @Route("/connexion", name="connexion")
      * @param Request $request
      * @return Response
      */
-    public function connection(Request $request): Response
+    public function connexion(Request $request): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -428,7 +428,7 @@ class HomeController extends AbstractController
             $user->setVerifie(true);
             $user->flush();
 
-            return $this->redirectToRoute('connection');
+            return $this->redirectToRoute('connexion');
         }
 
         return $this->redirectToRoute('homepage');
