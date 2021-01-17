@@ -475,7 +475,7 @@ class HomeController extends AbstractController
             $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'svg');
 
             if (in_array($fileExtension, $allowedfileExtensions)) {
-                $uploadFileDir = './uploads/';
+                $uploadFileDir = './uploads/logos/';
                 $dest_path = $uploadFileDir . $newFileName;
 
                 if (move_uploaded_file($fileTmpPath, $dest_path)) {

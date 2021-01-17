@@ -38,7 +38,7 @@ class EntrepriseController extends AbstractController
     public function createEmploi(Request $request, EntityManagerInterface $em): Response
     {
         if (!$this->session->get('user')) {
-            $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage');
         }
 
         if ($request->isMethod('POST')) {
@@ -127,6 +127,7 @@ class EntrepriseController extends AbstractController
                     ->setNbRecrutement($nbRecrutement);
                 EntityManager::createOffreEmploi($offre, $em, $typeContrat, $this->session->get('user'));
 
+                $this->addFlash('success', 'Votre offre d\'emploi a été créé');
                 return $this->redirectToRoute('userSpace');
             }
         }
