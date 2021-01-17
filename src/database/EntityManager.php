@@ -23,7 +23,7 @@ abstract class EntityManager
      */
     public static function getGenericUserFromMail(string $mail): ?GenericUser
     {
-        $result = (new PreparedQuery('MATCH (u) WHERE u.mail=$mail RETURN u'))
+        $result = (new PreparedQuery('MATCH (u) WHERE u.mail=$mail RETURN u, ID(u) AS id'))
             ->setString('mail', $mail)
             ->run()
             ->getOneOrNullResult();
@@ -33,7 +33,7 @@ abstract class EntityManager
             $result['u']['verifie'],
             $result['u']['motdepasse'],
             $result['u']['sel'],
-            $result['u']['id']
+            $result['id'][0]
         );
     }
 
@@ -43,7 +43,7 @@ abstract class EntityManager
      */
     public static function getUserTypeFromId(int $id): string
     {
-        $result = (new PreparedQuery('MATCH (u) WHERE u.id=$id RETURN LABELS(u) as label'))
+        $result = (new PreparedQuery('MATCH (u) WHERE ID(u)=$id RETURN LABELS(u) as label'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -71,16 +71,17 @@ abstract class EntityManager
      */
     public static function createCandidat(Candidat $candidat, EntityManagerInterface $em, string $motdepasse, string $sel, string $email)
     {
-        $em->persist($candidat);
-        $em->flush();
-
-        (new PreparedQuery('CREATE (:Candidat {id:$id, email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel})'))
-            ->setInteger('id', $candidat->getId())
+        $result = (new PreparedQuery('CREATE (c:Candidat {email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel}) RETURN ID(c) AS id'))
             ->setString('email', $email)
             ->setBoolean('verifie', false)
             ->setString('motdepasse', $motdepasse)
             ->setString('sel', $sel)
-            ->run();
+            ->run()
+            ->getOneOrNullResult();
+
+        $candidat->setIdentity($result['id'][0]);
+        $em->persist($candidat);
+        $em->flush();
     }
 
     /**
@@ -93,16 +94,13 @@ abstract class EntityManager
      */
     public static function createEntreprise(Entreprise $entreprise, EntityManagerInterface $em, string $motdepasse, string $sel, string $email, array $activites)
     {
-        $em->persist($entreprise);
-        $em->flush();
-
-        (new PreparedQuery('CREATE (:Candidat {id:$id, email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel})'))
-            ->setInteger('id', $entreprise->getId())
+        $result = (new PreparedQuery('CREATE (e:Entreprise {email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel}) RETURN ID(e) AS id'))
             ->setString('email', $email)
             ->setBoolean('verifie', false)
             ->setString('motdepasse', $motdepasse)
             ->setString('sel', $sel)
-            ->run();
+            ->run()
+            ->getOneOrNullResult();
 
         foreach ($activites as $activite) {
             if ((new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}) RETURN s'))
@@ -120,6 +118,10 @@ abstract class EntityManager
                     ->run();
             }
         }
+
+        $entreprise->setIdentity($result['id'][0]);
+        $em->persist($entreprise);
+        $em->flush();
     }
 
     /**
@@ -132,16 +134,13 @@ abstract class EntityManager
      */
     public static function createAutoEntrepreneur(AutoEntrepreneur $autoEntrepreneur, EntityManagerInterface $em, string $motdepasse, string $sel, string $email, string $activite)
     {
-        $em->persist($autoEntrepreneur);
-        $em->flush();
-
-        (new PreparedQuery('CREATE (:Candidat {id:$id, email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel})'))
-            ->setInteger('id', $autoEntrepreneur->getId())
+        $result = (new PreparedQuery('CREATE (a:AutoEntrepreneur {email:$email, verifie:$verifie, motdepasse:$motdepasse, sel:$sel}) RETURN ID(a) AS id'))
             ->setString('email', $email)
             ->setBoolean('verifie', false)
             ->setString('motdepasse', $motdepasse)
             ->setString('sel', $sel)
-            ->run();
+            ->run()
+            ->getOneOrNullResult();
 
         if ((new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}) RETURN s'))
                 ->setString('nom', $activite)
@@ -157,6 +156,10 @@ abstract class EntityManager
                 ->setInteger('id', $autoEntrepreneur->getId())
                 ->run();
         }
+
+        $autoEntrepreneur->setIdentity($result['id'][0]);
+        $em->persist($autoEntrepreneur);
+        $em->flush();
     }
 
     /**
@@ -180,7 +183,7 @@ abstract class EntityManager
     public static function getGenericUserFromId(int $id): ?GenericUser
     {
 
-        $result = (new PreparedQuery('MATCH (u) WHERE u.id=$id RETURN u'))
+        $result = (new PreparedQuery('MATCH (u) WHERE ID(u)=$id RETURN u'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -201,10 +204,8 @@ abstract class EntityManager
      */
     public static function getNomPrenomFromId(int $id, EntityManagerInterface $em): array
     {
-        $type = EntityManager::getUserTypeFromId($id);
-
         $user = null;
-        switch ($type) {
+        switch (EntityManager::getUserTypeFromId($id)) {
             case 'Candidat':
                 $user = $em->getRepository(Candidat::class)->find($id);
                 break;

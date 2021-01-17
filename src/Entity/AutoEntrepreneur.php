@@ -62,6 +62,11 @@ class AutoEntrepreneur
      */
     private $abonne;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $identity;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -171,6 +176,18 @@ class AutoEntrepreneur
     public function setAbonne(bool $abonne): self
     {
         $this->abonne = $abonne;
+
+        return $this;
+    }
+
+    public function getIdentity(): ?int
+    {
+        return $this->identity;
+    }
+
+    public function setIdentity(int $identity): self
+    {
+        $this->identity = $identity;
 
         return $this;
     }

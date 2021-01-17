@@ -181,7 +181,7 @@ class HomeController extends AbstractController
                             ->setTelephone($telephone);
                         EntityManager::createCandidat($candidat, $em, $motdepasse, $salt, $mail);
 
-                        return $this->sendMailAndWait($mailer, $mail, $candidat->getPrenom(), $candidat->getNom(), $candidat->getId());
+                        return $this->sendMailAndWait($mailer, $mail, $candidat->getPrenom(), $candidat->getNom(), $candidat->getIdentity());
                     }
                     break;
 
@@ -271,7 +271,7 @@ class HomeController extends AbstractController
                             ->setTelephone($telephone);
                         EntityManager::createEntreprise($entreprise, $em, $motdepasse, $salt, $mail, $activite);
 
-                        return $this->sendMailAndWait($mailer, $mail, $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getId());
+                        return $this->sendMailAndWait($mailer, $mail, $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getIdentity());
                     }
                     break;
 
@@ -362,7 +362,7 @@ class HomeController extends AbstractController
                             ->setAbonne(false);
                         EntityManager::createAutoEntrepreneur($autoEntrepreneur, $em, $motdepasse, $salt, $mail, $activite);
 
-                        return $this->sendMailAndWait($mailer, $mail, $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getId());
+                        return $this->sendMailAndWait($mailer, $mail, $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getIdentity());
                     }
                     break;
 
