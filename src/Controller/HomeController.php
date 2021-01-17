@@ -426,6 +426,7 @@ class HomeController extends AbstractController
         $user = EntityManager::getGenericUserFromId($id);
         if ($user) {
             $user->setVerifie(true);
+            $user->flush();
 
             return $this->redirectToRoute('connection');
         }

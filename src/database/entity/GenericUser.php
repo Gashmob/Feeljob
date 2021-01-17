@@ -132,7 +132,7 @@ class GenericUser
 
     public function flush()
     {
-        (new PreparedQuery('MATCH (u) WHERE u.id=$id SET u.motdepasse=$motdepasse, u.sel=$sel, u.email=$email, u.verifie=$verifie'))
+        (new PreparedQuery('MATCH (u) WHERE ID(u)=$id SET u.motdepasse=$motdepasse, u.sel=$sel, u.email=$email, u.verifie=$verifie'))
             ->setInteger('id', $this->id)
             ->setString('motdepasse', $this->motdepasse)
             ->setString('sel', $this->sel)
