@@ -9,6 +9,7 @@ use App\database\exceptions\UserNotFoundException;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
 use App\Entity\Entreprise;
+use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -225,5 +226,32 @@ abstract class EntityManager
         if (is_null($user)) throw new UserNotFoundException();
 
         return ['nom' => $user->getNom(), 'prenom' => $user->getPrenom()];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAllTypeContratName(): array
+    {
+        $res = [];
+        $results = (new Query('MATCH (t:TypeContrat) RETURN t'))->run()->getResult();
+        foreach ($results as $result) {
+            $res[] = $result['t']['nom'];
+        }
+
+        return $res;
+    }
+
+    public static function createOffreEmploi(OffreEmploi $offreEmploi, EntityManagerInterface $em, string $typeContrat, int $idEntreprise)
+    {
+        $result = (new PreparedQuery('MATCH (t:TypeContrat {nom:$nom}), (e:Entreprise) WHERE id(e)=$id CREATE (e)-[:Publie]->(o:OffreEmploi)-[:Type]->(t) RETURN id(o) AS id'))
+            ->setString('nom', $typeContrat)
+            ->setInteger('id', $idEntreprise)
+            ->run()
+            ->getOneOrNullResult();
+
+        $offreEmploi->setIdentity($result['id'][0]);
+        $em->persist($offreEmploi);
+        $em->flush();
     }
 }
