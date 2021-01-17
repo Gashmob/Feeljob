@@ -1,10 +1,10 @@
 $(document)
-    .ready(function() {
+    .ready(function () {
         $('.ui.menu .ui.dropdown').dropdown({
             on: 'hover'
         });
         $('.ui.menu a.item')
-            .on('click', function() {
+            .on('click', function () {
                 $(this)
                     .addClass('active')
                     .siblings()
@@ -24,5 +24,8 @@ $(document)
         $('.ui.form .ui.dropdown')
             .dropdown()
         ;
+        $('.dimmable.image').dimmer({
+            on: 'hover'
+        });
     })
 ;

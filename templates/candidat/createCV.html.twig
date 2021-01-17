@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Créer un CV{% endblock %}
+{% block body %}
+    <div style="margin-top: 20px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Créer son CV
+        </h2>
+        <form class="ui form">
+            <!-- Identité -->
+            <h4 class="ui dividing header">Identité</h4>
+            <div class="ui two column grid">
+                <div class="ui four wide column">
+                    <div class="blurring dimmable image">
+                        <div class="ui dimmer">
+                            <div class="content">
+                                <div class="center">
+                                    <i class="pencil icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="{{ asset('img/placeholders/elyse.png') }}" alt="photo de profil"
+                             class="ui small circular dimmable image">
+                    </div>
+                </div>
+                <div class="ui twelve wide column">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Prénom</label>
+                            <div class="ui field">
+                                <input type="text" name="prenom" placeholder="Jean">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Nom</label>
+                            <div class="ui field">
+                                <input type="text" name="nom" placeholder="Valjean">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Né le</label>
+                            <div class="ui field">
+                                <input type="text" name="dateNaissance" placeholder="18/09/1989">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>À</label>
+                            <div class="ui field">
+                                <input type="text" name="nom" placeholder="Saint-Maurin-les-Maurilles">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="eight wide field">
+                            <label>Sexe</label>
+                            <div class="field">
+                                <select class="ui dropdown" name="sexe">
+                                    <option value="N">Non renseigné</option>
+                                    <option value="H">Homme</option>
+                                    <option value="F">Femme</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="float right eight wide field">
+                            <label>Photo de profil</label>
+                            <div class="ui small basic icon buttons">
+                                <label style="width: 150px;" class="ui button" for="photo-profil">
+                                    <i class="paperclip icon"></i>
+                                    Sélectionner
+                                    <input type="file" style="display: none;" id="photo-profil"
+                                           name="logo-entreprise">
+                                </label>
+                                <button class="ui button"><i class="times icon"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Formation -->
+            <h4 class="ui dividing header">Formation</h4>
+            <div class="field">
+                <label>Nom de l'école/Université</label>
+                <div class="field">
+                    <input type="text" name="nomEcole" placeholder="Nom de l'école">
+                </div>
+            </div>
+            <div class="field">
+                <label>Intitulé du diplôme</label>
+                <div class="field">
+                    <input type="text" name="intituleDiplome" placeholder="Intitulé du diplôme">
+                </div>
+            </div>
+            <div class="field">
+                <label>Date de fréquentation</label>
+                <div class="fields">
+                    <div class="five wide field">
+                        Du
+                        <input type="text" name="date-debut" placeholder="Date début">
+                    </div>
+                    <div class="five wide field">
+                        Au
+                        <input type="text" name="date-fin" placeholder="Date fin">
+                    </div>
+                </div>
+            </div>
+            <!-- Expérience -->
+            <h4 class="ui dividing header">Expérience professionnelle</h4>
+            <div class="field">
+                <label>Intitulé du poste</label>
+                <div class="field">
+                    <input type="text" name="intitulePoste" placeholder="Intitulé du poste">
+                </div>
+            </div>
+            <div class="field">
+                <label>Nom de l'entreprise</label>
+                <div class="field">
+                    <input type="text" name="nomEntreprise" placeholder="Nom de l'entreprise">
+                </div>
+            </div>
+            <div class="field">
+                <label>Location</label>
+                <div class="field">
+                    <input type="text" name="location" placeholder="Location">
+                </div>
+            </div>
+            <div class="field">
+                <label>Date de fréquentation</label>
+                <div class="fields">
+                    <div class="five wide field">
+                        Du
+                        <input type="text" name="date-debut" placeholder="Date début">
+                    </div>
+                    <div class="five wide field">
+                        Au
+                        <input type="text" name="date-fin" placeholder="Date fin">
+                    </div>
+                </div>
+            </div>
+            <!-- Autres -->
+            <h4 class="ui dividing header">Autres informations</h4>
+            <div class="ui segment">
+                <div class="field">
+                    <div class="ui toggle checkbox">
+                        <input type="checkbox" name="gift" tabindex="0" class="hidden">
+                        <label>Je dispose du permis B</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
+            <div class="messages">
+                <div class="ui negative message">
+                    <div class="header">
+                        Certains champs sont incorrects
+                    </div>
+                    <p>Veuillez remplir les champs mis en rouge</p>
+                </div>
+                <div class="ui icon message">
+                    <i class="notched circle loading icon"></i>
+                    <div class="content">
+                        <div class="header">
+                            Une petite seconde
+                        </div>
+                        <p>Nous sommes en cours d'enregistrement</p>
+                    </div>
+                </div>
+                <!-- Remplacer positive par success et negative par error -->
+                <div class="ui positive message">
+                    <div class="header">
+                        Votre CV a bien été enregistré
+                    </div>
+                    <p>Vous pouvez retourner à vos précentes occupations</p>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
