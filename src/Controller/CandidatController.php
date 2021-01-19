@@ -50,7 +50,11 @@ class CandidatController extends AbstractController
     public function createCV(Request $request): Response
     {
         if (!$this->session->get('user')) {
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!$this->session->get('userType') === 'Candidat') {
+            return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
