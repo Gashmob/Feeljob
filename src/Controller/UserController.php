@@ -30,6 +30,9 @@ class UserController extends AbstractController
      */
     public function userSpace(): Response
     {
+        if (!$this->session->get('user'))
+            return $this->redirectToRoute('connexion');
+
         return $this->render('home/profil.html.twig');
     }
 }
