@@ -519,4 +519,22 @@ class HomeController extends AbstractController
         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
         return $this->redirectToRoute('waitVerifEmail', ['id' => $id]);
     }
+
+    /**
+     * @Route("/cv1", name="cv1")
+     * @return Response
+     */
+    public function cv1(): Response
+    {
+        return $this->render('candidat/createCV.html.twig');
+    }
+
+    /**
+     * @Route("/cv2", name="cv2")
+     * @return Response
+     */
+    public function cv2(): Response
+    {
+        return $this->render('candidat/showCV.html.twig');
+    }
 }

@@ -6,7 +6,13 @@
             <i class="address card outline icon"></i>
             Créer son CV
         </h2>
-        <form class="ui form">
+        <form class="ui form segment">
+            <div class="inline field">
+                <label>Nom du CV :</label>
+                <div class="ui input">
+                    <input type="text" name="nomCV" value="CV #1">
+                </div>
+            </div>
             <!-- Identité -->
             <h4 class="ui dividing header">Identité</h4>
             <div class="ui two column grid">
@@ -27,41 +33,31 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Prénom</label>
-                            <div class="ui field">
-                                <input type="text" name="prenom" placeholder="Jean">
-                            </div>
+                            <input type="text" name="prenom" value="Jean">
                         </div>
                         <div class="field">
                             <label>Nom</label>
-                            <div class="ui field">
-                                <input type="text" name="nom" placeholder="Valjean">
-                            </div>
+                            <input type="text" name="nom" value="Valjean">
                         </div>
                     </div>
                     <div class="two fields">
                         <div class="field">
                             <label>Né le</label>
-                            <div class="ui field">
-                                <input type="text" name="dateNaissance" placeholder="18/09/1989">
-                            </div>
+                            <input type="text" name="dateNaissance" placeholder="18/09/1989">
                         </div>
                         <div class="field">
-                            <label>À</label>
-                            <div class="ui field">
-                                <input type="text" name="lieuNaissance" placeholder="Saint-Maurin-les-Maurilles">
-                            </div>
+                            <label>Métier</label>
+                            <input type="text" name="metier" placeholder="Développeur Web">
                         </div>
                     </div>
                     <div class="two fields">
                         <div class="eight wide field">
                             <label>Sexe</label>
-                            <div class="field">
-                                <select class="ui dropdown" name="sexe">
-                                    <option value="N">Non renseigné</option>
-                                    <option value="H">Homme</option>
-                                    <option value="F">Femme</option>
-                                </select>
-                            </div>
+                            <select class="ui dropdown" name="sexe">
+                                <option value="N">Non précisé</option>
+                                <option value="H">Homme</option>
+                                <option value="F">Femme</option>
+                            </select>
                         </div>
                         <div class="float right eight wide field">
                             <label>Photo de profil</label>
@@ -78,32 +74,56 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Adresse</label>
+                        <div class="ui left icon input">
+                            <i class="icon home"></i>
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>E-mail</label>
+                        <div class="ui left icon input">
+                            <i class="icon envelope"></i>
+                            <input type="text" name="mail" value="jean.valjean@gmail.com">
+                        </div>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <div class="ui left icon input">
+                            <i class="icon phone"></i>
+                            <input type="text" name="telephone" placeholder="Téléphone">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Situation familiale</label>
+                        <select class="ui dropdown" name="situationF">
+                            <option value="N">Non précisée</option>
+                            <option value="CELIB">Célibataire</option>
+                            <option value="MARIE">Marié.e</option>
+                            <option value="PAX">Paxé.e</option>
+                            <option value="VEUF">Veuf.ve</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <!-- Formation -->
             <h4 class="ui dividing header">Formation</h4>
             <div class="field">
-                <label>Nom de l'école/Université</label>
-                <div class="field">
-                    <input type="text" name="nomEcole" placeholder="Nom de l'école">
-                </div>
+                <label>Nom de l'établissement</label>
+                <input type="text" name="nomEtablissement" placeholder="Nom de l'établissement">
             </div>
             <div class="field">
                 <label>Intitulé du diplôme</label>
-                <div class="field">
-                    <input type="text" name="intituleDiplome" placeholder="Intitulé du diplôme">
-                </div>
+                <input type="text" name="intituleDiplome" placeholder="Intitulé du diplôme">
             </div>
             <div class="field">
-                <label>Date de fréquentation</label>
-                <div class="fields">
-                    <div class="five wide field">
-                        Du
-                        <input type="text" name="date-debut" placeholder="Date début">
-                    </div>
-                    <div class="five wide field">
-                        Au
-                        <input type="text" name="date-fin" placeholder="Date fin">
-                    </div>
-                </div>
+                <label>Date d'obtention</label>
+                <input type="text" name="dateObtention" placeholder="26/04/2013">
             </div>
             <!-- Expérience -->
             <h4 class="ui dividing header">Expérience professionnelle</h4>
@@ -143,8 +163,14 @@
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" name="gift" tabindex="0" class="hidden">
+                        <input type="checkbox" name="permisB" class="hidden">
                         <label>Je dispose du permis B</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui toggle checkbox">
+                        <input type="checkbox" name="transport" class="hidden">
+                        <label>J'ai un moyen de transport</label>
                     </div>
                 </div>
             </div>

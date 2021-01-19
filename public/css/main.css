@@ -350,7 +350,7 @@ template {
 
 /*_______________________________________END NORMALIZE_______________________________________*/
 
-.ui.menu.fixed, .ui.menu.fixed .item:first-child, .ui.menu.fixed .item:last-child {
+.ui.menu.fixed, .ui.menu.fixed .item:first-child, .ui.menu.fixed .item:last-child, .ui.menu.primaryNav {
     border-radius: 0px !important;
     border: none !important;
 }
