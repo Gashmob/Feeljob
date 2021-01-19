@@ -124,9 +124,8 @@ class HomeController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            //$request->get('tab');
-            switch ($tab) {
-                case 'chercheur':
+            switch ($request->get('tab')) {
+                case 'candidat':
                     $nom = $request->get('nom');
                     $nomB = true;
                     if ($nom === '') {
