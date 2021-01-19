@@ -109,15 +109,14 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/inscription/{tab}", defaults={"tab"="chercheur"}, name="inscription")
-     * @param string $tab
+     * @Route("/inscription", name="inscription")
      * @param Request $request
      * @param MailerInterface $mailer
      * @param EntityManagerInterface $em
      * @return Response
      * @throws TransportExceptionInterface
      */
-    public function inscription(string $tab, Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
+    public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -213,7 +212,8 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner une adresse');
                     }
 
-                    $logo = $this->uploadImage();
+                    //$logo = $this->uploadImage();
+                    $logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -223,6 +223,9 @@ class HomeController extends AbstractController
                     }
 
                     $activite = $request->get('activite');
+                    if (is_string($activite)) {
+                        $activite = [$activite];
+                    }
 
                     $description = $request->get('description');
 
@@ -243,7 +246,7 @@ class HomeController extends AbstractController
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
-                    if (!preg_match('^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$', $telephone)) {
+                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
                         $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
                     }
@@ -252,7 +255,7 @@ class HomeController extends AbstractController
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
                     if ($motdepasse != $motdepasse2 ||
-                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
@@ -303,7 +306,8 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner une adresse pour l\'entreprise');
                     }
 
-                    $logo = $this->uploadImage();
+                    //$logo = $this->uploadImage();
+                    $logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -333,7 +337,7 @@ class HomeController extends AbstractController
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
-                    if (!preg_match('^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$', $telephone)) {
+                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
                         $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
                     }
@@ -342,7 +346,7 @@ class HomeController extends AbstractController
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
                     if ($motdepasse != $motdepasse2 ||
-                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
@@ -370,7 +374,6 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/inscription.html.twig', [
-            'tab' => $tab,
             'secteurActivites' => EntityManager::getAllActivitySectorName()
         ]);
     }
