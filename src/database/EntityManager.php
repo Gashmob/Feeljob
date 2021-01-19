@@ -144,6 +144,7 @@ abstract class EntityManager
             ->setString('sel', $sel)
             ->run()
             ->getOneOrNullResult();
+        $id = $result['id'];
 
         if ((new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}) RETURN s'))
                 ->setString('nom', $activite)
@@ -151,16 +152,16 @@ abstract class EntityManager
                 ->getOneOrNullResult() != null) {
             (new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}), (e:Entreprise {id:$id}) CREATE (e)-[:estDans]->(s)'))
                 ->setString('nom', $activite)
-                ->setInteger('id', $autoEntrepreneur->getId())
+                ->setInteger('id', $id)
                 ->run();
         } else {
             (new PreparedQuery('MATCH (e:Entreprise {id:$id}) CREATE (e)-[:estDans]->(:SecteurActivite {nom:$nom})'))
                 ->setString('nom', $activite)
-                ->setInteger('id', $autoEntrepreneur->getId())
+                ->setInteger('id', $id)
                 ->run();
         }
 
-        $autoEntrepreneur->setIdentity($result['id'][0]);
+        $autoEntrepreneur->setIdentity($id);
         $em->persist($autoEntrepreneur);
         $em->flush();
     }
