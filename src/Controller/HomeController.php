@@ -142,7 +142,7 @@ class HomeController extends AbstractController
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
-                    if (!preg_match('^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\\4){3}([0-9]{2})$', $telephone)) {
+                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
                         $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
                     }
@@ -166,7 +166,7 @@ class HomeController extends AbstractController
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
                     if ($motdepasse != $motdepasse2 ||
-                        !preg_match('^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$', $motdepasse)) {
+                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }

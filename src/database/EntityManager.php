@@ -81,7 +81,7 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
 
-        $candidat->setIdentity($result['id'][0]);
+        $candidat->setIdentity($result['id']);
         $em->persist($candidat);
         $em->flush();
     }
