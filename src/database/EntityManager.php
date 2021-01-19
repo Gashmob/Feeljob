@@ -25,17 +25,17 @@ abstract class EntityManager
      */
     public static function getGenericUserFromMail(string $mail): ?GenericUser
     {
-        $result = (new PreparedQuery('MATCH (u) WHERE u.mail=$mail RETURN u, ID(u) AS id'))
+        $result = (new PreparedQuery('MATCH (u) WHERE u.email=$mail RETURN u, ID(u) AS id'))
             ->setString('mail', $mail)
             ->run()
             ->getOneOrNullResult();
 
         return $result == null ? null : new GenericUser(
-            $result['u']['mail'],
+            $result['u']['email'],
             $result['u']['verifie'],
             $result['u']['motdepasse'],
             $result['u']['sel'],
-            $result['id'][0]
+            $result['id']
         );
     }
 
@@ -59,7 +59,7 @@ abstract class EntityManager
      */
     public static function isMailUsed($mail): bool
     {
-        return count((new PreparedQuery('MATCH (u {mail:$mail}) RETURN u'))
+        return count((new PreparedQuery('MATCH (u {email:$mail}) RETURN u'))
                 ->setString('mail', $mail)
                 ->getResult()) > 0;
     }

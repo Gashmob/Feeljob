@@ -90,7 +90,7 @@ class HomeController extends AbstractController
             if ($user) {
                 $motdepasse = $request->get('motdepasse');
 
-                if (password_verify(hash('sha512', hash('sha512', $motdepasse . $user->getSel())), $user->getMotdepasse())) {
+                if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
                     $this->session->set('user', $user->getId());
                     $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
 
@@ -170,7 +170,7 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
                     $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
+                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB) {
                         $candidat = new Candidat();
@@ -260,7 +260,7 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
                     $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
+                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
                         $entreprise = new Entreprise();
@@ -351,7 +351,7 @@ class HomeController extends AbstractController
                         $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
                     }
                     $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', hash('sha512', $motdepasse . $salt)), PASSWORD_DEFAULT, ['cost' => 12]);
+                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
                     if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
                         $autoEntrepreneur = new AutoEntrepreneur();
