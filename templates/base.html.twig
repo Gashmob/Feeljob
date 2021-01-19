@@ -66,23 +66,23 @@
                         </div>
                     </div>
                 </div>
-                <a class="item">
+                <a href="{{ path('connexion') }}" class="item">
                     <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
                     <div class="content person-summary">
                         <div class="ui sub header">Elyse</div>
                         <div>Auto-entrepreneur</div>
                     </div>
                 </a>
-                <a class="ui dropdown item">
+                <div class="ui dropdown item">
                     <i class="icon settings"></i>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item">Déposer sa carte</div>
-                        <div class="item">Accéder aux offres</div>
+                        <a href="{{ path('create_cv') }}" class="item">Déposer sa carte</a>
+                        <a href="{{ path('create_emploi') }}" class="item">Accéder aux offres</a>
                         <div class="divider"></div>
-                        <div class="item">Se déconnecter <i class="icon sign-out"></i></div>
+                        <a class="item">Se déconnecter <i class="icon sign-out"></i></a>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </nav>
