@@ -30,6 +30,6 @@ class UserController extends AbstractController
      */
     public function userSpace(): Response
     {
-        return new Response('This is my own user space');
+        return $this->render('home/profil.html.twig');
     }
 }
