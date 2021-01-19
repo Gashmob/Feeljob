@@ -38,7 +38,11 @@ class EntrepriseController extends AbstractController
     public function createEmploi(Request $request, EntityManagerInterface $em): Response
     {
         if (!$this->session->get('user')) {
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!$this->session->get('userType') === 'Entreprise') {
+            return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
