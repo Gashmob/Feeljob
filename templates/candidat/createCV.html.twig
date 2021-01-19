@@ -13,6 +13,25 @@
                     <input type="text" name="nomCV" value="CV #1">
                 </div>
             </div>
+            <div class="inline field">
+                <label>Types de contrat :</label>
+                <div class="ui toggle checkbox">
+                    <label>CDD</label>
+                    <input type="checkbox" name="transport" class="hidden">
+                </div>
+                <div class="ui toggle checkbox">
+                    <label>CDI</label>
+                    <input type="checkbox" name="transport" class="hidden">
+                </div>
+                <div class="ui toggle checkbox">
+                    <label>Intérim</label>
+                    <input type="checkbox" name="transport" class="hidden">
+                </div>
+                <div class="ui toggle checkbox">
+                    <label>Saisonnier</label>
+                    <input type="checkbox" name="transport" class="hidden">
+                </div>
+            </div>
             <!-- Identité -->
             <h4 class="ui dividing header">Identité</h4>
             <div class="ui two column grid">
@@ -77,26 +96,27 @@
             <div>
                 <div class="two fields">
                     <div class="field">
-                        <label>Adresse</label>
-                        <div class="ui left icon input">
-                            <i class="icon home"></i>
-                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
-                        </div>
-                    </div>
-                    <div class="field">
                         <label>E-mail</label>
                         <div class="ui left icon input">
                             <i class="icon envelope"></i>
-                            <input type="text" name="mail" value="jean.valjean@gmail.com">
+                            <input type="text" name="mail" placeholder="jeanvaljean@gmail.com"
+                                   value="jeanvaljean@gmail.com">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <div class="ui left icon input">
+                            <i class="icon phone"></i>
+                            <input type="text" name="telephone" placeholder="Téléphone" value="06 96 47 32 42">
                         </div>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label>Téléphone</label>
+                        <label>Adresse</label>
                         <div class="ui left icon input">
-                            <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone">
+                            <i class="icon home"></i>
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
                         </div>
                     </div>
                     <div class="field">
@@ -113,13 +133,15 @@
             </div>
             <!-- Formation -->
             <h4 class="ui dividing header">Formation</h4>
-            <div class="field">
-                <label>Nom de l'établissement</label>
-                <input type="text" name="nomEtablissement" placeholder="Nom de l'établissement">
-            </div>
-            <div class="field">
-                <label>Intitulé du diplôme</label>
-                <input type="text" name="intituleDiplome" placeholder="Intitulé du diplôme">
+            <div class="two fields">
+                <div class="field">
+                    <label>Nom de l'établissement</label>
+                    <input type="text" name="nomEtablissement" placeholder="Nom de l'établissement">
+                </div>
+                <div class="field">
+                    <label>Intitulé du diplôme</label>
+                    <input type="text" name="intituleDiplome" placeholder="Intitulé du diplôme">
+                </div>
             </div>
             <div class="field">
                 <label>Date d'obtention</label>
@@ -127,16 +149,18 @@
             </div>
             <!-- Expérience -->
             <h4 class="ui dividing header">Expérience professionnelle</h4>
-            <div class="field">
-                <label>Intitulé du poste</label>
+            <div class="two fields">
                 <div class="field">
-                    <input type="text" name="intitulePoste" placeholder="Intitulé du poste">
+                    <label>Intitulé du poste</label>
+                    <div class="field">
+                        <input type="text" name="intitulePoste" placeholder="Intitulé du poste">
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label>Nom de l'entreprise</label>
                 <div class="field">
-                    <input type="text" name="nomEntreprise" placeholder="Nom de l'entreprise">
+                    <label>Nom de l'entreprise</label>
+                    <div class="field">
+                        <input type="text" name="nomEntreprise" placeholder="Nom de l'entreprise">
+                    </div>
                 </div>
             </div>
             <div class="field">
