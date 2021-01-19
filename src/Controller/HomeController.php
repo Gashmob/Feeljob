@@ -109,6 +109,17 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/deconnexion", name="deconnexion")
+     */
+    public function deconnexion(): RedirectResponse
+    {
+        $this->session->clear();
+        $this->addFlash('success', 'Vous êtes déconnecté !');
+
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
      * @Route("/inscription", name="inscription")
      * @param Request $request
      * @param MailerInterface $mailer
