@@ -62,7 +62,7 @@
                                     <label>Adresse e-mail</label>
                                     <div class="ui left icon input">
                                         <i class="icon envelope"></i>
-                                        <input type="text" name="adresse-email" placeholder="@mail.fr">
+                                        <input type="text" name="mail" placeholder="@mail.fr">
                                     </div>
                                 </div>
                                 <div class="field">
@@ -76,14 +76,14 @@
                                     <label>Mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>Répéter le mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe-r" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
                                     </div>
                                 </div>
 
@@ -93,7 +93,7 @@
                                         <label>J'accepte les <a>conditions d'utilisation</a></label>
                                     </div>
                                 </div>
-                                <button class="ui large green fluid submit button" type="submit" value="candidat">
+                                <button class="ui large green fluid submit button" type="submit" name="tab" value="candidat">
                                     Valider
                                 </button>
                             </form>
@@ -117,11 +117,11 @@
                                 </div>
                                 <div class="field">
                                     <label>Nom de l'entreprise</label>
-                                    <input type="text" name="nom-entreprise" placeholder="Nom entreprise">
+                                    <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
                                 </div>
                                 <div class="field">
                                     <label>Adresse de l'entreprise</label>
-                                    <input type="text" name="adresse-entreprise" placeholder="Adresse entreprise">
+                                    <input type="text" name="adresse" placeholder="Adresse entreprise">
                                 </div>
                                 <div class="field">
                                     <label class="ui button" for="employeur-logo">
@@ -138,7 +138,7 @@
                                 <div class="field">
                                     <label>Secteur d'activité</label>
                                     <div class="ui selection dropdown">
-                                        <input type="hidden" name="secteur-activite">
+                                        <input type="hidden" name="activite">
                                         <div class="default text">Secteur</div>
                                         <i class="dropdown icon"></i>
                                         <div class="menu">
@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="field">
                                     <label>Descriptif de l'entreprise</label>
-                                    <textarea rows="4" placeholder="Une description de votre entreprise."></textarea>
+                                    <textarea rows="4" name="description" placeholder="Une description de votre entreprise."></textarea>
                                 </div>
                                 <div class="field">
                                     <label>Zone géographique</label>
@@ -188,7 +188,7 @@
                                         <label>Adresse e-mail</label>
                                         <div class="ui left icon input">
                                             <i class="icon envelope"></i>
-                                            <input type="text" name="adresse-email" placeholder="@mail.fr">
+                                            <input type="text" name="mail" placeholder="@mail.fr">
                                         </div>
                                     </div>
                                     <div class="field">
@@ -203,14 +203,14 @@
                                     <label>Mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>Répéter le mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe-r" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
                                     </div>
                                 </div>
 
@@ -245,11 +245,11 @@
                                 </div>
                                 <div class="field">
                                     <label>Nom de l'entreprise</label>
-                                    <input type="text" name="nom-entreprise" placeholder="Nom entreprise">
+                                    <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
                                 </div>
                                 <div class="field">
                                     <label>Adresse de l'entreprise</label>
-                                    <input type="text" name="adresse-entreprise" placeholder="Adresse entreprise">
+                                    <input type="text" name="adresse" placeholder="Adresse entreprise">
                                 </div>
                                 <div class="field">
                                     <label class="ui button" for="ae-logo">
@@ -265,7 +265,7 @@
                                 <div class="field">
                                     <label>Secteur d'activité</label>
                                     <div class="ui selection dropdown">
-                                        <input type="hidden" name="secteur-activite">
+                                        <input type="hidden" name="activite">
                                         <div class="default text">Secteur</div>
                                         <i class="dropdown icon"></i>
                                         <div class="menu">
@@ -286,7 +286,7 @@
                                 </div>
                                 <div class="field">
                                     <label>Descriptif de l'entreprise</label>
-                                    <textarea rows="4" placeholder="Une description de votre entreprise."></textarea>
+                                    <textarea name="description" rows="4" placeholder="Une description de votre entreprise."></textarea>
                                 </div>
                                 <div class="field">
                                     <label>Zone géographique</label>
@@ -315,7 +315,7 @@
                                         <label>Adresse e-mail</label>
                                         <div class="ui left icon input">
                                             <i class="icon envelope"></i>
-                                            <input type="text" name="adresse-email" placeholder="@mail.fr">
+                                            <input type="text" name="mail" placeholder="@mail.fr">
                                         </div>
                                     </div>
                                     <div class="field">
@@ -330,14 +330,14 @@
                                     <label>Mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>Répéter le mot de passe</label>
                                     <div class="ui left icon input">
                                         <i class="icon lock"></i>
-                                        <input type="password" name="mot-de-passe-r" placeholder="Mot de passe">
+                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
                                     </div>
                                 </div>
 

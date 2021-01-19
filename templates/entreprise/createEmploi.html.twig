@@ -16,7 +16,7 @@
                         <div class="field">
                             <label>Type de contrat</label>
                             <div class="ui selection dropdown">
-                                <input type="hidden" name="type-contrat">
+                                <input type="hidden" name="contrat">
                                 <div class="default text">Type</div>
                                 <i class="dropdown icon"></i>
                                 <div class="menu">
@@ -46,22 +46,22 @@
                         <div class="two fields">
                             <div class="disabled field">
                                 <label>Date début</label>
-                                <input placeholder="Si CDD ou saisonier" type="text" disabled="" tabindex="-1">
+                                <input name="dateD" placeholder="Si CDD ou saisonier" type="text" tabindex="-1">
                             </div>
                             <div class="disabled field">
                                 <label>Date fin</label>
-                                <input placeholder="uniquement" type="text" disabled="" tabindex="-1">
+                                <input name="dateF" placeholder="uniquement" type="text" tabindex="-1">
                             </div>
                         </div>
                         <div class="field">
                             <label>Nombre d'heures travaillées</label>
-                            <input type="text" name="nb-heures" placeholder="Nombre">
+                            <input type="text" name="heures" placeholder="Nombre">
                         </div>
                         <div class="field">
                             <label>Montant du salaire</label>
                             <div class="ui right labeled input">
                                 <label for="montant" class="ui label">€</label>
-                                <input type="text" placeholder="Montant" id="montant">
+                                <input name="salaire" type="text" placeholder="Montant" id="montant">
                                 <div class="ui basic label">.00</div>
                             </div>
                         </div>
@@ -88,13 +88,13 @@
                             </div>
                         </div>
 
-                        <div class="field">
+                        <div class="required inline field">
                             <div class="ui checkbox">
                                 <input type="checkbox" tabindex="0" class="hidden">
                                 <label>J'accepte les <a>conditions d'utilisation</a></label>
                             </div>
                         </div>
-                        <button class="ui button" type="submit">Valider</button>
+                        <button class="ui fluid large green submit button" type="submit">Valider</button>
                     </form>
                 </div>
             </div>
