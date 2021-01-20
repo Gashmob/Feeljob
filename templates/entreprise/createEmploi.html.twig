@@ -9,32 +9,17 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input type="text" name="intitule-poste" placeholder="Intitulé du poste">
+                <input type="text" name="nom" placeholder="Intitulé du poste" required>
             </div>
             <div class="field">
-                <label>Type de contrat</label>
-                <div class="ui selection dropdown">
-                    <input type="hidden" name="contrat">
-                    <div class="default text">Type</div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <div class="item" data-value="CDD">
-                            CDD
-                        </div>
-                        <div class="item" data-value="CDI">
-                            CDI
-                        </div>
-                        <div class="item" data-value="saisonier">
-                            Saisonier
-                        </div>
-                        <div class="item" data-value="interim">
-                            Intérim
-                        </div>
-                        <div class="item" data-value="appoint">
-                            Contrat d'appoint
-                        </div>
-                    </div>
-                </div>
+                <label>Types de contrat :</label>
+                <select class="ui dropdown" name="contrat">
+                    {% for type in typeContrat %}
+                        <option value="{{ type }}">
+                            {{ type }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="two fields">
                 <div class="disabled field">
@@ -61,19 +46,19 @@
                 </div>
                 <div class="required field">
                     <label>Nombre de postes à pourvoir</label>
-                    <input type="text" name="nb-postes" placeholder="#">
+                    <input type="text" name="nbRecrutement" placeholder="#" required>
                 </div>
             </div>
             <div class="ui divider"></div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="gift" tabindex="0" class="hidden">
+                    <input type="checkbox" name="loge" tabindex="0" class="hidden">
                     <label>Emploi logé</label>
                 </div>
             </div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="lieu-precis" tabindex="0" class="hidden">
+                    <input type="checkbox" name="deplacement" tabindex="0" class="hidden">
                     <label>Emploi rattaché à un lieu précis</label>
                 </div>
             </div>

@@ -260,7 +260,7 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
 
-        $offreEmploi->setIdentity($result['id'][0]);
+        $offreEmploi->setIdentity($result['id']);
         $em->persist($offreEmploi);
         $em->flush();
     }
@@ -572,5 +572,30 @@ abstract class EntityManager
             default:
                 return null;
         }
+    }
+
+    /**
+     * @param int $id
+     * @param EntityManagerInterface $em
+     * @return array
+     */
+    public static function getEmploiArrayFromId(int $id, EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) as id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+        $identity = $result['id'];
+
+        $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $identity]);
+
+        $res['nom'] = $offre->getNom();
+        $res['debut'] = $offre->getDebut();
+        $res['fin'] = $offre->getFin();
+        $res['loge'] = $offre->getLoge();
+
+        return $res;
     }
 }

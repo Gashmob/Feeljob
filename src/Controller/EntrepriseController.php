@@ -30,6 +30,19 @@ class EntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/offre_emploi/{id}", name="show_emploi")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function showEmploi($id, EntityManagerInterface $em): Response
+    {
+        return $this->render('', [
+            'offre' => EntityManager::getEmploiArrayFromId($id, $em)
+        ]);
+    }
+
+    /**
      * @Route("/create/emploi", name="create_emploi")
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -79,7 +92,7 @@ class EntrepriseController extends AbstractController
                 $dateFB = true;
             }
 
-            $loge = $request->get('loge');
+            $loge = $request->get('loge') != null;
 
             $heures = $request->get('heures');
             $heuresB = true;
@@ -95,7 +108,7 @@ class EntrepriseController extends AbstractController
                 $this->addFlash('salaire', 'Merci de renseigner un salaire valide');
             }
 
-            $deplacement = $request->get('deplacement');
+            $deplacement = $request->get('deplacement') == null;
             if (!$deplacement) {
                 $lieu = $request->get('lieu');
                 $lieuB = true;
@@ -108,7 +121,7 @@ class EntrepriseController extends AbstractController
                 $lieuB = true;
             }
 
-            $teletravail = $request->get('teletravail');
+            $teletravail = $request->get('teletravail') != null;
 
             $nbRecrutement = $request->get('nbRecrutement');
             $nbRecrutementB = true;
