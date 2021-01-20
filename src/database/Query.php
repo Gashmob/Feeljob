@@ -4,8 +4,6 @@
 namespace App\database;
 
 
-use Ds\Map;
-
 /**
  * Class Query
  * Usage :
