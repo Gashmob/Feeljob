@@ -347,10 +347,17 @@ abstract class EntityManager
      * @param array $langues
      * @param array $deplacements
      * @param string $typeContrat
+     * @param int $idUser
      */
-    public static function createCV(CV $cv, string $metier, string $famille, array $diplomes, array $dates, array $nomEntreprises, array $postes, array $durees, array $langues, array $deplacements, string $typeContrat)
+    public static function createCV(CV $cv, string $metier, string $famille, array $diplomes, array $dates, array $nomEntreprises, array $postes, array $durees, array $langues, array $deplacements, string $typeContrat, int $idUser)
     {
         $cv->flush();
+
+        // Relation Candidat
+        (new PreparedQuery('MATCH (c:CV), (ca:Candidat) WHERE id(c)=$id AND id(ca)=$idUser CREATE (ca)-[:Cree]->(c)'))
+            ->setInteger('id', $cv->getId())
+            ->setInteger('idUser', $idUser)
+            ->run();
 
         // Relations metier et famille
         (new PreparedQuery('MATCH (c:CV), (m:Metier {nom:$metier}), (f:Famille {nom:$famille}) WHERE id(c)=$id CREATE (m)<-[:Est]-(c)-[:EstFamille]->(f)'))
@@ -463,7 +470,7 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
         $res['email'] = $user['ca']['email'];
-        $candidat = $em->getRepository(Candidat::class)->findOneBy(['identity' => $user['id'][0]]);
+        $candidat = $em->getRepository(Candidat::class)->findOneBy(['identity' => $user['id']]);
         $res['nom'] = $candidat->getNom();
         $res['prenom'] = $candidat->getPrenom();
         $res['permis'] = $candidat->getPermis();
@@ -539,7 +546,7 @@ abstract class EntityManager
         $contrat = (new PreparedQuery('MATCH (c:CV)--(t:TypeContrat) WHERE id(c)=$id RETURN t'))
             ->setInteger('id', $id)
             ->run()
-            ->getResult();
+            ->getOneOrNullResult();
         $res['contrat'] = $contrat['t']['nom'];
 
         return $res;

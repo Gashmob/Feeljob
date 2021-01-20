@@ -46,6 +46,7 @@ class CandidatController extends AbstractController
     /**
      * @Route("/create/CV", name="create_cv")
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @return Response
      * @throws UserNotFoundException
      */
@@ -74,10 +75,16 @@ class CandidatController extends AbstractController
             $famille = $request->get('famille');
 
             $diplomes = $request->get('diplomes');
+            if (is_null($diplomes)) {
+                $diplomes = [];
+            }
             if (!is_array($diplomes)) {
                 $diplomes = [$diplomes];
             }
             $dates = $request->get('dates');
+            if (is_null($dates)) {
+                $dates = [];
+            }
             if (!is_array($dates)) {
                 $dates = [$dates];
             }
@@ -88,14 +95,23 @@ class CandidatController extends AbstractController
             }
 
             $nomEntreprises = $request->get('nomEntreprises');
+            if (is_null($nomEntreprises)) {
+                $nomEntreprises = [];
+            }
             if (!is_array($nomEntreprises)) {
                 $nomEntreprises = [$nomEntreprises];
             }
             $postes = $request->get('postes');
+            if (is_null($postes)) {
+                $postes = [];
+            }
             if (!is_array($postes)) {
                 $postes = [$postes];
             }
             $durees = $request->get('durees');
+            if (is_null($durees)) {
+                $durees = [];
+            }
             if (!is_array($durees)) {
                 $durees = [$durees];
             }
@@ -106,11 +122,17 @@ class CandidatController extends AbstractController
             }
 
             $langues = $request->get('langues');
+            if (is_null($langues)) {
+                $langues = [];
+            }
             if (!is_array($langues)) {
                 $langues = [$langues];
             }
 
             $deplacements = $request->get('deplacements');
+            if (is_null($deplacements)) {
+                $deplacements = [];
+            }
             if (!is_array($deplacements)) {
                 $deplacements = [$deplacements];
             }
@@ -121,7 +143,7 @@ class CandidatController extends AbstractController
                 $cv = new CV();
                 $cv->setNom($nom)
                     ->setPhoto($photo);
-                EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat);
+                EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
 
                 $this->addFlash('success', 'Votre CV a été créé');
                 return $this->redirectToRoute('userSpace');
@@ -151,6 +173,10 @@ class CandidatController extends AbstractController
      */
     private function uploadImage(): string
     {
+        if (count($_FILES) == 0) {
+            return '';
+        }
+
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé
             $fileTmpPath = $_FILES['photo']['tmp_name'];

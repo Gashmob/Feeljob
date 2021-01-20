@@ -86,6 +86,6 @@ class CV
             ->run()
             ->getOneOrNullResult();
 
-        $this->id = $result['id'][0];
+        $this->id = $result['id'];
     }
 }

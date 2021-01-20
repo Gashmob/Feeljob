@@ -15,22 +15,11 @@
             </div>
             <div class="inline field">
                 <label>Types de contrat :</label>
-                <div class="ui toggle checkbox">
-                    <label>CDD</label>
-                    <input type="checkbox" name="transport" class="hidden">
-                </div>
-                <div class="ui toggle checkbox">
-                    <label>CDI</label>
-                    <input type="checkbox" name="transport" class="hidden">
-                </div>
-                <div class="ui toggle checkbox">
-                    <label>Intérim</label>
-                    <input type="checkbox" name="transport" class="hidden">
-                </div>
-                <div class="ui toggle checkbox">
-                    <label>Saisonnier</label>
-                    <input type="checkbox" name="transport" class="hidden">
-                </div>
+                <select class="ui dropdown" name="typeContrat">
+                    {% for type in typeContrats %}
+                        <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <!-- Identité -->
             <h4 class="ui dividing header">Identité</h4>
@@ -66,7 +55,11 @@
                         </div>
                         <div class="field">
                             <label>Métier</label>
-                            <input type="text" name="metier" placeholder="Développeur Web">
+                            <select class="ui dropdown" name="metier">
+                                {% for metier in metiers %}
+                                    <option value="{{ metier }}">{{ metier }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="two fields">
@@ -121,7 +114,7 @@
                     </div>
                     <div class="field">
                         <label>Situation familiale</label>
-                        <select class="ui dropdown" name="situationF">
+                        <select class="ui dropdown" name="famille">
                             {% for situation in situations %}
                                 <option value="{{ situation }}">{{ situation }}</option>
                             {% endfor %}
@@ -151,34 +144,19 @@
                 <div class="field">
                     <label>Intitulé du poste</label>
                     <div class="field">
-                        <input type="text" name="intitulePoste" placeholder="Intitulé du poste">
+                        <input type="text" name="postes" placeholder="Intitulé du poste">
                     </div>
                 </div>
                 <div class="field">
                     <label>Nom de l'entreprise</label>
                     <div class="field">
-                        <input type="text" name="nomEntreprise" placeholder="Nom de l'entreprise">
+                        <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
                     </div>
                 </div>
             </div>
             <div class="field">
-                <label>Location</label>
-                <div class="field">
-                    <input type="text" name="location" placeholder="Location">
-                </div>
-            </div>
-            <div class="field">
-                <label>Date de fréquentation</label>
-                <div class="fields">
-                    <div class="five wide field">
-                        Du
-                        <input type="text" name="date-debut" placeholder="Date début">
-                    </div>
-                    <div class="five wide field">
-                        Au
-                        <input type="text" name="date-fin" placeholder="Date fin">
-                    </div>
-                </div>
+                <label>Durée</label>
+                <input type="text" name="durees" placeholder="Duree">
             </div>
             <!-- Autres -->
             <h4 class="ui dividing header">Autres informations</h4>
