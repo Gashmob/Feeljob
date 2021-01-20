@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}FealJob - Voir un CV{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px;" class="ui text justified container">
+    <div style="margin: 20px 0px;" class="ui text justified container">
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
             CV de Jean Valjean
@@ -24,15 +24,15 @@
                          class="ui small circular image">
                 </div>
                 <div class="column ten wide">
-                    <div>{{ cv['prenom'] }} Valjean</div>
-                    <div>Né le 18 octobre 1989</div>
+                    <div>{{ cv['prenom'] }} {{ cv['nom'] }}</div>
+                    <div>Né le {{ cv['naissance'] }}</div>
                     <div>Homme</div>
-                    <div>Marié</div>
+                    <div>{{ cv['famille'] }}</div>
                     <div class="ui divider"></div>
-                    <div>Développeur Web</div>
-                    <div>16 rue des Coquillages, Paris</div>
-                    <div>jean.valjean@gmail.com</div>
-                    <div>06 94 23 14 63</div>
+                    <div>{{ cv['metier'] }}</div>
+                    <div>{{ cv['adresse'] }}</div>
+                    <div>{{ cv['mail'] }}</div>
+                    <div>{{ cv['telephone'] }}</div>
                 </div>
             </div>
             <!-- Formation -->
@@ -41,10 +41,11 @@
                 <div class="content">Formation</div>
             </h3>
             <div class="ui segments">
+                {{ for diplome in cv['diplomes'] }}
                 <div class="ui segment formation1">
-                    <h5 class="ui header">DUT Informatique</h5>
-                    <div>Université d'Alsace-Lorraine</div>
-                    <div>2012-2014</div>
+                    <h5 class="ui header">{{ diplome['nom'] }}</h5>
+                    <div>{{ diplome['nom'] }}</div>
+                    <div>{{ diplome['date'] }}</div>
                 </div>
                 <div class="ui segment formation2">
                     <h5 class="ui header">Licence Informatique</h5>
@@ -58,14 +59,15 @@
                 <div class="content">Expérience professionnelle</div>
             </h3>
             <div class="ui segments">
+                {{ for experience in cv['experiences'] }}
                 <div class="ui segment experience1">
-                    <h5 class="ui header">Stagiaire développeur Java</h5>
-                    <div>Sopra Steria</div>
-                    <div>2015-2016</div>
+                    <h5 class="ui header">{{ experience['poste'] }}</h5>
+                    <div>{{ experience['nomEntreprise'] }}</div>
+                    <div>{{ experience['duree'] }}</div>
                 </div>
                 <div class="ui segment experience2">
                     <h5 class="ui header">Développeur C++</h5>
-                    <div>Devocom</div>
+                    <div>Sopra Steria</div>
                     <div>2016-2018</div>
                 </div>
             </div>
