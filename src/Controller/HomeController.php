@@ -99,13 +99,13 @@ class HomeController extends AbstractController
 
                         return $this->redirectToRoute('userSpace');
                     } else {
-                        $this->addFlash('form', 'Identifiants incorrects');
+                        $this->addFlash('mail', 'Identifiants incorrects');
                     }
                 } else {
                     $this->addFlash('fail', 'Vous devez vérifier votre mail !');
                 }
             } else {
-                $this->addFlash('form', 'Identifiants incorrects');
+                $this->addFlash('mail', 'Identifiants incorrects');
             }
         }
 
@@ -144,21 +144,21 @@ class HomeController extends AbstractController
                     $nomB = true;
                     if ($nom === '') {
                         $nomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un nom');
+                        $this->addFlash('nom', 'Merci de renseigner un nom');
                     }
 
                     $prenom = $request->get('prenom');
                     $prenomB = true;
                     if ($prenom === '') {
                         $prenomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un prénom');
+                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
                     }
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
                     if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
-                        $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
+                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
                     }
 
                     $mail = $request->get('mail');
@@ -170,19 +170,21 @@ class HomeController extends AbstractController
                     ]);
                     if (!$validator->isValid($mail, $multipleValidations)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Merci de renseigner une adresse mail valide');
+                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
                     } elseif (EntityManager::isMailUsed($mail)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Cet email est déjà utilisé');
+                        $this->addFlash('mail', 'Cet email est déjà utilisé');
                     }
 
                     $motdepasse = $request->get('motdepasse');
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
-                    if ($motdepasse != $motdepasse2 ||
-                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
+                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
-                        $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
+                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
+                    } else if ($motdepasse != $motdepasse2) {
+                        $motdepasseB = false;
+                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
                     }
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
@@ -203,28 +205,28 @@ class HomeController extends AbstractController
                     $nomB = true;
                     if ($nom === '') {
                         $nomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un nom');
+                        $this->addFlash('nom', 'Merci de renseigner un nom');
                     }
 
                     $prenom = $request->get('prenom');
                     $prenomB = true;
                     if ($prenom === '') {
                         $prenomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un prénom');
+                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
                     }
 
                     $nomEntreprise = $request->get('nomEntreprise');
                     $nomEntrepriseB = true;
                     if ($nomEntreprise === '') {
                         $nomEntrepriseB = false;
-                        $this->addFlash('form', 'Merci de renseigner un nom d\'entreprise');
+                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom d\'entreprise');
                     }
 
                     $adresse = $request->get('adresse');
                     $adresseB = true;
                     if ($adresse === '') {
                         $adresseB = false;
-                        $this->addFlash('form', 'Merci de renseigner une adresse');
+                        $this->addFlash('adresse', 'Merci de renseigner une adresse');
                     }
 
                     //$logo = $this->uploadImage();
@@ -234,7 +236,7 @@ class HomeController extends AbstractController
                     $siretB = true;
                     if ($siret === '') {
                         $siretB = false;
-                        $this->addFlash('form', 'Merci de renseigner le numéro siret');
+                        $this->addFlash('siret', 'Merci de renseigner le numéro siret');
                     }
 
                     $activite = $request->get('activite');
@@ -253,26 +255,28 @@ class HomeController extends AbstractController
                     ]);
                     if (!$validator->isValid($mail, $multipleValidations)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Merci de renseigner une adresse mail valide');
+                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
                     } elseif (EntityManager::isMailUsed($mail)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Cet email est déjà utilisé');
+                        $this->addFlash('mail', 'Cet email est déjà utilisé');
                     }
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
                     if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
-                        $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
+                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
                     }
 
                     $motdepasse = $request->get('motdepasse');
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
-                    if ($motdepasse != $motdepasse2 ||
-                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
+                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
-                        $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
+                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
+                    } else if ($motdepasse != $motdepasse2) {
+                        $motdepasseB = false;
+                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
                     }
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
@@ -297,28 +301,28 @@ class HomeController extends AbstractController
                     $nomB = true;
                     if ($nom === '') {
                         $nomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un nom');
+                        $this->addFlash('nom', 'Merci de renseigner un nom');
                     }
 
                     $prenom = $request->get('prenom');
                     $prenomB = true;
                     if ($prenom === '') {
                         $prenomB = false;
-                        $this->addFlash('form', 'Merci de renseigner un prénom');
+                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
                     }
 
                     $nomEntreprise = $request->get('nomEntreprise');
                     $nomEntrepriseB = true;
                     if ($nomEntreprise === '') {
                         $nomEntrepriseB = false;
-                        $this->addFlash('form', 'Merci de renseigner un nom d\'entreprise');
+                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom d\'entreprise');
                     }
 
                     $adresse = $request->get('adresse');
                     $adresseB = true;
                     if ($adresse === '') {
                         $adresseB = false;
-                        $this->addFlash('form', 'Merci de renseigner une adresse pour l\'entreprise');
+                        $this->addFlash('adresse', 'Merci de renseigner une adresse pour l\'entreprise');
                     }
 
                     //$logo = $this->uploadImage();
@@ -328,7 +332,7 @@ class HomeController extends AbstractController
                     $siretB = true;
                     if ($siret === '') {
                         $siretB = false;
-                        $this->addFlash('form', 'Merci de renseigner un siret');
+                        $this->addFlash('siret', 'Merci de renseigner un siret');
                     }
 
                     $activite = $request->get('activite');
@@ -344,26 +348,28 @@ class HomeController extends AbstractController
                     ]);
                     if (!$validator->isValid($mail, $multipleValidations)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Merci de renseigner une adresse mail valide');
+                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
                     } elseif (EntityManager::isMailUsed($mail)) {
                         $mailB = false;
-                        $this->addFlash('form', 'Cet email est déjà utilisé');
+                        $this->addFlash('mail', 'Cet email est déjà utilisé');
                     }
 
                     $telephone = $request->get('telephone');
                     $telephoneB = true;
                     if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
                         $telephoneB = false;
-                        $this->addFlash('form', 'Merci de renseigner un numéro de téléphone valide');
+                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
                     }
 
                     $motdepasse = $request->get('motdepasse');
                     $motdepasse2 = $request->get('motdepasse2');
                     $motdepasseB = true;
-                    if ($motdepasse != $motdepasse2 ||
-                        !preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
+                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
                         $motdepasseB = false;
-                        $this->addFlash('form', 'Merci de renseigner un mot de passe valide');
+                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
+                    } else if ($motdepasse != $motdepasse2) {
+                        $motdepasseB = false;
+                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
                     }
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);

@@ -50,21 +50,21 @@ class EntrepriseController extends AbstractController
             $nomB = true;
             if ($nom === '') {
                 $nomB = false;
-                $this->addFlash('form', 'Merci de renseigner un nom');
+                $this->addFlash('nom', 'Merci de renseigner un nom');
             }
 
             $typeContrat = $request->get('contrat');
             $typeContratB = true;
             if ($typeContrat === '') {
                 $typeContratB = false;
-                $this->addFlash('form', 'Merci de renseigner un type de contrat');
+                $this->addFlash('contrat', 'Merci de renseigner un type de contrat');
             }
 
             $dateD = $request->get('dateD');
             $dateDB = true;
             if ($dateD === '') {
                 $dateDB = false;
-                $this->addFlash('form', 'Merci de renseigner une date de début de contrat');
+                $this->addFlash('dateD', 'Merci de renseigner une date de début de contrat');
             }
 
             if ($typeContrat === 'CDD' || $typeContrat === 'Saisonnier') {
@@ -72,7 +72,7 @@ class EntrepriseController extends AbstractController
                 $dateFB = true;
                 if ($dateF === '') {
                     $dateFB = false;
-                    $this->addFlash('form', 'Merci de renseigner une date de fin de contrat');
+                    $this->addFlash('dateF', 'Merci de renseigner une date de fin de contrat');
                 }
             } else {
                 $dateF = '';
@@ -85,14 +85,14 @@ class EntrepriseController extends AbstractController
             $heuresB = true;
             if ($heures <= 0) {
                 $heuresB = false;
-                $this->addFlash('form', 'Merci de renseigner un nombre d\'heures de travail valide');
+                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures de travail valide');
             }
 
             $salaire = $request->get('salaire');
             $salaireB = true;
             if ($salaire < 0) {
                 $salaireB = false;
-                $this->addFlash('form', 'Merci de renseigner un salaire valide');
+                $this->addFlash('salaire', 'Merci de renseigner un salaire valide');
             }
 
             $deplacement = $request->get('deplacement');
@@ -101,7 +101,7 @@ class EntrepriseController extends AbstractController
                 $lieuB = true;
                 if ($lieu === '') {
                     $lieuB = false;
-                    $this->addFlash('form', 'Merci de renseigner un lieu de travail');
+                    $this->addFlash('lieu', 'Merci de renseigner un lieu de travail');
                 }
             } else {
                 $lieu = '';
@@ -114,7 +114,7 @@ class EntrepriseController extends AbstractController
             $nbRecrutementB = true;
             if ($nbRecrutement <= 0) {
                 $nbRecrutementB = false;
-                $this->addFlash('form', 'Merci de renseigner un nombre de recrutement supérieur à 0');
+                $this->addFlash('nbRecrutement', 'Merci de renseigner un nombre de recrutement supérieur à 0');
             }
 
             if ($nomB && $typeContratB && $dateDB && $dateFB && $heuresB && $salaireB && $lieuB && $nbRecrutementB) {

@@ -62,7 +62,7 @@ class CandidatController extends AbstractController
             $nomB = true;
             if ($nom === '') {
                 $nomB = false;
-                $this->addFlash('form', 'Merci de renseigner un nom');
+                $this->addFlash('nom', 'Merci de renseigner un nom');
             }
 
             $photo = $this->uploadImage();
@@ -85,7 +85,7 @@ class CandidatController extends AbstractController
             $experiencesB = true;
             if (sizeof($nomEntreprises) != sizeof($postes) && sizeof($nomEntreprises) != $durees) {
                 $experiencesB = false;
-                $this->addFlash('form', 'Merci de renseigner toutes les données pour vos expériences professionnelles');
+                $this->addFlash('nomEntreprises', 'Merci de renseigner toutes les données pour vos expériences professionnelles');
             }
 
             $langues = $request->get('langues');
