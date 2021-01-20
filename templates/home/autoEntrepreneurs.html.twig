@@ -2,11 +2,12 @@
 {% block body %}
     <div>
         <div>
-            <div style="padding:8em 0em" class="ui vertical segment">
+            <div style="padding:8em 0em" class="ui fluid container">
                 <div class="ui grid">
                     <div class="left floated four wide column">
                         <div class="">
-                            <img src="{{ asset('img/placeholders/elyse.png') }}" style="height: 400px;width: 300px;" alt="">
+                            <img src="{{ asset('img/placeholders/elyse.png') }}" style="height: 400px;width: 300px;"
+                                 alt="">
                         </div>
                     </div>
                     <div class="ui eight wide column">
@@ -31,19 +32,32 @@
                     </div>
                     <div class="right floated right aligned four wide column">
                         <div class="">
-                            <img src="{{ asset('img/placeholders/elyse.png') }}" style="height: 400px;width: 300px;" alt="">
+                            <img src="{{ asset('img/placeholders/elyse.png') }}" style="height: 400px;width: 300px;"
+                                 alt="">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ui vertical segment">
-                <h2 class="ui header">
-                    <i class="question circle outline icon"></i>
-                    <div class="content">
-                        Comment sont gérées mes données
-                        <div class="sub header">Nous respectons la vie privée et la sécurité</div>
+            <div class="ui container">
+                <div class="ui segment">
+                    <div class="ui vertical segment">
+                        <h2 class="ui header">
+                            <i class="question circle outline icon"></i>
+                            <div class="content">
+                                Comment sont gérées mes données
+                                <div class="sub header">Nous respectons la vie privée et la sécurité</div>
+                            </div>
+                        </h2>
                     </div>
-                </h2>
+                    <div class="ui vertical segment">
+                        <h4>Nous ne vendons pas vos données personnelles.</h4>
+                        <p>Toutes nos données sont encryptées en SHA-256 puis stockées sur un serveur dédié en France.</p>
+                    </div>
+                    <div class="ui vertical segment">
+                        <h4>Supprimer votre compte et toutes les données associées.</h4>
+                        <p>En vertue du droit à l'oubli, <a href="https://www.gdpr-expert.eu/article.html?id=17">article 17 de la RGPD</a>, Nous supprimerons définitivement toutes vos données lors de la suppression de votre compte ou après 700 jours d'inactivité.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
