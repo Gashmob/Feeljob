@@ -58,18 +58,18 @@
                         <a href="">J'ai oublié mon mot de passe.</a>
                     </div>
                 </div>
-                <div class="ui negative message transition">
+                <div class="ui negative message transition hidden">
                     <i class="close icon"></i>
                     <div class="header">
                         Erreur !
                     </div>
-                    <p>
+                    <div class="content">
                         {% for message in app.flashes('form') %}
-                    <div>
+                    <p>
                         {{ message }}
-                    </div>
-                    {% endfor %}
                     </p>
+                    {% endfor %}
+                    </div>
                 </div>
             </form>
         </div>
