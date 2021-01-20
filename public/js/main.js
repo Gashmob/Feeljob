@@ -27,9 +27,7 @@ $(document)
         $('.dimmable.image').dimmer({
             on: 'hover'
         });
-        $('.message .content')
-            .removeClass('hidden');
-        ;
+        if ($('.message .content p').html().trim()) $('.message').removeClass('hidden');
         $('.message .close')
             .on('click', function () {
                 $(this)

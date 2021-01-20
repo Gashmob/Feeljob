@@ -37,181 +37,68 @@
                     Fealjob
                 </div>
             </h2>
-            <div class="ui container vertical segment left aligned">
-                <div class="ui top attached tabular menu">
-                    <a class="item active" data-tab="first">Candidat</a>
-                    <a class="item" data-tab="second">Employeur</a>
-                    <a class="item" data-tab="third">Auto-entrepreneur</a>
-                </div>
-                <div class="ui bottom attached tab segment active" data-tab="first">
-                    <div class="ui vertical segment form--segment">
-                        <div class="ui container stackable middle aligned grid">
-                            <h3 class="ui header center aligned" style="width: 100%;">Création compte candidat</h3>
-                            <form class="ui form" method="post" style="width: 100%;">
-                                <div class="two fields">
-                                    <div class="required field">
-                                        <label>Nom</label>
-                                        <input type="text" name="nom" placeholder="Nom">
-                                    </div>
-                                    <div class="required field">
-                                        <label>Prénom</label>
-                                        <input type="text" name="prenom" placeholder="Prénom">
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Adresse e-mail</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon envelope"></i>
-                                        <input type="text" name="mail" placeholder="@mail.fr">
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Téléphone</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon phone"></i>
-                                        <input type="text" name="telephone" placeholder="Téléphone">
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Répéter le mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
-                                    </div>
-                                </div>
-                                <div class="ui divider"></div>
-                                <div class="required inline field">
-                                    <div class="ui checkbox">
-                                        <input type="checkbox" tabindex="0" class="hidden">
-                                        <label>J'accepte les <a>conditions d'utilisation</a></label>
-                                    </div>
-                                </div>
-                                <button class="ui large green fluid submit button" type="submit" name="tab"
-                                        value="candidat">
-                                    Valider
-                                </button>
-                                <div class="ui negative message transition">
-                                    <i class="close icon"></i>
-                                    <div class="header">
-                                        Erreur !
-                                    </div>
-                                    <p>
-                                        {% for message in app.flashes('nom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('prenom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('mail') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('telephone') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse') %}
-                                            {{ message|raw }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse2') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                </div>
-                            </form>
-                        </div>
+            <div class="row">
+                <div class="ui negative message hidden transition">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Erreur !
+                    </div>
+                    <div class="content">
+                        <p>
+                            {% for message in app.flashes('nom') %}
+                                {{ message }}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {% for message in app.flashes('prenom') %}
+                                {{ message }}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {% for message in app.flashes('mail') %}
+                                {{ message }}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {% for message in app.flashes('telephone') %}
+                                {{ message }}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {% for message in app.flashes('motdepasse') %}
+                                {{ message|raw }}
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {% for message in app.flashes('motdepasse2') %}
+                                {{ message }}
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
-                <div class="ui bottom attached tab segment" data-tab="second">
-                    <div class="ui vertical segment form--segment">
-                        <div class="ui container stackable middle aligned grid">
-                            <h3 class="ui header center aligned" style="width: 100%;">Création compte employeur</h3>
-                            <form class="ui form" method="post" style="width: 100%;">
-                                <div class="two fields">
-                                    <div class="required field">
-                                        <label>Nom</label>
-                                        <input type="text" name="nom" placeholder="Nom">
-                                    </div>
-                                    <div class="required field">
-                                        <label>Prénom</label>
-                                        <input type="text" name="prenom" placeholder="Prénom">
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Nom de l'entreprise</label>
-                                    <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
-                                </div>
-                                <div class="field">
-                                    <label>Adresse de l'entreprise</label>
-                                    <input type="text" name="adresse" placeholder="Adresse entreprise">
-                                </div>
-                                <div class="field">
-                                    <label class="ui button" for="employeur-logo">
-                                        <i class="paperclip icon"></i>
-                                        Logo de l'entreprise
-                                        <input type="file" style="display: none;" id="employeur-logo"
-                                               name="logo">
-                                    </label>
-                                </div>
-                                <div class="required field">
-                                    <label>N° de Siret</label>
-                                    <input type="text" name="siret" placeholder="N° Siret">
-                                </div>
-                                <div class="field">
-                                    <label>Secteur d'activité</label>
-                                    <div class="ui selection dropdown">
-                                        <input type="hidden" name="activite">
-                                        <div class="default text">Secteur</div>
-                                        <i class="dropdown icon"></i>
-                                        <div class="menu">
-                                            {% for secteur in secteurActivites %}
-                                                <div class="item" data-value="{{ secteur }}">
-                                                    {{ secteur }}
-                                                </div>
-                                            {% endfor %}
+            </div>
+            <div class="row">
+                <div class="ui container vertical segment left aligned">
+                    <div class="ui top attached tabular menu">
+                        <a class="item active" data-tab="first">Candidat</a>
+                        <a class="item" data-tab="second">Employeur</a>
+                        <a class="item" data-tab="third">Auto-entrepreneur</a>
+                    </div>
+                    <div class="ui bottom attached tab segment active" data-tab="first">
+                        <div class="ui vertical segment form--segment">
+                            <div class="ui container stackable middle aligned grid">
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte candidat</h3>
+                                <form class="ui form" method="post" style="width: 100%;">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom</label>
+                                            <input type="text" name="nom" placeholder="Nom">
+                                        </div>
+                                        <div class="required field">
+                                            <label>Prénom</label>
+                                            <input type="text" name="prenom" placeholder="Prénom">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="field">
-                                    <label>Descriptif de l'entreprise</label>
-                                    <textarea rows="4" name="description"
-                                              placeholder="Une description de votre entreprise."></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>Zone géographique</label>
-                                    <div class="ui selection dropdown">
-                                        <input type="hidden" name="zone-geographique">
-                                        <div class="default text">Zone</div>
-                                        <i class="dropdown icon"></i>
-                                        <div class="menu">
-                                            <div class="item" data-value="savoie">
-                                                Savoie
-                                            </div>
-                                            <div class="item" data-value="hsavoie">
-                                                Haute Savoie
-                                            </div>
-                                            <div class="item" data-value="autre">
-                                                Autre
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="two fields">
                                     <div class="required field">
                                         <label>Adresse e-mail</label>
                                         <div class="ui left icon input">
@@ -226,224 +113,270 @@
                                             <input type="text" name="telephone" placeholder="Téléphone">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
+                                    <div class="required field">
+                                        <label>Mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse" placeholder="Mot de passe">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Répéter le mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
+                                    <div class="required field">
+                                        <label>Répéter le mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse2" placeholder="Mot de passe">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="ui divider"></div>
-                                <div class="required inline field">
-                                    <div class="ui checkbox">
-                                        <input type="checkbox" tabindex="0" class="hidden">
-                                        <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                    <div class="ui divider"></div>
+                                    <div class="required inline field">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                        </div>
                                     </div>
-                                </div>
-                                <button class="ui large green fluid submit button" type="submit" value="entreprise"
-                                        name="tab">
-                                    Valider
-                                </button>
-                                <div class="ui negative message transition">
-                                    <i class="close icon"></i>
-                                    <div class="header">
-                                        Erreur !
-                                    </div>
-                                    <p>
-                                        {% for message in app.flashes('nom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('prenom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('mail') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('telephone') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse') %}
-                                            {{ message|raw }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse2') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                </div>
-                            </form>
+                                    <button class="ui large green fluid submit button" type="submit" name="tab"
+                                            value="candidat">
+                                        Valider
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="ui bottom attached tab segment" data-tab="third">
-                    <div class="ui vertical segment form--segment">
-                        <div class="ui container stackable middle aligned grid">
-                            <h3 class="ui header center aligned" style="width: 100%;">Création compte
-                                auto-entrepreneur</h3>
-                            <form class="ui form" method="post" style="width: 100%;">
-                                <div class="two fields">
-                                    <div class="required field">
-                                        <label>Nom</label>
-                                        <input type="text" name="nom" placeholder="Nom">
+                    <div class="ui bottom attached tab segment" data-tab="second">
+                        <div class="ui vertical segment form--segment">
+                            <div class="ui container stackable middle aligned grid">
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte employeur</h3>
+                                <form class="ui form" method="post" style="width: 100%;">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom</label>
+                                            <input type="text" name="nom" placeholder="Nom">
+                                        </div>
+                                        <div class="required field">
+                                            <label>Prénom</label>
+                                            <input type="text" name="prenom" placeholder="Prénom">
+                                        </div>
                                     </div>
                                     <div class="required field">
-                                        <label>Prénom</label>
-                                        <input type="text" name="prenom" placeholder="Prénom">
+                                        <label>Nom de l'entreprise</label>
+                                        <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Nom de l'entreprise</label>
-                                    <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
-                                </div>
-                                <div class="field">
-                                    <label>Adresse de l'entreprise</label>
-                                    <input type="text" name="adresse" placeholder="Adresse entreprise">
-                                </div>
-                                <div class="field">
-                                    <label class="ui button" for="ae-logo">
-                                        <i class="paperclip icon"></i>
-                                        Logo de l'entreprise
-                                        <input type="file" style="display: none;" id="ae-logo" name="logo">
-                                    </label>
-                                </div>
-                                <div class="required field">
-                                    <label>N° de Siret</label>
-                                    <input type="text" name="siret" placeholder="N° Siret">
-                                </div>
-                                <div class="field">
-                                    <label>Secteur d'activité</label>
-                                    <div class="ui selection dropdown">
-                                        <input type="hidden" name="activite">
-                                        <div class="default text">Secteur</div>
-                                        <i class="dropdown icon"></i>
-                                        <div class="menu">
-                                            {% for secteur in secteurActivites %}
-                                                <div class="item" data-value="{{ secteur }}">
-                                                    {{ secteur }}
+                                    <div class="field">
+                                        <label>Adresse de l'entreprise</label>
+                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
+                                    </div>
+                                    <div class="field">
+                                        <label class="ui button" for="employeur-logo">
+                                            <i class="paperclip icon"></i>
+                                            Logo de l'entreprise
+                                            <input type="file" style="display: none;" id="employeur-logo"
+                                                   name="logo">
+                                        </label>
+                                    </div>
+                                    <div class="required field">
+                                        <label>N° de Siret</label>
+                                        <input type="text" name="siret" placeholder="N° Siret">
+                                    </div>
+                                    <div class="field">
+                                        <label>Secteur d'activité</label>
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="activite">
+                                            <div class="default text">Secteur</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                {% for secteur in secteurActivites %}
+                                                    <div class="item" data-value="{{ secteur }}">
+                                                        {{ secteur }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Descriptif de l'entreprise</label>
+                                        <textarea rows="4" name="description"
+                                                  placeholder="Une description de votre entreprise."></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label>Zone géographique</label>
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="zone-geographique">
+                                            <div class="default text">Zone</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <div class="item" data-value="savoie">
+                                                    Savoie
                                                 </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label>Descriptif de l'entreprise</label>
-                                    <textarea name="description" rows="4"
-                                              placeholder="Une description de votre entreprise."></textarea>
-                                </div>
-                                <div class="field">
-                                    <label>Zone géographique</label>
-                                    <div class="ui selection dropdown">
-                                        <input type="hidden" name="zone-geographique">
-                                        <div class="default text">Zone</div>
-                                        <i class="dropdown icon"></i>
-                                        <div class="menu">
-                                            <div class="item" data-value="savoie">
-                                                Savoie
-                                            </div>
-                                            <div class="item" data-value="hsavoie">
-                                                Haute Savoie
-                                            </div>
-                                            <div class="item" data-value="autre">
-                                                Autre
+                                                <div class="item" data-value="hsavoie">
+                                                    Haute Savoie
+                                                </div>
+                                                <div class="item" data-value="autre">
+                                                    Autre
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="two fields">
-                                    <div class="required field">
-                                        <label>Adresse e-mail</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon envelope"></i>
-                                            <input type="text" name="mail" placeholder="@mail.fr">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Adresse e-mail</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon envelope"></i>
+                                                <input type="text" name="mail" placeholder="@mail.fr">
+                                            </div>
+                                        </div>
+                                        <div class="required field">
+                                            <label>Téléphone</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon phone"></i>
+                                                <input type="text" name="telephone" placeholder="Téléphone">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="required field">
-                                        <label>Téléphone</label>
+                                        <label>Mot de passe</label>
                                         <div class="ui left icon input">
-                                            <i class="icon phone"></i>
-                                            <input type="text" name="telephone" placeholder="Téléphone">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse" placeholder="Mot de passe">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse" placeholder="Mot de passe">
+                                    <div class="required field">
+                                        <label>Répéter le mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse2" placeholder="Mot de passe">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Répéter le mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" name="motdepasse2" placeholder="Mot de passe">
+                                    <div class="ui divider"></div>
+                                    <div class="required inline field">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="ui divider"></div>
-                                <div class="required inline field">
-                                    <div class="ui checkbox">
-                                        <input type="checkbox" tabindex="0" class="hidden">
-                                        <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                    <button class="ui large green fluid submit button" type="submit" value="entreprise"
+                                            name="tab">
+                                        Valider
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui bottom attached tab segment" data-tab="third">
+                        <div class="ui vertical segment form--segment">
+                            <div class="ui container stackable middle aligned grid">
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte
+                                    auto-entrepreneur</h3>
+                                <form class="ui form" method="post" style="width: 100%;">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom</label>
+                                            <input type="text" name="nom" placeholder="Nom">
+                                        </div>
+                                        <div class="required field">
+                                            <label>Prénom</label>
+                                            <input type="text" name="prenom" placeholder="Prénom">
+                                        </div>
                                     </div>
-                                </div>
-                                <button class="ui large green fluid submit button" type="submit"
-                                        value="auto" name="tab">Valider
-                                </button>
-                                <div class="ui negative message transition">
-                                    <i class="close icon"></i>
-                                    <div class="header">
-                                        Erreur !
+                                    <div class="required field">
+                                        <label>Nom de l'entreprise</label>
+                                        <input type="text" name="nomEntreprise" placeholder="Nom entreprise">
                                     </div>
-                                    <p>
-                                        {% for message in app.flashes('nom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('prenom') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('mail') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('telephone') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse') %}
-                                            {{ message|raw }}
-                                        {% endfor %}
-                                    </p>
-                                    <p>
-                                        {% for message in app.flashes('motdepasse2') %}
-                                            {{ message }}
-                                        {% endfor %}
-                                    </p>
-                                </div>
-
-                            </form>
+                                    <div class="field">
+                                        <label>Adresse de l'entreprise</label>
+                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
+                                    </div>
+                                    <div class="field">
+                                        <label class="ui button" for="ae-logo">
+                                            <i class="paperclip icon"></i>
+                                            Logo de l'entreprise
+                                            <input type="file" style="display: none;" id="ae-logo" name="logo">
+                                        </label>
+                                    </div>
+                                    <div class="required field">
+                                        <label>N° de Siret</label>
+                                        <input type="text" name="siret" placeholder="N° Siret">
+                                    </div>
+                                    <div class="field">
+                                        <label>Secteur d'activité</label>
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="activite">
+                                            <div class="default text">Secteur</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                {% for secteur in secteurActivites %}
+                                                    <div class="item" data-value="{{ secteur }}">
+                                                        {{ secteur }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Descriptif de l'entreprise</label>
+                                        <textarea name="description" rows="4"
+                                                  placeholder="Une description de votre entreprise."></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label>Zone géographique</label>
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="zone-geographique">
+                                            <div class="default text">Zone</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <div class="item" data-value="savoie">
+                                                    Savoie
+                                                </div>
+                                                <div class="item" data-value="hsavoie">
+                                                    Haute Savoie
+                                                </div>
+                                                <div class="item" data-value="autre">
+                                                    Autre
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Adresse e-mail</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon envelope"></i>
+                                                <input type="text" name="mail" placeholder="@mail.fr">
+                                            </div>
+                                        </div>
+                                        <div class="required field">
+                                            <label>Téléphone</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon phone"></i>
+                                                <input type="text" name="telephone" placeholder="Téléphone">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="required field">
+                                        <label>Mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse" placeholder="Mot de passe">
+                                        </div>
+                                    </div>
+                                    <div class="required field">
+                                        <label>Répéter le mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" name="motdepasse2" placeholder="Mot de passe">
+                                        </div>
+                                    </div>
+                                    <div class="ui divider"></div>
+                                    <div class="required inline field">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                        </div>
+                                    </div>
+                                    <button class="ui large green fluid submit button" type="submit"
+                                            value="auto" name="tab">Valider
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
