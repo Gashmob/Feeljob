@@ -4,6 +4,9 @@
 namespace App\Controller;
 
 
+use App\database\EntityManager;
+use App\database\exceptions\UserNotFoundException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -27,12 +30,20 @@ class UserController extends AbstractController
 
     /**
      * @Route("/my-space", name="userSpace")
+     * @param EntityManagerInterface $em
+     * @return Response
+     * @throws UserNotFoundException
      */
-    public function userSpace(): Response
+    public function userSpace(EntityManagerInterface $em): Response
     {
         if (!$this->session->get('user'))
             return $this->redirectToRoute('connexion');
 
-        return $this->render('home/profil.html.twig');
+        $nomPrenom = EntityManager::getNomPrenomFromId($this->session->get('user'), $em);
+
+        return $this->render('home/profil.html.twig', [
+            'nom' => $nomPrenom['nom'],
+            'prenom' => $nomPrenom['prenom']
+        ]);
     }
 }
