@@ -88,17 +88,21 @@ class HomeController extends AbstractController
 
             $user = EntityManager::getGenericUserFromMail($mail);
             if ($user) {
-                $motdepasse = $request->get('motdepasse');
+                if ($user->isVerifie()) {
+                    $motdepasse = $request->get('motdepasse');
 
-                if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
-                    $this->session->set('user', $user->getId());
-                    $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
+                    if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
+                        $this->session->set('user', $user->getId());
+                        $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
 
-                    $this->addFlash('success', 'Vous êtes connecté !');
+                        $this->addFlash('success', 'Vous êtes connecté !');
 
-                    return $this->redirectToRoute('userSpace');
+                        return $this->redirectToRoute('userSpace');
+                    } else {
+                        $this->addFlash('form', 'Identifiants incorrects');
+                    }
                 } else {
-                    $this->addFlash('form', 'Identifiants incorrects');
+                    $this->addFlash('fail', 'Vous devez vérifier votre mail !');
                 }
             } else {
                 $this->addFlash('form', 'Identifiants incorrects');
