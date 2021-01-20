@@ -72,7 +72,13 @@ class CandidatController extends AbstractController
             $famille = $request->get('famille');
 
             $diplomes = $request->get('diplomes');
+            if (!is_array($diplomes)) {
+                $diplomes = [$diplomes];
+            }
             $dates = $request->get('dates');
+            if (!is_array($dates)) {
+                $dates = [$dates];
+            }
             $diplomesB = true;
             if (sizeof($diplomes) != sizeof($dates)) {
                 $diplomesB = false;
@@ -80,8 +86,17 @@ class CandidatController extends AbstractController
             }
 
             $nomEntreprises = $request->get('nomEntreprises');
+            if (!is_array($nomEntreprises)) {
+                $nomEntreprises = [$nomEntreprises];
+            }
             $postes = $request->get('postes');
+            if (!is_array($postes)) {
+                $postes = [$postes];
+            }
             $durees = $request->get('durees');
+            if (!is_array($durees)) {
+                $durees = [$durees];
+            }
             $experiencesB = true;
             if (sizeof($nomEntreprises) != sizeof($postes) && sizeof($nomEntreprises) != $durees) {
                 $experiencesB = false;
@@ -89,8 +104,14 @@ class CandidatController extends AbstractController
             }
 
             $langues = $request->get('langues');
+            if (!is_array($langues)) {
+                $langues = [$langues];
+            }
 
             $deplacements = $request->get('deplacements');
+            if (!is_array($deplacements)) {
+                $deplacements = [$deplacements];
+            }
 
             $typeContrat = $request->get('typeContrat');
 
