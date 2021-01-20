@@ -595,6 +595,12 @@ abstract class EntityManager
         $res['debut'] = $offre->getDebut();
         $res['fin'] = $offre->getFin();
         $res['loge'] = $offre->getLoge();
+        $res['heures'] = $offre->getHeures();
+        $res['salaire'] = $offre->getSalaire();
+        $res['deplacement'] = $offre->getDeplacement();
+        $res['lieu'] = $offre->getLieu();
+        $res['teletravail'] = $offre->getTeletravail();
+        $res['nbRecrutement'] = $offre->getNbRecrutement();
 
         return $res;
     }
