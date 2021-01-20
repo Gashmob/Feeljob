@@ -143,18 +143,12 @@
                                         <div class="default text">Secteur</div>
                                         <i class="dropdown icon"></i>
                                         <div class="menu">
-                                            <div class="item" data-value="visa">
-                                                <i class="visa icon"></i>
-                                                Secteur 1
-                                            </div>
-                                            <div class="item" data-value="amex">
-                                                <i class="amex icon"></i>
-                                                Secteur 2
-                                            </div>
-                                            <div class="item" data-value="discover">
-                                                <i class="discover icon"></i>
-                                                Secteur 3
-                                            </div>
+                                            {% for secteur in secteurActivites %}
+                                                <div class="item" data-value="{{ secteur }}">
+                                                    <!--<i class="visa icon"></i>-->
+                                                    {{ secteur }}
+                                                </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
