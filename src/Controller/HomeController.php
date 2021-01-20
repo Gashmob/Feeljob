@@ -229,8 +229,8 @@ class HomeController extends AbstractController
                         $this->addFlash('adresse', 'Merci de renseigner une adresse');
                     }
 
-                    //$logo = $this->uploadImage();
-                    $logo = "";
+                    $logo = $this->uploadImage();
+                    //$logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -325,8 +325,8 @@ class HomeController extends AbstractController
                         $this->addFlash('adresse', 'Merci de renseigner une adresse pour l\'entreprise');
                     }
 
-                    //$logo = $this->uploadImage();
-                    $logo = "";
+                    $logo = $this->uploadImage();
+                    //$logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -494,8 +494,6 @@ class HomeController extends AbstractController
             // Infos sur le fichier téléchargé
             $fileTmpPath = $_FILES['logo']['tmp_name'];
             $fileName = $_FILES['logo']['name'];
-            $fileSize = $_FILES['logo']['size'];
-            $fileType = $_FILES['logo']['type'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
@@ -548,23 +546,5 @@ class HomeController extends AbstractController
 
         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
         return $this->redirectToRoute('waitVerifEmail', ['id' => $id]);
-    }
-
-    /**
-     * @Route("/cv1", name="cv1")
-     * @return Response
-     */
-    public function cv1(): Response
-    {
-        return $this->render('candidat/showCV.html.twig');
-    }
-
-    /**
-     * @Route("/cv2", name="cv2")
-     * @return Response
-     */
-    public function cv2(): Response
-    {
-        return $this->render('candidat/createCV.html.twig');
     }
 }
