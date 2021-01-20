@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\entity\CV;
 use App\database\EntityManager;
+use App\database\exceptions\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,8 +47,9 @@ class CandidatController extends AbstractController
      * @Route("/create/CV", name="create_cv")
      * @param Request $request
      * @return Response
+     * @throws UserNotFoundException
      */
-    public function createCV(Request $request): Response
+    public function createCV(Request $request, EntityManagerInterface $em): Response
     {
         if (!$this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -126,13 +128,19 @@ class CandidatController extends AbstractController
             }
         }
 
+        $nomPrenom = EntityManager::getNomPrenomFromId($this->session->get('user'), $em);
+
         return $this->render('candidat/createCV.html.twig', [
             'situations' => EntityManager::getAllSituationFamilleName(),
             'langues' => EntityManager::getAllLangueName(),
             'deplacements' => EntityManager::getAllDeplacementName(),
             'typeContrats' => EntityManager::getAllTypeContratName(),
             'metiers' => EntityManager::getAllMetierName(),
-            'entreprises' => EntityManager::getAllExperienceName()
+            'entreprises' => EntityManager::getAllExperienceName(),
+            'nom' => $nomPrenom['nom'],
+            'prenom' => $nomPrenom['prenom'],
+            'telephone' => EntityManager::getUserPhoneFromId($this->session->get('user'), $em),
+            'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail()
         ]);
     }
 
