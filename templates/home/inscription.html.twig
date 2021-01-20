@@ -124,7 +124,7 @@
                                     </p>
                                     <p>
                                         {% for message in app.flashes('motdepasse') %}
-                                            {{ message }}
+                                            {{ message|raw }}
                                         {% endfor %}
                                     </p>
                                     <p>
@@ -279,7 +279,7 @@
                                     </p>
                                     <p>
                                         {% for message in app.flashes('motdepasse') %}
-                                            {{ message }}
+                                            {{ message|raw }}
                                         {% endfor %}
                                     </p>
                                     <p>
@@ -433,7 +433,7 @@
                                     </p>
                                     <p>
                                         {% for message in app.flashes('motdepasse') %}
-                                            {{ message }}
+                                            {{ message|raw }}
                                         {% endfor %}
                                     </p>
                                     <p>
