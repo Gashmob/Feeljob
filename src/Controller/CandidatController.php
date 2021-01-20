@@ -126,8 +126,6 @@ class CandidatController extends AbstractController
             // Infos sur le fichier téléchargé
             $fileTmpPath = $_FILES['photo']['tmp_name'];
             $fileName = $_FILES['photo']['name'];
-            $fileSize = $_FILES['photo']['size'];
-            $fileType = $_FILES['photo']['type'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
