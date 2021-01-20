@@ -334,6 +334,17 @@
                                 <button class="ui large green fluid submit button" type="submit"
                                         value="auto" name="tab">Valider
                                 </button>
+                                <div class="ui negative message transition hidden">
+                                    <i class="close icon"></i>
+                                    <div class="header">
+                                        Erreur !
+                                    </div>
+                                    <p>
+                                        {% for message in app.flashes('fail') %}
+                                            {{ message }}
+                                        {% endfor %}
+                                    </p>
+                                </div>
                             </form>
                         </div>
                     </div>
