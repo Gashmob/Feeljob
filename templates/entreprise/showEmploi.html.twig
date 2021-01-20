@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Voir un CV{% endblock %}
+{% block body %}
+    <div style="margin: 20px 0px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Offre d'emploi
+        </h2>
+        <form class="ui form segment">
+            <h4>{{ aaaa['nom'] }}</h4>
+            <div>{{ aaaa['debut'] }}</div>
+            <div>{{ aaaa['fin'] }}</div>
+            <div>{{ aaaa['loge'] }}</div>
+
+            <!-- Autres -->
+            <h3 class="ui dividing header">
+                <i class="icon question circle outline"></i>
+                <div class="content">Autres informations</div>
+            </h3>
+            <div class="ui segment">
+                <div class="ui left float icon">
+                    <i class="icon check"></i>
+                    Logé
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon check"></i>
+                    Rattaché à un lieu précis
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon times"></i>
+                    Éligible au télétravail
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

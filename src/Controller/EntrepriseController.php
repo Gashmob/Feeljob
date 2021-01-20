@@ -37,7 +37,7 @@ class EntrepriseController extends AbstractController
      */
     public function showEmploi($id, EntityManagerInterface $em): Response
     {
-        return $this->render('', [
+        return $this->render('entreprise/showEmploi.html.twig', [
             'offre' => EntityManager::getEmploiArrayFromId($id, $em)
         ]);
     }
