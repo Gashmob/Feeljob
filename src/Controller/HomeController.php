@@ -99,13 +99,13 @@ class HomeController extends AbstractController
 
                         return $this->redirectToRoute('userSpace');
                     } else {
-                        $this->addFlash('mail', 'Identifiants incorrects');
+                        $this->addFlash('form', 'Identifiants incorrects');
                     }
                 } else {
                     $this->addFlash('fail', 'Vous devez vérifier votre mail !');
                 }
             } else {
-                $this->addFlash('mail', 'Identifiants incorrects');
+                $this->addFlash('form', 'Identifiants incorrects');
             }
         }
 
