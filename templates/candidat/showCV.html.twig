@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Voir un CV{% endblock %}
+{% block body %}
+    <div style="margin: 20px 0px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            CV de {{ cv['prenom'] }} {{ cv['nom'] }}
+        </h2>
+        <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
+            <button class="ui button">
+                <i class="download icon"></i>
+                Télécharger le CV
+            </button>
+        </a>
+        <form class="ui form segment">
+            <!-- Identité -->
+            <h3 class="ui dividing header">
+                <i class="icon user"></i>
+                <div class="content">Identité</div>
+            </h3>
+            <div class="ui two column grid">
+                <div class="column four wide">
+                    <img src="{{ asset('uploads/photos/' ~ cv['photo']) }}" alt="photo de profil"
+                         class="ui small circular image">
+                </div>
+                <div class="column ten wide">
+                    <div>{{ cv['prenom'] }} {{ cv['nom'] }}</div>
+                    <div>Homme</div>
+                    <div>{{ cv['famille'] }}</div>
+                    <div class="ui divider"></div>
+                    <div>{{ cv['metier'] }}</div>
+                    <div>{{ cv['email'] }}</div>
+                    <div>{{ cv['telephone'] }}</div>
+                </div>
+            </div>
+            <!-- Formation -->
+            <h3 class="ui dividing header">
+                <i class="icon university"></i>
+                <div class="content">Formation</div>
+            </h3>
+            <div class="ui segments">
+                {% for diplome in cv['diplomes'] %}
+                <div class="ui segment formation1">
+                    <h5 class="ui header">{{ diplome['nom'] }}</h5>
+                    <div>{{ diplome['nom'] }}</div>
+                    <div>{{ diplome['date'] }}</div>
+                </div>
+                {% endfor %}
+                <div class="ui segment formation2">
+                    <h5 class="ui header">Licence Informatique</h5>
+                    <div>Université de Bretagne</div>
+                    <div>2015-2016</div>
+                </div>
+            </div>
+            <!-- Expérience -->
+            <h3 class="ui dividing header">
+                <i class="icon dolly"></i>
+                <div class="content">Expérience professionnelle</div>
+            </h3>
+            <div class="ui segments">
+                {% for experience in cv['experiences'] %}
+                <div class="ui segment experience1">
+                    <h5 class="ui header">{{ experience['poste'] }}</h5>
+                    <div>{{ experience['nomEntreprise'] }}</div>
+                    <div>{{ experience['duree'] }}</div>
+                </div>
+                {% endfor %}
+                <div class="ui segment experience2">
+                    <h5 class="ui header">Développeur C++</h5>
+                    <div>Sopra Steria</div>
+                    <div>2016-2018</div>
+                </div>
+            </div>
+            <!-- Langues parlées -->
+            <h3 class="ui dividing header">
+                <i class="icon globe"></i>
+                <div class="content">Langues parlées</div>
+            </h3>
+            <ul>
+                <li>Français - langue maternelle</li>
+                <li>Anglais - couramment</li>
+                <li>Italien - quelques notions</li>
+            </ul>
+            <!-- Autres -->
+            <h3 class="ui dividing header">
+                <i class="icon question circle outline"></i>
+                <div class="content">Autres informations</div>
+            </h3>
+            <div class="ui segment">
+                <div class="ui left float icon">
+                    <i class="icon check"></i>
+                    Dispose du permis B
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon check"></i>
+                    Dispose d'un moyen de transport
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon times"></i>
+                    Pas plus de 50km
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

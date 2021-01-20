@@ -16,7 +16,9 @@
 ###< symfony/phpunit-bridge ###
 
 .idea
+composer.lock
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+.DS_Store

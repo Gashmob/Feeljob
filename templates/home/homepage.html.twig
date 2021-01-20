@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bienvenue sur FealJob{% endblock %}
+{% block body %}
+    <div>
+        <div style="min-height:300px;padding:1em 0em" class="ui inverted vertical center aligned segment">
+            <div class="ui large inverted pointing secondary menu">
+                <div class="ui container">
+                    <a href="{{ path('homepage') }}" class="active item">Accueil</a>
+                    <a href="{{ path('show', {type:'entreprise'}) }}" class="item">Employeurs</a>
+                    <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
+                    <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
+                    <div class="right item">
+                        {% if app.session.get('user') %}
+                            <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Mon espace</a>
+                            <a href="{{ path('deconnexion') }}" style="margin-left:0.5em"
+                               class="ui inverted button" role="button">Deconnexion</a>
+                        {% else %}
+                            <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
+                            <a href="{{ path('inscription') }}" style="margin-left:0.5em"
+                               class="ui inverted button" role="button">Inscription</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="ui text container masthead">
+                <h1 style="font-size:4em;font-weight:normal;margin-bottom:0;margin-top:1em" class="ui inverted header">
+                    Fealjob</h1>
+                <h2 style="font-size:1.7em;font-weight:normal;margin-top:1.5em" class="ui inverted header">La valeur du
+                    travail.</h2>
+                <a href="{{ path('inscription') }}" class="ui huge green button">Commencer<i
+                            aria-hidden="true" class="right arrow icon"></i>
+                </a>
+            </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="#1b1c1d" fill-opacity="1"
+                  d="M0,320L40,304C80,288,160,256,240,229.3C320,203,400,181,480,170.7C560,160,640,160,720,176C800,192,880,224,960,234.7C1040,245,1120,235,1200,208C1280,181,1360,139,1400,117.3L1440,96L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"></path>
+        </svg>
+
+    </div>
+
+    <div style="padding:8em 0em" class="ui vertical segment">
+        <div class="ui container stackable middle aligned grid">
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 style="font-size:2em" class="ui header">We Help Companies and Companions</h3>
+                    <p style="font-size:1.33em">We can give your company superpowers to do things that they never
+                        thought possible. Let us delight your customers and empower your needs... through pure data
+                        analytics.</p>
+                    <h3 style="font-size:2em" class="ui header">We Make websites That Can Dance</h3>
+                    <p style="font-size:1.33em">Yes that&#x27;s right, you thought it was the stuff of dreams, but even
+                        websites can be bioengineered.</p>
+                </div>
+                <div class="right floated six wide column"><img
+                            src="https://react.semantic-ui.com/images/wireframe/white-image.png"
+                            class="ui large bordered rounded image"/></div>
+            </div>
+            <div class="row">
+                <div class="center aligned column">
+                    <button class="ui huge button">Check Them Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding:0em" class="ui vertical segment">
+        <div class="ui stackable internally celled equal width grid">
+            <div class="center aligned row">
+                <div style="padding-bottom:5em;padding-top:5em" class="column">
+                    <h3 style="font-size:2em" class="ui header">&quot;What a Company&quot;</h3>
+                    <p style="font-size:1.33em">That is what they all say about us</p>
+                </div>
+                <div style="padding-bottom:5em;padding-top:5em" class="column">
+                    <h3 style="font-size:2em" class="ui header">&quot;I shouldn&#x27;t have gone with their competitor.&quot;</h3>
+                    <p style="font-size:1.33em"><img src="https://react.semantic-ui.com/images/avatar/large/nan.jpg"
+                                                     class="ui avatar image"/><b>Nan</b> Chief Fun Officer Acme Toys</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding:8em 0em" class="ui vertical segment">
+        <div class="ui text container">
+            <h3 style="font-size:2em" class="ui header">Breaking The Grid, Grabs Your Attention</h3>
+            <p style="font-size:1.33em">Instead of focusing on content creation and hard work, we have learned how to
+                master the art of doing nothing by providing massive amounts of whitespace and generic content that can
+                seem massive, monolithic and worth your attention.</p>
+            <a class="ui large button" role="button">Read More</a>
+            <h4 style="margin:3em 0em;text-transform:uppercase" class="ui horizontal divider header"><a href="#">Case
+                    Studies</a></h4>
+            <h3 style="font-size:2em" class="ui header">Did We Tell You About Our websites?</h3>
+            <p style="font-size:1.33em">Yes I know you probably disregarded the earlier boasts as non-sequitur filler
+                content, but it&#x27;s really true. It took years of gene splicing and combinatory DNA research, but our
+                websites can really dance.</p>
+            <a class="ui large button" role="button">I&#x27;m Still Quite Interested</a>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('.primaryNav').addClass('hidden');
+        // fix menu when passed
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function () {
+                    $('.fixed.menu').transition('fade in');
+                },
+                onBottomPassedReverse: function () {
+                    $('.fixed.menu').transition('fade out');
+                }
+            })
+        ;
+    </script>
+{% endblock %}

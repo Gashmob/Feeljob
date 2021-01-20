@@ -17,6 +17,11 @@ class Query
     /**
      * @var string
      */
+    private static string $graph = 'fealjob';
+
+    /**
+     * @var string
+     */
     protected string $query;
     /**
      * @var array
@@ -33,7 +38,7 @@ class Query
      */
     public function __construct(string $query)
     {
-        $this->query = $query;
+        $this->query = 'USE ' . self::$graph . ' ' . $query;
         $this->connection = new Connection();
     }
 
@@ -44,7 +49,10 @@ class Query
     public function run(): Query
     {
         $results = $this->connection->getConnection()->run($this->query);
-        $this->result = $results->toArray();
+        for ($i = 0; $i < $results->count(); $i++) {
+            $result = $results->get($i);
+            $this->result[] = $result->toArray();
+        }
 
         return $this;
     }
@@ -60,10 +68,10 @@ class Query
 
     /**
      * Return the first result of the query or null if there is no result
-     * @return null|mixed
+     * @return mixed|null
      */
     public function getOneOrNullResult()
     {
-        return $this->result[0];
+        return isset($this->result[0]) ? $this->result[0] : null;
     }
 }

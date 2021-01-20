@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Voir un CV{% endblock %}
+{% block body %}
+    <div style="margin: 20px 0px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Offre d'emploi
+        </h2>
+        <form class="ui form segment">
+            <h4>{{ offre['nom'] }}</h4>
+            <div>De {{ offre['debut'] }}</div>
+            <div>à {{ offre['fin'] }}</div>
+            <div>{{ offre['nbRecrutement'] }} recrutement{% if offre['nbRecrutement'] > 1 %}s{% endif%} disponible{% if offre['nbRecrutement'] > 1 %}s{% endif%}</div>
+            <div>{{ offre['salaire'] }}.00€</div>
+            <div>{{ offre['heures'] }} heures par semaine</div>
+
+            <!-- Autres -->
+            <h3 class="ui dividing header">
+                <i class="icon question circle outline"></i>
+                <div class="content">Autres informations</div>
+            </h3>
+            <div class="ui segment">
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
+                    Logé
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['deplacement'] %}times{% else %}check{% endif %}"></i>
+                    Rattaché à un lieu précis
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['teletravail'] %}check{% else %}times{% endif %}"></i>
+                    Éligible au télétravail
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
