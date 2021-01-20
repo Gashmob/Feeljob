@@ -47,7 +47,6 @@
                         </div>
                     </div>
                     <button class="ui large green fluid submit button" type="submit" value="auto">Se connecter</button>
-                    <div class="ui error message"></div>
                     <div class="ui divider"></div>
                     <div>
                         Vous ne possédez pas de compte? <a
@@ -55,6 +54,17 @@
                         <br>
                         <a href="">J'ai oublié mon mot de passe.</a>
                     </div>
+                </div>
+                <div class="ui negative message transition hidden">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Erreur !
+                    </div>
+                    <p>
+                        {% for message in app.flashes('fail') %}
+                            {{ message }}
+                        {% endfor %}
+                    </p>
                 </div>
             </form>
         </div>

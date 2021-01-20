@@ -199,29 +199,16 @@
                 </div>
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
-            <div class="messages">
-                <div class="ui negative message">
-                    <div class="header">
-                        Certains champs sont incorrects
-                    </div>
-                    <p>Veuillez remplir les champs mis en rouge</p>
+            <div class="ui negative message transition hidden">
+                <i class="close icon"></i>
+                <div class="header">
+                    Erreur !
                 </div>
-                <div class="ui icon message">
-                    <i class="notched circle loading icon"></i>
-                    <div class="content">
-                        <div class="header">
-                            Une petite seconde
-                        </div>
-                        <p>Nous sommes en cours d'enregistrement</p>
-                    </div>
-                </div>
-                <!-- Remplacer positive par success et negative par error -->
-                <div class="ui positive message">
-                    <div class="header">
-                        Votre CV a bien été enregistré
-                    </div>
-                    <p>Vous pouvez retourner à vos précentes occupations</p>
-                </div>
+                <p>
+                    {% for message in app.flashes('fail') %}
+                        {{ message }}
+                    {% endfor %}
+                </p>
             </div>
         </form>
     </div>

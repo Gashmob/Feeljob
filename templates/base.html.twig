@@ -26,7 +26,8 @@
 <header>
     <nav>
         <div class="ui menu primaryNav">
-            <a href="{{ path('homepage') }}" class="header item"><img style="margin-right: .5em;" src="{{ asset('img/FJ200.png') }}"/>Accueil</a>
+            <a href="{{ path('homepage') }}" class="header item"><img style="margin-right: .5em;"
+                                                                      src="{{ asset('img/FJ200.png') }}"/>Accueil</a>
             <a href="{{ path('show', {type:'entreprise'}) }}" class="active item">Employeurs</a>
             <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
             <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
@@ -87,6 +88,17 @@
         </div>
     </nav>
 </header>
+<div class="ui positive message transition hidden">
+    <i class="close icon"></i>
+    <div class="header">
+        Succès !
+    </div>
+    <p>
+        {% for message in app.flashes('success') %}
+            {{ message }}
+        {% endfor %}
+    </p>
+</div>
 {% block body %}{% endblock %}
 <footer class="footer">
     <div style="padding:5em 0em" class="ui inverted vertical segment">
@@ -112,9 +124,7 @@
                     </div>
                     <div class="seven wide column">
                         <h4 class="ui inverted header">Footer Header</h4>
-                        <p>Messages flash :<br> {% for message in app.flashes('success') %}
-                                {{ message }}
-                            {% endfor %}</p>
+                        <p></p>
                     </div>
                 </div>
             </div>
