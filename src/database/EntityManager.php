@@ -544,4 +544,26 @@ abstract class EntityManager
 
         return $res;
     }
+
+    /**
+     * @param int $id
+     * @param EntityManagerInterface $em
+     * @return string|null
+     */
+    public static function getUserPhoneFromId(int $id, EntityManagerInterface $em): ?string
+    {
+        switch (EntityManager::getUserTypeFromId($id)) {
+            case 'Candidat':
+                return $em->getRepository(Candidat::class)->findOneBy(['identity' => $id])->getTelephone();
+
+            case 'Entreprise':
+                return $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id])->getTelephone();
+
+            case 'AutoEntrepreneur':
+                return $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $id])->getTelephone();
+
+            default:
+                return null;
+        }
+    }
 }

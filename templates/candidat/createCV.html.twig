@@ -52,11 +52,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Prénom</label>
-                            <input type="text" name="prenom" value="Jean">
+                            <input type="text" name="prenom" value="{{ prenom }}">
                         </div>
                         <div class="field">
                             <label>Nom</label>
-                            <input type="text" name="nom" value="Valjean">
+                            <input type="text" name="nom" value="{{ nom }}">
                         </div>
                     </div>
                     <div class="two fields">
@@ -99,15 +99,15 @@
                         <label>E-mail</label>
                         <div class="ui left icon input">
                             <i class="icon envelope"></i>
-                            <input type="text" name="mail" placeholder="jeanvaljean@gmail.com"
-                                   value="jeanvaljean@gmail.com">
+                            <input type="text" name="mail" placeholder="Email"
+                                   value="{{ email }}">
                         </div>
                     </div>
                     <div class="field">
                         <label>Téléphone</label>
                         <div class="ui left icon input">
                             <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone" value="06 96 47 32 42">
+                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ telephone }}">
                         </div>
                     </div>
                 </div>
@@ -122,11 +122,9 @@
                     <div class="field">
                         <label>Situation familiale</label>
                         <select class="ui dropdown" name="situationF">
-                            <option value="N">Non précisée</option>
-                            <option value="CELIB">Célibataire</option>
-                            <option value="MARIE">Marié.e</option>
-                            <option value="PAX">Paxé.e</option>
-                            <option value="VEUF">Veuf.ve</option>
+                            {% for situation in situations %}
+                                <option value="{{ situation }}">{{ situation }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
