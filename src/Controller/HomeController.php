@@ -503,6 +503,10 @@ class HomeController extends AbstractController
             // Les extensions autorisées
             $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'svg');
 
+            if (!file_exists('./uploads/logos')) {
+                mkdir('./uploads/logos');
+            }
+
             if (in_array($fileExtension, $allowedfileExtensions)) {
                 $uploadFileDir = './uploads/logos/';
                 $dest_path = $uploadFileDir . $newFileName;
