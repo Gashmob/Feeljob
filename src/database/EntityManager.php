@@ -546,11 +546,11 @@ abstract class EntityManager
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param EntityManagerInterface $em
      * @return string|null
      */
-    public static function getUserPhoneFromId($id, EntityManagerInterface $em): ?string
+    public static function getUserPhoneFromId(int $id, EntityManagerInterface $em): ?string
     {
         switch (EntityManager::getUserTypeFromId($id)) {
             case 'Candidat':
