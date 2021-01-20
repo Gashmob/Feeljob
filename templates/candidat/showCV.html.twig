@@ -4,12 +4,14 @@
     <div style="margin-top: 20px;" class="ui text justified container">
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
-            Voir le CV (à voir directement depuis le profil d'une personne)
+            CV de Jean Valjean
         </h2>
-        <button class="ui button">
-            <i class="download icon"></i>
-            Télécharger le CV
-        </button>
+        <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
+            <button class="ui button">
+                <i class="download icon"></i>
+                Télécharger le CV
+            </button>
+        </a>
         <form class="ui form segment">
             <!-- Identité -->
             <h3 class="ui dividing header">
@@ -67,6 +69,16 @@
                     <div>2016-2018</div>
                 </div>
             </div>
+            <!-- Langues parlées -->
+            <h3 class="ui dividing header">
+                <i class="icon globe"></i>
+                <div class="content">Langues parlées</div>
+            </h3>
+            <ul>
+                <li>Français - langue maternelle</li>
+                <li>Anglais - couramment</li>
+                <li>Italien - quelques notions</li>
+            </ul>
             <!-- Autres -->
             <h3 class="ui dividing header">
                 <i class="icon question circle outline"></i>
@@ -80,6 +92,10 @@
                 <div class="ui left float icon">
                     <i class="icon check"></i>
                     Dispose d'un moyen de transport
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon times"></i>
+                    Pas plus de 50km
                 </div>
             </div>
         </form>

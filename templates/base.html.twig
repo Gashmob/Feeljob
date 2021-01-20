@@ -25,12 +25,28 @@
 <body>
 <header>
     <nav>
+        <div class="ui fixed menu">
+            <div class="ui container">
+                <a href="#" class="header item">
+                    <img style="margin-right: 1.5em;" class="logo" src="{{ asset('img/FJ200.png') }}">
+                    FealJob
+                </a>
+                <a href="{{ path('show', {type:'entreprise'}) }}" class="item">Employeurs</a>
+                <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
+                <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
+            </div>
+            <div class="right item">
+                <a href="{{ path('connexion') }}" class="item">Connexion</a>
+                <a href="{{ path('inscription') }}" class="item">Inscription</a>
+            </div>
+        </div>
+        <!--
         <div class="ui menu primaryNav">
             <a href="{{ path('homepage') }}" class="header item"><img style="margin-right: .5em;"
                                                                       src="{{ asset('img/FJ200.png') }}"/>Accueil</a>
-            <a href="{{ path('show', {type:'entreprise'}) }}" class="active item">Employeurs</a>
-            <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
-            <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
+            <a href="" class="active item">Annonces</a>
+            <a href="" class="item">Créer annonce</a>
+            <a href="" class="item">CV</a>
             <div class="right menu">
                 <div class="ui dropdown item">
                     <i class="icon bell"></i>
@@ -81,11 +97,13 @@
                         <a href="{{ path('create_cv') }}" class="item">Déposer sa carte</a>
                         <a href="{{ path('create_emploi') }}" class="item">Accéder aux offres</a>
                         <div class="divider"></div>
-                        <a class="item" href="{{ path('deconnexion') }}">Se déconnecter <i class="icon sign-out"></i></a>
+                        <a class="item" href="{{ path('deconnexion') }}">Se déconnecter <i
+                                    class="icon sign-out"></i></a>
                     </div>
                 </div>
             </div>
         </div>
+        -->
     </nav>
 </header>
 <div style="position: absolute; right: 10px; top: 40px;" class="ui text container positive message transition hidden">
@@ -121,7 +139,9 @@
                     </div>
                     <div class="seven wide column">
                         <h4 class="ui inverted header">Footer Header</h4>
-                        <p></p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus culpa eligendi eum ex
+                            ipsum iste quaerat quas qui reprehenderit sapiente. Adipisci, culpa expedita facilis
+                            inventore mollitia quasi soluta suscipit voluptate.</p>
                     </div>
                 </div>
             </div>
