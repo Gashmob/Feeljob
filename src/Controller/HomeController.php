@@ -189,7 +189,13 @@ class HomeController extends AbstractController
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
-                    if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB) {
+                    $conditionsB = true;
+                    if (!$request->get('conditions')) {
+                        $conditionsB = false;
+                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
+                    }
+
+                    if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB && $conditionsB) {
                         $candidat = new Candidat();
                         $candidat->setPrenom($prenom)
                             ->setNom($nom)
@@ -230,7 +236,6 @@ class HomeController extends AbstractController
                     }
 
                     $logo = $this->uploadImage();
-                    //$logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -281,7 +286,13 @@ class HomeController extends AbstractController
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
-                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
+                    $conditionsB = true;
+                    if (!$request->get('conditions')) {
+                        $conditionsB = false;
+                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
+                    }
+
+                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB && $conditionsB) {
                         $entreprise = new Entreprise();
                         $entreprise->setNom($nom)
                             ->setPrenom($prenom)
@@ -326,7 +337,6 @@ class HomeController extends AbstractController
                     }
 
                     $logo = $this->uploadImage();
-                    //$logo = "";
 
                     $siret = $request->get('siret');
                     $siretB = true;
@@ -374,7 +384,13 @@ class HomeController extends AbstractController
                     $salt = $this->randomString(16);
                     $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
 
-                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB) {
+                    $conditionsB = true;
+                    if (!$request->get('conditions')) {
+                        $conditionsB = false;
+                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
+                    }
+
+                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB && $conditionsB) {
                         $autoEntrepreneur = new AutoEntrepreneur();
                         $autoEntrepreneur->setPrenom($prenom)
                             ->setNom($nom)
