@@ -1,18 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block title %}FealJob - Créer une offre d'emploi{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px;" class="ui text justified container">
+    <div style="margin-top: 20px; margin-bottom: 60px;" class="ui text justified container">
         <h2 class="ui center aligned icon header">
-            <i class="address card outline icon"></i>
+            <i class="briefcase icon"></i>
             Créer une offre d'emploi
         </h2>
         <form class="ui form segment" method="post">
-            <div class="field">
+            <div class="required field">
                 <label>Intitulé du poste</label>
-                <div class="ui left icon input">
-                    <i class="search icon"></i>
-                    <input type="text" name="intitule-poste" placeholder="Rechercher...">
-                </div>
+                <input type="text" name="intitule-poste" placeholder="Intitulé du poste">
             </div>
             <div class="field">
                 <label>Type de contrat</label>
@@ -22,23 +19,18 @@
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <div class="item" data-value="CDD">
-                            <i class="visa icon"></i>
                             CDD
                         </div>
                         <div class="item" data-value="CDI">
-                            <i class="amex icon"></i>
                             CDI
                         </div>
                         <div class="item" data-value="saisonier">
-                            <i class="discover icon"></i>
-                            saisonier
+                            Saisonier
                         </div>
                         <div class="item" data-value="interim">
-                            <i class="discover icon"></i>
-                            Interim
+                            Intérim
                         </div>
                         <div class="item" data-value="appoint">
-                            <i class="discover icon"></i>
                             Contrat d'appoint
                         </div>
                     </div>
@@ -47,29 +39,32 @@
             <div class="two fields">
                 <div class="disabled field">
                     <label>Date début</label>
-                    <input name="dateD" placeholder="Si CDD ou saisonier" type="text" tabindex="-1">
+                    <input name="dateD" placeholder="12/05/2021" type="text">
                 </div>
                 <div class="disabled field">
                     <label>Date fin</label>
-                    <input name="dateF" placeholder="uniquement" type="text" tabindex="-1">
+                    <input name="dateF" placeholder="12/07/2021" type="text">
                 </div>
             </div>
-            <div class="field">
-                <label>Nombre d'heures travaillées</label>
-                <input type="text" name="heures" placeholder="Nombre">
-            </div>
-            <div class="field">
-                <label>Montant du salaire</label>
-                <div class="ui right labeled input">
-                    <label for="montant" class="ui label">€</label>
-                    <input name="salaire" type="text" placeholder="Montant" id="montant">
-                    <div class="ui basic label">.00</div>
+            <div class="three fields">
+                <div class="field">
+                    <label>Nombre d'heures travaillées</label>
+                    <input type="text" name="heures" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Montant du salaire</label>
+                    <div class="ui right labeled input">
+                        <label for="montant" class="ui label">€</label>
+                        <input name="salaire" type="text" placeholder="Montant" id="montant">
+                        <div class="ui basic label">.00</div>
+                    </div>
+                </div>
+                <div class="required field">
+                    <label>Nombre de postes à pourvoir</label>
+                    <input type="text" name="nb-postes" placeholder="#">
                 </div>
             </div>
-            <div class="field">
-                <label>Nombre de postes à pourvoir</label>
-                <input type="text" name="nb-postes" placeholder="#">
-            </div>
+            <div class="ui divider"></div>
             <div class="field">
                 <div class="ui toggle checkbox">
                     <input type="checkbox" name="gift" tabindex="0" class="hidden">
@@ -88,14 +83,7 @@
                     <label>Éligible au télétravail</label>
                 </div>
             </div>
-
-            <div class="required inline field">
-                <div class="ui checkbox">
-                    <input type="checkbox" tabindex="0" class="hidden">
-                    <label>J'accepte les <a>conditions d'utilisation</a></label>
-                </div>
-            </div>
-            <button class="ui fluid large green submit button" type="submit">Valider</button>
+            <button class="ui fluid large green submit button" type="submit">Créer</button>
         </form>
     </div>
 {% endblock %}
