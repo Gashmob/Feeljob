@@ -1,103 +1,101 @@
 {% extends 'base.html.twig' %}
+{% block title %}FealJob - Créer une offre d'emploi{% endblock %}
 {% block body %}
-    <div>
-        <div class="ui vertical segment form--segment">
-            <div class="ui container stackable middle aligned grid">
-                <div>
-                    <h3>Création offre d'emploi</h3>
-                    <form class="ui form">
-                        <div class="field">
-                            <label>Intitulé du poste</label>
-                            <div class="ui left icon input">
-                                <i class="search icon"></i>
-                                <input type="text" name="intitule-poste" placeholder="Rechercher...">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Type de contrat</label>
-                            <div class="ui selection dropdown">
-                                <input type="hidden" name="contrat">
-                                <div class="default text">Type</div>
-                                <i class="dropdown icon"></i>
-                                <div class="menu">
-                                    <div class="item" data-value="CDD">
-                                        <i class="visa icon"></i>
-                                        CDD
-                                    </div>
-                                    <div class="item" data-value="CDI">
-                                        <i class="amex icon"></i>
-                                        CDI
-                                    </div>
-                                    <div class="item" data-value="saisonier">
-                                        <i class="discover icon"></i>
-                                        saisonier
-                                    </div>
-                                    <div class="item" data-value="interim">
-                                        <i class="discover icon"></i>
-                                        Interim
-                                    </div>
-                                    <div class="item" data-value="appoint">
-                                        <i class="discover icon"></i>
-                                        Contrat d'appoint
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="two fields">
-                            <div class="disabled field">
-                                <label>Date début</label>
-                                <input name="dateD" placeholder="Si CDD ou saisonier" type="text" tabindex="-1">
-                            </div>
-                            <div class="disabled field">
-                                <label>Date fin</label>
-                                <input name="dateF" placeholder="uniquement" type="text" tabindex="-1">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Nombre d'heures travaillées</label>
-                            <input type="text" name="heures" placeholder="Nombre">
-                        </div>
-                        <div class="field">
-                            <label>Montant du salaire</label>
-                            <div class="ui right labeled input">
-                                <label for="montant" class="ui label">€</label>
-                                <input name="salaire" type="text" placeholder="Montant" id="montant">
-                                <div class="ui basic label">.00</div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Nombre de postes à pourvoir</label>
-                            <input type="text" name="nb-postes" placeholder="#">
-                        </div>
-                        <div class="field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="gift" tabindex="0" class="hidden">
-                                <label>Emploi logé</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="lieu-precis" tabindex="0" class="hidden">
-                                <label>Emploi rattaché à un lieu précis</label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="teletravail" tabindex="0" class="hidden">
-                                <label>Éligible au télétravail</label>
-                            </div>
-                        </div>
-
-                        <div class="required inline field">
-                            <div class="ui checkbox">
-                                <input type="checkbox" tabindex="0" class="hidden">
-                                <label>J'accepte les <a>conditions d'utilisation</a></label>
-                            </div>
-                        </div>
-                        <button class="ui fluid large green submit button" type="submit">Valider</button>
-                    </form>
+    <div style="margin-top: 20px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Créer une offre d'emploi
+        </h2>
+        <form class="ui form segment" method="post">
+            <div class="field">
+                <label>Intitulé du poste</label>
+                <div class="ui left icon input">
+                    <i class="search icon"></i>
+                    <input type="text" name="intitule-poste" placeholder="Rechercher...">
                 </div>
             </div>
-        </div>
+            <div class="field">
+                <label>Type de contrat</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="contrat">
+                    <div class="default text">Type</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="CDD">
+                            <i class="visa icon"></i>
+                            CDD
+                        </div>
+                        <div class="item" data-value="CDI">
+                            <i class="amex icon"></i>
+                            CDI
+                        </div>
+                        <div class="item" data-value="saisonier">
+                            <i class="discover icon"></i>
+                            saisonier
+                        </div>
+                        <div class="item" data-value="interim">
+                            <i class="discover icon"></i>
+                            Interim
+                        </div>
+                        <div class="item" data-value="appoint">
+                            <i class="discover icon"></i>
+                            Contrat d'appoint
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="disabled field">
+                    <label>Date début</label>
+                    <input name="dateD" placeholder="Si CDD ou saisonier" type="text" tabindex="-1">
+                </div>
+                <div class="disabled field">
+                    <label>Date fin</label>
+                    <input name="dateF" placeholder="uniquement" type="text" tabindex="-1">
+                </div>
+            </div>
+            <div class="field">
+                <label>Nombre d'heures travaillées</label>
+                <input type="text" name="heures" placeholder="Nombre">
+            </div>
+            <div class="field">
+                <label>Montant du salaire</label>
+                <div class="ui right labeled input">
+                    <label for="montant" class="ui label">€</label>
+                    <input name="salaire" type="text" placeholder="Montant" id="montant">
+                    <div class="ui basic label">.00</div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Nombre de postes à pourvoir</label>
+                <input type="text" name="nb-postes" placeholder="#">
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="gift" tabindex="0" class="hidden">
+                    <label>Emploi logé</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="lieu-precis" tabindex="0" class="hidden">
+                    <label>Emploi rattaché à un lieu précis</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="teletravail" tabindex="0" class="hidden">
+                    <label>Éligible au télétravail</label>
+                </div>
+            </div>
+
+            <div class="required inline field">
+                <div class="ui checkbox">
+                    <input type="checkbox" tabindex="0" class="hidden">
+                    <label>J'accepte les <a>conditions d'utilisation</a></label>
+                </div>
+            </div>
+            <button class="ui fluid large green submit button" type="submit">Valider</button>
+        </form>
     </div>
 {% endblock %}
