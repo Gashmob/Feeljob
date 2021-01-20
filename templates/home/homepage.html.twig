@@ -10,9 +10,15 @@
                     <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
                     <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
                     <div class="right item">
-                        <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
-                        <a href="{{ path('inscription') }}" style="margin-left:0.5em"
-                           class="ui inverted button" role="button">Inscription</a>
+                        {% if app.session.get('user') %}
+                            <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Mon espace</a>
+                            <a href="{{ path('deconnexion') }}" style="margin-left:0.5em"
+                               class="ui inverted button" role="button">Deconnexion</a>
+                        {% else %}
+                            <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
+                            <a href="{{ path('inscription') }}" style="margin-left:0.5em"
+                               class="ui inverted button" role="button">Inscription</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

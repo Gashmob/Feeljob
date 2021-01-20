@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{{ path('connexion') }}" class="item">
+                <a href="{{ path('userSpace') }}" class="item">
                     <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
                     <div class="content person-summary">
                         <div class="ui sub header" style="max-width: 117px;">Elyse</div>
@@ -88,11 +88,8 @@
         </div>
     </nav>
 </header>
-<div class="ui positive message transition hidden">
+<div class="ui positive message transition">
     <i class="close icon"></i>
-    <div class="header">
-        Succès !
-    </div>
     <p>
         {% for message in app.flashes('success') %}
             {{ message }}
