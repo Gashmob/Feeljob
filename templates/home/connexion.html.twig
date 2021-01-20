@@ -18,7 +18,10 @@
             max-width: 450px;
         }
     </style>
-    <svg style="position:absolute; top: -30px; right: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#21ba45" fill-opacity="1" d="M0,64L48,85.3C96,107,192,149,288,138.7C384,128,480,64,576,48C672,32,768,64,864,106.7C960,149,1056,203,1152,229.3C1248,256,1344,256,1392,256L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+    <svg style="position:absolute; top: -30px; right: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#21ba45" fill-opacity="1"
+              d="M0,64L48,85.3C96,107,192,149,288,138.7C384,128,480,64,576,48C672,32,768,64,864,106.7C960,149,1056,203,1152,229.3C1248,256,1344,256,1392,256L1440,256L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+    </svg>
     <a href="{{ path('homepage') }}" class="ui compact labeled icon button"
        style="position: fixed; top: 20px; left: 20px;">
         <i class="left arrow icon"></i>
@@ -61,9 +64,11 @@
                         Erreur !
                     </div>
                     <p>
-                        {% for message in app.flashes('fail') %}
-                            {{ message }}
-                        {% endfor %}
+                        {% for message in app.flashes('form') %}
+                    <div>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
                     </p>
                 </div>
             </form>
