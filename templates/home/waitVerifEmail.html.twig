@@ -23,10 +23,10 @@
                 <i class="icon at"></i>
                 <div class="content">
                     Un e-mail a été envoyé.
-                    <div class="sub header">Adresse : pierre.martin@gmail.com</div>
+                    <div class="sub header">Adresse : {{ mail }}</div>
                 </div>
             </h2>
-            <h5>Vous ne l'avez pas reçu ? <a>Renvoyer.</a></h5>
+            <h5>Vous ne l'avez pas reçu ? <form method="post"><button type="submit">Renvoyer</button></form></h5>
         </div>
     </div>
 {% endblock %}
