@@ -46,7 +46,8 @@
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input type="password" name="motdepasse" autocomplete="current-password" placeholder="Mot de passe">
+                            <input type="password" name="motdepasse" autocomplete="current-password"
+                                   placeholder="Mot de passe">
                         </div>
                     </div>
                     <button class="ui large green fluid submit button" type="submit" value="auto">Se connecter</button>
@@ -65,10 +66,10 @@
                     </div>
                     <div class="content">
                         {% for message in app.flashes('form') %}
-                    <p>
-                        {{ message }}
-                    </p>
-                    {% endfor %}
+                            <div>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </form>
