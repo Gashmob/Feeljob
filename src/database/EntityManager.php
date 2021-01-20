@@ -59,9 +59,10 @@ abstract class EntityManager
      */
     public static function isMailUsed($mail): bool
     {
-        return count((new PreparedQuery('MATCH (u {email:$mail}) RETURN u'))
+        return (new PreparedQuery('MATCH (u {email:$mail}) RETURN u'))
                 ->setString('mail', $mail)
-                ->getResult()) > 0;
+                ->run()
+                ->getOneOrNullResult() != null;
     }
 
     /**

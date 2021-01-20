@@ -423,7 +423,8 @@ class HomeController extends AbstractController
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([
                         'nom' => $nomPrenom['nom'],
-                        'prenom' => $nomPrenom['prenom']
+                        'prenom' => $nomPrenom['prenom'],
+                        'id' => $id
                     ]);
                 $mailer->send($email);
                 $this->addFlash('success', 'Email envoyé !');
@@ -436,7 +437,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""}, methods={"POST"})
+     * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""})
      * @param $id
      * @return RedirectResponse
      */
@@ -451,6 +452,7 @@ class HomeController extends AbstractController
             $user->setVerifie(true);
             $user->flush();
 
+            $this->addFlash('success', 'Votre email est vérifié');
             return $this->redirectToRoute('connexion');
         }
 
@@ -533,7 +535,8 @@ class HomeController extends AbstractController
             ->htmlTemplate('emails/verification.html.twig')
             ->context([
                 'nom' => $nom,
-                'prenom' => $prenom
+                'prenom' => $prenom,
+                'id' => $id
             ]);
         $mailer->send($email);
 
