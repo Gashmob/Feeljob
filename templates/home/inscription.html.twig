@@ -44,36 +44,13 @@
                         Erreur !
                     </div>
                     <div class="content">
-                        <div>
-                            {% for message in app.flashes('nom') %}
-                                {{ message }}
+                        {% for messages in app.flashes %}
+                            {% for message in messages %}
+                                <div>
+                                    {{ message | raw }}
+                                </div>
                             {% endfor %}
-                        </div>
-                        <div>
-                            {% for message in app.flashes('prenom') %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                        <div>
-                            {% for message in app.flashes('mail') %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                        <div>
-                            {% for message in app.flashes('telephone') %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                        <div>
-                            {% for message in app.flashes('motdepasse') %}
-                                {{ message|raw }}
-                            {% endfor %}
-                        </div>
-                        <div>
-                            {% for message in app.flashes('motdepasse2') %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -130,7 +107,7 @@
                                     <div class="ui divider"></div>
                                     <div class="required inline field">
                                         <div class="ui checkbox">
-                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <input type="checkbox" name="conditions" class="hidden">
                                             <label>J'accepte les <a>conditions d'utilisation</a></label>
                                         </div>
                                     </div>
@@ -249,7 +226,7 @@
                                     <div class="ui divider"></div>
                                     <div class="required inline field">
                                         <div class="ui checkbox">
-                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <input type="checkbox" name="conditions" class="hidden">
                                             <label>J'accepte les <a>conditions d'utilisation</a></label>
                                         </div>
                                     </div>
@@ -368,7 +345,7 @@
                                     <div class="ui divider"></div>
                                     <div class="required inline field">
                                         <div class="ui checkbox">
-                                            <input type="checkbox" tabindex="0" class="hidden">
+                                            <input type="checkbox" name="conditions" class="hidden">
                                             <label>J'accepte les <a>conditions d'utilisation</a></label>
                                         </div>
                                     </div>
