@@ -192,8 +192,8 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
         return $result == null ? null : new GenericUser(
-            $result['u']['mail'],
-            $result['u']['verification'],
+            $result['u']['email'],
+            $result['u']['verifie'],
             $result['u']['motdepasse'],
             $result['u']['sel'],
             $id
@@ -211,15 +211,15 @@ abstract class EntityManager
         $user = null;
         switch (EntityManager::getUserTypeFromId($id)) {
             case 'Candidat':
-                $user = $em->getRepository(Candidat::class)->find($id);
+                $user = $em->getRepository(Candidat::class)->findOneBy(['identity' => $id]);
                 break;
 
             case 'Entreprise':
-                $user = $em->getRepository(Entreprise::class)->find($id);
+                $user = $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id]);
                 break;
 
             case 'AutoEntrepreneur':
-                $user = $em->getRepository(AutoEntrepreneur::class)->find($id);
+                $user = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $id]);
                 break;
 
             default:

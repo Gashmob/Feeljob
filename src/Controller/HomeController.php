@@ -409,8 +409,12 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
+        $user = EntityManager::getGenericUserFromId($id);
+        if ($user->isVerifie()) {
+            return $this->redirectToRoute('userSpace');
+        }
+
         if ($request->isMethod('POST')) {
-            $user = EntityManager::getGenericUserFromId($id);
             $nomPrenom = EntityManager::getNomPrenomFromId($id, $em);
             if ($user) {
                 $email = (new TemplatedEmail())
@@ -426,7 +430,9 @@ class HomeController extends AbstractController
             }
         }
 
-        return $this->render('home/waitVerifEmail.html.twig');
+        return $this->render('home/waitVerifEmail.html.twig', [
+            'mail' => $user->getEmail()
+        ]);
     }
 
     /**
