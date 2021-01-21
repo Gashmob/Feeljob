@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div>
+        <div class="ui vertical segment form--segment">
+            <div class="ui container stackable middle aligned grid">
+                <div>
+                    <h3>Création annonce chantier/service</h3>
+                    <form class="ui form">
+                        <div class="field">
+                            <label>Secteurs visés</label>
+                            <input type="text" name="nom" placeholder="Nom">
+                        </div>
+                        <div class="field">
+                            <label>Date début</label>
+                            <input type="text" name="prenom" placeholder="Prénom">
+                        </div>
+                        <div class="field">
+                            <label>Adresse e-mail</label>
+                            <input type="text" name="adresse-email" placeholder="@mail.fr">
+                        </div>
+                        <div class="field">
+                            <label>Téléphone</label>
+                            <input type="text" name="telephone" placeholder="Téléphone">
+                        </div>
+                        <div class="field">
+                            <label>Mot de passe</label>
+                            <input type="password" name="mot-de-passe">
+                        </div>
+
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden">
+                                <label>J'accepte les <a>conditions d'utilisation</a></label>
+                            </div>
+                        </div>
+                        <button class="ui button" type="submit">Valider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

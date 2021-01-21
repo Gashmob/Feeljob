@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Créer une offre d'emploi{% endblock %}
+{% block body %}
+    <div style="margin-top: 20px; margin-bottom: 60px;" class="ui text justified container">
+        <h2 class="ui center aligned icon header">
+            <i class="briefcase icon"></i>
+            Créer une offre d'emploi
+        </h2>
+        <form class="ui form segment" method="post">
+            <div class="required field">
+                <label>Intitulé du poste</label>
+                <input type="text" name="nom" placeholder="Intitulé du poste" required>
+            </div>
+            <div class="field">
+                <label>Types de contrat :</label>
+                <select class="ui dropdown" name="contrat">
+                    {% for type in typeContrat %}
+                        <option value="{{ type }}">
+                            {{ type }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="two fields">
+                <div class="disabled field">
+                    <label>Date début</label>
+                    <input name="dateD" placeholder="jj/mm/aaaa" type="text">
+                </div>
+                <div class="disabled field">
+                    <label>Date fin</label>
+                    <input name="dateF" placeholder="jj/mm/aaaa" type="text">
+                </div>
+            </div>
+            <div class="three fields">
+                <div class="field">
+                    <label>Nombre d'heures travaillées</label>
+                    <input type="text" name="heures" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Montant du salaire</label>
+                    <div class="ui right labeled input">
+                        <label for="montant" class="ui label">€</label>
+                        <input name="salaire" type="text" placeholder="Montant" id="montant">
+                        <div class="ui basic label">.00</div>
+                    </div>
+                </div>
+                <div class="required field">
+                    <label>Nombre de postes à pourvoir</label>
+                    <input type="text" name="nbRecrutement" placeholder="#" required>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="loge" class="hidden">
+                    <label>Emploi logé</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="deplacement" class="hidden">
+                    <label>Emploi rattaché à un lieu précis</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="teletravail" class="hidden">
+                    <label>Éligible au télétravail</label>
+                </div>
+            </div>
+            <button class="ui fluid large green submit button" type="submit">Créer</button>
+        </form>
+    </div>
+{% endblock %}

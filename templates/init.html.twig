@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="FR">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Authors -->
+    <meta name="author" content="Kevin Traini, Luca Ciampi, Florian Deschenaux, Kevin Martins Gomes, Brunelle Cordier"/>
+    <meta property='article:author' content=''/>
+    <meta property='article:publisher' content=''/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="fr">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="rating" content="safe for kids">
+    <meta name="keywords" content="Fealjob, Feal, Job">
+
+    <!-- Favicon -->
+
+    <!-- CSS -->
+    <link rel='stylesheet' id='main-css' href="{{ asset('css/semantic.min.css') }}" type='text/css' media='all'/>
+    <link rel='stylesheet' id='main-css' href="{{ asset('css/main.css') }}" type='text/css' media='all'/>
+
+    <title>{% block title %}FealJob{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+<!-- Scripts -->
+<script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
+<script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
+<script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
+{% block javascripts %}{% endblock %}
+</footer>
+</body>
+</html>

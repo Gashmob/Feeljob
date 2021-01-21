@@ -1,0 +1,12 @@
+{# For error 404 #}
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Oups !</h1>
+
+    <p>
+        Il semblerait que la page que vous cherchez ne soit pas disponible.
+        <a href="{{ path('homepage') }}">Retourner à la page d'accueil</a>.
+    </p>
+{% endblock %}
