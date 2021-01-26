@@ -1,7 +1,23 @@
 {% extends 'base.html.twig' %}
+{% block title %}FealJob - Résultats offres d'emploi{% endblock %}
 {% block body %}
-    <div>
-        <div class="ui tiny breadcrumb">
+    <div style="margin-top: 100px !important; margin-bottom: 40px;" class="ui justified container">
+        <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Rechercher">
+            <div class="ui basic floating dropdown button">
+                <div class="text">Tous les résultats</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="active item">Tous les résultats</div>
+                    <div class="item">Offres d'emploi</div>
+                    <div class="item">Candidats</div>
+                    <div class="item">Auto-entrepreneurs</div>
+                </div>
+            </div>
+            <div class="ui button">Rechercher</div>
+        </div>
+        <div style="margin-bottom: 10px;" class="ui tiny breadcrumb">
             <a class="section">Home</a>
             <i class="right chevron icon divider"></i>
             <a class="section">Registration</a>
@@ -42,11 +58,11 @@
                     </div>
                 </div>
             </div>
-            <div class="nine wide column">
+            <div class="thirteen wide column">
                 <div class="ui divided items">
-                    <a class="item">
+                    <div class="item">
                         <div class="image">
-                            <img src="{{ asset('img/grey-frame.png') }}">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
                         </div>
                         <div class="content">
                             <a class="header">12 Years a Slave</a>
@@ -54,17 +70,19 @@
                                 <span class="cinema">Union Square 14</span>
                             </div>
                             <div class="description">
-                                <p>Ici la description de l'offre, nous travaillons à Annecy et nous cherchons un employé pour une durée de 3 semaines...</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut corporis, dignissimos
+                                    eligendi esse et excepturi fugit nulla obcaecati quam veritatis! Aliquid delectus
+                                    dignissimos ea excepturi expedita minima numquam optio sit?</p>
                             </div>
                             <div class="extra">
                                 <div class="ui label">IMAX</div>
                                 <div class="ui label"><i class="globe icon"></i> Additional Languages</div>
                             </div>
                         </div>
-                    </a>
-                    <a class="item">
+                    </div>
+                    <div class="item">
                         <div class="image">
-                            <img src="{{ asset('img/grey-frame.png') }}">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
                         </div>
                         <div class="content">
                             <a class="header">My Neighbor Totoro</a>
@@ -72,7 +90,10 @@
                                 <span class="cinema">IFC Cinema</span>
                             </div>
                             <div class="description">
-                                <p></p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aliquam aliquid
+                                    assumenda at aut cum debitis delectus distinctio, dolorum facilis incidunt
+                                    laboriosam maiores modi molestiae neque repellat reprehenderit similique
+                                    tempora!</p>
                             </div>
                             <div class="extra">
                                 <div class="ui right floated primary button">
@@ -82,31 +103,10 @@
                                 <div class="ui label">Limited</div>
                             </div>
                         </div>
-                    </a>
-                    <a class="item">
+                    </div>
+                    <div class="item">
                         <div class="image">
-                            <img src="{{ asset('img/grey-frame.png') }}">
-                        </div>
-                        <div class="content">
-                            <a class="header">My Neighbor Totoro</a>
-                            <div class="meta">
-                                <span class="cinema">IFC Cinema</span>
-                            </div>
-                            <div class="description">
-                                <p></p>
-                            </div>
-                            <div class="extra">
-                                <div class="ui right floated primary button">
-                                    Buy tickets
-                                    <i class="right chevron icon"></i>
-                                </div>
-                                <div class="ui label">Limited</div>
-                            </div>
-                        </div>
-                    </a>
-                    <a class="item">
-                        <div class="image">
-                            <img src="{{ asset('img/grey-frame.png') }}">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
                         </div>
                         <div class="content">
                             <a class="header">Watchmen</a>
@@ -114,7 +114,10 @@
                                 <span class="cinema">IFC</span>
                             </div>
                             <div class="description">
-                                <p></p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto deleniti
+                                    expedita ipsum nihil odit praesentium quidem repellat? Aliquid, dignissimos
+                                    distinctio dolorem eos, laborum, magnam nostrum numquam perspiciatis quia sapiente
+                                    ut.</p>
                             </div>
                             <div class="extra">
                                 <div class="ui right floated primary button">
@@ -123,7 +126,7 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
