@@ -212,4 +212,22 @@ class CandidatController extends AbstractController
 
         return "";
     }
+
+    /**
+     * @Route("/search/offre-emploi", name="search_emploi")
+     * @param Request $request
+     * @return Response
+     */
+    public function searchEmploi(Request $request): Response
+    {
+        // TODO : récupérer toutes le données de toutes les offres d'emploi
+
+        if ($request->isMethod('POST')) {
+            // TODO : récupérer les données des offres d'emploi correspondants aux filtres
+        }
+
+        return $this->render('', [
+            'offres' => []
+        ]);
+    }
 }
