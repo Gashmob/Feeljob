@@ -12,6 +12,7 @@ $(document)
                 ;
             })
         ;
+        $('.container .ui.dropdown').dropdown();
         $('.ui.checkbox')
             .checkbox()
         ;
