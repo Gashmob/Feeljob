@@ -176,7 +176,7 @@ class EntrepriseController extends AbstractController
             // TODO : récupérer les données des profils correspondant aux filtres
         }
 
-        return $this->render('', [
+        return $this->render('entreprise/showProfiles.html.twig', [
             'profils' => []
         ]);
     }
