@@ -604,4 +604,18 @@ abstract class EntityManager
 
         return $res;
     }
+
+    /**
+     * @param int $userId
+     * @param int $cvId
+     * @return bool
+     */
+    public static function isCVFromUser(int $userId, int $cvId): bool
+    {
+        return (new PreparedQuery('MATCH (u:Candidat)--(c:CV) WHERE id(u)=$idU AND id(c)=$idC RETURN c'))
+            ->setInteger('idU', $userId)
+            ->setInteger('idC', $cvId)
+            ->run()
+            ->getOneOrNullResult() != null;
+    }
 }

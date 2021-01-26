@@ -38,8 +38,16 @@ class CandidatController extends AbstractController
      */
     public function showCV($id, EntityManagerInterface $em): Response
     {
+        $canModify = false;
+        if ($this->session->get('user')) {
+            if (EntityManager::isCVFromUser($this->session->get('user'), $id)) {
+                $canModify = true;
+            }
+        }
+
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => EntityManager::getCVArrayFromId($id, $em)
+            'cv' => EntityManager::getCVArrayFromId($id, $em),
+            'canModify' => $canModify
         ]);
     }
 
