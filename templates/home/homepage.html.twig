@@ -99,15 +99,16 @@
 {% block javascripts %}
     <script>
         $('.primaryNav').addClass('hidden');
+        $('.primaryNav').addClass('fixed');
         // fix menu when passed
         $('.masthead')
             .visibility({
                 once: false,
                 onBottomPassed: function () {
-                    $('.fixed.menu').transition('fade in');
+                    $('.primaryNav').transition('fade in');
                 },
                 onBottomPassedReverse: function () {
-                    $('.fixed.menu').transition('fade out');
+                    $('.primaryNav').transition('fade out');
                 }
             })
         ;

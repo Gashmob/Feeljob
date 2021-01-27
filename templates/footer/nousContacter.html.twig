@@ -1,5 +1,23 @@
-<div>
-    Téléphone : 00 00 00 00 00
-    Adresse e-mail : mail@mail.fr
-    Adresse : 10 rue de la Victoire, Paris, France
-</div>
+{% extends 'page.html.twig' %}
+{% block title %}FealJob - Nous contacter{% endblock %}
+{% block body %}
+    <div class="ui segment vertical">
+        <h2>Nous contacter</h2>
+        <form class="ui form" style="max-width: 600px;" action="POST">
+            <div class="two fields">
+                <div class="required field">
+                    <label>Nom</label>
+                    <input type="text" name="nom" placeholder="Nom" required>
+                </div>
+                <div class="required field">
+                    <label>Adresse e-mail</label>
+                    <input type="text" name="mail" placeholder="e-mail" required>
+                </div>
+            </div>
+            <div class="required field">
+                <label>Votre message</label>
+                <textarea rows="4" name="description"></textarea>
+            </div>
+        </form>
+    </div>
+{% endblock %}

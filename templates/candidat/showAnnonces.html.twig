@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+{% block title %}FealJob - Résultats offres d'emploi{% endblock %}
+{% block body %}
+    <div style="margin-top: 100px  !important; margin-bottom: 40px;" class="ui justified container">
+        <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Rechercher">
+            <div class="ui basic floating dropdown button">
+                <div class="text">Tous les résultats</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="active item">Tous les résultats</div>
+                    <div class="item">Offres d'emploi</div>
+                    <div class="item">Candidats</div>
+                    <div class="item">Auto-entrepreneurs</div>
+                </div>
+            </div>
+            <div class="ui button">Rechercher</div>
+        </div>
+        <div style="margin-bottom: 10px;" class="ui tiny breadcrumb">
+            <a class="section">Home</a>
+            <i class="right chevron icon divider"></i>
+            <a class="section">Registration</a>
+            <i class="right chevron icon divider"></i>
+            <div class="active section">Personal Information</div>
+        </div>
+        <div class="ui grid">
+            <div class="three wide column">
+                <div class="ui vertical menu">
+                    <div class="item">
+                        <div class="header">Products</div>
+                        <div class="menu">
+                            <a class="item">Enterprise</a>
+                            <a class="item">Consumer</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">CMS Solutions</div>
+                        <div class="menu">
+                            <a class="item">Rails</a>
+                            <a class="item">Python</a>
+                            <a class="item">PHP</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">Hosting</div>
+                        <div class="menu">
+                            <a class="item">Shared</a>
+                            <a class="item">Dedicated</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">Support</div>
+                        <div class="menu">
+                            <a class="item">E-mail Support</a>
+                            <a class="item">FAQs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="thirteen wide column">
+                <div class="ui divided items">
+                    <div class="item">
+                        <div class="image">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
+                        </div>
+                        <div class="content">
+                            <a class="header">Pâtissier</a>
+                            <div class="meta">
+                                <span class="cinema">Du 12/06 au 12/07</span>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
+                                    blanditiis delectus distinctio dolor dolorum ducimus molestiae, natus nostrum
+                                    perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
+                            </div>
+                            <div class="extra">
+                                <div class="ui right floated primary button">
+                                    Voir l'annonce
+                                    <i class="right chevron icon"></i>
+                                </div>
+                                <div class="ui label">CDD</div>
+                                <div class="ui label">CDI</div>
+                                <div class="ui label"><i class="globe icon"></i> Anglais</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="image">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
+                        </div>
+                        <div class="content">
+                            <a class="header">DRH</a>
+                            <div class="meta">
+                                <span class="cinema">Du 12/06 au 12/07</span>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusamus animi, beatae
+                                    cupiditate distinctio ex expedita harum, nam nemo nihil odio praesentium quas
+                                    quibusdam rem, reprehenderit saepe sapiente voluptatem voluptatum!</p>
+                            </div>
+                            <div class="extra">
+                                <div class="ui right floated primary button">
+                                    Voir l'annonce
+                                    <i class="right chevron icon"></i>
+                                </div>
+                                <div class="ui label">Intérim</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="image">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
+                        </div>
+                        <div class="content">
+                            <a class="header">Graphiste</a>
+                            <div class="meta">
+                                <span class="cinema">Du 12/06 au 12/07</span>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dicta excepturi
+                                    ipsum iusto odit quas quibusdam quis rem saepe. Alias aspernatur assumenda deleniti
+                                    deserunt error impedit, modi mollitia nesciunt quos!</p>
+                            </div>
+                            <div class="extra">
+                                <div class="ui right floated primary button">
+                                    Voir l'annonce
+                                    <i class="right chevron icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

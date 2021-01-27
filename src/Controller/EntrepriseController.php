@@ -180,4 +180,13 @@ class EntrepriseController extends AbstractController
             'profils' => []
         ]);
     }
+
+    /**
+     * @Route("/profils", name="showProfiles")
+     * @return Response
+     */
+    public function showProfiles(): Response
+    {
+        return $this->render('entreprise/showProfiles.html.twig');
+    }
 }

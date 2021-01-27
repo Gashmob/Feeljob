@@ -45,7 +45,7 @@
             <div class="ui menu primaryNav">
                 <a href="{{ path('homepage') }}" class="header item"><img style="margin-right: .5em;"
                                                                           src="{{ asset('img/FJ200.png') }}"/>Accueil</a>
-                <a href="{{ path('showAnnonces') }}" class="active item">Annonces</a>
+                <a href="" class="active item">Annonces</a>
                 <a href="" class="item">Créer annonce</a>
                 <a href="" class="item">CV</a>
                 <div class="right menu">
@@ -107,7 +107,7 @@
         {% endif %}
     </nav>
 </header>
-<div style="position: absolute; right: 10px; top: 40px; z-index: 10;" class="ui text container positive message transition hidden">
+<div style="position: absolute; right: 10px; top: 40px;" class="ui text container positive message transition hidden">
     <i class="close icon"></i>
     <p>
         {% for message in app.flashes('success') %}
@@ -115,8 +115,10 @@
         {% endfor %}
     </p>
 </div>
-{% block body %}
-{% endblock %}
+<div class="ui container page-content">
+    {% block body %}
+    {% endblock %}
+</div>
 <footer class="footer">
     <div style="padding:5em 0em" class="ui inverted vertical segment">
         <div class="ui container">

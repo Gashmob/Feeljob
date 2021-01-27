@@ -212,4 +212,13 @@ class CandidatController extends AbstractController
 
         return "";
     }
+
+    /**
+     * @Route("/annonces", name="showAnnonces")
+     * @return Response
+     */
+    public function offres(): Response
+    {
+        return $this->render('candidat/showAnnonces.html.twig');
+    }
 }

@@ -359,6 +359,12 @@ template {
     padding-left: .5em;
 }
 
+.page-content {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    min-height: 60vh;
+}
+
 .segment.form--segment {
     padding: 4em;
 }

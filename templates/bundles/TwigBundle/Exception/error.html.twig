@@ -1,11 +1,15 @@
 {# For all errors including 500 #}
-{% extends 'base.html.twig' %}
-
+{% extends 'page.html.twig' %}
+{% block title %}FealJob - Erreur{% endblock %}
 {% block body %}
     <h1>Oups !</h1>
 
     <p>
-        Une erreur s'est produite.
+        Il semblerait qu'une erreur se soit produite.
         <a href="{{ path('homepage') }}">Retourner à la page d'accueil</a>.
+    </p>
+    <p>
+        Ou :
+        <a href="{{ path('contact') }}">Nous faire part de cette erreur</a>.
     </p>
 {% endblock %}
