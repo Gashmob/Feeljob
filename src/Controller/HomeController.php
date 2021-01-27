@@ -481,6 +481,51 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('homepage');
     }
 
+    /**
+     * @Route("/contact", name="contact")
+     * @return Response
+     */
+    public function contact(): Response
+    {
+        return $this->render('footer/nousContacter.html.twig');
+    }
+
+    /**
+     * @Route("/developers", name="developers")
+     * @return Response
+     */
+    public function developers(): Response
+    {
+        return $this->render('footer/developpeurs.html.twig');
+    }
+
+    /**
+     * @Route("/cookies", name="cookies")
+     * @return Response
+     */
+    public function cookies(): Response
+    {
+        return $this->render('footer/cookies.html.twig');
+    }
+
+    /**
+     * @Route("/confidentiality", name="confidentiality")
+     * @return Response
+     */
+    public function confidentiality(): Response
+    {
+        return $this->render('footer/confidentialite.html.twig');
+    }
+
+    /**
+     * @Route("/conditions", name="conditions")
+     * @return Response
+     */
+    public function useConditions(): Response
+    {
+        return $this->render('footer/conditionsUtilisation.html.twig');
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
