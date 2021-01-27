@@ -226,7 +226,7 @@ class CandidatController extends AbstractController
             // TODO : récupérer les données des offres d'emploi correspondants aux filtres
         }
 
-        return $this->render('', [
+        return $this->render('candidat/showOffresEmploi.html.twig', [
             'offres' => []
         ]);
     }
