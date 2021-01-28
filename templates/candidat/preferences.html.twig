@@ -1,0 +1,70 @@
+{% extends 'page.html.twig' %}
+{% block title %}FealJob - Préférences Compte{% endblock %}
+{% block body %}
+    <form action="POST" class="ui segment form">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                Paramètres du compte
+                <div class="sub header">Modifiez les paramètres relatifs à votre compte.</div>
+            </div>
+        </h2>
+        <div class="ui vertical segment">
+            <h3>Confidentialité</h3>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="afficherEmail" class="hidden" checked>
+                    <label>Afficher mon profil dans les résultats des recherches</label>
+                </div>
+            </div>
+            <p>Note : désactiver cette option ne permettra pas aux employeurs de vous trouver depuis le site.</p>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="afficherEmail" class="hidden">
+                    <label>Afficher mon adresse e-mail sur mon profil</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="afficherTel" class="hidden">
+                    <label>Afficher mon numéro de téléphone sur mon profil</label>
+                </div>
+            </div>
+        </div>
+        <div class="ui vertical segment">
+            <h3>Notifications</h3>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" class="hidden">
+                    <label>Autoriser Fealjob à m'envoyer des e-mails</label>
+                </div>
+            </div>
+            <div style="padding-left: 1.5em;" class="notifications-fields">
+                <div class="field">
+                    <div class="ui disabled checkbox">
+                        <input type="checkbox" class="hidden">
+                        <label>Une personne m'a envoyé un message</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui disabled checkbox">
+                        <input type="checkbox" class="hidden">
+                        <label>Une personne m'a laissé un avis</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui disabled checkbox">
+                        <input type="checkbox" class="hidden">
+                        <label>Une personne a vu mon CV</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui vertical segment">
+            <h3>Supprimer votre compte</h3>
+            <p>Votre compte sera supprimé de notre base de données. Cette action est irréversible.</p>
+            <button class="ui negative basic button" value="supprimer">Supprimer</button>
+        </div>
+        <button class="ui large primary submit button" type="submit" value="contact">Sauvegarder</button>
+    </form>
+{% endblock %}

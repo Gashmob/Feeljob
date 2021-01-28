@@ -11,9 +11,9 @@
                     <a href="{{ path('show', {type:'auto-entrepreneurs'}) }}" class="item">Auto-entrepreneurs</a>
                     <div class="right item">
                         {% if app.session.get('user') %}
-                            <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Mon espace</a>
+                            <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Profil</a>
                             <a href="{{ path('deconnexion') }}" style="margin-left:0.5em"
-                               class="ui inverted button" role="button">Deconnexion</a>
+                               class="ui inverted button" role="button">Déconnexion</a>
                         {% else %}
                             <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
                             <a href="{{ path('inscription') }}" style="margin-left:0.5em"

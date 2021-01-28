@@ -3,7 +3,7 @@
  *  Do not distribute
  */
 
-.ui.menu.fixed, .ui.menu.fixed .item:first-child, .ui.menu.fixed .item:last-child, .ui.menu.primaryNav {
+.primaryNav, .primaryNav .item {
     border-radius: 0px !important;
     border: none !important;
 }

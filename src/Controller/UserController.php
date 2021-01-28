@@ -46,4 +46,13 @@ class UserController extends AbstractController
             'prenom' => $nomPrenom['prenom']
         ]);
     }
+
+    /**
+     * @Route("/preferences", name="preferences")
+     * @return Response
+     */
+    public function preferences(): Response
+    {
+        return $this->render('candidat/preferences.html.twig');
+    }
 }

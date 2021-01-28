@@ -3,12 +3,13 @@
         <img style="margin-right: .5em;" src="{{ asset('img/FJ200.png') }}"/>
         Accueil
     </a>
-    <a href="" class="active item">Annonces</a>
+    <a href="" class="item">Annonces</a>
     <a href="" class="item">Créer annonce</a>
     <a href="" class="item">CV</a>
     <div class="right menu">
         <div class="ui dropdown item">
             <i class="icon bell"></i>
+            <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
             <div class="menu">
                 <div class="ui item feed">
                     <div class="event">
@@ -42,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <a href="{{ path('userSpace') }}" class="item">
+        <a href="{{ path('userSpace') }}" class="ui dropdown item">
             <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             <div class="content person-summary">
                 <div class="ui sub header" style="max-width: 117px;">Elyse</div>
@@ -53,10 +54,10 @@
             <i class="icon settings"></i>
             <i class="dropdown icon"></i>
             <div class="menu">
-                <a href="{{ path('create_cv') }}" class="item">Déposer sa carte</a>
-                <a href="{{ path('create_emploi') }}" class="item">Accéder aux offres</a>
+                <a href="{{ path('create_cv') }}" class="item">Créer un CV</a>
+                <a href="{{ path('preferences') }}" class="item">Préférences</a>
                 <div class="divider"></div>
-                <a class="item" href="{{ path('deconnexion') }}">Se déconnecter
+                <a class="item" href="{{ path('deconnexion') }}">Déconnexion
                     <i class="icon sign-out"></i>
                 </a>
             </div>

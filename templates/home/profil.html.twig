@@ -7,12 +7,23 @@
             </div>
             <div class="ten wide column">
                 <h2>Profil de {{ prenom }} {{ nom }}</h2>
+                <div class="ui label">{{ app.session.get('userType') }}</div>
                 <div>Profil créé le 12 septembre 2020</div>
+            </div>
+            <div class="four wide column">
+                <div>
+                    <i class="icon green check circle outline"></i>
+                    E-mail vérifié
+                </div>
+                <div>
+                    <i class="icon green check circle outline"></i>
+                    Téléphone vérifié
+                </div>
             </div>
         </div>
         <div class="ui vertical segment">
-            <h3>Vos CV <a href="{{ path('create_cv') }}"><i class="icon plus square outline"></i></a></h3>
-            <div class="ui five stackable cards">
+            <h3>Vos CV</h3>
+            <div class="ui four stackable cards">
                 <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
                     <div class="content">
                         <div class="header">CV#1</div>
@@ -68,87 +79,51 @@
                         Vu 23 fois
                     </div>
                 </a>
+                <div style="border: none; width: auto; box-shadow: none;"
+                     class="ui card grid middle aligned center aligned">
+                    <div class="column">
+                        <div class="ui row labeled icon">
+                            <label class="ui labeled icon button" for="profile-cv">
+                                <i class="download icon"></i>
+                                Télécharger
+                                <input type="file" style="display: none;" id="profile-cv" name="cv">
+                            </label>
+                        </div>
+                        <div style="margin: .5em 0;" class="row">Ou</div>
+                        <a href="{{ path('create_cv') }}" class="ui row labeled icon">
+                            <button class="ui blue labeled icon button">
+                                <i class="plus icon"></i>
+                                Créer
+                            </button>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="ui vertical segment">
             <h3>Avis des employeurs</h3>
             <div class="ui three stackable cards">
-                <div class="ui card">
-                    <div class="content">
-                        <div class="header">Superbe expérience !</div>
-                        <div class="meta">
-                            <span class="right floated time">2 days ago</span>
-                            <span class="category">Nom entreprise</span>
+                {% for i in 0..5 %}
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Superbe expérience !</div>
+                            <div class="meta">
+                                <span class="right floated time">2 days ago</span>
+                                <span class="category">Nom entreprise</span>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
+                                    dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
+                                    rem sunt veniam veritatis? Ipsa.</p>
+                            </div>
                         </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
-                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
-                                rem sunt veniam veritatis? Ipsa.</p>
-                        </div>
-                    </div>
-                    <div class="extra content">
-                        <div class="right floated author">
-                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
-                        </div>
-                    </div>
-                </div>
-                <div class="ui card">
-                    <div class="content">
-                        <div class="header">Superbe expérience !</div>
-                        <div class="meta">
-                            <span class="right floated time">2 days ago</span>
-                            <span class="category">Nom entreprise</span>
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
-                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
-                                rem sunt veniam veritatis? Ipsa.</p>
+                        <div class="extra content">
+                            <div class="right floated author">
+                                <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
+                            </div>
                         </div>
                     </div>
-                    <div class="extra content">
-                        <div class="right floated author">
-                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
-                        </div>
-                    </div>
-                </div>
-                <div class="ui card">
-                    <div class="content">
-                        <div class="header">Superbe expérience !</div>
-                        <div class="meta">
-                            <span class="right floated time">2 days ago</span>
-                            <span class="category">Nom entreprise</span>
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
-                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
-                                rem sunt veniam veritatis? Ipsa.</p>
-                        </div>
-                    </div>
-                    <div class="extra content">
-                        <div class="right floated author">
-                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
-                        </div>
-                    </div>
-                </div>
-                <div class="ui card">
-                    <div class="content">
-                        <div class="header">Superbe expérience !</div>
-                        <div class="meta">
-                            <span class="right floated time">2 days ago</span>
-                            <span class="category">Nom entreprise</span>
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
-                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
-                                rem sunt veniam veritatis? Ipsa.</p>
-                        </div>
-                    </div>
-                    <div class="extra content">
-                        <div class="right floated author">
-                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

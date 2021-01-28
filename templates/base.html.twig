@@ -16,7 +16,8 @@
         {% endif %}
     </nav>
 </header>
-<div style="position: absolute; right: 10px; top: 40px; z-index: 10;" class="ui text container positive message transition hidden">
+<div style="position: absolute; right: 10px; top: 40px; z-index: 10;"
+     class="ui text container positive message transition hidden">
     <i class="close icon"></i>
     <p>
         {% for message in app.flashes('success') %}
@@ -24,9 +25,10 @@
         {% endfor %}
     </p>
 </div>
-{% block body %}
-{% endblock %}
-
+<div class="content">
+    {% block body %}
+    {% endblock %}
+</div>
 {% include('footer/footer.html.twig') %}
 {% block javascripts %}{% endblock %}
 </body>
