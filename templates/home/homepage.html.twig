@@ -3,12 +3,12 @@
 {% block body %}
     <div>
         <div style="min-height:300px;padding:1em 0em" class="ui inverted vertical center aligned segment">
-            <div class="ui large inverted pointing secondary menu">
+            <div style="border-color: transparent !important;" class="ui large inverted pointing secondary menu">
                 <div class="ui container">
                     <a href="{{ path('homepage') }}" class="active item">Accueil</a>
-                    <a href="{{ path('show', {type:'entreprise'}) }}" class="item">Employeurs</a>
-                    <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
-                    <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
+                    <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
+                    <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
+                    <a href="{{ path('show', {type:'auto-entrepreneurs'}) }}" class="item">Auto-entrepreneurs</a>
                     <div class="right item">
                         {% if app.session.get('user') %}
                             <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Mon espace</a>

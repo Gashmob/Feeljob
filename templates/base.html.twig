@@ -2,112 +2,17 @@
 <html lang="FR">
 <head>
     <meta charset="UTF-8">
-
-    <!-- Authors -->
-    <meta name="author" content="Kevin Traini, Luca Ciampi, Florian Deschenaux, Kevin Martins Gomes, Brunelle Cordier"/>
-    <meta property='article:author' content=''/>
-    <meta property='article:publisher' content=''/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Language" content="fr">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="rating" content="safe for kids">
-    <meta name="keywords" content="Fealjob, Feal, Job">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
-
-    <!-- CSS -->
-    <link rel='stylesheet' id='main-css' href="{{ asset('css/semantic.min.css') }}" type='text/css' media='all'/>
-    <link rel='stylesheet' id='main-css' href="{{ asset('css/main.css') }}" type='text/css' media='all'/>
-
-    <title>{% block title %}FealJob{% endblock %}</title>
+    {% include('home/head.html.twig') %}
+    <title>{% block title %}Fealjob{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 <header>
     <nav>
         {% if not app.session.get('user') %}
-            <div class="ui primaryNav transition menu">
-                <div class="ui container">
-                    <a href="{{ path('homepage') }}" class="header item">
-                        <img style="margin-right: 1.5em;" class="logo" src="{{ asset('img/FJ200.png') }}">
-                        FealJob
-                    </a>
-                    <a href="{{ path('show', {type:'entreprise'}) }}" class="item">Employeurs</a>
-                    <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
-                    <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
-                </div>
-                <div class="right item">
-                    <a href="{{ path('connexion') }}" class="item">Connexion</a>
-                    <a href="{{ path('inscription') }}" class="item">Inscription</a>
-                </div>
-            </div>
+            {% include('navigation/visiteurNav.html.twig') %}
         {% else %}
-            <div class="ui menu primaryNav">
-                <a href="{{ path('homepage') }}" class="header item"><img style="margin-right: .5em;"
-                                                                          src="{{ asset('img/FJ200.png') }}"/>Accueil</a>
-                <a href="{{ path('showAnnonces') }}" class="active item">Annonces</a>
-                <a href="" class="item">Créer annonce</a>
-                <a href="" class="item">CV</a>
-                <div class="right menu">
-                    <div class="ui dropdown item">
-                        <i class="icon bell"></i>
-                        <div class="menu">
-                            <div class="ui item feed">
-                                <div class="event">
-                                    <div class="label">
-                                        <img src="{{ asset('img/placeholders/matt.jpg') }}">
-                                    </div>
-                                    <div class="content">
-                                        <div class="date">
-                                            Il y a 3 jours
-                                        </div>
-                                        <div class="summary">
-                                            Matt vous a envoyé un message.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui item feed">
-                                <div class="event">
-                                    <div class="label">
-                                        <img src="{{ asset('img/placeholders/elyse.png') }}">
-                                    </div>
-                                    <div class="content">
-                                        <div class="date">
-                                            Il y a plus d'une semaine
-                                        </div>
-                                        <div class="summary">
-                                            Clément a déposé une nouvelle annonce.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="{{ path('userSpace') }}" class="item">
-                        <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
-                        <div class="content person-summary">
-                            <div class="ui sub header" style="max-width: 117px;">Elyse</div>
-                            <div>{{ app.session.get('userType') }}</div>
-                        </div>
-                    </a>
-                    <div class="ui dropdown item">
-                        <i class="icon settings"></i>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a href="{{ path('create_cv') }}" class="item">Déposer sa carte</a>
-                            <a href="{{ path('create_emploi') }}" class="item">Accéder aux offres</a>
-                            <div class="divider"></div>
-                            <a class="item" href="{{ path('deconnexion') }}">Se déconnecter <i
-                                        class="icon sign-out"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include('navigation/candidatNav.html.twig') %}
         {% endif %}
     </nav>
 </header>
@@ -121,49 +26,8 @@
 </div>
 {% block body %}
 {% endblock %}
-<footer class="footer">
-    <div style="padding:5em 0em" class="ui inverted vertical segment">
-        <div class="ui container">
-            <div class="ui inverted stackable divided grid">
-                <div class="row">
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">À propos</h4>
-                        <div role="list" class="ui inverted link list">
-                            <a href="{{ path('contact') }}" role="listitem" class="item">Nous contacter</a>
-                            <a role="listitem" class="item">Plan du site</a>
-                            <a href="{{ path('developers') }}" role="listitem" class="item">Développeurs</a>
-                            <a role="listitem" class="item" href="https://github.com/Gashmob/Fealjob">Code source</a>
-                        </div>
-                    </div>
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">Mentions légales</h4>
-                        <div role="list" class="ui inverted link list">
-                            <a href="{{ path('conditions') }}" role="listitem" class="item">Conditions d'utilisation</a>
-                            <a href="{{ path('confidentiality') }}" role="listitem" class="item">Confidentialité</a>
-                            <a href="{{ path('cookies') }}" role="listitem" class="item">Cookies</a>
-                            <a role="listitem" class="item">Mentions légales</a>
-                        </div>
-                    </div>
-                    <div class="seven wide column">
-                        <h4 class="ui inverted header">Footer Header</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus culpa eligendi eum ex
-                            ipsum iste quaerat quas qui reprehenderit sapiente. Adipisci, culpa expedita facilis
-                            inventore mollitia quasi soluta suscipit voluptate.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="ui inverted vertical segment center aligned footer__additional ">
-        Copyright &#169; FealJob est une marque déposée, tous droits réservés.
-    </div>
-
-    <!-- Scripts -->
-    <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
-    <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
-    <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
-    {% block javascripts %}{% endblock %}
-</footer>
+{% include('footer/footer.html.twig') %}
+{% block javascripts %}{% endblock %}
 </body>
 </html>

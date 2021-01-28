@@ -1,0 +1,43 @@
+<footer class="footer">
+    <div style="padding:5em 0em" class="ui inverted vertical segment">
+        <div class="ui container">
+            <div class="ui inverted stackable divided grid">
+                <div class="row">
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">À propos</h4>
+                        <div role="list" class="ui inverted link list">
+                            <a href="{{ path('contact') }}" role="listitem" class="item">Nous contacter</a>
+                            <a role="listitem" class="item">Plan du site</a>
+                            <a href="{{ path('developers') }}" role="listitem" class="item">Développeurs</a>
+                            <a role="listitem" class="item" href="https://github.com/Gashmob/Fealjob">Code source</a>
+                        </div>
+                    </div>
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">Mentions légales</h4>
+                        <div role="list" class="ui inverted link list">
+                            <a href="{{ path('conditions') }}" role="listitem" class="item">Conditions d'utilisation</a>
+                            <a href="{{ path('confidentiality') }}" role="listitem" class="item">Confidentialité</a>
+                            <a href="{{ path('cookies') }}" role="listitem" class="item">Cookies</a>
+                            <a role="listitem" class="item">Mentions légales</a>
+                        </div>
+                    </div>
+                    <div class="seven wide column">
+                        <h4 class="ui inverted header">Footer Header</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus culpa eligendi eum ex
+                            ipsum iste quaerat quas qui reprehenderit sapiente. Adipisci, culpa expedita facilis
+                            inventore mollitia quasi soluta suscipit voluptate.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui inverted vertical segment center aligned footer__additional ">
+        Copyright &#169; <?php echo date("Y"); ?> FealJob est une marque déposée, tous droits réservés.
+    </div>
+
+    <!-- Scripts -->
+    <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
+</footer>

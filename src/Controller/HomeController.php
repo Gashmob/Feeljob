@@ -58,13 +58,13 @@ class HomeController extends AbstractController
     public function show($type): Response
     {
         switch ($type) {
-            case 'candidat':
+            case 'candidats':
                 return $this->render('home/candidat.html.twig');
 
-            case 'entreprise':
+            case 'entreprises':
                 return $this->render('home/employeur.html.twig');
 
-            case 'autoEntrepreneur':
+            case 'auto-entrepreneurs':
                 return $this->render('home/autoEntrepreneurs.html.twig');
 
             default:
@@ -491,7 +491,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/developers", name="developers")
+     * @Route("/developpeurs", name="developers")
      * @return Response
      */
     public function developers(): Response
