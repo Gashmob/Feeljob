@@ -75,7 +75,8 @@
                                     perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
                             </div>
                             <div class="extra">
-                                <a href="{{ path('show_emploi', {'id': '1'}) }}" class="ui right floated primary button">
+                                <a href="{{ path('show_emploi', {'id': '1'}) }}"
+                                   class="ui right floated primary button">
                                     Voir l'annonce
                                     <i class="right chevron icon"></i>
                                 </a>
@@ -130,6 +131,31 @@
                             </div>
                         </div>
                     </div>
+                    {% for i in 0..6 %}
+                        <div class="item">
+                            <div class="image">
+                                <div class="ui placeholder">
+                                    <div class="square image"></div>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="very short line"></div>
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
