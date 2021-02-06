@@ -583,7 +583,7 @@ abstract class EntityManager
     {
         $res = [];
 
-        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) as id'))
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) AS id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -601,6 +601,25 @@ abstract class EntityManager
         $res['lieu'] = $offre->getLieu();
         $res['teletravail'] = $offre->getTeletravail();
         $res['nbRecrutement'] = $offre->getNbRecrutement();
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @return mixed
+     */
+    public static function getAllEmploi(EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) RETURN id(o) AS id'))
+            ->run()
+            ->getResult();
+
+        foreach ($result as $id) {
+            $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+        }
 
         return $res;
     }

@@ -216,18 +216,21 @@ class CandidatController extends AbstractController
     /**
      * @Route("/search/offre-emploi", name="search_emploi")
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @return Response
      */
-    public function searchEmploi(Request $request): Response
+    public function searchEmploi(Request $request, EntityManagerInterface $em): Response
     {
-        // TODO : récupérer toutes le données de toutes les offres d'emploi
+        $offres = [];
 
         if ($request->isMethod('POST')) {
             // TODO : récupérer les données des offres d'emploi correspondants aux filtres
+        } else {
+            $offres = EntityManager::getAllEmploi($em);
         }
 
         return $this->render('candidat/showOffresEmploi.html.twig', [
-            'offres' => []
+            'offres' => $offres
         ]);
     }
 }
