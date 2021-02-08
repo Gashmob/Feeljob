@@ -2,29 +2,34 @@
 {% block title %}FealJob - Voir une offre d'emploi{% endblock %}
 {% block body %}
     <div style="position: relative;" class="ui text justified container">
+        <a href="{{ path('showAnnonces') }}" class="ui compact labeled icon button"
+           style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+            <i class="left arrow icon"></i>
+            Retour aux annonces
+        </a>
         <div class="ui segment">
-            <a href="{{ path('showAnnonces') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
-                <i class="left arrow icon"></i>
-                Retour aux annonces
-            </a>
-            <h2 class="ui header">{{ offre['nom'] }}</h2>
-            <div>
-                <div class="ui label">CDD</div>
-                <div class="ui label">CDI</div>
-                <div class="ui label">Stage</div>
+            <div class="ui two column grid">
+                <div class="column twelve wide">
+                    <h2 class="ui header">nom</h2>
+                    <div>
+                        <div class="ui label">CDD</div>
+                        <div class="ui label">CDI</div>
+                        <div class="ui label">Stage</div>
+                    </div>
+                </div>
+                <div class="four wide column">
+                    <a href="{{ path('userSpace') }}" class="ui header small">
+                        <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
+                        Entreprise
+                    </a>
+                </div>
             </div>
-            <a href="{{ path('userSpace') }}" class="ui header small">
-                <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
-                Entreprise
-            </a>
-            <div>Du {{ offre['debut'] }}</div>
-            <div>au {{ offre['fin'] }}</div>
-            <div>{{ offre['nbRecrutement'] }} recrutement{% if offre['nbRecrutement'] > 1 %}s{% endif %}
-                disponible{% if offre['nbRecrutement'] > 1 %}s{% endif %}</div>
-            <div>{{ offre['salaire'] }}.00€</div>
-            <div>{{ offre['heures'] }} heures par semaine</div>
-
+            <div style="padding-top: 20px;" class="ui content">
+                <p>Du debut au fin</p>
+                <p>1 recrutement disponible</p>
+                <p>1200.00€</p>
+                <p>35 heures par semaine</p>
+            </div>
             <!-- Autres -->
             <h3 class="ui dividing header">
                 <i class="icon question circle outline"></i>
@@ -32,15 +37,15 @@
             </h3>
             <div class="ui segment">
                 <div class="ui left float icon">
-                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
+                    <i class="icon check"></i>
                     Logé
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon {% if offre['deplacement'] %}times{% else %}check{% endif %}"></i>
+                    <i class="icon check"></i>
                     Rattaché à un lieu précis
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon {% if offre['teletravail'] %}check{% else %}times{% endif %}"></i>
+                    <i class="icon times"></i>
                     Éligible au télétravail
                 </div>
             </div>
