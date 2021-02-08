@@ -8,6 +8,7 @@ use App\database\EntityManager;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -152,5 +153,40 @@ class EntrepriseController extends AbstractController
         return $this->render('entreprise/createEmploi.html.twig', [
             'typeContrat' => EntityManager::getAllTypeContratName()
         ]);
+    }
+
+    /**
+     * @Route("/search/candidat", name="search_profil")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function searchProfil(Request $request)
+    {
+        if (!$this->session->get('user')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if (!$this->session->get('userType') === 'Entreprise') {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        // TODO : récupérer les données de tout les profils
+
+        if ($request->isMethod('POST')) {
+            // TODO : récupérer les données des profils correspondant aux filtres
+        }
+
+        return $this->render('entreprise/showProfiles.html.twig', [
+            'profils' => []
+        ]);
+    }
+
+    /**
+     * @Route("/profils", name="showProfiles")
+     * @return Response
+     */
+    public function showProfiles(): Response
+    {
+        return $this->render('entreprise/showProfiles.html.twig');
     }
 }

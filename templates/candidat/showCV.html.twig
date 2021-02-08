@@ -1,17 +1,27 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Voir un CV{% endblock %}
 {% block body %}
-    <div style="margin: 20px 0px;" class="ui text justified container">
+    <div class="ui text justified container">
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
             CV de {{ cv['prenom'] }} {{ cv['nom'] }}
         </h2>
-        <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
-            <button class="ui button">
-                <i class="download icon"></i>
-                Télécharger le CV
-            </button>
-        </a>
+        <div>
+            <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
+                <button class="ui labeled icon button">
+                    <i class="download icon"></i>
+                    Télécharger le CV
+                </button>
+            </a>
+            {% if modify %}
+                <a href="{{ path('create_cv') }}?id={{ cv['id'] }}">
+                    <button class="ui blue labeled icon button">
+                        <i class="pencil icon"></i>
+                        Éditer le CV
+                    </button>
+                </a>
+            {% endif %}
+        </div>
         <form class="ui form segment">
             <!-- Identité -->
             <h3 class="ui dividing header">
@@ -20,7 +30,8 @@
             </h3>
             <div class="ui two column grid">
                 <div class="column four wide">
-                    <img src="{{ asset('uploads/photos/' ~ cv['photo']) }}" alt="photo de profil"
+                    <img src="{{ asset('uploads/photos/' ~ cv['photo']) }}"
+                         alt="photo de profil"
                          class="ui small circular image">
                 </div>
                 <div class="column ten wide">
@@ -29,8 +40,10 @@
                     <div>{{ cv['famille'] }}</div>
                     <div class="ui divider"></div>
                     <div>{{ cv['metier'] }}</div>
-                    <div>{{ cv['email'] }}</div>
-                    <div>{{ cv['telephone'] }}</div>
+                    {% if app.session.get('user') %}
+                        <div>{{ cv['email'] }}</div>
+                        <div>{{ cv['telephone'] }}</div>
+                    {% endif %}
                 </div>
             </div>
             <!-- Formation -->
@@ -40,11 +53,11 @@
             </h3>
             <div class="ui segments">
                 {% for diplome in cv['diplomes'] %}
-                <div class="ui segment formation1">
-                    <h5 class="ui header">{{ diplome['nom'] }}</h5>
-                    <div>{{ diplome['nom'] }}</div>
-                    <div>{{ diplome['date'] }}</div>
-                </div>
+                    <div class="ui segment formation1">
+                        <h5 class="ui header">{{ diplome['nom'] }}</h5>
+                        <div>{{ diplome['nom'] }}</div>
+                        <div>{{ diplome['date'] }}</div>
+                    </div>
                 {% endfor %}
                 <div class="ui segment formation2">
                     <h5 class="ui header">Licence Informatique</h5>
@@ -59,11 +72,11 @@
             </h3>
             <div class="ui segments">
                 {% for experience in cv['experiences'] %}
-                <div class="ui segment experience1">
-                    <h5 class="ui header">{{ experience['poste'] }}</h5>
-                    <div>{{ experience['nomEntreprise'] }}</div>
-                    <div>{{ experience['duree'] }}</div>
-                </div>
+                    <div class="ui segment experience1">
+                        <h5 class="ui header">{{ experience['poste'] }}</h5>
+                        <div>{{ experience['nomEntreprise'] }}</div>
+                        <div>{{ experience['duree'] }}</div>
+                    </div>
                 {% endfor %}
                 <div class="ui segment experience2">
                     <h5 class="ui header">Développeur C++</h5>

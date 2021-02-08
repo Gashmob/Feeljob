@@ -14,6 +14,7 @@
             <div class="field">
                 <label>Types de contrat :</label>
                 <select class="ui dropdown" name="contrat">
+                    <option value="contractDefault">Type de contrat</option>
                     {% for type in typeContrat %}
                         <option value="{{ type }}">
                             {{ type }}

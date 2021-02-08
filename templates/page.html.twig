@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="FR">
+<head>
+    <meta charset="UTF-8">
+    {% include('home/head.html.twig') %}
+    <title>{% block title %}Fealjob{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<header>
+    <nav>
+        {% if not app.session.get('user') %}
+            {% include('navigation/visiteurNav.html.twig') %}
+        {% else %}
+            {% include('navigation/candidatNav.html.twig') %}
+        {% endif %}
+    </nav>
+</header>
+<div style="position: absolute; right: 10px; top: 40px;" class="ui text container positive message transition hidden">
+    <i class="close icon"></i>
+    <p>
+        {% for message in app.flashes('success') %}
+            {{ message }}
+        {% endfor %}
+    </p>
+</div>
+<div class="ui container content page-content">
+    {% block body %}
+    {% endblock %}
+</div>
+{% include('footer/footer.html.twig') %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>
