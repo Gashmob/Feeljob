@@ -22,67 +22,133 @@
             </div>
         </div>
         <div class="ui vertical segment">
-            <h3>Vos CV</h3>
-            <div class="ui four stackable cards">
-                {% for publication in publications %}
-                    <a href="{{ path('show_cv', {'id': publication['id']}) }}" class="ui card">
+            {% if app.session.get('userType') == 'Candidat' %}
+                <h3>Vos CV</h3>
+                <div class="ui four stackable cards">
+                    {% for publication in publications %}
+                        <a href="{{ path('show_cv', {'id': publication['id']}) }}" class="ui card">
+                            <div class="content">
+                                <div class="header">{{ publication['intitule'] }}</div>
+                                <div class="meta">Créé le 12 novembre 2020</div>
+                                <div class="description">
+                                    <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for
+                                        their
+                                        adorable faces, others for their tiny stature, and even others for their massive
+                                        size.</p>
+                                    <div class="extra">
+                                        <div class="ui label">{{ publication['contrat'] }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <i class="check icon"></i>
+                                Vu {{ publication['id'] }} fois
+                            </div>
+                        </a>
+                    {% endfor %}
+                    <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
                         <div class="content">
-                            <div class="header">{{ publication['nom'] }}</div>
+                            <div class="header">CV#1</div>
                             <div class="meta">Créé le 12 novembre 2020</div>
                             <div class="description">
                                 <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for their
                                     adorable faces, others for their tiny stature, and even others for their massive
                                     size.</p>
                                 <div class="extra">
-                                    <div class="ui label">{{ publication['typeContrat'] }}</div>
+                                    <div class="ui label">CDD</div>
+                                    <div class="ui label">CDI</div>
                                 </div>
                             </div>
                         </div>
                         <div class="extra content">
                             <i class="check icon"></i>
-                            Vu {{ publication['id'] }} fois
+                            Vu 121 fois
                         </div>
                     </a>
-                {% endfor %}
-                <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
-                    <div class="content">
-                        <div class="header">CV#1</div>
-                        <div class="meta">Créé le 12 novembre 2020</div>
-                        <div class="description">
-                            <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for their
-                                adorable faces, others for their tiny stature, and even others for their massive
-                                size.</p>
-                            <div class="extra">
-                                <div class="ui label">CDD</div>
-                                <div class="ui label">CDI</div>
+                    <div style="border: none; width: auto; box-shadow: none;"
+                         class="ui card grid middle aligned center aligned">
+                        <div class="column">
+                            <div class="ui row labeled icon">
+                                <label class="ui labeled icon button" for="profile-cv">
+                                    <i class="download icon"></i>
+                                    Télécharger
+                                    <input type="file" style="display: none;" id="profile-cv" name="cv">
+                                </label>
                             </div>
+                            <div style="margin: .5em 0;" class="row">Ou</div>
+                            <a href="{{ path('create_cv') }}" class="ui row labeled icon">
+                                <button class="ui blue labeled icon button">
+                                    <i class="plus icon"></i>
+                                    Créer
+                                </button>
+                            </a>
                         </div>
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vu 121 fois
-                    </div>
-                </a>
-                <div style="border: none; width: auto; box-shadow: none;"
-                     class="ui card grid middle aligned center aligned">
-                    <div class="column">
-                        <div class="ui row labeled icon">
-                            <label class="ui labeled icon button" for="profile-cv">
-                                <i class="download icon"></i>
-                                Télécharger
-                                <input type="file" style="display: none;" id="profile-cv" name="cv">
-                            </label>
-                        </div>
-                        <div style="margin: .5em 0;" class="row">Ou</div>
-                        <a href="{{ path('create_cv') }}" class="ui row labeled icon">
-                            <button class="ui blue labeled icon button">
-                                <i class="plus icon"></i>
-                                Créer
-                            </button>
-                        </a>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <h3>Vos annonces</h3>
+                <div class="ui four stackable cards">
+                    {% for publication in publications %}
+                        <a href="{{ path('show_emploi', {'id': publication['id']}) }}" class="ui card">
+                            <div class="content">
+                                <div class="header">{{ publication['nom'] }}</div>
+                                <div class="meta">Créé le 12 novembre 2020</div>
+                                <div class="description">
+                                    <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for
+                                        their
+                                        adorable faces, others for their tiny stature, and even others for their massive
+                                        size.</p>
+                                    <div class="extra">
+                                        <div class="ui label">{{ publication['typeContrat'] }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <i class="check icon"></i>
+                                Vu {{ publication['id'] }} fois
+                            </div>
+                        </a>
+                    {% endfor %}
+                    <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
+                        <div class="content">
+                            <div class="header">CV#1</div>
+                            <div class="meta">Créé le 12 novembre 2020</div>
+                            <div class="description">
+                                <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for their
+                                    adorable faces, others for their tiny stature, and even others for their massive
+                                    size.</p>
+                                <div class="extra">
+                                    <div class="ui label">CDD</div>
+                                    <div class="ui label">CDI</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="check icon"></i>
+                            Vu 121 fois
+                        </div>
+                    </a>
+                    <div style="border: none; width: auto; box-shadow: none;"
+                         class="ui card grid middle aligned center aligned">
+                        <div class="column">
+                            <div class="ui row labeled icon">
+                                <label class="ui labeled icon button" for="profile-cv">
+                                    <i class="download icon"></i>
+                                    Télécharger
+                                    <input type="file" style="display: none;" id="profile-cv" name="cv">
+                                </label>
+                            </div>
+                            <div style="margin: .5em 0;" class="row">Ou</div>
+                            <a href="{{ path('create_cv') }}" class="ui row labeled icon">
+                                <button class="ui blue labeled icon button">
+                                    <i class="plus icon"></i>
+                                    Créer
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         <div class="ui vertical segment">
             <h3>Avis des employeurs</h3>

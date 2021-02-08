@@ -703,4 +703,18 @@ abstract class EntityManager
 
         return $res;
     }
+
+    /**
+     * @param int $idUser
+     * @param int $idCV
+     * @return bool
+     */
+    public static function isOwnerOfCV(int $idUser, int $idCV): bool
+    {
+        return (new PreparedQuery('MATCH (c:Candidat)--(cv:CV) WHERE id(c)=$idU AND id(cv)=$idC RETURN c'))
+                ->setInteger('idU', $idUser)
+                ->setInteger('idC', $idCV)
+                ->run()
+                ->getOneOrNullResult() != null;
+    }
 }
