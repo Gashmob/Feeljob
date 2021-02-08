@@ -584,11 +584,12 @@ abstract class EntityManager
     {
         $res = [];
 
-        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) AS id'))
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi)--(t:TypeContrat) WHERE id(o)=$id RETURN id(o) AS id, t'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
         $identity = $result['id'];
+        $res['typeContrat'] = $result['id']['nom'];
 
         $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $identity]);
 
