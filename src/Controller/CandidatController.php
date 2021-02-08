@@ -151,7 +151,11 @@ class CandidatController extends AbstractController
                 $cv = new CV();
                 $cv->setNom($nom)
                     ->setPhoto($photo);
-                EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
+
+                if ($request->get('id'))
+                    EntityManager::modifyCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
+                else
+                    EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
 
                 $this->addFlash('success', 'Votre CV a été créé');
                 return $this->redirectToRoute('userSpace');
