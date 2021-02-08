@@ -40,8 +40,14 @@ class CandidatController extends AbstractController
      */
     public function showCV($id, EntityManagerInterface $em): Response
     {
+        $modify = false;
+        if ($this->session->get('user')) {
+            $modify = EntityManager::isOwnerOfCV($this->session->get('user'), $id);
+        }
+
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => EntityManager::getCVArrayFromId($id, $em)
+            'cv' => EntityManager::getCVArrayFromId($id, $em),
+            'modify' => $modify
         ]);
     }
 
