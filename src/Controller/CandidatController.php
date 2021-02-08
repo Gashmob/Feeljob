@@ -167,6 +167,34 @@ class CandidatController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/search/offre-emploi", name="search_emploi")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     * @throws NonUniqueResultException
+     */
+    public function searchEmploi(Request $request, EntityManagerInterface $em): Response
+    {
+        $offres = [];
+
+        if ($request->isMethod('POST')) {
+            $secteur = $request->get('secteur');
+            $contrat = $request->get('contrat');
+            $salaire = $request->get('salaire');
+            $heures = $request->get('heures');
+            $deplacement = $request->get('deplacement');
+
+            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement);
+        } else {
+            $offres = EntityManager::getAllOffreEmploi($em);
+        }
+
+        return $this->render('candidat/showOffresEmploi.html.twig', [
+            'offres' => $offres
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
@@ -212,33 +240,5 @@ class CandidatController extends AbstractController
         }
 
         return "";
-    }
-
-    /**
-     * @Route("/search/offre-emploi", name="search_emploi")
-     * @param Request $request
-     * @param EntityManagerInterface $em
-     * @return Response
-     * @throws NonUniqueResultException
-     */
-    public function searchEmploi(Request $request, EntityManagerInterface $em): Response
-    {
-        $offres = [];
-
-        if ($request->isMethod('POST')) {
-            $secteur = $request->get('secteur');
-            $contrat = $request->get('contrat');
-            $salaire = $request->get('salaire');
-            $heures = $request->get('heures');
-            $deplacement = $request->get('deplacement');
-
-            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement);
-        } else {
-            $offres = EntityManager::getAllOffreEmploi($em);
-        }
-
-        return $this->render('candidat/showOffresEmploi.html.twig', [
-            'offres' => $offres
-        ]);
     }
 }
