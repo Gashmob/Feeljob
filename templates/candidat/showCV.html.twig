@@ -6,12 +6,20 @@
             <i class="address card outline icon"></i>
             CV de {{ cv['prenom'] }} {{ cv['nom'] }}
         </h2>
-        <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
-            <button class="ui button">
-                <i class="download icon"></i>
-                Télécharger le CV
-            </button>
-        </a>
+        <div>
+            <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
+                <button class="ui labeled icon button">
+                    <i class="download icon"></i>
+                    Télécharger le CV
+                </button>
+            </a>
+            <a href="{{ path('create_cv') }}">
+                <button class="ui blue labeled icon button">
+                    <i class="pen icon"></i>
+                    Éditer le CV
+                </button>
+            </a>
+        </div>
         <form class="ui form segment">
             <!-- Identité -->
             <h3 class="ui dividing header">
