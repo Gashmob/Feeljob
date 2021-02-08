@@ -168,16 +168,14 @@ class CandidatController extends AbstractController
     }
 
     /**
-     * @Route("/search/offre-emploi", name="search_emploi")
+     * @Route("/annonces", name="showAnnonces")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function searchEmploi(Request $request, EntityManagerInterface $em): Response
+    public function offres(Request $request, EntityManagerInterface $em): Response
     {
-        $offres = [];
-
         if ($request->isMethod('POST')) {
             $secteur = $request->get('secteur');
             $contrat = $request->get('contrat');
@@ -190,7 +188,7 @@ class CandidatController extends AbstractController
             $offres = EntityManager::getAllOffreEmploi($em);
         }
 
-        return $this->render('candidat/showOffresEmploi.html.twig', [
+        return $this->render('candidat/showAnnonces.html.twig', [
             'offres' => $offres
         ]);
     }
@@ -240,14 +238,5 @@ class CandidatController extends AbstractController
         }
 
         return "";
-    }
-
-    /**
-     * @Route("/annonces", name="showAnnonces")
-     * @return Response
-     */
-    public function offres(): Response
-    {
-        return $this->render('candidat/showAnnonces.html.twig');
     }
 }
