@@ -51,7 +51,7 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Né le</label>
-                            <input type="text" name="dateNaissance" placeholder="18/09/1989">
+                            <input type="text" name="dateNaissance" placeholder="18/09/1989" value="{% if cv['naissance'] %}{{ cv['naissance'] }}{% endif %}">
                         </div>
                         <div class="field">
                             <label>Métier</label>
@@ -109,7 +109,7 @@
                         <label>Adresse</label>
                         <div class="ui left icon input">
                             <i class="icon home"></i>
-                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages" value="{% if cv['adresse'] %}{{ cv['adresse'] }}{% endif %}">
                         </div>
                     </div>
                     <div class="field">
