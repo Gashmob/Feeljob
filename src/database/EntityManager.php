@@ -649,8 +649,8 @@ abstract class EntityManager
             ->getResult();
 
         foreach ($result as $id) {
-            if ($em->getRepository(OffreEmploi::class)->findIdWithFiltersAndIdentity($id['id'], $salaire, $heures, $deplacement)) {
-                $res[] = $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+            if ($em->getRepository(OffreEmploi::class)->findEmploiWithFiltersAndIdentity($id['id'], $salaire, $heures, $deplacement) != null) {
+                $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
             }
         }
 

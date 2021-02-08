@@ -25,12 +25,12 @@ class OffreEmploiRepository extends ServiceEntityRepository
      * @param float|null $salaire
      * @param int|null $heures
      * @param bool|null $deplacement
-     * @return int|null
+     * @return OffreEmploi|null
      * @throws NonUniqueResultException
      */
-    public function findIdWithFiltersAndIdentity($identity, float $salaire = null, int $heures = null, bool $deplacement = null): ?int
+    public function findEmploiWithFiltersAndIdentity($identity, float $salaire = null, int $heures = null, bool $deplacement = null): ?OffreEmploi
     {
-        $offre = $this->createQueryBuilder('o')
+        return $this->createQueryBuilder('o')
             ->andWhere('o.salaire >= :salaire')
             ->setParameter('salaire', $salaire)
             ->andWhere('o.heures = :heures')
@@ -41,8 +41,6 @@ class OffreEmploiRepository extends ServiceEntityRepository
             ->setParameter('identity', $identity)
             ->getQuery()
             ->getOneOrNullResult();
-
-        return $offre != null ? $offre->getId() : null;
     }
 
     // /**
