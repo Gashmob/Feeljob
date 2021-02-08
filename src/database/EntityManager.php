@@ -659,4 +659,46 @@ abstract class EntityManager
 
         return $res;
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return array
+     */
+    public static function getCVFromUser(EntityManagerInterface $em, int $id): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (c:Candidat)--(cv:CV) WHERE id(c)=$id RETURN id(cv) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+
+        foreach ($result as $idA) {
+            $res[] = EntityManager::getCVArrayFromId($idA['id'], $em);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return array
+     */
+    public static function getEmploiFromUser(EntityManagerInterface $em, int $id): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (e:Entreprise)--(o:OffreEmploi) WHERE id(e)=$id RETURN id(o) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+
+        foreach ($result as $idA) {
+            $res[] = EntityManager::getEmploiArrayFromId($idA['id'], $em);
+        }
+
+        return $res;
+    }
 }
