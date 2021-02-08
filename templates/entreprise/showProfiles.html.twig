@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Résultats profils{% endblock %}
 {% block body %}
-    <div style="margin-top: 100px  !important; margin-bottom: 40px;" class="ui justified container">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input type="text" placeholder="Rechercher">
@@ -60,91 +60,121 @@
             </div>
             <div class="thirteen wide column">
                 <div class="ui three stackable cards">
-                    {% for i in 0..3 %}
-                        <a class="ui card" href="#">
+                    <a class="ui card" href="#">
+                        <div class="content">
+                            <img class="ui left floated mini circular image"
+                                 src="{{ asset('img/placeholders/matthew.png') }}">
+                            <div class="header">Matt Romney</div>
+                            <div class="meta">
+                                <span class="category">Développeur Web</span>
+                            </div>
+                            <div style="margin-top: 10px;" class="contract">
+                                <div class="ui label">Intérim</div>
+                                <div class="ui label">Saisonnier</div>
+                                <div class="ui label">Étudiant</div>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                    deserunt,
+                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                    tempore
+                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                <ul>
+                                    <li>HTML/CSS</li>
+                                    <li>Javascript</li>
+                                    <li>jQuery</li>
+                                    <li>Ruby-on-rails</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="icon calendar"></i>
+                            Du 01/06 au 31/08 2021
+                        </div>
+                    </a>
+                    <a class="ui card" href="#">
+                        <div class="content">
+                            <img class="ui left floated mini circular image"
+                                 src="{{ asset('img/placeholders/jenny.jpg') }}">
+                            <div class="header">Jennifer Laniston</div>
+                            <div class="meta">
+                                <span class="category">Chef de cuisine</span>
+                            </div>
+                            <div style="margin-top: 10px;" class="contract">
+                                <div class="ui label">CDD</div>
+                                <div class="ui label">CDI</div>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                    deserunt,
+                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                    tempore
+                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="icon calendar"></i>
+                            À partir du 01/04/2021
+                        </div>
+                    </a>
+                    <a class="ui card" href="#">
+                        <div class="content">
+                            <img class="ui left floated mini circular image"
+                                 src="{{ asset('img/placeholders/steve.jpg') }}">
+                            <div class="header">Jean Jessétou</div>
+                            <div class="meta">
+                                <span class="category">Directeur RH</span>
+                            </div>
+                            <div style="margin-top: 10px;" class="contract">
+                                <div class="ui label">CDD</div>
+                                <div class="ui label">CDI</div>
+                                <div class="ui label">Intérim</div>
+                                <div class="ui label">Saisonnier</div>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                    deserunt,
+                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                    tempore
+                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="icon calendar"></i>
+                            Disponible dès maintenaint
+                        </div>
+                    </a>
+                    {% for i in 0..5 %}
+                        <div class="ui card">
                             <div class="content">
-                                <img class="ui left floated mini circular image"
-                                     src="{{ asset('img/placeholders/matthew.png') }}">
-                                <div class="header">Matt Romney</div>
-                                <div class="meta">
-                                    <span class="category">Développeur Web</span>
+                                <div class="ui placeholder">
+                                    <div class="image header">
+                                        <div class="medium line"></div>
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="line"></div>
+                                        <div class="line"></div>
+                                        <div class="line"></div>
+                                        <div class="line"></div>
+                                    </div>
                                 </div>
-                                <div style="margin-top: 10px;" class="contract">
-                                    <div class="ui label">Intérim</div>
-                                    <div class="ui label">Saisonnier</div>
-                                    <div class="ui label">Étudiant</div>
-                                </div>
-                                <div class="description">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                        deserunt,
-                                        dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                        tempore
-                                        voluptate, voluptates voluptatibus? Asperiores, id.</p>
-                                    <ul>
-                                        <li>HTML/CSS</li>
-                                        <li>Javascript</li>
-                                        <li>jQuery</li>
-                                        <li>Ruby-on-rails</li>
-                                    </ul>
+                                <br>
+                                <br>
+                                <div class="ui placeholder">
+                                    <div class="paragraph">
+                                        <div class="line"></div>
+                                        <div class="line"></div>
+                                        <div class="line"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="extra content">
-                                <i class="icon calendar"></i>
-                                Du 01/06 au 31/08 2021
-                            </div>
-                        </a>
-                        <a class="ui card" href="#">
-                            <div class="content">
-                                <img class="ui left floated mini circular image"
-                                     src="{{ asset('img/placeholders/jenny.jpg') }}">
-                                <div class="header">Jennifer Laniston</div>
-                                <div class="meta">
-                                    <span class="category">Chef de cuisine</span>
-                                </div>
-                                <div style="margin-top: 10px;" class="contract">
-                                    <div class="ui label">CDD</div>
-                                    <div class="ui label">CDI</div>
-                                </div>
-                                <div class="description">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                        deserunt,
-                                        dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                        tempore
-                                        voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                <div class="ui placeholder">
+                                    <div class="long line"></div>
                                 </div>
                             </div>
-                            <div class="extra content">
-                                <i class="icon calendar"></i>
-                                À partir du 01/04/2021
-                            </div>
-                        </a>
-                        <a class="ui card" href="#">
-                            <div class="content">
-                                <img class="ui left floated mini circular image"
-                                     src="{{ asset('img/placeholders/steve.jpg') }}">
-                                <div class="header">Jean Jessétou</div>
-                                <div class="meta">
-                                    <span class="category">Directeur RH</span>
-                                </div>
-                                <div style="margin-top: 10px;" class="contract">
-                                    <div class="ui label">CDD</div>
-                                    <div class="ui label">CDI</div>
-                                    <div class="ui label">Intérim</div>
-                                    <div class="ui label">Saisonnier</div>
-                                </div>
-                                <div class="description">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                        deserunt,
-                                        dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                        tempore
-                                        voluptate, voluptates voluptatibus? Asperiores, id.</p>
-                                </div>
-                            </div>
-                            <div class="extra content">
-                                <i class="icon calendar"></i>
-                                Disponible dès maintenaint
-                            </div>
-                        </a>
+                        </div>
                     {% endfor %}
                 </div>
             </div>

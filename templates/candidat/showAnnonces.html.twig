@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Résultats offres d'emploi{% endblock %}
 {% block body %}
-    <div style="margin-top: 100px  !important; margin-bottom: 40px;" class="ui justified container">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input type="text" placeholder="Rechercher">
@@ -75,10 +75,11 @@
                                     perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
                             </div>
                             <div class="extra">
-                                <div class="ui right floated primary button">
+                                <a href="{{ path('show_emploi', {'id': '1'}) }}"
+                                   class="ui right floated primary button">
                                     Voir l'annonce
                                     <i class="right chevron icon"></i>
-                                </div>
+                                </a>
                                 <div class="ui label">CDD</div>
                                 <div class="ui label">CDI</div>
                                 <div class="ui label"><i class="globe icon"></i> Anglais</div>
@@ -130,6 +131,31 @@
                             </div>
                         </div>
                     </div>
+                    {% for i in 0..6 %}
+                        <div class="item">
+                            <div class="image">
+                                <div class="ui placeholder">
+                                    <div class="square image"></div>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="very short line"></div>
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
