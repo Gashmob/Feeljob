@@ -25,7 +25,7 @@
             <h3>Vos CV</h3>
             <div class="ui four stackable cards">
                 {% for publication in publications %}
-                    <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
+                    <a href="{{ path('show_cv', {'id': publication['id']}) }}" class="ui card">
                         <div class="content">
                             <div class="header">{{ publication['nom'] }}</div>
                             <div class="meta">Créé le 12 novembre 2020</div>
