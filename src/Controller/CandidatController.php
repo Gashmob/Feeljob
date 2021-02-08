@@ -164,7 +164,8 @@ class CandidatController extends AbstractController
             'nom' => $nomPrenom['nom'],
             'prenom' => $nomPrenom['prenom'],
             'telephone' => EntityManager::getUserPhoneFromId($this->session->get('user'), $em),
-            'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail()
+            'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail(),
+            'cv' => $request->get('id') ? EntityManager::getCVArrayFromId($request->get('id'), $em) : []
         ]);
     }
 
