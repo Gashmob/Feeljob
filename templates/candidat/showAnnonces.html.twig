@@ -142,9 +142,9 @@
                                     <span class="cinema">Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
                                 </div>
                                 <div class="description">
-                                    <p><span class="cinema">{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</span>
-                                        <span class="cinema">{{ annonce['salaire'] }}€/mois</span>
-                                        <span class="cinema">{{ annonce['heures'] }}h/semaine</span></p>
+                                    <p>{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</p>
+                                    <p>{{ annonce['salaire'] }}€/mois</p>
+                                    <p>{{ annonce['heures'] }}h/semaine</p>
                                 </div>
                                 <div class="extra">
                                     <a href="{{ path('show_emploi', {'id': '1'}) }}"
@@ -205,6 +205,7 @@
                 button.text(response.votes);
             });
         });
+
         function searchOffre(e) {
             e.preventDefault();
             var $link = $(e.currentTarget);
