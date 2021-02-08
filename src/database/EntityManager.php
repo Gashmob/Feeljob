@@ -590,6 +590,7 @@ abstract class EntityManager
             ->getOneOrNullResult();
         $identity = $result['id'];
         $res['typeContrat'] = $result['t']['nom'];
+        $res['id'] = $identity;
 
         $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $identity]);
 
