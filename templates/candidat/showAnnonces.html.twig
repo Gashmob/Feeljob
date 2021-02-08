@@ -137,12 +137,12 @@
                                 <img src="{{ asset('img/placeholders/grey-frame.png') }}">
                             </div>
                             <div class="content">
-                                <a class="header">{{ dump(annonce['nom']) }}</a>
+                                <a class="header">{{ annonce['nom'] }}</a>
                                 <div class="meta">
-                                    <span class="cinema">Du {{ dump(annonce['debut']) }} au {{ dump(annonce['fin']) }}</span>
-                                    <span class="cinema">{{ dump(annonce['nbRecrutement']) }} Recrutement(s) possible(s)</span>
-                                    <span class="cinema">{{ dump(annonce['salaire']) }}€/mois</span>
-                                    <span class="cinema">{{ dump(annonce['heures']) }}h/semaine</span>
+                                    <span class="cinema">Du {{ annonce['debut'] }} au {{ annonce['fin']) }}</span>
+                                    <span class="cinema">{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</span>
+                                    <span class="cinema">{{ annonce['salaire'] }}€/mois</span>
+                                    <span class="cinema">{{ annonce['heures'] }}h/semaine</span>
                                 </div>
                                 <div class="extra">
                                     <a href="{{ path('show_emploi', {'id': '1'}) }}"
@@ -150,8 +150,7 @@
                                         Voir l'annonce
                                         <i class="right chevron icon"></i>
                                     </a>
-                                    <div class="ui label">{{ dump(annonce['typeContrat']) }}</div>
-                                    <div class="ui label"><i class="globe icon"></i>{{ dump(annonce['langues']) }}</div>
+                                    <div class="ui label">{{ annonce['typeContrat'] }}</div>
                                 </div>
                             </div>
                         </div>
