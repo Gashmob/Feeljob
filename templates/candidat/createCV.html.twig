@@ -10,7 +10,8 @@
             <div class="inline field">
                 <label>Nom du CV :</label>
                 <div class="ui input">
-                    <input type="text" name="nomCV" value="{% if cv is not empty %}{{ cv['intitule'] }}{% else %}CV #1{% endif %}">
+                    <input type="text" name="nomCV"
+                           value="{% if cv is not empty %}{{ cv['intitule'] }}{% else %}CV #1{% endif %}">
                 </div>
             </div>
             <div class="inline field">
@@ -33,7 +34,8 @@
                                 </div>
                             </div>
                         </div>
-                        <img src="{% if cv is not empty %}{{ cv['photo'] }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}" alt="photo de profil"
+                        <img src="{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}"
+                             alt="photo de profil"
                              class="ui small circular dimmable image">
                     </div>
                 </div>
@@ -51,7 +53,8 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Né le</label>
-                            <input type="text" name="dateNaissance" placeholder="18/09/1989" value="{% if cv is not empty %}{{ cv['naissance'] }}{% endif %}">
+                            <input type="text" name="dateNaissance" placeholder="18/09/1989"
+                                   value="{% if cv is not empty %}{{ cv['naissance'] }}{% endif %}">
                         </div>
                         <div class="field">
                             <label>Métier</label>
@@ -109,7 +112,7 @@
                         <label>Adresse</label>
                         <div class="ui left icon input">
                             <i class="icon home"></i>
-                            <input type="text" name="adresse" placeholder="16 rue des Coquillages" value="{% if cv is not empty %}{{ cv['adresse'] }}{% endif %}">
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
                         </div>
                     </div>
                     <div class="field">
