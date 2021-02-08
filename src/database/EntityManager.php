@@ -604,4 +604,20 @@ abstract class EntityManager
 
         return $res;
     }
+
+
+    public static function getProfiles( EntityManagerInterface $em):array
+    {
+	$res = [];
+        $result=(new PreparedQuery('MATCH (c:Candidat) return id(c)'))->run()->getResult();
+
+	foreach ($result as $id) {
+		$res[] = EntityManager::getGenericUserFromId($id['id'], $em);
+	    }
+
+        return $res;
+    }
+
+  
+
 }
