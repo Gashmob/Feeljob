@@ -150,6 +150,8 @@
                                             <div class="line"></div>
                                             <div class="line"></div>
                                             <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -160,4 +162,32 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        /**
+         * Simple (ugly) code to handle the comment vote up/down
+         */
+        var button = $('.js-vote-arrows');
+        button.on('click', function (e) {
+            e.preventDefault();
+            var $link = $(e.currentTarget);
+            $.ajax({
+                url: '/comments/10/vote/' + $link.data('direction'),
+                method: 'GET'
+            }).then(function (response) {
+                button.text(response.votes);
+            });
+        });
+        function searchOffre(e) {
+            e.preventDefault();
+            var $link = $(e.currentTarget);
+            $.ajax({
+                url: '/annonces/' + $link.data('direction'),
+                method: 'GET'
+            }).then(function (response) {
+                $container.find('.js-vote-total').text(response.votes);
+            });
+        }
+    </script>
 {% endblock %}
