@@ -8,6 +8,7 @@ use App\database\entity\CV;
 use App\database\EntityManager;
 use App\database\exceptions\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -163,6 +164,34 @@ class CandidatController extends AbstractController
             'prenom' => $nomPrenom['prenom'],
             'telephone' => EntityManager::getUserPhoneFromId($this->session->get('user'), $em),
             'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail()
+        ]);
+    }
+
+    /**
+     * @Route("/search/offre-emploi", name="search_emploi")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     * @throws NonUniqueResultException
+     */
+    public function searchEmploi(Request $request, EntityManagerInterface $em): Response
+    {
+        $offres = [];
+
+        if ($request->isMethod('POST')) {
+            $secteur = $request->get('secteur');
+            $contrat = $request->get('contrat');
+            $salaire = $request->get('salaire');
+            $heures = $request->get('heures');
+            $deplacement = $request->get('deplacement');
+
+            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement);
+        } else {
+            $offres = EntityManager::getAllOffreEmploi($em);
+        }
+
+        return $this->render('candidat/showOffresEmploi.html.twig', [
+            'offres' => $offres
         ]);
     }
 

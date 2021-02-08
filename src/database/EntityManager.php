@@ -12,6 +12,7 @@ use App\Entity\Candidat;
 use App\Entity\Entreprise;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * Class EntityManager
@@ -583,7 +584,7 @@ abstract class EntityManager
     {
         $res = [];
 
-        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) as id'))
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) AS id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -601,6 +602,57 @@ abstract class EntityManager
         $res['lieu'] = $offre->getLieu();
         $res['teletravail'] = $offre->getTeletravail();
         $res['nbRecrutement'] = $offre->getNbRecrutement();
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @return mixed
+     */
+    public static function getAllOffreEmploi(EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) RETURN id(o) AS id'))
+            ->run()
+            ->getResult();
+
+        foreach ($result as $id) {
+            $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string|null $secteur
+     * @param string|null $contrat
+     * @param float|null $salaire
+     * @param int|null $heures
+     * @param bool|null $deplacement
+     * @return array
+     * @throws NonUniqueResultException
+     */
+    public static function getOffreEmploiWithFilter(EntityManagerInterface $em,
+                                                    string $secteur = null, string $contrat = null,
+                                                    float $salaire = null, int $heures = null,
+                                                    bool $deplacement = null): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (:SecteurActivite' . ($secteur != null ? ' {nom:$secteur}' : '') . ')--(:Entreprise)--(o:OffreEmploi)--(:TypeContrat' . ($contrat != null ? ' {nom:$contrat}' : '') . ') RETURN id(o) AS id'))
+            ->setString('secteur', $secteur)
+            ->setString('contrat', $contrat)
+            ->run()
+            ->getResult();
+
+        foreach ($result as $id) {
+            if ($em->getRepository(OffreEmploi::class)->findEmploiWithFiltersAndIdentity($id['id'], $salaire, $heures, $deplacement) != null) {
+                $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+            }
+        }
 
         return $res;
     }
