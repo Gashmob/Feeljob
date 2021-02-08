@@ -462,6 +462,7 @@ abstract class EntityManager
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
+        $res['id'] = $id;
         $res['intitule'] = $cv['c']['nom'];
         $res['photo'] = $cv['c']['photo'];
 
