@@ -24,6 +24,9 @@
         <div class="ui vertical segment">
             <h3>Vos CV</h3>
             <div class="ui four stackable cards">
+                {% for publication in publications %}
+                    {{ publication['nom'] }}
+                {% endfor %}
                 <a href="{{ path('show_cv', {'id': '1'}) }}" class="ui card">
                     <div class="content">
                         <div class="header">CV#1</div>
