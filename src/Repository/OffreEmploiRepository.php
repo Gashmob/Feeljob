@@ -43,6 +43,37 @@ class OffreEmploiRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param string $nom
+     * @return OffreEmploi[]
+     */
+    public function findAllEmploiWithNameLike(string $nom): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.nom LIKE :nom')
+            ->setParameter('nom', '%' . $nom . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param string $nom
+     * @param int[] $ids
+     * @return OffreEmploi[]
+     */
+    public function findAllEmploiWithNameLikeFromPreResultIds(string $nom, array $ids): array
+    {
+        $res = [];
+        foreach ($ids as $id) {
+            $offre = $this->findOneBy(['identity' => $id['id']]);
+            if (stristr($offre->getNom(), $nom) != false) {
+                $res[] = $offre;
+            }
+        }
+
+        return $res;
+    }
+
     // /**
     //  * @return OffreEmploi[] Returns an array of OffreEmploi objects
     //  */

@@ -10,6 +10,7 @@ use App\database\exceptions\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -169,28 +170,41 @@ class CandidatController extends AbstractController
 
     /**
      * @Route("/annonces", name="showAnnonces")
-     * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
+     */
+    public function offres(EntityManagerInterface $em): Response
+    {
+        $offres = EntityManager::getAllOffreEmploi($em);
+
+        return $this->render('candidat/showAnnonces.html.twig', [
+            'offres' => $offres
+        ]);
+    }
+
+    /**
+     * @Route("/annonces/{nom}", defaults={"nom"=""})
+     * @param $nom
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
      * @throws NonUniqueResultException
      */
-    public function offres(Request $request, EntityManagerInterface $em): Response
+    public function offresFilters($nom, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('GET')) {
             $secteur = $request->get('secteur');
             $contrat = $request->get('contrat');
             $salaire = $request->get('salaire');
             $heures = $request->get('heures');
             $deplacement = $request->get('deplacement');
 
-            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement);
+            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement, $nom);
         } else {
-            $offres = EntityManager::getAllOffreEmploi($em);
+            $offres = EntityManager::getAllOffreEmploi($em, $nom);
         }
 
-        return $this->render('candidat/showAnnonces.html.twig', [
-            'offres' => $offres
-        ]);
+        return new JsonResponse($offres);
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

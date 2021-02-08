@@ -609,18 +609,17 @@ abstract class EntityManager
 
     /**
      * @param EntityManagerInterface $em
-     * @return mixed
+     * @param string $nom
+     * @return array
      */
-    public static function getAllOffreEmploi(EntityManagerInterface $em): array
+    public static function getAllOffreEmploi(EntityManagerInterface $em, string $nom = ''): array
     {
         $res = [];
 
-        $result = (new PreparedQuery('MATCH (o:OffreEmploi) RETURN id(o) AS id'))
-            ->run()
-            ->getResult();
+        $result = $em->getRepository(OffreEmploi::class)->findAllEmploiWithNameLike($nom);
 
-        foreach ($result as $id) {
-            $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+        foreach ($result as $offre) {
+            $res[] = EntityManager::getEmploiArrayFromId($offre->getIdentity(), $em);
         }
 
         return $res;
@@ -633,13 +632,14 @@ abstract class EntityManager
      * @param float|null $salaire
      * @param int|null $heures
      * @param bool|null $deplacement
+     * @param string $nom
      * @return array
      * @throws NonUniqueResultException
      */
     public static function getOffreEmploiWithFilter(EntityManagerInterface $em,
                                                     string $secteur = null, string $contrat = null,
                                                     float $salaire = null, int $heures = null,
-                                                    bool $deplacement = null): array
+                                                    bool $deplacement = null, string $nom = ''): array
     {
         $res = [];
 
@@ -649,9 +649,11 @@ abstract class EntityManager
             ->run()
             ->getResult();
 
-        foreach ($result as $id) {
-            if ($em->getRepository(OffreEmploi::class)->findEmploiWithFiltersAndIdentity($id['id'], $salaire, $heures, $deplacement) != null) {
-                $res[] = EntityManager::getEmploiArrayFromId($id['id'], $em);
+        $result = $em->getRepository(OffreEmploi::class)->findAllEmploiWithNameLikeFromPreResultIds($nom, $result);
+
+        foreach ($result as $offre) {
+            if ($em->getRepository(OffreEmploi::class)->findEmploiWithFiltersAndIdentity($offre->getIdentity(), $salaire, $heures, $deplacement) != null) {
+                $res[] = EntityManager::getEmploiArrayFromId($offre->getIdentity(), $em);
             }
         }
 
