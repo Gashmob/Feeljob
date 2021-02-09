@@ -7,8 +7,8 @@
             <i class="left arrow icon"></i>
             Retour aux annonces
         </a>
-        <div class="ui segment">
-            <div class="ui two column grid">
+        <div class="ui segment annonce">
+            <div class="ui two column grid annonce-header">
                 <div class="column ten wide">
                     <h2 class="ui header">{{ offre['nom'] }}</h2>
                     <div>
@@ -18,16 +18,21 @@
                 <div class="six wide column">
                     <a href="{{ path('userSpace') }}" class="ui header small">
                         {% if offre['logo'] is not empty %}
-                        <img src="{{ asset('uploads/logos/' ~ offre['logo']) }}">
+                            <img src="{{ asset('uploads/logos/' ~ offre['logo']) }}" class="ui circular image">
                         {% else %}
-                        <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
+                            <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
                         {% endif %}
                         {{ offre['nomEntreprise'] }}
                     </a>
                 </div>
             </div>
-            <div style="padding-top: 20px;" class="ui content">
+            <div style="padding-top: 20px;" class="ui content annonce-content">
                 <p>
+                    <i class="icon map pin"></i>
+                    Grésy-sur-aix
+                </p>
+                <p>
+                    <i class="icon calendar alternate"></i>
                     {% if offre['typeContrat'] == 'CDI' %}
                         <span class="cinema">À partir du {{ offre['debut'] }}</span>
                     {% else %}
@@ -38,6 +43,24 @@
                     disponible{% if offre['nbRecrutement'] > 1 %}s{% endif %}</p>
                 <p>{{ offre['salaire'] }}.00€</p>
                 <p>{{ offre['heures'] }} heures par semaine</p>
+            </div>
+            <!-- Location carte -->
+            <div style="padding-top: 20px;" class="ui content annonce-location">
+                <h3 class="ui dividing header">
+                    <i class="icon map pin"></i>
+                    <div class="content">Location sur la carte</div>
+                </h3>
+                <div>
+                    <!--
+                    <div class="ui embed"
+                         data-url="https://www.google.com/maps/embed/v1/place?q=université+savoie+mont+blanc&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+                         data-placeholder="{ asset('img/placeholders/grey-frame.png') }">
+                    </div>
+                    -->
+                    <div class="ui embed"
+                         data-url="https://www.google.com/maps/embed/v1/place?q=université+savoie+mont+blanc&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8">
+                    </div>
+                </div>
             </div>
             <!-- Autres -->
             <h3 class="ui dividing header">
@@ -60,4 +83,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        $('.ui.embed').embed();
+    </script>
 {% endblock %}

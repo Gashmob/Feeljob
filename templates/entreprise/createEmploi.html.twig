@@ -21,6 +21,20 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="field">
+                <label>Localisation</label>
+                <p>Si votre emploi est rattaché à un lieu, cliquez sur le bouton ci-dessous</p>
+                <div class="two fields">
+                    <div style="padding-top: 6px;" class="two wide field">
+                        <div style="padding-left: 10px;" class="ui toggle checkbox">
+                            <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
+                        </div>
+                    </div>
+                    <div class="fourteen wide field disabled" id="lieuField">
+                        <input type="text" name="lieu" placeholder="Emplacement">
+                    </div>
+                </div>
+            </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Date début</label>
@@ -31,22 +45,22 @@
                     <input required name="dateF" placeholder="jj/mm/aaaa" type="text">
                 </div>
             </div>
-            <div class="three fields">
-                <div class="field required">
-                    <label>Nombre d'heures travaillées</label>
-                    <input required type="text" name="heures" placeholder="Nombre">
-                </div>
-                <div class="field required required">
-                    <label>Montant du salaire</label>
-                    <div class="ui right labeled input">
-                        <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="text" placeholder="Montant" id="montant">
-                        <div class="ui basic label">.00</div>
-                    </div>
-                </div>
+            <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="text" name="nbRecrutement" placeholder="#" required>
+                    <input required type="text" name="nbRecrutement" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Nombre d'heures travaillées</label>
+                    <input type="text" name="heures" placeholder="Nombre">
+                </div>
+            </div>
+            <div class="field required">
+                <label>Montant du salaire</label>
+                <div class="ui right labeled input">
+                    <label for="montant" class="ui label">€</label>
+                    <input required name="salaire" type="text" placeholder="Montant" id="montant">
+                    <div class="ui basic label">.00</div>
                 </div>
             </div>
             <div class="ui divider"></div>
@@ -58,12 +72,6 @@
             </div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="deplacement" class="hidden">
-                    <label>Emploi rattaché à un lieu précis</label>
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui toggle checkbox">
                     <input type="checkbox" name="teletravail" class="hidden">
                     <label>Éligible au télétravail</label>
                 </div>
@@ -71,4 +79,17 @@
             <button class="ui fluid large green submit button" type="submit">Créer</button>
         </form>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        const lieuBtn = document.getElementById('lieuBtn')
+        const lieuField = document.getElementById('lieuField')
+        lieuBtn.addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                lieuField.classList.remove("disabled");
+            } else {
+                lieuField.classList.add("disabled");
+            }
+        })
+    </script>
 {% endblock %}

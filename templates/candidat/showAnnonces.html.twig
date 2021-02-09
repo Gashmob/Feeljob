@@ -67,7 +67,11 @@
                         <div class="content">
                             <a class="header">Pâtissier</a>
                             <div class="meta">
-                                <span class="cinema">Du 12/06 au 12/07</span>
+                                <span>
+                                    <i class="icon map pin"></i>
+                                    Aix-les-Bains,
+                                </span>
+                                <span>du 12/06 au 12/07</span>
                             </div>
                             <div class="description">
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
@@ -94,10 +98,16 @@
                             <div class="content">
                                 <a class="header">{{ annonce['nom'] }}</a>
                                 <div class="meta">
+                                    {% if annonce['lieu'] is not empty %}
+                                        <span>
+                                            <i class="icon map pin"></i>
+                                            {{ annonce['lieu'] }}
+                                        </span>
+                                    {% endif %}
                                     {% if annonce['typeContrat'] == 'CDI' %}
-                                        <span class="cinema">À partir du {{ annonce['debut'] }}</span>
+                                        <span>À partir du {{ annonce['debut'] }}</span>
                                     {% else %}
-                                        <span class="cinema">Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
+                                        <span>Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
                                     {% endif %}
                                 </div>
                                 <div class="description">
