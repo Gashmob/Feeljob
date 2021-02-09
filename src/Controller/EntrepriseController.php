@@ -155,36 +155,11 @@ class EntrepriseController extends AbstractController
 		]);
 	}
 
-	/**
-	 * @Route("/search/candidat", name="search_profil")
-	 * @param Request $request
-	 * @return RedirectResponse|Response
-	 */
-	public function searchProfil(Request $request)
-	{
-		if (!$this->session->get('user')) {
-			return $this->redirectToRoute('homepage');
-		}
-
-		if (!$this->session->get('userType') === 'Entreprise') {
-			return $this->redirectToRoute('userSpace');
-		}
-
-		// TODO : récupérer les données de tout les profils
-
-		if ($request->isMethod('POST')) {
-			// TODO : récupérer les données des profils correspondant aux filtres
-		}
-
-		return $this->render('entreprise/showProfiles.html.twig', [
-			'profils' => []
-		]);
-	}
-
-	/**
-	 * @Route("/profils", name="showProfiles")
-	 * @return Response
-	 */
+    /**
+     * @Route("/profils", name="showProfiles")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
 	public function showProfiles(EntityManagerInterface $em): Response
 	{
 		$profil = EntityManager::getAllProfiles($em);
