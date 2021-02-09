@@ -64,7 +64,7 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        if (!$this->session->get('userType') === 'Candidat') {
+        if (!($this->session->get('userType') === 'Candidat')) {
             return $this->redirectToRoute('userSpace');
         }
 
