@@ -51,6 +51,15 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/mailVérifié", name="mailVerified")
+     * @return Response
+     */
+    public function mailVerified(): Response
+    {
+        return $this->render('home/mailVerified.html.twig');
+    }
+
+    /**
      * @Route("/show/{type}", name="show")
      * @param $type
      * @return Response
@@ -474,8 +483,7 @@ class HomeController extends AbstractController
             $user->setVerifie(true);
             $user->flush();
 
-            $this->addFlash('success', 'Votre email est vérifié');
-            return $this->redirectToRoute('connexion');
+            return $this->redirectToRoute('mailVerified');
         }
 
         return $this->redirectToRoute('homepage');

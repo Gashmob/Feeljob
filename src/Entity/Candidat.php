@@ -43,7 +43,7 @@ class Candidat
     private $permis;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=true)
      */
     private $identity;
 
