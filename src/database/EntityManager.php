@@ -609,15 +609,15 @@ abstract class EntityManager
     public static function getProfiles( EntityManagerInterface $em):array
     {
 	$res = [];
-        $result=(new PreparedQuery('MATCH (c:Candidat) return id(c)'))->run()->getResult();
+        $result=(new PreparedQuery('MATCH (c:CV) return id(c)'))->run()->getResult();
 
 	foreach ($result as $id) {
-		$res[] = EntityManager::getGenericUserFromId($id['id'], $em);
+		$res[] = EntityManager::getCVArrayFromId($id['id'], $em);
 	    }
 
         return $res;
     }
 
-  
+    
 
 }
