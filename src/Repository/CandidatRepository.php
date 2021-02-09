@@ -14,15 +14,27 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CandidatRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Candidat::class);
-    }
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, Candidat::class);
+	}
 
-    // /**
-    //  * @return Candidat[] Returns an array of Candidat objects
-    //  */
-    /*
+	/**
+	 * @param string nom
+	 * @return Candidat[]
+	 */
+	public function findAllCandidatWithNameLike(string $nom): array
+	{
+		return $this->createQueryBuilder('c')->andWhere('c.nom LIKE :nom')
+			->setParameter('nom', '%' . $nom . '%')
+			->getQuery()->getResult();
+	}
+
+
+	// /**
+	//  * @return Candidat[] Returns an array of Candidat objects
+	//  */
+	/*
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('c')
@@ -36,7 +48,7 @@ class CandidatRepository extends ServiceEntityRepository
     }
     */
 
-    /*
+	/*
     public function findOneBySomeField($value): ?Candidat
     {
         return $this->createQueryBuilder('c')
