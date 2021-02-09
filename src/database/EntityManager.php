@@ -872,4 +872,14 @@ abstract class EntityManager
             ->setInteger('id', $cv->getId())
             ->run();
     }
+
+    /**
+     * @param int $id
+     * @param EntityManagerInterface $em
+     * @return string
+     */
+    public static function getNomEntrepriseFromId(int $id, EntityManagerInterface $em): string
+    {
+        return $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id])->getNomEntreprise();
+    }
 }
