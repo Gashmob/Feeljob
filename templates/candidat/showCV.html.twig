@@ -13,13 +13,13 @@
                     Télécharger le CV
                 </button>
             </a>
-            {% if app.session.get('userType') == 'Candidat' %}
-            <a href="{{ path('create_cv') }}">
-                <button class="ui blue labeled icon button">
-                    <i class="pencil icon"></i>
-                    Éditer le CV
-                </button>
-            </a>
+            {% if modify %}
+                <a href="{{ path('create_cv') }}?id={{ cv['id'] }}">
+                    <button class="ui blue labeled icon button">
+                        <i class="pencil icon"></i>
+                        Éditer le CV
+                    </button>
+                </a>
             {% endif %}
         </div>
         <form class="ui form segment">
@@ -30,7 +30,8 @@
             </h3>
             <div class="ui two column grid">
                 <div class="column four wide">
-                    <img src="{#{{ asset('uploads/photos/' ~ cv['photo']) }}#}{{ asset('uploads/photos/profil.png') }}" alt="photo de profil"
+                    <img src="{{ asset('uploads/photos/' ~ cv['photo']) }}"
+                         alt="photo de profil"
                          class="ui small circular image">
                 </div>
                 <div class="column ten wide">
