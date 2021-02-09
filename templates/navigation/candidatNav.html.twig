@@ -4,7 +4,11 @@
         Accueil
     </a>
     <a href="{{ path('showAnnonces') }}" class="item">Annonces</a>
-    <a href="{{ path('create_emploi') }}" class="item">Créer annonce</a>
+    {% if app.session.get('userType') == 'Candidat' %}
+        <a href="{{ path('create_cv') }}" class="item">Nouveau CV</a>
+    {% else %}
+        <a href="{{ path('create_emploi') }}" class="item">Créer annonce</a>
+    {% endif %}
     <a href="{{ path('showProfiles') }}" class="item">Candidats</a>
     <div class="right menu">
         <div class="ui dropdown item" onmouseover="loadNotifications()">
@@ -54,7 +58,6 @@
             <i class="icon settings"></i>
             <i class="dropdown icon"></i>
             <div class="menu">
-                <a href="{{ path('create_cv') }}" class="item">Créer un CV</a>
                 <a href="{{ path('preferences') }}" class="item">Préférences</a>
                 <div class="divider"></div>
                 <a class="item" href="{{ path('deconnexion') }}">Déconnexion

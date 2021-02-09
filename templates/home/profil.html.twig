@@ -18,6 +18,14 @@
                     <i class="icon green check circle outline"></i>
                     Téléphone vérifié
                 </div>
+                {% if app.session.get('userType') == 'Entreprise' %}
+                    <br><br>
+                    <div>
+                        <i class="icon newspaper outline"></i>
+                        Crédit annonces restantes : 2
+                    </div>
+                    <a href="#">Ajouter des crédits</a>
+                {% endif %}
             </div>
         </div>
         <div class="ui vertical segment">
