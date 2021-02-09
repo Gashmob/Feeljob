@@ -84,9 +84,11 @@ class HomeController extends AbstractController
     /**
      * @Route("/connexion", name="connexion")
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @return Response
+     * @throws UserNotFoundException
      */
-    public function connexion(Request $request): Response
+    public function connexion(Request $request, EntityManagerInterface $em): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -103,6 +105,7 @@ class HomeController extends AbstractController
                     if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
                         $this->session->set('user', $user->getId());
                         $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
+                        $this->session->set('userName', EntityManager::getNomPrenomFromId($user->getId(), $em)['prenom']);
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
