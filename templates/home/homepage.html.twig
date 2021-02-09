@@ -3,23 +3,21 @@
 {% block body %}
     <div>
         <div style="min-height:300px;padding:1em 0em" class="ui inverted vertical center aligned segment">
-            <div class="ui large inverted pointing secondary menu">
+            <div style="border-color: transparent !important;" class="ui large inverted pointing secondary menu">
                 <div class="ui container">
-                    <a href="{{ path('homepage') }}" class="active item">Accueil</a>
-                    <a href="{{ path('show', {type:'entreprise'}) }}" class="item">Employeurs</a>
-                    <a href="{{ path('show', {type:'candidat'}) }}" class="item">Candidats</a>
-                    <a href="{{ path('show', {type:'autoEntrepreneur'}) }}" class="item">Auto-entrepreneurs</a>
-                    <div class="right item">
-                        {% if app.session.get('user') %}
-                            <a href="{{ path('userSpace') }}" class="ui inverted button" role="button">Mon espace</a>
-                            <a href="{{ path('deconnexion') }}" style="margin-left:0.5em"
-                               class="ui inverted button" role="button">Deconnexion</a>
-                        {% else %}
+                    {% if app.session.get('user') %}
+                        <div style="margin-top: 60px;"></div>
+                    {% else %}
+                        <a href="{{ path('homepage') }}" class="active item">Accueil</a>
+                        <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
+                        <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
+                        <a href="{{ path('show', {type:'auto-entrepreneurs'}) }}" class="item">Auto-entrepreneurs</a>
+                        <div class="right item">
                             <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
                             <a href="{{ path('inscription') }}" style="margin-left:0.5em"
                                class="ui inverted button" role="button">Inscription</a>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="ui text container masthead">
@@ -27,9 +25,15 @@
                     Fealjob</h1>
                 <h2 style="font-size:1.7em;font-weight:normal;margin-top:1.5em" class="ui inverted header">La valeur du
                     travail.</h2>
-                <a href="{{ path('inscription') }}" class="ui huge green button">Commencer<i
-                            aria-hidden="true" class="right arrow icon"></i>
-                </a>
+                {% if app.session.get('user') %}
+                    <a href="{{ path('showAnnonces') }}" class="ui huge green button">Accéder aux annonces<i
+                                aria-hidden="true" class="right arrow icon"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ path('inscription') }}" class="ui huge green button">Commencer<i
+                                aria-hidden="true" class="right arrow icon"></i>
+                    </a>
+                {% endif %}
             </div>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -38,7 +42,6 @@
         </svg>
 
     </div>
-
     <div style="padding:8em 0em" class="ui vertical segment">
         <div class="ui container stackable middle aligned grid">
             <div class="row">
@@ -98,16 +101,17 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $('.primaryNav').addClass('hidden');
+        $('.visiteurNav').addClass('hidden');
+        $('.primaryNav').addClass('fixed');
         // fix menu when passed
         $('.masthead')
             .visibility({
                 once: false,
                 onBottomPassed: function () {
-                    $('.fixed.menu').transition('fade in');
+                    $('.visiteurNav').transition('fade in');
                 },
                 onBottomPassedReverse: function () {
-                    $('.fixed.menu').transition('fade out');
+                    $('.visiteurNav').transition('fade out');
                 }
             })
         ;

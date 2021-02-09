@@ -51,6 +51,15 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/mailVérifié", name="mailVerified")
+     * @return Response
+     */
+    public function mailVerified(): Response
+    {
+        return $this->render('home/mailVerified.html.twig');
+    }
+
+    /**
      * @Route("/show/{type}", name="show")
      * @param $type
      * @return Response
@@ -58,13 +67,13 @@ class HomeController extends AbstractController
     public function show($type): Response
     {
         switch ($type) {
-            case 'candidat':
+            case 'candidats':
                 return $this->render('home/candidat.html.twig');
 
-            case 'entreprise':
+            case 'entreprises':
                 return $this->render('home/employeur.html.twig');
 
-            case 'autoEntrepreneur':
+            case 'auto-entrepreneurs':
                 return $this->render('home/autoEntrepreneurs.html.twig');
 
             default:
@@ -75,9 +84,11 @@ class HomeController extends AbstractController
     /**
      * @Route("/connexion", name="connexion")
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @return Response
+     * @throws UserNotFoundException
      */
-    public function connexion(Request $request): Response
+    public function connexion(Request $request, EntityManagerInterface $em): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -94,6 +105,7 @@ class HomeController extends AbstractController
                     if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
                         $this->session->set('user', $user->getId());
                         $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
+                        $this->session->set('userName', EntityManager::getNomPrenomFromId($user->getId(), $em)['prenom']);
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
@@ -474,11 +486,55 @@ class HomeController extends AbstractController
             $user->setVerifie(true);
             $user->flush();
 
-            $this->addFlash('success', 'Votre email est vérifié');
-            return $this->redirectToRoute('connexion');
+            return $this->redirectToRoute('mailVerified');
         }
 
         return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/contact", name="contact")
+     * @return Response
+     */
+    public function contact(): Response
+    {
+        return $this->render('footer/nousContacter.html.twig');
+    }
+
+    /**
+     * @Route("/developpeurs", name="developers")
+     * @return Response
+     */
+    public function developers(): Response
+    {
+        return $this->render('footer/developpeurs.html.twig');
+    }
+
+    /**
+     * @Route("/cookies", name="cookies")
+     * @return Response
+     */
+    public function cookies(): Response
+    {
+        return $this->render('footer/cookies.html.twig');
+    }
+
+    /**
+     * @Route("/confidentiality", name="confidentiality")
+     * @return Response
+     */
+    public function confidentiality(): Response
+    {
+        return $this->render('footer/confidentialite.html.twig');
+    }
+
+    /**
+     * @Route("/conditions", name="conditions")
+     * @return Response
+     */
+    public function useConditions(): Response
+    {
+        return $this->render('footer/conditionsUtilisation.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

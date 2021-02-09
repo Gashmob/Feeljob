@@ -12,6 +12,7 @@ use App\Entity\Candidat;
 use App\Entity\Entreprise;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * Class EntityManager
@@ -110,7 +111,8 @@ abstract class EntityManager
             if ((new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}) RETURN s'))
                     ->setString('nom', $activite)
                     ->run()
-                    ->getOneOrNullResult() != null) {
+                    ->getOneOrNullResult() != null
+            ) {
                 (new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}), (e:Entreprise {id:$id}) CREATE (e)-[:estDans]->(s)'))
                     ->setString('nom', $activite)
                     ->setInteger('id', $id)
@@ -150,7 +152,8 @@ abstract class EntityManager
         if ((new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}) RETURN s'))
                 ->setString('nom', $activite)
                 ->run()
-                ->getOneOrNullResult() != null) {
+                ->getOneOrNullResult() != null
+        ) {
             (new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}), (e:Entreprise {id:$id}) CREATE (e)-[:estDans]->(s)'))
                 ->setString('nom', $activite)
                 ->setInteger('id', $id)
@@ -370,7 +373,8 @@ abstract class EntityManager
         for ($i = 0; $i < sizeof($diplomes); $i++) {
             if ((new PreparedQuery('MATCH (d:Diplome {nom:$nom}) RETURN d'))
                     ->setString('nom', $diplomes[$i])
-                    ->run()->getOneOrNullResult() != null) {
+                    ->run()->getOneOrNullResult() != null
+            ) {
                 (new PreparedQuery('MATCH (c:CV), (d:Diplome {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:Obtenue {date:$date}]->(d)'))
                     ->setString('nom', $diplomes[$i])
                     ->setInteger('id', $cv->getId())
@@ -389,7 +393,8 @@ abstract class EntityManager
         for ($i = 0; $i < sizeof($nomEntreprises); $i++) {
             if ((new PreparedQuery('MATCH (e:Experience {nom:$nom}) RETURN e'))
                     ->setString('nom', $nomEntreprises[$i])
-                    ->run()->getOneOrNullResult() != null) {
+                    ->run()->getOneOrNullResult() != null
+            ) {
                 (new PreparedQuery('MATCH (c:CV), (e:Experience {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:ATravaille {poste:$poste, duree:$duree}]->(e)'))
                     ->setString('nom', $nomEntreprises[$i])
                     ->setInteger('id', $cv->getId())
@@ -410,7 +415,8 @@ abstract class EntityManager
         foreach ($langues as $langue) {
             if ((new PreparedQuery('MATCH (l:Langue {nom:$nom}) RETURN l'))
                     ->setString('nom', $langue)
-                    ->run()->getOneOrNullResult() != null) {
+                    ->run()->getOneOrNullResult() != null
+            ) {
                 (new PreparedQuery('MATCH (l:Langue {nom:$nom}), (c:CV) WHERE id(c)=$id CREATE (c)-[:Parle]->(l)'))
                     ->setString('nom', $langue)
                     ->setInteger('id', $cv->getId())
@@ -427,7 +433,8 @@ abstract class EntityManager
         foreach ($deplacements as $deplacement) {
             if ((new PreparedQuery('MATCH (d:Deplacement {nom:$nom}) RETURN d'))
                     ->setString('nom', $deplacement)
-                    ->run()->getOneOrNullResult() != null) {
+                    ->run()->getOneOrNullResult() != null
+            ) {
                 (new PreparedQuery('MATCH (c:CV), (d:Deplacement {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:Utilise]->(d)'))
                     ->setString('nom', $deplacement)
                     ->setInteger('id', $cv->getId())
@@ -461,6 +468,7 @@ abstract class EntityManager
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
+        $res['id'] = $id;
         $res['intitule'] = $cv['c']['nom'];
         $res['photo'] = $cv['c']['photo'];
 
@@ -583,11 +591,13 @@ abstract class EntityManager
     {
         $res = [];
 
-        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) as id'))
+        $result = (new PreparedQuery('MATCH (e:Entreprise)--(o:OffreEmploi)--(t:TypeContrat) WHERE id(o)=$id RETURN id(o) AS id, t, id(e) AS idE'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
         $identity = $result['id'];
+        $res['typeContrat'] = $result['t']['nom'];
+        $res['id'] = $identity;
 
         $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $identity]);
 
@@ -602,6 +612,274 @@ abstract class EntityManager
         $res['teletravail'] = $offre->getTeletravail();
         $res['nbRecrutement'] = $offre->getNbRecrutement();
 
+        $entreprise = $em->getRepository(Entreprise::class)->findOneBy(['identity' => $result['idE']]);
+
+        $res['nomEntreprise'] = $entreprise->getNomEntreprise();
+        $res['logo'] = $entreprise->getLogo();
+
         return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $nom
+     * @return array
+     */
+    public static function getAllProfiles(EntityManagerInterface $em, string $nom = ''): array
+    {
+        $res = [];
+
+        $result = $em->getRepository(Candidat::class)->findAllCandidatWithNameLike($nom);
+
+        foreach ($result as $candidat) {
+            $cvs = (new PreparedQuery('MATCH (c:Candidat)--(cv:CV) WHERE id(c)=$id RETURN id(cv) AS id'))
+                ->setInteger('id', $candidat->getIdentity())
+                ->run()
+                ->getResult();
+
+            foreach ($cvs as $id) {
+                $res[] = EntityManager::getCVArrayFromId($id['id'], $em);
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $nom
+     * @return array
+     */
+    public static function getAllOffreEmploi(EntityManagerInterface $em, string $nom = ''): array
+    {
+        $res = [];
+
+        $result = $em->getRepository(OffreEmploi::class)->findAllEmploiWithNameLike($nom);
+
+        foreach ($result as $offre) {
+            $res[] = EntityManager::getEmploiArrayFromId($offre->getIdentity(), $em);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string|null $secteur
+     * @param string|null $contrat
+     * @param float|null $salaire
+     * @param int|null $heures
+     * @param bool|null $deplacement
+     * @param string $nom
+     * @return array
+     * @throws NonUniqueResultException
+     */
+    public static function getOffreEmploiWithFilter(
+        EntityManagerInterface $em,
+        string $secteur = null,
+        string $contrat = null,
+        float $salaire = null,
+        int $heures = null,
+        bool $deplacement = null,
+        string $nom = ''
+    ): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (:SecteurActivite' . ($secteur != null ? ' {nom:$secteur}' : '') . ')--(:Entreprise)--(o:OffreEmploi)--(:TypeContrat' . ($contrat != null ? ' {nom:$contrat}' : '') . ') RETURN id(o) AS id'))
+            ->setString('secteur', $secteur)
+            ->setString('contrat', $contrat)
+            ->run()
+            ->getResult();
+
+        $result = $em->getRepository(OffreEmploi::class)->findAllEmploiWithNameLikeFromPreResultIds($nom, $result);
+
+        foreach ($result as $offre) {
+            if ($em->getRepository(OffreEmploi::class)->findEmploiWithFiltersAndIdentity($offre->getIdentity(), $salaire, $heures, $deplacement) != null) {
+                $res[] = EntityManager::getEmploiArrayFromId($offre->getIdentity(), $em);
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return array
+     */
+    public static function getCVFromUser(EntityManagerInterface $em, int $id): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (c:Candidat)--(cv:CV) WHERE id(c)=$id RETURN id(cv) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+
+        foreach ($result as $idA) {
+            $res[] = EntityManager::getCVArrayFromId($idA['id'], $em);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return array
+     */
+    public static function getEmploiFromUser(EntityManagerInterface $em, int $id): array
+    {
+        $res = [];
+
+        $result = (new PreparedQuery('MATCH (e:Entreprise)--(o:OffreEmploi) WHERE id(e)=$id RETURN id(o) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getResult();
+
+        foreach ($result as $idA) {
+            $res[] = EntityManager::getEmploiArrayFromId($idA['id'], $em);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param int $idUser
+     * @param int $idCV
+     * @return bool
+     */
+    public static function isOwnerOfCV(int $idUser, int $idCV): bool
+    {
+        return (new PreparedQuery('MATCH (c:Candidat)--(cv:CV) WHERE id(c)=$idU AND id(cv)=$idC RETURN c'))
+                ->setInteger('idU', $idUser)
+                ->setInteger('idC', $idCV)
+                ->run()
+                ->getOneOrNullResult() != null;
+    }
+
+    /**
+     * @param CV $cv
+     * @param string $metier
+     * @param string $famille
+     * @param array $diplomes
+     * @param array $dates
+     * @param array $nomEntreprises
+     * @param array $postes
+     * @param array $durees
+     * @param array $langues
+     * @param array $deplacements
+     * @param string $typeContrat
+     * @param int $idUser
+     */
+    public static function modifyCV(CV $cv, string $metier, string $famille, array $diplomes, array $dates, array $nomEntreprises, array $postes, array $durees, array $langues, array $deplacements, string $typeContrat, int $idUser)
+    {
+        // Relation Candidat
+        (new PreparedQuery('MATCH (c:CV), (ca:Candidat) WHERE id(c)=$id AND id(ca)=$idUser CREATE (ca)-[:Cree]->(c)'))
+            ->setInteger('id', $cv->getId())
+            ->setInteger('idUser', $idUser)
+            ->run();
+
+        // Relations metier et famille
+        (new PreparedQuery('MATCH (c:CV), (m:Metier {nom:$metier}), (f:Famille {nom:$famille}) WHERE id(c)=$id CREATE (m)<-[:Est]-(c)-[:EstFamille]->(f)'))
+            ->setString('metier', $metier)
+            ->setString('famille', $famille)
+            ->setInteger('id', $cv->getId())
+            ->run();
+
+        // Relations diplomes, date
+        for ($i = 0; $i < sizeof($diplomes); $i++) {
+            if ((new PreparedQuery('MATCH (d:Diplome {nom:$nom}) RETURN d'))
+                    ->setString('nom', $diplomes[$i])
+                    ->run()->getOneOrNullResult() != null
+            ) {
+                (new PreparedQuery('MATCH (c:CV), (d:Diplome {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:Obtenue {date:$date}]->(d)'))
+                    ->setString('nom', $diplomes[$i])
+                    ->setInteger('id', $cv->getId())
+                    ->setString('date', $dates[$i])
+                    ->run();
+            } else {
+                (new PreparedQuery('MATCH (c:CV) WHERE id(c)=$id CREATE (c)-[:Obtenue {date:$date}]->(:Diplome {nom:$nom})'))
+                    ->setInteger('id', $cv->getId())
+                    ->setString('date', $dates[$i])
+                    ->setString('nom', $diplomes[$i])
+                    ->run();
+            }
+        }
+
+        // Relations expériences, nomEntreprise, poste, durée
+        for ($i = 0; $i < sizeof($nomEntreprises); $i++) {
+            if ((new PreparedQuery('MATCH (e:Experience {nom:$nom}) RETURN e'))
+                    ->setString('nom', $nomEntreprises[$i])
+                    ->run()->getOneOrNullResult() != null
+            ) {
+                (new PreparedQuery('MATCH (c:CV), (e:Experience {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:ATravaille {poste:$poste, duree:$duree}]->(e)'))
+                    ->setString('nom', $nomEntreprises[$i])
+                    ->setInteger('id', $cv->getId())
+                    ->setString('poste', $postes[$i])
+                    ->setString('duree', $durees[$i])
+                    ->run();
+            } else {
+                (new PreparedQuery('MATCH (c:CV) WHERE id(c)=$id CREATE (c)-[:ATravaille {poste:$poste, duree:$duree}]->(:Experience {nom:$nom})'))
+                    ->setInteger('id', $cv->getId())
+                    ->setString('poste', $postes[$i])
+                    ->setString('duree', $durees[$i])
+                    ->setString('nom', $nomEntreprises[$i])
+                    ->run();
+            }
+        }
+
+        // Relations langues
+        foreach ($langues as $langue) {
+            if ((new PreparedQuery('MATCH (l:Langue {nom:$nom}) RETURN l'))
+                    ->setString('nom', $langue)
+                    ->run()->getOneOrNullResult() != null
+            ) {
+                (new PreparedQuery('MATCH (l:Langue {nom:$nom}), (c:CV) WHERE id(c)=$id CREATE (c)-[:Parle]->(l)'))
+                    ->setString('nom', $langue)
+                    ->setInteger('id', $cv->getId())
+                    ->run();
+            } else {
+                (new PreparedQuery('MATCH (c:CV) WHERE id(c)=$id CREATE (c)-[:Parle]->(:Langue {nom:$nom})'))
+                    ->setInteger('id', $cv->getId())
+                    ->setString('nom', $langue)
+                    ->run();
+            }
+        }
+
+        // Relations deplacements
+        foreach ($deplacements as $deplacement) {
+            if ((new PreparedQuery('MATCH (d:Deplacement {nom:$nom}) RETURN d'))
+                    ->setString('nom', $deplacement)
+                    ->run()->getOneOrNullResult() != null
+            ) {
+                (new PreparedQuery('MATCH (c:CV), (d:Deplacement {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:Utilise]->(d)'))
+                    ->setString('nom', $deplacement)
+                    ->setInteger('id', $cv->getId())
+                    ->run();
+            } else {
+                (new PreparedQuery('MATCH (c:CV) WHERE id(c)=$id CREATE (c)-[:Utilise]->(:Deplacement {nom:$nom})'))
+                    ->setInteger('id', $cv->getId())
+                    ->setString('nom', $deplacement)
+                    ->run();
+            }
+        }
+
+        // Relation type contrat
+        (new PreparedQuery('MATCH (c:CV), (t:TypeContrat {nom:$nom}) WHERE id(c)=$id CREATE (c)-[:Recherche]->(t)'))
+            ->setString('nom', $typeContrat)
+            ->setInteger('id', $cv->getId())
+            ->run();
+    }
+
+    /**
+     * @param int $id
+     * @param EntityManagerInterface $em
+     * @return string
+     */
+    public static function getNomEntrepriseFromId(int $id, EntityManagerInterface $em): string
+    {
+        return $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id])->getNomEntreprise();
     }
 }

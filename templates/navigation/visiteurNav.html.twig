@@ -1,0 +1,15 @@
+<div class="ui primaryNav visiteurNav transition menu">
+    <div class="ui container">
+        <a href="{{ path('homepage') }}" class="header item">
+            <img style="margin-right: 1.5em;" class="logo" src="{{ asset('img/FJ200.png') }}">
+            FealJob
+        </a>
+        <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
+        <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
+        <a href="{{ path('show', {type:'auto-entrepreneurs'}) }}" class="item">Auto-entrepreneurs</a>
+    </div>
+    <div class="right item">
+        <a href="{{ path('connexion') }}" class="item">Connexion</a>
+        <a href="{{ path('inscription') }}" class="item inscription">Inscription</a>
+    </div>
+</div>

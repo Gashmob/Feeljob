@@ -8,7 +8,9 @@ use App\database\entity\CV;
 use App\database\EntityManager;
 use App\database\exceptions\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -38,8 +40,14 @@ class CandidatController extends AbstractController
      */
     public function showCV($id, EntityManagerInterface $em): Response
     {
+        $modify = false;
+        if ($this->session->get('user')) {
+            $modify = EntityManager::isOwnerOfCV($this->session->get('user'), $id);
+        }
+
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => EntityManager::getCVArrayFromId($id, $em)
+            'cv' => EntityManager::getCVArrayFromId($id, $em),
+            'modify' => $modify
         ]);
     }
 
@@ -56,7 +64,7 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        if (!$this->session->get('userType') === 'Candidat') {
+        if (!($this->session->get('userType') === 'Candidat')) {
             return $this->redirectToRoute('userSpace');
         }
 
@@ -143,7 +151,11 @@ class CandidatController extends AbstractController
                 $cv = new CV();
                 $cv->setNom($nom)
                     ->setPhoto($photo);
-                EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
+
+                if ($request->get('id'))
+                    EntityManager::modifyCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
+                else
+                    EntityManager::createCV($cv, $metier, $famille, $diplomes, $dates, $nomEntreprises, $postes, $durees, $langues, $deplacements, $typeContrat, $this->session->get('user'));
 
                 $this->addFlash('success', 'Votre CV a été créé');
                 return $this->redirectToRoute('userSpace');
@@ -162,8 +174,48 @@ class CandidatController extends AbstractController
             'nom' => $nomPrenom['nom'],
             'prenom' => $nomPrenom['prenom'],
             'telephone' => EntityManager::getUserPhoneFromId($this->session->get('user'), $em),
-            'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail()
+            'email' => EntityManager::getGenericUserFromId($this->session->get('user'))->getEmail(),
+            'cv' => $request->get('id') ? EntityManager::getCVArrayFromId($request->get('id'), $em) : []
         ]);
+    }
+
+    /**
+     * @Route("/annonces", name="showAnnonces")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function offres(EntityManagerInterface $em): Response
+    {
+        $offres = EntityManager::getAllOffreEmploi($em);
+
+        return $this->render('candidat/showAnnonces.html.twig', [
+            'offres' => $offres
+        ]);
+    }
+
+    /**
+     * @Route("/annonces/{nom}", defaults={"nom"=""})
+     * @param $nom
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @throws NonUniqueResultException
+     */
+    public function offresFilters($nom, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if ($request->isMethod('GET')) {
+            $secteur = $request->get('secteur');
+            $contrat = $request->get('contrat');
+            $salaire = $request->get('salaire');
+            $heures = $request->get('heures');
+            $deplacement = $request->get('deplacement');
+
+            $offres = EntityManager::getOffreEmploiWithFilter($em, $secteur, $contrat, $salaire, $heures, $deplacement, $nom);
+        } else {
+            $offres = EntityManager::getAllOffreEmploi($em, $nom);
+        }
+
+        return new JsonResponse($offres);
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
