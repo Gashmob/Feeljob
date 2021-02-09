@@ -9,12 +9,11 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input type="text" name="nom" placeholder="Intitulé du poste" required>
+                <input required type="text" name="nom" placeholder="Intitulé du poste">
             </div>
             <div class="field required">
                 <label>Types de contrat :</label>
-                <select class="ui dropdown" name="contrat">
-                    <option value="contractDefault">Type de contrat</option>
+                <select required class="ui dropdown" name="contrat">
                     {% for type in typeContrat %}
                         <option value="{{ type }}">
                             {{ type }}
@@ -25,29 +24,29 @@
             <div class="two fields">
                 <div class="field required">
                     <label>Date début</label>
-                    <input name="dateD" placeholder="jj/mm/aaaa" type="text">
+                    <input required name="dateD" placeholder="jj/mm/aaaa" type="text">
                 </div>
                 <div class="field required">
                     <label>Date fin</label>
-                    <input name="dateF" placeholder="jj/mm/aaaa" type="text">
+                    <input required name="dateF" placeholder="jj/mm/aaaa" type="text">
                 </div>
             </div>
             <div class="three fields">
-                <div class="field">
+                <div class="field required">
                     <label>Nombre d'heures travaillées</label>
-                    <input type="text" name="heures" placeholder="Nombre">
+                    <input required type="text" name="heures" placeholder="Nombre">
                 </div>
-                <div class="field">
+                <div class="field required required">
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input name="salaire" type="text" placeholder="Montant" id="montant">
+                        <input required name="salaire" type="text" placeholder="Montant" id="montant">
                         <div class="ui basic label">.00</div>
                     </div>
                 </div>
-                <div class="required field">
+                <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input type="text" name="nbRecrutement" placeholder="#" required>
+                    <input required type="text" name="nbRecrutement" placeholder="#" required>
                 </div>
             </div>
             <div class="ui divider"></div>
