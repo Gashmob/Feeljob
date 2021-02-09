@@ -42,16 +42,19 @@ class UserController extends AbstractController
         $nomPrenom = EntityManager::getNomPrenomFromId($this->session->get('user'), $em);
 
         $offres = [];
+        $nomEntreprise = '';
         if ($this->session->get('userType') == 'Candidat') {
             $offres = EntityManager::getCVFromUser($em, $this->session->get('user'));
         } elseif ($this->session->get('userType') == 'Entreprise') {
             $offres = EntityManager::getEmploiFromUser($em, $this->session->get('user'));
+            $nomEntreprise = EntityManager::getNomEntrepriseFromId($this->session->get('user'), $em);
         }
 
         return $this->render('home/profil.html.twig', [
             'nom' => $nomPrenom['nom'],
             'prenom' => $nomPrenom['prenom'],
-            'publications' => $offres
+            'publications' => $offres,
+            'nomEntreprise' => $nomEntreprise
         ]);
     }
 
