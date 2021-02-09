@@ -13,7 +13,7 @@
             </div>
             <div class="field required">
                 <label>Types de contrat :</label>
-                <select required class="ui dropdown" name="contrat">
+                <select id="selectTypeContrat" required class="ui dropdown" name="contrat">
                     {% for type in typeContrat %}
                         <option value="{{ type }}">
                             {{ type }}
@@ -40,7 +40,7 @@
                     <label>Date début</label>
                     <input required name="dateD" placeholder="jj/mm/aaaa" type="date">
                 </div>
-                <div class="field required">
+                <div class="field" id="dateFinField">
                     <label>Date fin</label>
                     <input required name="dateF" placeholder="jj/mm/aaaa" type="date">
                 </div>
@@ -84,6 +84,10 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded", function(){
+            checkDateFin();
+        });
+        //Lieu
         const lieuBtn = document.getElementById('lieuBtn')
         const lieuField = document.getElementById('lieuField')
         lieuBtn.addEventListener('change', (event) => {
@@ -93,5 +97,16 @@
                 lieuField.classList.add("disabled");
             }
         })
+        //Date fin
+        const selectTypeContrat = document.getElementById('selectTypeContrat')
+        const dateFinField = document.getElementById('dateFinField')
+        selectTypeContrat.addEventListener('change', checkDateFin)
+        function checkDateFin(){
+            if (selectTypeContrat.value == 'CDI') {
+                dateFinField.classList.add("disabled");
+            } else {
+                dateFinField.classList.remove("disabled");
+            }
+        }
     </script>
 {% endblock %}
