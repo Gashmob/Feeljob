@@ -75,7 +75,7 @@
                                     perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
                             </div>
                             <div class="extra">
-                                <a href="{{ path('show_emploi', {'id': '1'}) }}"
+                                <a href="#"
                                    class="ui right floated primary button">
                                     Voir l'annonce
                                     <i class="right chevron icon"></i>
@@ -83,51 +83,6 @@
                                 <div class="ui label">CDD</div>
                                 <div class="ui label">CDI</div>
                                 <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image">
-                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
-                        </div>
-                        <div class="content">
-                            <a class="header">DRH</a>
-                            <div class="meta">
-                                <span class="cinema">Du 12/06 au 12/07</span>
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusamus animi, beatae
-                                    cupiditate distinctio ex expedita harum, nam nemo nihil odio praesentium quas
-                                    quibusdam rem, reprehenderit saepe sapiente voluptatem voluptatum!</p>
-                            </div>
-                            <div class="extra">
-                                <div class="ui right floated primary button">
-                                    Voir l'annonce
-                                    <i class="right chevron icon"></i>
-                                </div>
-                                <div class="ui label">Intérim</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image">
-                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
-                        </div>
-                        <div class="content">
-                            <a class="header">Graphiste</a>
-                            <div class="meta">
-                                <span class="cinema">Du 12/06 au 12/07</span>
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dicta excepturi
-                                    ipsum iusto odit quas quibusdam quis rem saepe. Alias aspernatur assumenda deleniti
-                                    deserunt error impedit, modi mollitia nesciunt quos!</p>
-                            </div>
-                            <div class="extra">
-                                <div class="ui right floated primary button">
-                                    Voir l'annonce
-                                    <i class="right chevron icon"></i>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -139,7 +94,11 @@
                             <div class="content">
                                 <a class="header">{{ annonce['nom'] }}</a>
                                 <div class="meta">
-                                    <span class="cinema">Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
+                                    {% if annonce['typeContrat'] == 'CDI' %}
+                                        <span class="cinema">À partir du {{ annonce['debut'] }}</span>
+                                    {% else %}
+                                        <span class="cinema">Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
+                                    {% endif %}
                                 </div>
                                 <div class="description">
                                     <p>{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</p>

@@ -10,11 +10,9 @@
         <div class="ui segment">
             <div class="ui two column grid">
                 <div class="column twelve wide">
-                    <h2 class="ui header">nom</h2>
+                    <h2 class="ui header">{{ offre['nom'] }}</h2>
                     <div>
-                        <div class="ui label">CDD</div>
-                        <div class="ui label">CDI</div>
-                        <div class="ui label">Stage</div>
+                        <div class="ui label">{{ offre['typeContrat'] }}</div>
                     </div>
                 </div>
                 <div class="four wide column">
@@ -25,10 +23,17 @@
                 </div>
             </div>
             <div style="padding-top: 20px;" class="ui content">
-                <p>Du debut au fin</p>
-                <p>1 recrutement disponible</p>
-                <p>1200.00€</p>
-                <p>35 heures par semaine</p>
+                <p>
+                    {% if offre['typeContrat'] == 'CDI' %}
+                        <span class="cinema">À partir du {{ offre['debut'] }}</span>
+                    {% else %}
+                        <span class="cinema">Du {{ offre['debut'] }} au {{ offre['fin'] }}</span>
+                    {% endif %}
+                </p>
+                <p>{{ offre['nbRecrutement'] }} recrutement{% if offre['nbRecrutement'] > 1 %}s{% endif %}
+                    disponible{% if offre['nbRecrutement'] > 1 %}s{% endif %}</p>
+                <p>{{ offre['salaire'] }}.00€</p>
+                <p>{{ offre['heures'] }} heures par semaine</p>
             </div>
             <!-- Autres -->
             <h3 class="ui dividing header">
@@ -37,15 +42,15 @@
             </h3>
             <div class="ui segment">
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
                     Logé
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if not offre['deplacement'] %}check{% else %}times{% endif %}"></i>
                     Rattaché à un lieu précis
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon times"></i>
+                    <i class="icon {% if offre['teletravail'] %}check{% else %}times{% endif %}"></i>
                     Éligible au télétravail
                 </div>
             </div>
