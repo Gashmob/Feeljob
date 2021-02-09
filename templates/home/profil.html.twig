@@ -1,4 +1,5 @@
 {% extends 'page.html.twig' %}
+{% block title %}FealJob - Votre profil{% endblock %}
 {% block body %}
     <div class="ui container vertical segment">
         <div class="ui segment grid identity">
@@ -9,7 +10,7 @@
                 <h2 class="ui header">
                     <div class="content">Profil de {{ prenom }} {{ nom }}
                         {% if app.session.get('userType') == 'Entreprise' %}
-                            <div class="sub header">Nom entreprise</div>
+                            <div class="sub header">{{ nomEntreprise }}</div>
                         {% endif %}
                     </div>
                 </h2>
