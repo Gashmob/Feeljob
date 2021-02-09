@@ -609,17 +609,21 @@ abstract class EntityManager
         return $res;
     }
 
-
-    public static function getProfiles( EntityManagerInterface $em):array
+    /**
+     * @param EntityManagerInterface $em
+     * @return array
+     */
+    public static function getAllProfiles(EntityManagerInterface $em): array
     {
-	$res = [];
-        $result=(new PreparedQuery('MATCH (c:CV) return id(c)'))->run()->getResult();
+        $res = [];
+        $result = (new PreparedQuery('MATCH (c:CV) return id(c)'))->run()->getResult();
 
-	foreach ($result as $id) {
-		$res[] = EntityManager::getCVArrayFromId($id['id'], $em);
-	}
-	return $res;
+        foreach ($result as $id) {
+            $res[] = EntityManager::getCVArrayFromId($id['id'], $em);
+        }
+        return $res;
     }
+
     /**
      * @param EntityManagerInterface $em
      * @param string $nom
