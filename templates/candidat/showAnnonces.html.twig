@@ -101,13 +101,13 @@
                                     {% if annonce['lieu'] is not empty %}
                                         <span>
                                             <i class="icon map pin"></i>
-                                            {{ annonce['lieu'] }}
+                                            {{ annonce['lieu'] }},
                                         </span>
                                     {% endif %}
                                     {% if annonce['typeContrat'] == 'CDI' %}
-                                        <span>À partir du {{ annonce['debut'] }}</span>
+                                        <span>à partir du {{ annonce['debut'] }}</span>
                                     {% else %}
-                                        <span>Du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
+                                        <span>du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
                                     {% endif %}
                                 </div>
                                 <div class="description">

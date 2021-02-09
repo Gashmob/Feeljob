@@ -27,10 +27,12 @@
                 </div>
             </div>
             <div style="padding-top: 20px;" class="ui content annonce-content">
+                {% if not offre['deplacement'] %}
                 <p>
                     <i class="icon map pin"></i>
-                    Grésy-sur-aix
+                    {{ offre['lieu'] }}
                 </p>
+                {% endif %}
                 <p>
                     <i class="icon calendar alternate"></i>
                     {% if offre['typeContrat'] == 'CDI' %}
@@ -65,20 +67,16 @@
             <!-- Autres -->
             <h3 class="ui dividing header">
                 <i class="icon question circle outline"></i>
-                <div class="content">Autres informations</div>
+                <div class="content">Informations additionnelles</div>
             </h3>
             <div class="ui segment">
                 <div class="ui left float icon">
-                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
-                    Logé
-                </div>
-                <div class="ui left float icon">
-                    <i class="icon {% if not offre['deplacement'] %}check{% else %}times{% endif %}"></i>
-                    Rattaché à un lieu précis
-                </div>
-                <div class="ui left float icon">
                     <i class="icon {% if offre['teletravail'] %}check{% else %}times{% endif %}"></i>
                     Éligible au télétravail
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
+                    Logé
                 </div>
             </div>
         </div>
