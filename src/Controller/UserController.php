@@ -54,7 +54,7 @@ class UserController extends AbstractController
             'nom' => $nomPrenom['nom'],
             'prenom' => $nomPrenom['prenom'],
             'publications' => $offres,
-            'nomEntreprise' => $nomEntreprise;
+            'nomEntreprise' => $nomEntreprise
         ]);
     }
 
