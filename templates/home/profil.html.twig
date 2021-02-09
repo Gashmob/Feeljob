@@ -6,7 +6,13 @@
                 <img class="ui circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             </div>
             <div class="ten wide column">
-                <h2>Profil de {{ prenom }} {{ nom }}</h2>
+                <h2 class="ui header">
+                    <div class="content">Profil de {{ prenom }} {{ nom }}
+                        {% if app.session.get('userType') == 'Entreprise' %}
+                            <div class="sub header">Nom entreprise</div>
+                        {% endif %}
+                    </div>
+                </h2>
                 <div class="ui label">{{ app.session.get('userType') }}</div>
             </div>
             <div class="four wide column">
