@@ -11,7 +11,7 @@
                 <label>Intitulé du poste</label>
                 <input type="text" name="nom" placeholder="Intitulé du poste" required>
             </div>
-            <div class="field">
+            <div class="field required">
                 <label>Types de contrat :</label>
                 <select class="ui dropdown" name="contrat">
                     <option value="contractDefault">Type de contrat</option>
@@ -23,11 +23,11 @@
                 </select>
             </div>
             <div class="two fields">
-                <div class="disabled field">
+                <div class="field required">
                     <label>Date début</label>
                     <input name="dateD" placeholder="jj/mm/aaaa" type="text">
                 </div>
-                <div class="disabled field">
+                <div class="field required">
                     <label>Date fin</label>
                     <input name="dateF" placeholder="jj/mm/aaaa" type="text">
                 </div>
