@@ -9,7 +9,7 @@
                 <h2 class="ui header">
                     <div class="content">Profil de {{ prenom }} {{ nom }}
                         {% if app.session.get('userType') == 'Entreprise' %}
-                            <div class="sub header">Nom entreprise</div>
+                            <div class="sub header">{{ nomEntreprise }}</div>
                         {% endif %}
                     </div>
                 </h2>
