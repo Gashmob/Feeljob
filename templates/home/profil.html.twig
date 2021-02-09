@@ -8,7 +8,6 @@
             <div class="ten wide column">
                 <h2>Profil de {{ prenom }} {{ nom }}</h2>
                 <div class="ui label">{{ app.session.get('userType') }}</div>
-                <div>Profil créé le 12 septembre 2020</div>
             </div>
             <div class="four wide column">
                 <div>
@@ -101,7 +100,7 @@
                                 </label>
                             </div>
                             <div style="margin: .5em 0;" class="row">Ou</div>
-                            <a href="{{ path('create_cv') }}" class="ui row labeled icon">
+                            <a href="{{ path('create_emploi') }}" class="ui row labeled icon">
                                 <button class="ui blue labeled icon button">
                                     <i class="plus icon"></i>
                                     Créer

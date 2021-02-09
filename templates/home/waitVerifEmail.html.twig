@@ -1,23 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block body %}
-    <style type="text/css">
-        body {
-            background-color: #fafbfc;
-        }
-
-        body > .grid {
-            min-height: 60%;
-        }
-
-        .image {
-            margin-top: -100px;
-        }
-
-        .column {
-            max-width: 450px;
-        }
-    </style>
-    <div class="ui middle aligned center aligned grid">
+    <div style="padding-top: 20px;" class="ui middle aligned center aligned grid">
         <div class="column">
             <h2 class="ui icon header">
                 <i class="icon at"></i>
@@ -26,7 +9,10 @@
                     <div class="sub header">Adresse : {{ mail }}</div>
                 </div>
             </h2>
-            <h5>Vous ne l'avez pas reçu ? <form method="post"><button type="submit">Renvoyer</button></form></h5>
+            <h4>Vous ne l'avez pas reçu ?</h4>
+            <form method="post">
+                <button class="ui primary button" type="submit">Renvoyer</button>
+            </form>
         </div>
     </div>
 {% endblock %}
