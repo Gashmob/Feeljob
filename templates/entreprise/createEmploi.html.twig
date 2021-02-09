@@ -1,19 +1,19 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Créer une offre d'emploi{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px; margin-bottom: 60px;" class="ui text justified container">
-        <h2 class="ui center aligned icon header">
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
             <i class="briefcase icon"></i>
-            Créer une offre d'emploi
-        </h2>
+            Nouvelle offre d'emploi
+        </h3>
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input type="text" name="nom" placeholder="Intitulé du poste" required>
+                <input required type="text" name="nom" placeholder="Intitulé du poste">
             </div>
-            <div class="field">
+            <div class="field required">
                 <label>Types de contrat :</label>
-                <select class="ui dropdown" name="contrat">
+                <select id="selectTypeContrat" required class="ui dropdown" name="contrat">
                     {% for type in typeContrat %}
                         <option value="{{ type }}">
                             {{ type }}
@@ -21,32 +21,48 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="two fields">
-                <div class="disabled field">
-                    <label>Date début</label>
-                    <input name="dateD" placeholder="jj/mm/aaaa" type="text">
-                </div>
-                <div class="disabled field">
-                    <label>Date fin</label>
-                    <input name="dateF" placeholder="jj/mm/aaaa" type="text">
+            <div class="field">
+                <label>Localisation</label>
+                <p>Si votre emploi est géolocalisé, cliquez sur le bouton ci-dessous.</p>
+                <div class="two fields">
+                    <div style="padding-top: 6px;" class="two wide field">
+                        <div style="padding-left: 10px;" class="ui toggle checkbox">
+                            <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
+                        </div>
+                    </div>
+                    <div class="fourteen wide field disabled" id="lieuField">
+                        <input type="text" name="lieu" placeholder="ex : Chambéry">
+                    </div>
                 </div>
             </div>
-            <div class="three fields">
+            <div class="two fields">
+                <div class="field required">
+                    <label>Date début</label>
+                    <input required name="dateD" placeholder="jj/mm/aaaa" type="date">
+                </div>
+                <div class="field" id="dateFinField">
+                    <label>Date fin</label>
+                    <input required name="dateF" placeholder="jj/mm/aaaa" type="date">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field required">
+                    <label>Nombre de postes à pourvoir</label>
+                    <input required type="number" min="1" name="nbRecrutement" placeholder="Nombre">
+                </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées</label>
-                    <input type="text" name="heures" placeholder="Nombre">
+                    <input type="number" min="0" name="heures" placeholder="Nombre">
                 </div>
+            </div>
+            <div class="two fields">
                 <div class="field">
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input name="salaire" type="text" placeholder="Montant" id="montant">
+                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant">
                         <div class="ui basic label">.00</div>
                     </div>
-                </div>
-                <div class="required field">
-                    <label>Nombre de postes à pourvoir</label>
-                    <input type="text" name="nbRecrutement" placeholder="#" required>
                 </div>
             </div>
             <div class="ui divider"></div>
@@ -58,12 +74,6 @@
             </div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="deplacement" class="hidden">
-                    <label>Emploi rattaché à un lieu précis</label>
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui toggle checkbox">
                     <input type="checkbox" name="teletravail" class="hidden">
                     <label>Éligible au télétravail</label>
                 </div>
@@ -71,4 +81,32 @@
             <button class="ui fluid large green submit button" type="submit">Créer</button>
         </form>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded", function(){
+            checkDateFin();
+        });
+        //Lieu
+        const lieuBtn = document.getElementById('lieuBtn')
+        const lieuField = document.getElementById('lieuField')
+        lieuBtn.addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                lieuField.classList.remove("disabled");
+            } else {
+                lieuField.classList.add("disabled");
+            }
+        })
+        //Date fin
+        const selectTypeContrat = document.getElementById('selectTypeContrat')
+        const dateFinField = document.getElementById('dateFinField')
+        selectTypeContrat.addEventListener('change', checkDateFin)
+        function checkDateFin(){
+            if (selectTypeContrat.value == 'CDI') {
+                dateFinField.classList.add("disabled");
+            } else {
+                dateFinField.classList.remove("disabled");
+            }
+        }
+    </script>
 {% endblock %}

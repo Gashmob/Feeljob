@@ -19,6 +19,20 @@ class CandidatRepository extends ServiceEntityRepository
         parent::__construct($registry, Candidat::class);
     }
 
+    /**
+     * @param string nom
+     * @return Candidat[]
+     */
+    public function findAllCandidatWithNameLike(string $nom): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.nom LIKE :nom')
+            ->setParameter('nom', '%' . $nom . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     // /**
     //  * @return Candidat[] Returns an array of Candidat objects
     //  */

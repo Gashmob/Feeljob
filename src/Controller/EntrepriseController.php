@@ -54,7 +54,7 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        if (!$this->session->get('userType') === 'Entreprise') {
+        if (!($this->session->get('userType') === 'Entreprise')) {
             return $this->redirectToRoute('userSpace');
         }
 
@@ -95,18 +95,8 @@ class EntrepriseController extends AbstractController
             $loge = $request->get('loge') != null;
 
             $heures = $request->get('heures');
-            $heuresB = true;
-            if ($heures <= 0) {
-                $heuresB = false;
-                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures de travail valide');
-            }
 
             $salaire = $request->get('salaire');
-            $salaireB = true;
-            if ($salaire < 0) {
-                $salaireB = false;
-                $this->addFlash('salaire', 'Merci de renseigner un salaire valide');
-            }
 
             $deplacement = $request->get('deplacement') == null;
             if (!$deplacement) {
@@ -130,7 +120,7 @@ class EntrepriseController extends AbstractController
                 $this->addFlash('nbRecrutement', 'Merci de renseigner un nombre de recrutement supérieur à 0');
             }
 
-            if ($nomB && $typeContratB && $dateDB && $dateFB && $heuresB && $salaireB && $lieuB && $nbRecrutementB) {
+            if ($nomB && $typeContratB && $dateDB && $dateFB && $lieuB && $nbRecrutementB) {
                 $offre = new OffreEmploi();
                 $offre->setNom($nom)
                     ->setDebut($dateD)
@@ -151,6 +141,20 @@ class EntrepriseController extends AbstractController
 
         return $this->render('entreprise/createEmploi.html.twig', [
             'typeContrat' => EntityManager::getAllTypeContratName()
+        ]);
+    }
+
+    /**
+     * @Route("/profils", name="showProfiles")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function showProfiles(EntityManagerInterface $em): Response
+    {
+        $profil = EntityManager::getAllProfiles($em);
+
+        return $this->render('entreprise/showProfiles.html.twig', [
+            'profil' => $profil
         ]);
     }
 }

@@ -1,16 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Créer un CV{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px;" class="ui text justified container">
-        <h2 class="ui center aligned icon header">
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
-            Créer son CV
-        </h2>
+            Nouveau CV
+        </h3>
         <form class="ui form segment" method="post">
             <div class="inline field">
                 <label>Nom du CV :</label>
                 <div class="ui input">
-                    <input type="text" name="nomCV" value="CV #1">
+                    <input type="text" name="nomCV"
+                           value="{% if cv is not empty %}{{ cv['intitule'] }}{% else %}CV #1{% endif %}">
                 </div>
             </div>
             <div class="inline field">
@@ -33,17 +34,18 @@
                                 </div>
                             </div>
                         </div>
-                        <img src="{{ asset('img/placeholders/elyse.png') }}" alt="photo de profil"
+                        <img src="{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}"
+                             alt="photo de profil"
                              class="ui small circular dimmable image">
                     </div>
                 </div>
                 <div class="ui twelve wide column">
                     <div class="two fields">
-                        <div class="field">
+                        <div class="field disabled">
                             <label>Prénom</label>
                             <input type="text" name="prenom" value="{{ prenom }}">
                         </div>
-                        <div class="field">
+                        <div class="field disabled">
                             <label>Nom</label>
                             <input type="text" name="nom" value="{{ nom }}">
                         </div>
@@ -51,7 +53,8 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Né le</label>
-                            <input type="text" name="dateNaissance" placeholder="18/09/1989">
+                            <input type="text" name="dateNaissance" placeholder="18/09/1989"
+                                   value="{% if cv is not empty %}{{ cv['naissance'] }}{% endif %}">
                         </div>
                         <div class="field">
                             <label>Métier</label>
@@ -126,12 +129,12 @@
             <h4 class="ui dividing header">Formation</h4>
             <div class="two fields">
                 <div class="field">
-                    <label>Nom de l'établissement</label>
-                    <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
-                </div>
-                <div class="field">
                     <label>Intitulé du diplôme</label>
                     <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                </div>
+                <div class="field">
+                    <label>Nom de l'établissement</label>
+                    <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
                 </div>
             </div>
             <div class="field">

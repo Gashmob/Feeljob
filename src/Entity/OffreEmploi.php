@@ -68,7 +68,7 @@ class OffreEmploi
     private $nbRecrutement;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=true)
      */
     private $identity;
 

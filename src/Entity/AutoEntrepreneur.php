@@ -63,7 +63,7 @@ class AutoEntrepreneur
     private $abonne;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=true)
      */
     private $identity;
 
