@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 {% block title %}FealJob - Créer une offre d'emploi{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px; margin-bottom: 60px;" class="ui text justified container">
-        <h2 class="ui center aligned icon header">
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
             <i class="briefcase icon"></i>
-            Créer une offre d'emploi
-        </h2>
+            Nouvelle offre d'emploi
+        </h3>
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
@@ -23,7 +23,7 @@
             </div>
             <div class="field">
                 <label>Localisation</label>
-                <p>Si votre emploi est rattaché à un lieu, cliquez sur le bouton ci-dessous</p>
+                <p>Si votre emploi est géolocalisé, cliquez sur le bouton ci-dessous.</p>
                 <div class="two fields">
                     <div style="padding-top: 6px;" class="two wide field">
                         <div style="padding-left: 10px;" class="ui toggle checkbox">
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="lieu" placeholder="Emplacement">
+                        <input type="text" name="lieu" placeholder="ex : Chambéry">
                     </div>
                 </div>
             </div>
@@ -48,19 +48,21 @@
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="text" name="nbRecrutement" placeholder="Nombre">
+                    <input required type="number" min="1" name="nbRecrutement" placeholder="Nombre">
                 </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées</label>
-                    <input type="text" name="heures" placeholder="Nombre">
+                    <input type="number" min="0" name="heures" placeholder="Nombre">
                 </div>
             </div>
-            <div class="field required">
-                <label>Montant du salaire</label>
-                <div class="ui right labeled input">
-                    <label for="montant" class="ui label">€</label>
-                    <input required name="salaire" type="text" placeholder="Montant" id="montant">
-                    <div class="ui basic label">.00</div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Montant du salaire</label>
+                    <div class="ui right labeled input">
+                        <label for="montant" class="ui label">€</label>
+                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant">
+                        <div class="ui basic label">.00</div>
+                    </div>
                 </div>
             </div>
             <div class="ui divider"></div>
