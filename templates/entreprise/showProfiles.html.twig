@@ -92,31 +92,47 @@
                             Du 01/06 au 31/08 2021
                         </div>
                     </a>
-                    <a class="ui card" href="#">
-                        <div class="content">
-                            <img class="ui left floated mini circular image"
-                                 src="{{ asset('img/placeholders/jenny.jpg') }}">
-                            <div class="header">Jennifer Laniston</div>
-                            <div class="meta">
-                                <span class="category">Chef de cuisine</span>
+                    {% for cv in profil %}
+                        <a class="ui card" href="{{ path('show_cv', {'id': cv['id']}) }}">
+                            <div class="content">
+                                <img class="ui left floated mini circular image"
+                                     src="{{ asset('img/placeholders/jenny.jpg') }}">
+                                <div class="header">{{ cv['prenom'] }} {{ cv['nom'] }}</div>
+                                <div class="meta">
+                                    <span class="category">{{ cv['metier'] }}</span>
+                                </div>
+                                <div style="margin-top: 10px;" class="contract">
+                                    <div class="ui label">{{ cv['contrat'] }}</div>
+                                    {% if cv['langues'] is not empty %}
+                                        <div class="ui label">{{ cv['langues'][0] }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="description">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                        deserunt,
+                                        dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                        tempore
+                                        voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                    {% if cv['diplomes'][0]['nom'] is not empty %}
+                                    <p>
+                                        <i class="icon bookmark"></i>
+                                        {{ cv['diplomes'][0]['nom'] }} obtenu le {{ cv['diplomes'][0]['date'] }}
+                                    </p>
+                                    {% endif %}
+                                    {% if cv['permis'] is not null %}
+                                    <p>
+                                        <i class="icon outline check"></i>
+                                        Dispose du permis
+                                    </p>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div style="margin-top: 10px;" class="contract">
-                                <div class="ui label">CDD</div>
-                                <div class="ui label">CDI</div>
+                            <div class="extra content">
+                                <i class="icon calendar"></i>
+                                À partir du 01/04/2021
                             </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                    deserunt,
-                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                    tempore
-                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
-                            </div>
-                        </div>
-                        <div class="extra content">
-                            <i class="icon calendar"></i>
-                            À partir du 01/04/2021
-                        </div>
-                    </a>
+                        </a>
+                    {% endfor %}
                     <a class="ui card" href="#">
                         <div class="content">
                             <img class="ui left floated mini circular image"

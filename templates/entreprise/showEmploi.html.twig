@@ -9,16 +9,20 @@
         </a>
         <div class="ui segment">
             <div class="ui two column grid">
-                <div class="column twelve wide">
+                <div class="column ten wide">
                     <h2 class="ui header">{{ offre['nom'] }}</h2>
                     <div>
                         <div class="ui label">{{ offre['typeContrat'] }}</div>
                     </div>
                 </div>
-                <div class="four wide column">
+                <div class="six wide column">
                     <a href="{{ path('userSpace') }}" class="ui header small">
+                        {% if offre['logo'] is not empty %}
+                        <img src="{{ asset('uploads/logos/' ~ offre['logo']) }}">
+                        {% else %}
                         <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
-                        Entreprise
+                        {% endif %}
+                        {{ offre['nomEntreprise'] }}
                     </a>
                 </div>
             </div>
