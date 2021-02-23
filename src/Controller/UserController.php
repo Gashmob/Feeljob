@@ -66,4 +66,31 @@ class UserController extends AbstractController
     {
         return $this->render('candidat/preferences.html.twig');
     }
+
+    /**
+     * @Route("/annonceChantier", name="annonceChantier")
+     * @return Response
+     */
+    public function annonceChantier(): Response
+    {
+        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig');
+    }
+
+    /**
+     * @Route("/create/carte", name="createCarteVisite")
+     * @return Response
+     */
+    public function createCarteVisite(): Response
+    {
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
+    }
+
+    /**
+     * @Route("/contrats", name="contrats")
+     * @return Response
+     */
+    public function contrats(): Response
+    {
+        return $this->render('autoEntrepreneur/propositionsContrat.html.twig');
+    }
 }
