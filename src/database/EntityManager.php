@@ -884,4 +884,20 @@ abstract class EntityManager
     {
         return $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id])->getNomEntreprise();
     }
+
+    /**
+     * @param int $idOffre
+     * @param int $idAuto
+     */
+    public static function acceptOffreChantier(int $idOffre, int $idAuto)
+    {
+        (new PreparedQuery('MATCH (o:OffreChantier)-[r]-(a:AutoEntrepreneur) WHERE id(o)=$idO AND id(a)=$idA SET r.accept=true'))
+            ->setInteger('idO', $idOffre)
+            ->setInteger('idA', $idAuto)
+            ->run();
+
+        (new PreparedQuery('MATCH (o:OffreChantier)-[r]-(:AutoEntrepreneur) WHERE id(o)=$idO AND r.accept<>true DELETE r'))
+            ->setInteger('idO', $idOffre)
+            ->run();
+    }
 }

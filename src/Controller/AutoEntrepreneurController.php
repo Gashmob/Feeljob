@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\database\EntityManager;
 use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,6 +51,19 @@ class AutoEntrepreneurController extends AbstractController
         }
 
         return $this->render('');
+    }
+
+    /**
+     * @Route("/accept/{id}")
+     * @param int $id
+     */
+    public function acceptOffreChantier(int $id)
+    {
+        if ($this->session->get('user')) {
+            if ($this->session->get('userType') === 'Freelance') {
+                EntityManager::acceptOffreChantier($id, $this->session->get('user'));
+            }
+        }
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
