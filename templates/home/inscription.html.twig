@@ -79,36 +79,38 @@
                                         <label>Adresse e-mail</label>
                                         <div class="ui left icon input">
                                             <i class="icon envelope"></i>
-                                            <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                            <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text"
+                                                   name="mail" placeholder="@mail.fr" required>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Téléphone</label>
                                         <div class="ui left icon input">
                                             <i class="icon phone"></i>
-                                            <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                            <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
+                                                   placeholder="Téléphone" required>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
                                         <div class="ui left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <i class="icon eye slash link circular"
+                                               onclick="showPsswd(this, 'mdpC')"></i>
+                                            <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
                                         </div>
-                                        <div style="padding: 1em;" class="ui pointing label">
+                                        <!--<div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
-                                        </div>
+                                            <li>1 chiffre min</li>
+                                        </div>-->
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpC')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpC')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -206,37 +208,39 @@
                                             <label>Adresse e-mail</label>
                                             <div class="ui left icon input">
                                                 <i class="icon envelope"></i>
-                                                <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
+                                                       type="text" name="mail" placeholder="@mail.fr" required>
                                             </div>
                                         </div>
                                         <div class="required field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
-                                                <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                                <input type="text" onkeyup="checkField(this, regexPhone)"
+                                                       name="telephone" placeholder="Téléphone" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
                                         <div class="ui left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <i class="icon eye slash link circular"
+                                               onclick="showPsswd(this, 'mdpE')"></i>
+                                            <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
+                                            <li>1 chiffre min</li>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpE')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpE')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -334,37 +338,39 @@
                                             <label>Adresse e-mail</label>
                                             <div class="ui left icon input">
                                                 <i class="icon envelope"></i>
-                                                <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
+                                                       type="text" name="mail" placeholder="@mail.fr" required>
                                             </div>
                                         </div>
                                         <div class="required field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
-                                                <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                                <input type="text" onkeyup="checkField(this, regexPhone)"
+                                                       name="telephone" placeholder="Téléphone" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
                                         <div class="ui left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <i class="icon eye slash link circular"
+                                               onclick="showPsswd(this, 'mdpA')"></i>
+                                            <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
+                                            <li>1 chiffre min</li>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpA')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpA')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -396,15 +402,15 @@
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
         const regexMdp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~])[a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~]{8,30}$/
+        //Vérif regex
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
                 sender.parentNode.parentNode.classList.add('error')
-            }
-            else {
+            } else {
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
-
+        //Vérif mdp identiques
         function comparePass(sender, model) {
             model = document.getElementById(model).value
             if (sender.value != model) {
@@ -413,5 +419,16 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+        //Oeil mdp
+        function showPsswd(obj, psswdfield) {
+            psswdfield = document.getElementById(psswdfield)
+            if (obj.classList.contains('slash')) {
+                obj.classList.remove('slash');
+                psswdfield.type = 'text';
+            } else {
+                obj.classList.add('slash');
+                psswdfield.type = 'password';
+            }
+        };
     </script>
 {% endblock %}
