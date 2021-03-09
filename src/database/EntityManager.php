@@ -51,6 +51,8 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
 
+        if ($result['label'][0] === 'AutoEntrepreneur')
+            return 'Freelance';
         return $result['label'][0];
     }
 
