@@ -516,7 +516,7 @@ class HomeController extends AbstractController
         $motdepasse = $request->get('motdepasse');
         $motdepasse2 = $request->get('motdepasse2');
         $motdepasseB = true;
-        if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
+        if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[0-9]).*$/', $motdepasse)) {
             $motdepasseB = false;
             $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide</br>Au minimum : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
         } else if ($motdepasse != $motdepasse2) {
