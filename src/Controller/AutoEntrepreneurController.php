@@ -66,12 +66,25 @@ class AutoEntrepreneurController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/chantiers", name="chantiers")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function offres(EntityManagerInterface $em): Response
+    {
+        return $this->render('', [
+            'offres' => EntityManager::getAllOffreChantier($em)
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
      * @return string
      */
-    private function uploadImage(): string
+    private
+    function uploadImage(): string
     {
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé

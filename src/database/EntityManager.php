@@ -10,6 +10,7 @@ use App\database\exceptions\UserNotFoundException;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
 use App\Entity\Entreprise;
+use App\Entity\OffreChantier;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -899,5 +900,39 @@ abstract class EntityManager
         (new PreparedQuery('MATCH (o:OffreChantier)-[r]-(:AutoEntrepreneur) WHERE id(o)=$idO AND r.accept<>true DELETE r'))
             ->setInteger('idO', $idOffre)
             ->run();
+    }
+
+    /**
+     * @param OffreChantier $offre
+     * @return array
+     */
+    public static function getChantierArrayFromEntity(OffreChantier $offre): array
+    {
+        $res = [];
+
+        $res['nom'] = $offre->getNom();
+        $res['date'] = $offre->getDate();
+        $res['description'] = $offre->getDescription();
+        $res['adresse'] = $offre->getAdresse();
+        $res['id'] = $offre->getIdentity();
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @return array
+     */
+    public static function getAllOffreChantier(EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        $result = $em->getRepository(OffreChantier::class)->findAll();
+
+        foreach ($result as $offre) {
+            $res[] = EntityManager::getChantierArrayFromEntity($offre);
+        }
+
+        return $res;
     }
 }
