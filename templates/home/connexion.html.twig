@@ -45,8 +45,8 @@
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
-                            <i class="lock icon"></i>
-                            <input type="password" name="motdepasse" autocomplete="current-password"
+                            <i class="icon eye slash link" onclick="showPsswd(this, 'psswdCo')"></i>
+                            <input id="psswdCo" type="password" name="motdepasse" autocomplete="current-password"
                                    placeholder="Mot de passe">
                         </div>
                     </div>
@@ -75,4 +75,19 @@
             </form>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        //Oeil mdp
+        function showPsswd(obj, psswdfield) {
+            psswdfield = document.getElementById(psswdfield)
+            if (obj.classList.contains('slash')) {
+                obj.classList.remove('slash');
+                psswdfield.type = 'text';
+            } else {
+                obj.classList.add('slash');
+                psswdfield.type = 'password';
+            }
+        };
+    </script>
 {% endblock %}
