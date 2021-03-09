@@ -186,6 +186,9 @@ class CandidatController extends AbstractController
      */
     public function offres(EntityManagerInterface $em): Response
     {
+        if ($this->session->get('userType') === 'Entreprise')
+            return $this->redirectToRoute('userSpace');
+
         $offres = EntityManager::getAllOffreEmploi($em);
 
         return $this->render('candidat/showAnnonces.html.twig', [
