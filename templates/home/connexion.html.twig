@@ -44,10 +44,13 @@
                         </div>
                     </div>
                     <div class="field">
-                        <div class="ui left icon input">
-                            <i class="icon eye slash link" onclick="showPsswd(this, 'psswdCo')"></i>
+                        <div class="ui right labeled left icon input">
+                        <i class="icon lock"></i>
                             <input id="psswdCo" type="password" name="motdepasse" autocomplete="current-password"
                                    placeholder="Mot de passe">
+                            <div style="cursor: pointer" class="ui basic label" onclick="showPsswd(this, 'psswdCo')">
+                                <i style="margin: 0;" class="icon eye slash link"></i>
+                            </div>
                         </div>
                     </div>
                     <button class="ui large green fluid submit button" type="submit" value="auto">Se connecter</button>
@@ -81,11 +84,12 @@
         //Oeil mdp
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            if (obj.classList.contains('slash')) {
-                obj.classList.remove('slash');
+            let eyeIcon = obj.getElementsByTagName('i')[0]
+            if (eyeIcon.classList.contains('slash')) {
+                eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';
             } else {
-                obj.classList.add('slash');
+                eyeIcon.classList.add('slash');
                 psswdfield.type = 'password';
             }
         };

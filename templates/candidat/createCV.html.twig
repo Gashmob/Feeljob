@@ -23,7 +23,7 @@
                 </select>
             </div>
             <!-- Identité -->
-            <h4 class="ui dividing header">Identité</h4>
+            <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid">
                 <div class="ui four wide column">
                     <div class="blurring dimmable image">
@@ -126,43 +126,57 @@
                 </div>
             </div>
             <!-- Formation -->
-            <h4 class="ui dividing header">Formation</h4>
-            <div class="two fields">
-                <div class="field">
-                    <label>Intitulé du diplôme</label>
-                    <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
-                </div>
-                <div class="field">
-                    <label>Nom de l'établissement</label>
-                    <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
+            <h3 class="ui dividing green header">Formation</h3>
+            <div style="margin-bottom: 10px;" class="formations-list" id="formationsList">
+                <div class="ui segment" id="formationsItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du diplôme</label>
+                            <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                        </div>
+                        <div class="field">
+                            <label>Nom de l'établissement</label>
+                            <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Date d'obtention</label>
+                        <input type="date" name="dates" placeholder="26/04/2013">
+                    </div>
                 </div>
             </div>
-            <div class="field">
-                <label>Date d'obtention</label>
-                <input type="text" name="dates" placeholder="26/04/2013">
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
             </div>
             <!-- Expérience -->
-            <h4 class="ui dividing header">Expérience professionnelle</h4>
-            <div class="two fields">
-                <div class="field">
-                    <label>Intitulé du poste</label>
-                    <div class="field">
-                        <input type="text" name="postes" placeholder="Intitulé du poste">
+            <h3 class="ui dividing green header">Expérience professionnelle</h3>
+            <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
+                <div class="ui segment" id="experiencesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du poste</label>
+                            <div class="field">
+                                <input type="text" name="postes" placeholder="Intitulé du poste">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Nom de l'entreprise</label>
+                            <div class="field">
+                                <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label>Nom de l'entreprise</label>
                     <div class="field">
-                        <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
+                        <label>Durée</label>
+                        <input type="text" name="durees" placeholder="Durée">
                     </div>
                 </div>
             </div>
-            <div class="field">
-                <label>Durée</label>
-                <input type="text" name="durees" placeholder="Duree">
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
             </div>
             <!-- Autres -->
-            <h4 class="ui dividing header">Autres informations</h4>
+            <h3 class="ui dividing green header">Autres informations</h3>
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
@@ -191,4 +205,45 @@
             </div>
         </form>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        var nbForm = nbExp = 1
+
+        function add_feed() {
+            if (nbForm < 8) {
+                $('#feedPlus').transition('jiggle');
+                nbForm += 1;
+                let div1 = document.createElement('div');
+                div1.classList.add('ui');
+                div1.classList.add('segment');
+                div1.classList.add('form' + nbForm);
+                div1.classList.add('transition');
+                div1.classList.add('hidden');
+                div1.innerHTML = document.getElementById('formationsItem').innerHTML;
+                document.getElementById('formationsList').appendChild(div1);
+                $(div1).transition('scale')
+            } else {
+                $('#feedPlus').transition('shake');
+            }
+        }
+
+        function add_exp() {
+            if (nbExp < 12) {
+                $('#expPlus').transition('jiggle');
+                nbExp += 1;
+                let div1 = document.createElement('div');
+                div1.classList.add('ui');
+                div1.classList.add('segment');
+                div1.classList.add('exp' + nbExp);
+                div1.classList.add('transition');
+                div1.classList.add('hidden');
+                div1.innerHTML = document.getElementById('experiencesItem').innerHTML;
+                document.getElementById('experiencesList').appendChild(div1);
+                $(div1).transition('scale')
+            } else {
+                $('#expPlus').transition('shake');
+            }
+        }
+    </script>
 {% endblock %}

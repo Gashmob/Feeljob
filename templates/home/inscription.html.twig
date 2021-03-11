@@ -93,12 +93,15 @@
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon eye slash link circular"
-                                               onclick="showPsswd(this, 'mdpC')"></i>
+                                        <div class="ui right labeled left icon input">
+                                            <i class="icon lock"></i>
                                             <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)"
                                                    name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpC')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
                                         <!--<div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
@@ -223,12 +226,15 @@
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon eye slash link circular"
-                                               onclick="showPsswd(this, 'mdpE')"></i>
+                                        <div class="ui right labeled left icon input">
+                                            <i class="icon lock"></i>
                                             <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)"
                                                    name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpE')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
@@ -353,12 +359,15 @@
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon eye slash link circular"
-                                               onclick="showPsswd(this, 'mdpA')"></i>
+                                        <div class="ui right labeled left icon input">
+                                            <i class="icon lock"></i>
                                             <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)"
                                                    name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpA')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
@@ -401,7 +410,8 @@
     <script type='text/javascript'>
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-        const regexMdp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~])[a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~]{8,30}$/
+        const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
+
         //Vérif regex
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
@@ -410,6 +420,7 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+
         //Vérif mdp identiques
         function comparePass(sender, model) {
             model = document.getElementById(model).value
@@ -419,14 +430,16 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+
         //Oeil mdp
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            if (obj.classList.contains('slash')) {
-                obj.classList.remove('slash');
+            let eyeIcon = obj.getElementsByTagName('i')[0]
+            if (eyeIcon.classList.contains('slash')) {
+                eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';
             } else {
-                obj.classList.add('slash');
+                eyeIcon.classList.add('slash');
                 psswdfield.type = 'password';
             }
         };

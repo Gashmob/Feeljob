@@ -42,3 +42,14 @@
 .ui.inverted.segment.footer__additional {
     background: #0e0f10;
 }
+
+.card.homeCard {
+    background-color: #fafbfc;
+    -webkit-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+    -moz-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+    box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+}
+
+.card.homeCard .headerContent .header {
+    color: #21ba45 !important;
+}
