@@ -53,3 +53,50 @@
 .card.homeCard .headerContent .header {
     color: #21ba45 !important;
 }
+
+.background.fixed {
+    position: fixed;
+    z-index: -1;
+    bottom: -85px;
+    left: 0;
+    right: 0;
+}
+
+.background.fixed .relative {
+    position: relative;
+}
+
+.background.fixed .layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.background.fixed .layer.no1 {
+    z-index: -1;
+}
+
+.background.fixed .layer.no2 {
+    z-index: -2;
+    bottom: 5px;
+}
+
+.background.fixed .layer.no3 {
+    z-index: -3;
+    bottom: 65px;
+}
+
+.annonceCard {
+    position: relative;
+}
+
+.annonceCard .actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.annonceCard .description {
+    margin-bottom: 1em;
+}
