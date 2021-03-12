@@ -8,6 +8,7 @@ use App\database\EntityManager;
 use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -99,11 +100,13 @@ class AutoEntrepreneurController extends AbstractController
     }
 
     /**
-     * @Route("/contrats/")
+     * @Route("/contrats/{id}", name="show_contrat")
+     * @param $id
+     * @return RedirectResponse
      */
-    public function showContrat()
+    public function showContrat($id): RedirectResponse
     {
-
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
