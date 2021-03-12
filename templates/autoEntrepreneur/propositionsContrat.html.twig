@@ -6,9 +6,9 @@
         <div class="content">Vos propositions de contrat</div>
     </h2>
     <div class="ui segment stacked">
-        {% for i in 1..5 %}
+        {% for offre in offres %}
             <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
-                <div class="ui left floated twelve wide column">
+                <div class="ui left floated fourteen wide column">
                     <img class="ui left floated mini circular image"
                          src="{{ asset('img/placeholders/matthew.png') }}">
                     <div class="header">{{ i }} - Matt Romney</div>
@@ -16,7 +16,7 @@
                         <span class="date">15 Février 2021</span>
                     </div>
                 </div>
-                <div class="ui right floated four wide column">
+                <div class="ui right floated two wide column">
                     <!--<button class="ui button red btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
                     <button class="ui button green btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
                 </div>
