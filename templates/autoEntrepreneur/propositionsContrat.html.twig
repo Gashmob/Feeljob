@@ -1,0 +1,107 @@
+{% extends 'page.html.twig' %}
+{% block title %}FealJob - Propositions de contrat{% endblock %}
+{% block body %}
+    <h2 class="ui centered aligned header">
+        <i class="briefcase icon"></i>
+        <div class="content">Vos propositions de contrat</div>
+    </h2>
+    <div class="ui segment stacked">
+        {% for i in 1..5 %}
+            <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
+                <div class="ui left floated twelve wide column">
+                    <img class="ui left floated mini circular image"
+                         src="{{ asset('img/placeholders/matthew.png') }}">
+                    <div class="header">{{ i }} - Matt Romney</div>
+                    <div class="meta">
+                        <span class="date">15 Février 2021</span>
+                    </div>
+                </div>
+                <div class="ui right floated four wide column">
+                    <button class="ui button red btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>
+                    <button class="ui button green btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="modalAccept" class="ui modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Êtes-vous sûr ?
+        </div>
+        <div class="content">
+            <div class="description">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
+                    nihil
+                    nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel vitae
+                    voluptas, voluptatum!</p>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">
+                <i class="icon times"></i>
+                Annuler
+            </div>
+            <div class="ui green button acceptBtn">
+                <i class="checkmark icon"></i>
+                Valider
+            </div>
+        </div>
+    </div>
+    <div id="modalDeny" class="ui modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Êtes-vous sûr ?
+        </div>
+        <div class="content">
+            <div class="description">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
+                    nihil
+                    nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel vitae
+                    voluptas, voluptatum!</p>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">
+                <i class="icon times"></i>
+                Annuler
+            </div>
+            <div class="ui red button declineBtn">
+                <i class="times icon"></i>
+                Refuser
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        function showModalAccept(contratID) {
+            $('#modalAccept')
+                .modal('setting', 'transition', 'fade up')
+                .modal('show')
+            ;
+            $('.acceptBtn').click(function () {
+                console.log('accepted ' + contratID)
+                $('#modalAccept')
+                    .modal('setting', 'transition', 'fade down')
+                    .modal('hide')
+                $('#proposition' + contratID).remove()
+                ;
+            })
+        }
+
+        function showModalDecline(contratID) {
+            $('#modalDeny')
+                .modal('setting', 'transition', 'fade up')
+                .modal('show')
+            ;
+            $('.declineBtn').click(function () {
+                console.log('refused ' + contratID)
+                $('#modalDeny')
+                    .modal('setting', 'transition', 'fade down')
+                    .modal('hide')
+                $('#proposition' + contratID).remove()
+                ;
+            })
+        }
+    </script>
+{% endblock %}
