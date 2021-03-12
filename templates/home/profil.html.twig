@@ -131,11 +131,11 @@
                          class="ui card grid middle aligned center aligned">
                         <div class="column">
                             <div class="ui row labeled icon">
-                                <label class="ui blue labeled icon button" for="profile-carte">
+                                <a href="{{ path('create_carte') }}" class="ui blue labeled icon button" for="profile-carte">
                                     <i class="plus icon"></i>
-                                    Ajouter
-                                    <input type="file" style="display: none;" id="profile-carte" name="carte">
-                                </label>
+                                    Ajouter carte visite
+                                    <a href="{{ path('create_carte') }}" style="display: none;" name="carte"></a>
+                                </a>
                             </div>
                         </div>
                     </div>
