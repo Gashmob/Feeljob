@@ -948,4 +948,26 @@ abstract class EntityManager
         $em->persist($offreChantier);
         $em->flush();
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idFreelance
+     * @return array
+     */
+    public static function getAllPropositions(EntityManagerInterface $em, int $idFreelance): array
+    {
+        $res = [];
+
+        $results = (new PreparedQuery('MATCH (a:AutoEntrepreneur)-[r]-(o:OffreChantier) WHERE id(a)=$id RETURN r, id(o) as id'))
+            ->setInteger('id', $idFreelance)
+            ->run()
+            ->getResult();
+
+        foreach ($results as $result) {
+            $res[] = array_merge(EntityManager::getChantierArrayFromEntity($em->getRepository(OffreChantier::class)->findOneBy(['identity' => $result['id']])),
+                ['accept' => sizeof($result['r']) > 0]);
+        }
+
+        return $res;
+    }
 }

@@ -82,6 +82,30 @@ class AutoEntrepreneurController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/contrats", name="contrats")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function contrats(EntityManagerInterface $em): Response
+    {
+        if (!$this->session->get('user')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('autoEntrepreneur/propositionsContrat.html.twig', [
+            'contrats' => EntityManager::getAllPropositions($em, $this->session->get('user'))
+        ]);
+    }
+
+    /**
+     * @Route("/contrats/")
+     */
+    public function showContrat()
+    {
+
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
