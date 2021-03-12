@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}FealJob - Créer une carte de Visite{% endblock %}
+{% block title %}FealJob - Ajouter une carte de Visite{% endblock %}
 {% block body %}
     <div class="ui text justified container">
         <h3 class="ui center aligned icon header">
@@ -9,8 +9,8 @@
         <form class="ui form segment" method="post">
             <label class="ui blue labeled icon button" for="profile-carte">
                 <i class="download icon"></i>
-                Télécharger votre carte de visite
-                <input href="{{ path('create_carte') }}" type="file" style="display: none;" id="profile-carte" name="carte">
+                <span id="profile-carte-label">Télécharger votre carte de visite</span>
+                <input onchange="readURL(this);" href="{{ path('create_carte') }}" type="file" style="display: none;" id="profile-carte" name="carte">
             </label>
             <button type="submit" class="ui green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -26,4 +26,13 @@
             </div>
         </form>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#profile-carte').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#profile-carte')[0].files[0].name;
+            $('#profile-carte-label').text(file);
+        });
+    </script>
 {% endblock %}
