@@ -158,7 +158,7 @@
                                     <div class="field">
                                         <label class="ui button" for="employeur-logo">
                                             <i class="paperclip icon"></i>
-                                            Logo de l'entreprise
+                                            <span id="employeur-label">Logo de l'entreprise</span>
                                             <input type="file" style="display: none;" id="employeur-logo"
                                                    name="logo">
                                         </label>
@@ -292,7 +292,7 @@
                                     <div class="field">
                                         <label class="ui button" for="ae-logo">
                                             <i class="paperclip icon"></i>
-                                            Logo de l'entreprise
+                                            <span id="ae-label">Logo de l'entreprise</span>
                                             <input type="file" style="display: none;" id="ae-logo" name="logo">
                                         </label>
                                     </div>
@@ -411,8 +411,6 @@
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
         const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
-
-        //Vérif regex
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
                 sender.parentNode.parentNode.classList.add('error')
@@ -420,8 +418,6 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
-
-        //Vérif mdp identiques
         function comparePass(sender, model) {
             model = document.getElementById(model).value
             if (sender.value != model) {
@@ -430,8 +426,6 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
-
-        //Oeil mdp
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
             let eyeIcon = obj.getElementsByTagName('i')[0]
@@ -443,5 +437,15 @@
                 psswdfield.type = 'password';
             }
         };
+        $('#ae-logo').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#ae-logo')[0].files[0].name;
+            $('#ae-label').text(file);
+        });
+        $('#employeur-logo').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#employeur-logo')[0].files[0].name;
+            $('#employeur-label').text(file);
+        });
     </script>
 {% endblock %}
