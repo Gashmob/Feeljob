@@ -84,13 +84,4 @@ class UserController extends AbstractController
     {
         return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
     }
-
-    /**
-     * @Route("/contrats", name="contrats")
-     * @return Response
-     */
-    public function contrats(): Response
-    {
-        return $this->render('autoEntrepreneur/propositionsContrat.html.twig');
-    }
 }
