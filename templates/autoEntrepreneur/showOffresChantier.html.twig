@@ -59,11 +59,8 @@
                 </div>
             </div>
             <div class="thirteen wide column">
-                <div class="ui divided items">
-                    <div class="item">
-                        <div class="image">
-                            <img src="{{ asset('img/placeholders/grey-frame.png') }}">
-                        </div>
+                <div class="ui two stackable cards">
+                    <div class="card annonceCard">
                         <div class="content">
                             <a class="header">Pâtissier</a>
                             <div class="meta">
@@ -79,17 +76,56 @@
                                     perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
                             </div>
                             <div class="extra">
-                                <a href="#"
-                                   class="ui right floated primary button">
-                                    Voir l'annonce
-                                    <i class="right chevron icon"></i>
-                                </a>
                                 <div class="ui label">CDD</div>
                                 <div class="ui label">CDI</div>
                                 <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                                <a href="#"
+                                   class="ui right floated green button">
+                                    Voir l'annonce
+                                    <i class="right chevron icon"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
+                    {% for annonce in offres %}
+                        <div class="card annonceCard">
+                            <div class="content">
+                                <a class="header">{{ annonce['nom'] }}</a>
+                                <div class="meta">
+                                    {% if annonce['lieu'] is not empty %}
+                                        <span>
+                                            <i class="icon map pin"></i>
+                                            {{ annonce['lieu'] }},
+                                        </span>
+                                    {% endif %}
+                                    {% if annonce['typeContrat'] == 'CDI' %}
+                                        <span>à partir du {{ annonce['debut'] }}</span>
+                                    {% else %}
+                                        <span>du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="actions">
+                                    <i class="icon star addFav"></i>
+                                </div>
+                                <div class="description">
+                                    <p>{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</p>
+                                    <p>{{ annonce['salaire'] }}€/mois</p>
+                                    <p>{{ annonce['heures'] }}h/semaine</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aspernatur beatae
+                                        commodi, dolore est, exercitationem expedita hic magnam nisi non officia quo
+                                        repellendus? Ex minus nisi qui quod sed temporibus!</p>
+                                </div>
+                                <div class="extra">
+                                    <div class="ui label">{{ annonce['typeContrat'] }}</div>
+                                    <a href="{{ path('show_emploi', {'id': annonce['id']}) }}"
+                                       class="ui right floated green button">
+                                        Voir l'annonce
+                                        <i class="right chevron icon"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
