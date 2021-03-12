@@ -116,17 +116,15 @@
             {% elseif app.session.get('userType') == 'Freelance' %}
                 <h3>Vos cartes de visite</h3>
                 <div class="ui three stackable cards">
-                    {% for i in 1..4 %}
-                        <a href="#" class="ui card">
-                            <div class="ui image">
-                                <img src="{{ asset('img/placeholders/grey-frame.png') }}" alt="carte visite">
-                            </div>
-                            <div class="extra content">
-                                <i class="check icon"></i>
-                                Vue 62 fois
-                            </div>
-                        </a>
-                    {% endfor %}
+                    <a href="#" class="ui card">
+                        <div class="ui image">
+                            <img src="{{ asset('img/placeholders/grey-frame.png') }}" alt="carte visite">
+                        </div>
+                        <div class="extra content">
+                            <i class="check icon"></i>
+                            Vue 62 fois
+                        </div>
+                    </a>
                     <div style="border: none; width: auto; box-shadow: none;"
                          class="ui card grid middle aligned center aligned">
                         <div class="column">
