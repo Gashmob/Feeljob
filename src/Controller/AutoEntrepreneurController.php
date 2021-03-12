@@ -59,16 +59,19 @@ class AutoEntrepreneurController extends AbstractController
     }
 
     /**
-     * @Route("/accept/{id}")
+     * @Route("/accept/{id}", name="accept")
      * @param int $id
+     * @return RedirectResponse
      */
-    public function acceptOffreChantier(int $id)
+    public function acceptOffreChantier(int $id): RedirectResponse
     {
         if ($this->session->get('user')) {
             if ($this->session->get('userType') === 'Freelance') {
                 EntityManager::acceptOffreChantier($id, $this->session->get('user'));
             }
         }
+
+        return $this->redirectToRoute('contrats');
     }
 
     /**

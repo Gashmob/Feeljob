@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\EntityManager;
 use App\database\exceptions\UserNotFoundException;
+use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,8 @@ class UserController extends AbstractController
         } elseif ($this->session->get('userType') == 'Entreprise') {
             $offres = EntityManager::getEmploiFromUser($em, $this->session->get('user'));
             $nomEntreprise = EntityManager::getNomEntrepriseFromId($this->session->get('user'), $em);
+        } elseif ($this->session->get('userType') == 'Freelance') {
+            $offres = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')])->getCarte();
         }
 
         return $this->render('home/profil.html.twig', [
