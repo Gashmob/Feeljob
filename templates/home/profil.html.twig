@@ -116,10 +116,10 @@
             {% elseif app.session.get('userType') == 'Freelance' %}
                 <h3>Votre carte de visite</h3>
                 <div class="ui two stackable cards">
-                    {% if publications is not empty %}
+                    {% if publications %}
                     <a href="#" class="ui card">
                         <div class="ui image">
-                            <img src="{{ asset('img/placeholders/grey-frame.png') }}" alt="carte visite">
+                            <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
                         </div>
                         <div class="extra content">
                             <i class="check icon"></i>
