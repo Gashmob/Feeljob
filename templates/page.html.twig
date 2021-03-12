@@ -2,7 +2,7 @@
 <html lang="FR">
 <head>
     <meta charset="UTF-8">
-    {% include('home/head.html.twig') %}
+    {% include('head.html.twig') %}
     <title>{% block title %}Fealjob{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
 </head>
@@ -11,8 +11,12 @@
     <nav>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
-        {% else %}
+        {% elseif app.session.get('userType') == 'Candidat' %}
             {% include('navigation/candidatNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Entreprise' %}
+            {% include('navigation/entrepriseNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Freelance' %}
+            {% include('navigation/freelanceNav.html.twig') %}
         {% endif %}
     </nav>
 </header>

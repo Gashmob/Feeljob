@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\EntityManager;
 use App\database\exceptions\UserNotFoundException;
+use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,8 @@ class UserController extends AbstractController
         } elseif ($this->session->get('userType') == 'Entreprise') {
             $offres = EntityManager::getEmploiFromUser($em, $this->session->get('user'));
             $nomEntreprise = EntityManager::getNomEntrepriseFromId($this->session->get('user'), $em);
+        } elseif ($this->session->get('userType') == 'Freelance') {
+            $offres = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')])->getCarte();
         }
 
         return $this->render('home/profil.html.twig', [
@@ -65,5 +68,23 @@ class UserController extends AbstractController
     public function preferences(): Response
     {
         return $this->render('candidat/preferences.html.twig');
+    }
+
+    /**
+     * @Route("/annonceChantier", name="annonceChantier")
+     * @return Response
+     */
+    public function annonceChantier(): Response
+    {
+        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig');
+    }
+
+    /**
+     * @Route("/create/carte", name="createCarteVisite")
+     * @return Response
+     */
+    public function createCarteVisite(): Response
+    {
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
     }
 }

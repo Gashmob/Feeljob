@@ -2,7 +2,7 @@
 {% block title %}FealJob - Votre profil{% endblock %}
 {% block body %}
     <div class="ui container vertical segment">
-        <div class="ui segment grid identity">
+        <div class="ui segment grid identity stackable">
             <div class="two wide column">
                 <img class="ui circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             </div>
@@ -37,6 +37,39 @@
         </div>
         <div class="ui vertical segment">
             {% if app.session.get('userType') == 'Candidat' %}
+                <h3>Vos contrats</h3>
+                <div class="ui segment">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="header">
+                                    <i class="icon green check"></i>
+                                    Accepté
+                                </div>
+                                <div class="description">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
+                                        exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
+                                        unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="header">
+                                    <i class="icon red times"></i>
+                                    Refusé
+                                </div>
+                                <div class="description">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
+                                        dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
+                                        placeat praesentium rem velit. Harum nobis officia praesentium.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
                 <h3>Vos CV</h3>
                 <div class="ui four stackable cards">
                     {% for publication in publications %}
@@ -79,6 +112,34 @@
                             </a>
                         </div>
                     </div>
+                </div>
+            {% elseif app.session.get('userType') == 'Freelance' %}
+                <h3>Votre carte de visite</h3>
+                <div class="ui two stackable cards">
+                    {% if publications %}
+                    <a href="{{ path('create_carte') }}" class="ui card">
+                        <div class="ui image">
+                            <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
+                        </div>
+                        <div class="extra content">
+                            <i class="check icon"></i>
+                            Vue 62 fois
+                        </div>
+                    </a>
+                    {% else %}
+                    <div style="border: none; width: auto; box-shadow: none;"
+                         class="ui card grid middle aligned center aligned">
+                        <div class="column">
+                            <div class="ui row labeled icon">
+                                <a href="{{ path('create_carte') }}" class="ui blue labeled icon button" for="profile-carte">
+                                    <i class="plus icon"></i>
+                                    Ajouter carte visite
+                                    <a href="{{ path('create_carte') }}" style="display: none;" name="carte"></a>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             {% else %}
                 <h3>Vos annonces</h3>

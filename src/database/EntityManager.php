@@ -10,6 +10,7 @@ use App\database\exceptions\UserNotFoundException;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\Candidat;
 use App\Entity\Entreprise;
+use App\Entity\OffreChantier;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -51,6 +52,8 @@ abstract class EntityManager
             ->run()
             ->getOneOrNullResult();
 
+        if ($result['label'][0] === 'AutoEntrepreneur')
+            return 'Freelance';
         return $result['label'][0];
     }
 
@@ -222,7 +225,7 @@ abstract class EntityManager
                 $user = $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id]);
                 break;
 
-            case 'AutoEntrepreneur':
+            case 'Freelance':
                 $user = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $id]);
                 break;
 
@@ -881,5 +884,90 @@ abstract class EntityManager
     public static function getNomEntrepriseFromId(int $id, EntityManagerInterface $em): string
     {
         return $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id])->getNomEntreprise();
+    }
+
+    /**
+     * @param int $idOffre
+     * @param int $idAuto
+     */
+    public static function acceptOffreChantier(int $idOffre, int $idAuto)
+    {
+        (new PreparedQuery('MATCH (o:OffreChantier)-[r]-(a:AutoEntrepreneur) WHERE id(o)=$idO AND id(a)=$idA SET r.accept=true'))
+            ->setInteger('idO', $idOffre)
+            ->setInteger('idA', $idAuto)
+            ->run();
+
+        (new PreparedQuery('MATCH (o:OffreChantier)-[r]-(:AutoEntrepreneur) WHERE id(o)=$idO AND r.accept<>true DELETE r'))
+            ->setInteger('idO', $idOffre)
+            ->run();
+    }
+
+    /**
+     * @param OffreChantier $offre
+     * @return array
+     */
+    public static function getChantierArrayFromEntity(OffreChantier $offre): array
+    {
+        $res = [];
+
+        $res['nom'] = $offre->getNom();
+        $res['date'] = $offre->getDate();
+        $res['description'] = $offre->getDescription();
+        $res['adresse'] = $offre->getAdresse();
+        $res['id'] = $offre->getIdentity();
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @return array
+     */
+    public static function getAllOffreChantier(EntityManagerInterface $em): array
+    {
+        $res = [];
+
+        $result = $em->getRepository(OffreChantier::class)->findAll();
+
+        foreach ($result as $offre) {
+            $res[] = EntityManager::getChantierArrayFromEntity($offre);
+        }
+
+        return $res;
+    }
+
+    public static function createOffreChantier(OffreChantier $offreChantier, EntityManagerInterface $em, int $idCandidat, string $name)
+    {
+        $result = (new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}), (c:Candidat) WHERE id(c)=$id CREATE (c)-[:propose]->(o:OffreChantier)-[:concerne]->(s) RETURN id(o) AS id'))
+            ->setString('nom',$name)
+            ->setInteger('id',$idCandidat)
+            ->run()
+            ->getOneOrNullResult();
+
+        $offreChantier->setIdentity($result['id']);
+        $em->persist($offreChantier);
+        $em->flush();
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idFreelance
+     * @return array
+     */
+    public static function getAllPropositions(EntityManagerInterface $em, int $idFreelance): array
+    {
+        $res = [];
+
+        $results = (new PreparedQuery('MATCH (a:AutoEntrepreneur)-[r]-(o:OffreChantier) WHERE id(a)=$id RETURN r, id(o) as id'))
+            ->setInteger('id', $idFreelance)
+            ->run()
+            ->getResult();
+
+        foreach ($results as $result) {
+            $res[] = array_merge(EntityManager::getChantierArrayFromEntity($em->getRepository(OffreChantier::class)->findOneBy(['identity' => $result['id']])),
+                ['accept' => sizeof($result['r']) > 0]);
+        }
+
+        return $res;
     }
 }

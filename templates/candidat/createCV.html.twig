@@ -1,6 +1,22 @@
 {% extends 'page.html.twig' %}
 {% block title %}FealJob - Créer un CV{% endblock %}
 {% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0099ff" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0069fa" fill-opacity="1"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0029f8" fill-opacity="1"
+                      d="M0,320L48,293.3C96,267,192,213,288,197.3C384,181,480,203,576,197.3C672,192,768,160,864,128C960,96,1056,64,1152,53.3C1248,43,1344,53,1392,58.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
     <div class="ui text justified container">
         <h3 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
@@ -23,21 +39,13 @@
                 </select>
             </div>
             <!-- Identité -->
-            <h4 class="ui dividing header">Identité</h4>
-            <div class="ui two column grid">
-                <div class="ui four wide column">
-                    <div class="blurring dimmable image">
-                        <div class="ui dimmer">
-                            <div class="content">
-                                <div class="center">
-                                    <i class="pencil icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <img src="{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}"
-                             alt="photo de profil"
-                             class="ui small circular dimmable image">
-                    </div>
+            <h3 class="ui dividing green header">Identité</h3>
+            <div class="ui two column grid stackable">
+                <div class="ui four wide column middle aligned">
+                    <img src="{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}"
+                         alt="photo de profil"
+                         id="pdp"
+                         class="ui small circular centered image">
                 </div>
                 <div class="ui twelve wide column">
                     <div class="two fields">
@@ -53,11 +61,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Né le</label>
-                            <input type="text" name="dateNaissance" placeholder="18/09/1989"
+                            <input type="date" name="dateNaissance" placeholder="18/09/1989"
                                    value="{% if cv is not empty %}{{ cv['naissance'] }}{% endif %}">
                         </div>
                         <div class="field">
-                            <label>Métier</label>
+                            <label>Profil</label>
                             <select class="ui dropdown" name="metier">
                                 {% for metier in metiers %}
                                     <option value="{{ metier }}">{{ metier }}</option>
@@ -66,7 +74,7 @@
                         </div>
                     </div>
                     <div class="two fields">
-                        <div class="eight wide field">
+                        <div class="field">
                             <label>Sexe</label>
                             <select class="ui dropdown" name="sexe">
                                 <option value="N">Non précisé</option>
@@ -74,16 +82,16 @@
                                 <option value="F">Femme</option>
                             </select>
                         </div>
-                        <div class="float right eight wide field">
+                        <div class="field">
                             <label>Photo de profil</label>
                             <div class="ui small basic icon buttons">
-                                <label style="width: 150px;" class="ui button" for="photo-profil">
+                                <label style="width: 150px;" class="ui button" id="pdpLabel" for="photo-profil">
                                     <i class="paperclip icon"></i>
                                     Sélectionner
-                                    <input type="file" style="display: none;" id="photo-profil"
-                                           name="photoProfil">
                                 </label>
-                                <button class="ui button"><i class="times icon"></i></button>
+                                <input type="file" style="display: none;" id="photo-profil"
+                                       name="photoProfil" onchange="readURL(this);">
+                                <div class="ui button" id="pdpClear"><i class="times icon"></i></div>
                             </div>
                         </div>
                     </div>
@@ -126,43 +134,88 @@
                 </div>
             </div>
             <!-- Formation -->
-            <h4 class="ui dividing header">Formation</h4>
-            <div class="two fields">
-                <div class="field">
-                    <label>Intitulé du diplôme</label>
-                    <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
-                </div>
-                <div class="field">
-                    <label>Nom de l'établissement</label>
-                    <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
+            <h3 class="ui dividing green header">Formation</h3>
+            <div style="margin-bottom: 10px;" class="formations-list" id="formationsList">
+                <div class="ui segment" id="formationsItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du diplôme</label>
+                            <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                        </div>
+                        <div class="field">
+                            <label>Date d'obtention</label>
+                            <input type="date" name="dates" placeholder="26/04/2013">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Nom de l'établissement</label>
+                        <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
+                    </div>
                 </div>
             </div>
-            <div class="field">
-                <label>Date d'obtention</label>
-                <input type="text" name="dates" placeholder="26/04/2013">
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
             </div>
             <!-- Expérience -->
-            <h4 class="ui dividing header">Expérience professionnelle</h4>
-            <div class="two fields">
-                <div class="field">
-                    <label>Intitulé du poste</label>
-                    <div class="field">
-                        <input type="text" name="postes" placeholder="Intitulé du poste">
+            <h3 class="ui dividing green header">Expérience professionnelle</h3>
+            <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
+                <div class="ui segment" id="experiencesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du poste</label>
+                            <div class="field">
+                                <input type="text" name="postes" placeholder="Intitulé du poste">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Durée</label>
+                            <input type="text" name="durees" placeholder="Durée">
+                        </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label>Nom de l'entreprise</label>
                     <div class="field">
-                        <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
+                        <label>Nom de l'entreprise</label>
+                        <div class="field">
+                            <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="field">
-                <label>Durée</label>
-                <input type="text" name="durees" placeholder="Duree">
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
+            </div>
+            <!-- Langues -->
+            <h3 class="ui dividing green header">Langues</h3>
+            <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
+                <div class="ui segment" id="languesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Langue</label>
+                            <div class="field">
+                                <select class="ui dropdown" name="langue">
+                                    <option value="FR">Français</option>
+                                    <option value="EN">Anglais</option>
+                                    <option value="IT">Italien</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Niveau</label>
+                            <select class="ui dropdown" name="niveau">
+                                <option value="1">Basique</option>
+                                <option value="2">Intermédiaire</option>
+                                <option value="3">Avancé</option>
+                                <option value="4">Bilingue</option>
+                                <option value="5">Langue Maternelle</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_lang()" id="langPlus"></i>
             </div>
             <!-- Autres -->
-            <h4 class="ui dividing header">Autres informations</h4>
+            <h3 class="ui dividing green header">Autres informations</h3>
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
@@ -191,4 +244,88 @@
             </div>
         </form>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#photo-profil').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#photo-profil')[0].files[0].name;
+            $('#pdpLabel').text(file);
+        });
+
+        $('#pdpClear').on('click', function () {
+            $('#photo-profil').val('');
+            $('#pdpLabel').text('Sélectionner');
+            $('#pdp').attr('src', '{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}');
+        });
+
+        var nbForm = nbExp = nbLang = 1
+
+        function add_feed() {
+            if (nbForm < 8) {
+                $('#feedPlus').transition('jiggle');
+                nbForm += 1;
+                let div1 = document.createElement('div');
+                div1.classList.add('ui');
+                div1.classList.add('segment');
+                div1.classList.add('form' + nbForm);
+                div1.classList.add('transition');
+                div1.classList.add('hidden');
+                div1.innerHTML = document.getElementById('formationsItem').innerHTML;
+                document.getElementById('formationsList').appendChild(div1);
+                $(div1).transition('scale')
+            } else {
+                $('#feedPlus').transition('shake');
+            }
+        }
+
+        function add_exp() {
+            if (nbExp < 12) {
+                $('#expPlus').transition('jiggle');
+                nbExp += 1;
+                let div1 = document.createElement('div');
+                div1.classList.add('ui');
+                div1.classList.add('segment');
+                div1.classList.add('exp' + nbExp);
+                div1.classList.add('transition');
+                div1.classList.add('hidden');
+                div1.innerHTML = document.getElementById('experiencesItem').innerHTML;
+                document.getElementById('experiencesList').appendChild(div1);
+                $(div1).transition('scale')
+            } else {
+                $('#expPlus').transition('shake');
+            }
+        }
+
+        function add_lang() {
+            if (nbLang < 5) {
+                $('#langPlus').transition('jiggle');
+                nbLang += 1;
+                let div1 = document.createElement('div');
+                div1.classList.add('ui');
+                div1.classList.add('segment');
+                div1.classList.add('exp' + nbLang);
+                div1.classList.add('transition');
+                div1.classList.add('hidden');
+                div1.innerHTML = document.getElementById('languesItem').innerHTML;
+                document.getElementById('languesList').appendChild(div1);
+                $(div1).transition('scale')
+            } else {
+                $('#langPlus').transition('shake');
+            }
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#pdp')
+                        .attr('src', e.target.result)
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 {% endblock %}

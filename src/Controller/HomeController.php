@@ -152,87 +152,20 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             switch ($request->get('tab')) {
                 case 'candidat':
-                    $nom = $request->get('nom');
-                    $nomB = true;
-                    if ($nom === '') {
-                        $nomB = false;
-                        $this->addFlash('nom', 'Merci de renseigner un nom');
-                    }
+                    $data = $this->getInscriptionData($request);
 
-                    $prenom = $request->get('prenom');
-                    $prenomB = true;
-                    if ($prenom === '') {
-                        $prenomB = false;
-                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
-                    }
-
-                    $telephone = $request->get('telephone');
-                    $telephoneB = true;
-                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\\4){3}([0-9]{2})$/', $telephone)) {
-                        $telephoneB = false;
-                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
-                    }
-
-                    $mail = $request->get('mail');
-                    $mailB = true;
-                    $validator = new EmailValidator();
-                    $multipleValidations = new MultipleValidationWithAnd([
-                        new RFCValidation(),
-                        new DNSCheckValidation()
-                    ]);
-                    if (!$validator->isValid($mail, $multipleValidations)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
-                    } elseif (EntityManager::isMailUsed($mail)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Cet email est déjà utilisé');
-                    }
-
-                    $motdepasse = $request->get('motdepasse');
-                    $motdepasse2 = $request->get('motdepasse2');
-                    $motdepasseB = true;
-                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
-                    } else if ($motdepasse != $motdepasse2) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
-                    }
-                    $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
-
-                    $conditionsB = true;
-                    if (!$request->get('conditions')) {
-                        $conditionsB = false;
-                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
-                    }
-
-                    if ($nomB && $prenomB && $telephoneB && $mailB && $motdepasseB && $conditionsB) {
+                    if ($data['ok']) {
                         $candidat = new Candidat();
-                        $candidat->setPrenom($prenom)
-                            ->setNom($nom)
-                            ->setTelephone($telephone);
-                        EntityManager::createCandidat($candidat, $em, $motdepasse, $salt, $mail);
+                        $candidat->setPrenom($data['prenom'])
+                            ->setNom($data['nom'])
+                            ->setTelephone($data['telephone']);
+                        EntityManager::createCandidat($candidat, $em, $data['motdepasse'], $data['salt'], $data['mail']);
 
-                        return $this->sendMailAndWait($mailer, $mail, $candidat->getPrenom(), $candidat->getNom(), $candidat->getIdentity());
+                        return $this->sendMailAndWait($mailer, $data['mail'], $candidat->getPrenom(), $candidat->getNom(), $candidat->getIdentity());
                     }
                     break;
 
                 case 'entreprise':
-                    $nom = $request->get('nom');
-                    $nomB = true;
-                    if ($nom === '') {
-                        $nomB = false;
-                        $this->addFlash('nom', 'Merci de renseigner un nom');
-                    }
-
-                    $prenom = $request->get('prenom');
-                    $prenomB = true;
-                    if ($prenom === '') {
-                        $prenomB = false;
-                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
-                    }
-
                     $nomEntreprise = $request->get('nomEntreprise');
                     $nomEntrepriseB = true;
                     if ($nomEntreprise === '') {
@@ -263,77 +196,24 @@ class HomeController extends AbstractController
 
                     $description = $request->get('description');
 
-                    $mail = $request->get('mail');
-                    $mailB = true;
-                    $validator = new EmailValidator();
-                    $multipleValidations = new MultipleValidationWithAnd([
-                        new RFCValidation(),
-                        new DNSCheckValidation()
-                    ]);
-                    if (!$validator->isValid($mail, $multipleValidations)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
-                    } elseif (EntityManager::isMailUsed($mail)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Cet email est déjà utilisé');
-                    }
+                    $data = $this->getInscriptionData($request);
 
-                    $telephone = $request->get('telephone');
-                    $telephoneB = true;
-                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
-                        $telephoneB = false;
-                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
-                    }
-
-                    $motdepasse = $request->get('motdepasse');
-                    $motdepasse2 = $request->get('motdepasse2');
-                    $motdepasseB = true;
-                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
-                    } else if ($motdepasse != $motdepasse2) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
-                    }
-                    $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
-
-                    $conditionsB = true;
-                    if (!$request->get('conditions')) {
-                        $conditionsB = false;
-                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
-                    }
-
-                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB && $conditionsB) {
+                    if ($nomEntrepriseB && $adresseB && $siretB && $data['ok']) {
                         $entreprise = new Entreprise();
-                        $entreprise->setNom($nom)
-                            ->setPrenom($prenom)
+                        $entreprise->setNom($data['nom'])
+                            ->setPrenom($data['prenom'])
                             ->setNomEntreprise($nomEntreprise)
                             ->setLogo($logo)
                             ->setSiret($siret)
                             ->setDescription($description)
-                            ->setTelephone($telephone);
-                        EntityManager::createEntreprise($entreprise, $em, $motdepasse, $salt, $mail, $activite);
+                            ->setTelephone($data['telephone']);
+                        EntityManager::createEntreprise($entreprise, $em, $data['motdepasse'], $data['salt'], $data['mail'], $activite);
 
-                        return $this->sendMailAndWait($mailer, $mail, $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getIdentity());
+                        return $this->sendMailAndWait($mailer, $data['mail'], $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getIdentity());
                     }
                     break;
 
                 case 'auto':
-                    $nom = $request->get('nom');
-                    $nomB = true;
-                    if ($nom === '') {
-                        $nomB = false;
-                        $this->addFlash('nom', 'Merci de renseigner un nom');
-                    }
-
-                    $prenom = $request->get('prenom');
-                    $prenomB = true;
-                    if ($prenom === '') {
-                        $prenomB = false;
-                        $this->addFlash('prenom', 'Merci de renseigner un prénom');
-                    }
-
                     $nomEntreprise = $request->get('nomEntreprise');
                     $nomEntrepriseB = true;
                     if ($nomEntreprise === '') {
@@ -361,60 +241,21 @@ class HomeController extends AbstractController
 
                     $description = $request->get('description');
 
-                    $mail = $request->get('mail');
-                    $mailB = true;
-                    $validator = new EmailValidator();
-                    $multipleValidations = new MultipleValidationWithAnd([
-                        new RFCValidation(),
-                        new DNSCheckValidation()
-                    ]);
-                    if (!$validator->isValid($mail, $multipleValidations)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
-                    } elseif (EntityManager::isMailUsed($mail)) {
-                        $mailB = false;
-                        $this->addFlash('mail', 'Cet email est déjà utilisé');
-                    }
+                    $data = $this->getInscriptionData($request);
 
-                    $telephone = $request->get('telephone');
-                    $telephoneB = true;
-                    if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
-                        $telephoneB = false;
-                        $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
-                    }
-
-                    $motdepasse = $request->get('motdepasse');
-                    $motdepasse2 = $request->get('motdepasse2');
-                    $motdepasseB = true;
-                    if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/', $motdepasse)) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide</br>Au minimum : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
-                    } else if ($motdepasse != $motdepasse2) {
-                        $motdepasseB = false;
-                        $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
-                    }
-                    $salt = $this->randomString(16);
-                    $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
-
-                    $conditionsB = true;
-                    if (!$request->get('conditions')) {
-                        $conditionsB = false;
-                        $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
-                    }
-
-                    if ($nomB && $prenomB && $nomEntrepriseB && $adresseB && $siretB && $mailB && $telephoneB && $motdepasseB && $conditionsB) {
+                    if ($nomEntrepriseB && $adresseB && $siretB && $data['ok']) {
                         $autoEntrepreneur = new AutoEntrepreneur();
-                        $autoEntrepreneur->setPrenom($prenom)
-                            ->setNom($nom)
-                            ->setTelephone($telephone)
+                        $autoEntrepreneur->setPrenom($data['prenom'])
+                            ->setNom($data['nom'])
+                            ->setTelephone($data['telephone'])
                             ->setDescription($description)
                             ->setSiret($siret)
                             ->setLogo($logo)
                             ->setNomEntreprise($nomEntreprise)
                             ->setAbonne(false);
-                        EntityManager::createAutoEntrepreneur($autoEntrepreneur, $em, $motdepasse, $salt, $mail, $activite);
+                        EntityManager::createAutoEntrepreneur($autoEntrepreneur, $em, $data['motdepasse'], $data['salt'], $data['mail'], $activite);
 
-                        return $this->sendMailAndWait($mailer, $mail, $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getIdentity());
+                        return $this->sendMailAndWait($mailer, $data['mail'], $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getIdentity());
                     }
                     break;
 
@@ -622,5 +463,80 @@ class HomeController extends AbstractController
 
         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
         return $this->redirectToRoute('waitVerifEmail', ['id' => $id]);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getInscriptionData(Request $request): array
+    {
+        $res = [];
+
+        $nom = $request->get('nom');
+        $nomB = true;
+        if ($nom === '') {
+            $nomB = false;
+            $this->addFlash('nom', 'Merci de renseigner un nom');
+        }
+        $res['nom'] = $nom;
+
+        $prenom = $request->get('prenom');
+        $prenomB = true;
+        if ($prenom === '') {
+            $prenomB = false;
+            $this->addFlash('prenom', 'Merci de renseigner un prénom');
+        }
+        $res['prenom'] = $prenom;
+
+        $mail = $request->get('mail');
+        $mailB = true;
+        $validator = new EmailValidator();
+        $multipleValidations = new MultipleValidationWithAnd([
+            new RFCValidation(),
+            new DNSCheckValidation()
+        ]);
+        if (!$validator->isValid($mail, $multipleValidations)) {
+            $mailB = false;
+            $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
+        } elseif (EntityManager::isMailUsed($mail)) {
+            $mailB = false;
+            $this->addFlash('mail', 'Cet email est déjà utilisé');
+        }
+        $res['mail'] = $mail;
+
+        $telephone = $request->get('telephone');
+        $telephoneB = true;
+        if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
+            $telephoneB = false;
+            $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
+        }
+        $res['telephone'] = $telephone;
+
+        $motdepasse = $request->get('motdepasse');
+        $motdepasse2 = $request->get('motdepasse2');
+        $motdepasseB = true;
+        if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[0-9]).*$/', $motdepasse)) {
+            $motdepasseB = false;
+            $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide</br>Au minimum : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
+        } else if ($motdepasse != $motdepasse2) {
+            $motdepasseB = false;
+            $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
+        }
+        $salt = $this->randomString(16);
+        $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
+        $res['motdepasse'] = $motdepasse;
+        $res['salt'] = $salt;
+
+        $conditionsB = true;
+        if (!$request->get('conditions')) {
+            $conditionsB = false;
+            $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
+        }
+
+
+        $res['ok'] = $prenomB && $nomB && $telephoneB & $mailB && $motdepasseB && $conditionsB;
+
+        return $res;
     }
 }
