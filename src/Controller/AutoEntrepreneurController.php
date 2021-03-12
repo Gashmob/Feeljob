@@ -53,6 +53,8 @@ class AutoEntrepreneurController extends AbstractController
             $auto->setCarte($carte);
             $em->persist($auto);
             $em->flush();
+
+            return $this->redirectToRoute('userSpace');
         }
 
         return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
@@ -120,10 +122,10 @@ class AutoEntrepreneurController extends AbstractController
     private
     function uploadImage(): string
     {
-        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+        if (isset($_FILES['carte']) && $_FILES['carte']['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé
-            $fileTmpPath = $_FILES['logo']['tmp_name'];
-            $fileName = $_FILES['logo']['name'];
+            $fileTmpPath = $_FILES['carte']['tmp_name'];
+            $fileName = $_FILES['carte']['name'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
