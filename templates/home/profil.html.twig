@@ -117,7 +117,7 @@
                 <h3>Votre carte de visite</h3>
                 <div class="ui two stackable cards">
                     {% if publications %}
-                    <a href="#" class="ui card">
+                    <a href="{{ path('create_carte') }}" class="ui card">
                         <div class="ui image">
                             <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
                         </div>
