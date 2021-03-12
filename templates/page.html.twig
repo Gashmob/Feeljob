@@ -11,8 +11,12 @@
     <nav>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
-        {% else %}
+        {% elseif app.session.get('userType') == 'Candidat' %}
             {% include('navigation/candidatNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Entreprise' %}
+            {% include('navigation/entrepriseNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
+            {% include('navigation/freelanceNav.html.twig') %}
         {% endif %}
     </nav>
 </header>
