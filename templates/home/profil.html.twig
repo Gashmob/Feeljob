@@ -114,8 +114,9 @@
                     </div>
                 </div>
             {% elseif app.session.get('userType') == 'Freelance' %}
-                <h3>Vos cartes de visite</h3>
-                <div class="ui three stackable cards">
+                <h3>Votre carte de visite</h3>
+                <div class="ui two stackable cards">
+                    {% if publications is not empty %}
                     <a href="#" class="ui card">
                         <div class="ui image">
                             <img src="{{ asset('img/placeholders/grey-frame.png') }}" alt="carte visite">
@@ -125,6 +126,7 @@
                             Vue 62 fois
                         </div>
                     </a>
+                    {% else %}
                     <div style="border: none; width: auto; box-shadow: none;"
                          class="ui card grid middle aligned center aligned">
                         <div class="column">
@@ -137,6 +139,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             {% else %}
                 <h3>Vos annonces</h3>
