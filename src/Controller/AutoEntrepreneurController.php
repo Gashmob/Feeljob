@@ -41,6 +41,10 @@ class AutoEntrepreneurController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
+        if (EntityManager::getUserTypeFromId($this->session->get('user')) != 'Freelance') {
+            return $this->redirectToRoute('homepage');
+        }
+
         if ($request->isMethod('POST')) {
             $carte = $this->uploadImage();
 
@@ -50,7 +54,7 @@ class AutoEntrepreneurController extends AbstractController
             $em->flush();
         }
 
-        return $this->render('');
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
     }
 
     /**
@@ -73,7 +77,7 @@ class AutoEntrepreneurController extends AbstractController
      */
     public function offres(EntityManagerInterface $em): Response
     {
-        return $this->render('', [
+        return $this->render('autoEntrepreneur/showOffresChantier.html.twig', [
             'offres' => EntityManager::getAllOffreChantier($em)
         ]);
     }

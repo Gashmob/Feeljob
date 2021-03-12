@@ -225,7 +225,7 @@ abstract class EntityManager
                 $user = $em->getRepository(Entreprise::class)->findOneBy(['identity' => $id]);
                 break;
 
-            case 'AutoEntrepreneur':
+            case 'Freelance':
                 $user = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $id]);
                 break;
 
