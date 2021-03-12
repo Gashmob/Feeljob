@@ -7,10 +7,12 @@ namespace App\Controller;
 use App\database\entity\CV;
 use App\database\EntityManager;
 use App\database\exceptions\UserNotFoundException;
+use App\Entity\OffreChantier;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -219,6 +221,53 @@ class CandidatController extends AbstractController
         }
 
         return new JsonResponse($offres);
+    }
+
+    /**
+     * @Route("/create/chantier", name="create_chantier")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function createOffreChantier(Request $request, EntityManagerInterface $em)
+    {
+        if (!$this->session->get('user')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != 'Candidat') {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            // Get all data
+            $nom =  $request->get('nom');
+            $nomB = true;
+            if ($nom == '') {
+                $nomB = false;
+                $this->addFlash('nom', 'Merci de renseigner un nom');
+            }
+
+            $description = $request->get('description');
+
+            $date = $request->get('date');
+
+            $adresse = $request->get('adresse');
+
+            $secteur = $request->get('secteur');
+
+            if ($nomB) {
+                $offre = new OffreChantier();
+                $offre->setNom($nom)
+                    ->setDescription($description)
+                    ->setDate($date)
+                    ->setAdresse($adresse);
+                EntityManager::createOffreChantier($offre, $em, $this->session->get('user'), $secteur);
+            }
+        }
+
+        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig', [
+            'secteurs' => EntityManager::getAllActivitySectorName()
+        ]);
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
