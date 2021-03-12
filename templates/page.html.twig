@@ -15,7 +15,7 @@
             {% include('navigation/candidatNav.html.twig') %}
         {% elseif app.session.get('userType') == 'Entreprise' %}
             {% include('navigation/entrepriseNav.html.twig') %}
-        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
+        {% elseif app.session.get('userType') == 'Freelance' %}
             {% include('navigation/freelanceNav.html.twig') %}
         {% endif %}
     </nav>
