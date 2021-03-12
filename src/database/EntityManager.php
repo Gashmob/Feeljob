@@ -935,4 +935,17 @@ abstract class EntityManager
 
         return $res;
     }
+
+    public static function createOffreChantier(OffreChantier $offreChantier, EntityManagerInterface $em, int $idCandidat, string $name)
+    {
+        $result = (new PreparedQuery('MATCH (s:SecteurActivite {nom:$nom}), (c:Candidat) WHERE id(c)=$id CREATE (c)-[:propose]->(o:OffreChantier)-[:concerne]->(s) RETURN id(o) AS id'))
+            ->setString('nom',$name)
+            ->setInteger('id',$idCandidat)
+            ->run()
+            ->getOneOrNullResult();
+
+        $offreChantier->setIdentity($result['id']);
+        $em->persist($offreChantier);
+        $em->flush();
+    }
 }
