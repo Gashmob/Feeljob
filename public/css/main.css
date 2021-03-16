@@ -5,6 +5,7 @@
 
 #nav {
     z-index: 30 !important;
+    margin: 0;
 }
 
 #nav-icon {
@@ -98,7 +99,7 @@
 }
 
 #nav-icon, #backToTop {
-    margin: 40px;
+    margin: 30px;
 }
 
 .nav-background-toggled {
@@ -119,7 +120,7 @@
     display: none;
 }
 
-#nav .item.title img {
+#nav .item img {
     margin-right: 1.5em;
 }
 
@@ -132,14 +133,13 @@
         position: fixed;
         height: 100vh;
         width: 230px !important;
+        max-width: 70vw;
         padding-top: 100px;
-        padding-left: 20px;
-        padding-right: 10px;
         top: 0;
         background: #fafbfc;
         margin: 0;
     }
-    #nav .right.item {
+    #nav .right {
         margin: 0 !important;
         padding: 0 !important;
         flex-direction: column;

@@ -1,10 +1,10 @@
 {% extends 'page.html.twig' %}
 {% block title %}Votre profil{% endblock %}
 {% block body %}
-    <div class="ui container vertical segment">
+    <div>
         <div class="ui segment grid identity stackable">
             <div class="two wide column">
-                <img class="ui circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+                <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             </div>
             <div class="ten wide column">
                 <h2 class="ui header">
@@ -198,8 +198,6 @@
                 </div>
             {% endif %}
         </div>
-    </div>
-    <div class="ui vertical segment">
         <h3>Avis des employeurs</h3>
         <div class="ui three stackable cards">
             {% for i in 0..4 %}
@@ -224,6 +222,5 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
     </div>
 {% endblock %}
