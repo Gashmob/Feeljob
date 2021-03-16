@@ -40,3 +40,22 @@ $(document)
         }
     )
 ;
+
+function menuDisplay() {
+    var button = document.getElementById('nav-icon')
+    var nav = document.getElementById('nav')
+    var background = document.getElementById('nav-background')
+    button.classList.toggle('nav-icon-toggled')
+    background.classList.toggle('nav-background-toggled')
+    nav.classList.toggle('nav-displayed')
+
+    var navList = document.getElementsByClassName("nav-item")
+    var delay = 80
+
+    for (let i = 0; i < navList.length; i++) {
+        setTimeout( function() {
+            navList[i].classList.toggle('nav-item-display')
+        }, delay)
+        delay += 80
+    }
+}

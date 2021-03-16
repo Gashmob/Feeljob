@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     {% include('head.html.twig') %}
-    <title>{% block title %}Fealjob{% endblock %}</title>
+    <title>{% block title%}{% endblock %} – FeelJob</title>
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 <header>
     <nav>
+        <div id="nav-icon" class="nav-icon" onclick="menuDisplay()"><span></span></div>
+        <div id="nav-background" onclick="menuDisplay()"></div>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
         {% elseif app.session.get('userType') == 'Candidat' %}

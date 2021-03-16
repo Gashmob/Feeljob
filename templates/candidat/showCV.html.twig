@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}FealJob - Voir un CV{% endblock %}
+{% block title %}Voir un CV{% endblock %}
 {% block body %}
     <div class="ui text justified container">
         <h2 class="ui center aligned icon header">
@@ -10,14 +10,20 @@
             <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
                 <button class="ui labeled icon button">
                     <i class="download icon"></i>
-                    Télécharger le CV
+                    Télécharger
                 </button>
             </a>
             {% if modify %}
                 <a href="{{ path('create_cv') }}?id={{ cv['id'] }}">
                     <button class="ui blue labeled icon button">
                         <i class="pencil icon"></i>
-                        Éditer le CV
+                        Éditer
+                    </button>
+                </a>
+                <a href="#">
+                    <button class="ui red labeled icon button">
+                        <i class="times icon"></i>
+                        Supprimer
                     </button>
                 </a>
             {% endif %}

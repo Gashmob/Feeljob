@@ -1,7 +1,105 @@
 /*
- *  Fealjob
+ *  Feeljob
  *  Do not distribute
  */
+
+#nav-icon {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    cursor: pointer;
+    height: 30px;
+    -webkit-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    padding: 0;
+}
+
+.nav-icon span {
+    margin: 0 auto;
+    position: relative;
+    top: 12px;
+}
+
+.nav-icon span:before, .nav-icon span:after {
+    position: absolute;
+    content: '';
+}
+
+.nav-icon span, .nav-icon span:before, .nav-icon span:after {
+    width: 40px;
+    height: 3px;
+    background-color: #000;
+    display: block;
+    border-radius: 2px;
+}
+
+.nav-icon span:before {
+    margin-top: -14px;
+}
+
+.nav-icon span:after {
+    margin-top: 14px;
+}
+
+.nav-icon span {
+    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s; -o-transition-delay: 0.2s; transition-delay: 0.2s;
+}
+
+.nav-icon span:before {
+    -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; -o-transition-property: margin, transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform;
+    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s, 0s; -o-transition-delay: 0.2s, 0s; transition-delay: 0.2s, 0s;
+}
+
+.nav-icon span:after {
+    -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; -o-transition-property: margin, transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform;
+    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s, 0s; -o-transition-delay: 0.2s, 0s; transition-delay: 0.2s, 0s;
+}
+
+.nav-icon-toggled span {
+    background-color: rgba(0,0,0,0.0);
+    -webkit-transition-delay: 0s; -o-transition-delay: 0s; transition-delay: 0s;
+}
+
+.nav-icon-toggled span:before {
+    margin-top: 0;
+    -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg);
+    -webkit-transition-delay: 0s, 0.2s; -o-transition-delay: 0s, 0.2s; transition-delay: 0s, 0.2s;
+}
+
+.nav-icon-toggled span:after {
+    margin-top: 0;
+    -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); transform: rotate(-45deg);
+    -webkit-transition-delay: 0s, 0.2s; -o-transition-delay: 0s, 0.2s; transition-delay: 0s, 0.2s;
+}
+
+#nav-background {
+    visibility: hidden;
+    z-index: 8;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    -webkit-transition: 200ms ease-in-out;
+    -o-transition: 200ms ease-in-out;
+    transition: 200ms ease-in-out;
+}
+
+#nav-icon, #backToTop {
+    margin: 50px;
+}
+
+.nav-background-toggled {
+    visibility: visible !important;
+    opacity: .7 !important;
+}
 
 .primaryNav, .primaryNav .item {
     border-radius: 0px !important;
