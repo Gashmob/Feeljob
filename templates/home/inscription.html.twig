@@ -58,7 +58,7 @@
                     <div class="ui top attached tabular menu">
                         <a class="item active" data-tab="first">Candidat</a>
                         <a class="item" data-tab="second">Employeur</a>
-                        <a class="item" data-tab="third">Auto-entrepreneur</a>
+                        <a class="item" data-tab="third">Freelance</a>
                     </div>
                     <div class="ui bottom attached tab segment active" data-tab="first">
                         <div class="ui vertical segment form--segment">
@@ -79,36 +79,41 @@
                                         <label>Adresse e-mail</label>
                                         <div class="ui left icon input">
                                             <i class="icon envelope"></i>
-                                            <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                            <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text"
+                                                   name="mail" placeholder="@mail.fr" required>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Téléphone</label>
                                         <div class="ui left icon input">
                                             <i class="icon phone"></i>
-                                            <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                            <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
+                                                   placeholder="Téléphone" required>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
+                                        <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpC')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
-                                        <div style="padding: 1em;" class="ui pointing label">
+                                        <!--<div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
-                                        </div>
+                                            <li>1 chiffre min</li>
+                                        </div>-->
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpC')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpC')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -153,7 +158,7 @@
                                     <div class="field">
                                         <label class="ui button" for="employeur-logo">
                                             <i class="paperclip icon"></i>
-                                            Logo de l'entreprise
+                                            <span id="employeur-label">Logo de l'entreprise</span>
                                             <input type="file" style="display: none;" id="employeur-logo"
                                                    name="logo">
                                         </label>
@@ -206,37 +211,42 @@
                                             <label>Adresse e-mail</label>
                                             <div class="ui left icon input">
                                                 <i class="icon envelope"></i>
-                                                <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
+                                                       type="text" name="mail" placeholder="@mail.fr" required>
                                             </div>
                                         </div>
                                         <div class="required field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
-                                                <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                                <input type="text" onkeyup="checkField(this, regexPhone)"
+                                                       name="telephone" placeholder="Téléphone" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
+                                        <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpE')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
+                                            <li>1 chiffre min</li>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpE')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpE')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -259,7 +269,7 @@
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
                                 <h3 class="ui header center aligned" style="width: 100%;">Création compte
-                                    auto-entrepreneur</h3>
+                                    Freelance</h3>
                                 <form class="ui form" method="post" style="width: 100%;" enctype="multipart/form-data">
                                     <div class="two fields">
                                         <div class="required field">
@@ -275,14 +285,14 @@
                                         <label>Nom de l'entreprise</label>
                                         <input type="text" name="nomEntreprise" placeholder="Nom entreprise" required>
                                     </div>
-                                    <div class="field">
+                                    <div class="required field">
                                         <label>Adresse de l'entreprise</label>
-                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
+                                        <input type="text" name="adresse" placeholder="Adresse entreprise" required>
                                     </div>
                                     <div class="field">
                                         <label class="ui button" for="ae-logo">
                                             <i class="paperclip icon"></i>
-                                            Logo de l'entreprise
+                                            <span id="ae-label">Logo de l'entreprise</span>
                                             <input type="file" style="display: none;" id="ae-logo" name="logo">
                                         </label>
                                     </div>
@@ -334,37 +344,42 @@
                                             <label>Adresse e-mail</label>
                                             <div class="ui left icon input">
                                                 <i class="icon envelope"></i>
-                                                <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text" name="mail" placeholder="@mail.fr" required>
+                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
+                                                       type="text" name="mail" placeholder="@mail.fr" required>
                                             </div>
                                         </div>
                                         <div class="required field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
-                                                <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone" placeholder="Téléphone" required>
+                                                <input type="text" onkeyup="checkField(this, regexPhone)"
+                                                       name="telephone" placeholder="Téléphone" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Mot de passe</label>
-                                        <div class="ui left icon input">
+                                        <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)" name="motdepasse" placeholder="Mot de passe"
+                                            <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe"
                                                    required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpA')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
                                         </div>
                                         <div style="padding: 1em;" class="ui pointing label">
                                             <li>8 caractères min</li>
-                                            <li>1 lettre majuscule</li>
-                                            <li>1 lettre minuscule</li>
-                                            <li>1 chiffre</li>
-                                            <li>1 symbole</li>
+                                            <li>1 chiffre min</li>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpA')" name="motdepasse2" placeholder="Mot de passe"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpA')"
+                                                   name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
                                     </div>
@@ -395,16 +410,14 @@
     <script type='text/javascript'>
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-        const regexMdp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~])[a-zA-Z0-9!"#\$%&'\(\)\*\+,-\.\/:;<=>\?@[\]\^_`\{\|}~]{8,30}$/
+        const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
                 sender.parentNode.parentNode.classList.add('error')
-            }
-            else {
+            } else {
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
-
         function comparePass(sender, model) {
             model = document.getElementById(model).value
             if (sender.value != model) {
@@ -413,5 +426,26 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+        function showPsswd(obj, psswdfield) {
+            psswdfield = document.getElementById(psswdfield)
+            let eyeIcon = obj.getElementsByTagName('i')[0]
+            if (eyeIcon.classList.contains('slash')) {
+                eyeIcon.classList.remove('slash');
+                psswdfield.type = 'text';
+            } else {
+                eyeIcon.classList.add('slash');
+                psswdfield.type = 'password';
+            }
+        };
+        $('#ae-logo').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#ae-logo')[0].files[0].name;
+            $('#ae-label').text(file);
+        });
+        $('#employeur-logo').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#employeur-logo')[0].files[0].name;
+            $('#employeur-label').text(file);
+        });
     </script>
 {% endblock %}

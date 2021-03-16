@@ -16,6 +16,10 @@
     display: none;
 }
 
+#homepageSegment {
+    background-size: cover;
+}
+
 .page-content {
     padding-top: 1em;
     padding-bottom: 1em;
@@ -37,4 +41,62 @@
 
 .ui.inverted.segment.footer__additional {
     background: #0e0f10;
+}
+
+.card.homeCard {
+    background-color: #fafbfc;
+    -webkit-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+    -moz-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+    box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
+}
+
+.card.homeCard .headerContent .header {
+    color: #21ba45 !important;
+}
+
+.background.fixed {
+    position: fixed;
+    z-index: -1;
+    bottom: -85px;
+    left: 0;
+    right: 0;
+}
+
+.background.fixed .relative {
+    position: relative;
+}
+
+.background.fixed .layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.background.fixed .layer.no1 {
+    z-index: -1;
+}
+
+.background.fixed .layer.no2 {
+    z-index: -2;
+    bottom: 5px;
+}
+
+.background.fixed .layer.no3 {
+    z-index: -3;
+    bottom: 65px;
+}
+
+.annonceCard {
+    position: relative;
+}
+
+.annonceCard .actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.annonceCard .description {
+    margin-bottom: 1em;
 }

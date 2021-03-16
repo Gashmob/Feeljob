@@ -37,6 +37,9 @@ class EntrepriseController extends AbstractController
      */
     public function showEmploi($id, EntityManagerInterface $em): Response
     {
+        if ($this->session->get('userType') === 'Entreprise')
+            return $this->redirectToRoute('userSpace');
+
         return $this->render('entreprise/showEmploi.html.twig', [
             'offre' => EntityManager::getEmploiArrayFromId($id, $em)
         ]);
@@ -151,6 +154,9 @@ class EntrepriseController extends AbstractController
      */
     public function showProfiles(EntityManagerInterface $em): Response
     {
+        if ($this->session->get('userType') === 'Candidat')
+            return $this->redirectToRoute('userSpace');
+
         $profil = EntityManager::getAllProfiles($em);
 
         return $this->render('entreprise/showProfiles.html.twig', [
