@@ -3,6 +3,12 @@
  *  Do not distribute
  */
 
+#flashMessages {
+    position: absolute;
+    right: 10px;
+    top: 40px;
+}
+
 #nav {
     z-index: 30 !important;
     margin: 0;
