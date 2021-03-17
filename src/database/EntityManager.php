@@ -7,9 +7,9 @@ use App\database\manager\AnnonceManager;
 use App\database\manager\AutoEntrepreneurManager;
 use App\database\manager\EmployeManager;
 use App\database\manager\EmployeurManager;
+use App\database\manager\Manager;
 use App\database\manager\OffreEmploiManager;
 use App\database\manager\ParticulierManager;
-use App\database\manager\Manager;
 use App\database\manager\SecteurActiviteManager;
 use App\database\manager\TypeContratManager;
 
@@ -27,6 +27,12 @@ abstract class EntityManager
     public const AUTO_ENTREPRENEUR = 'AutoEntrepreneur';
     public const PARTICULIER = 'Particulier';
     public const ANNONCE = 'Annonce';
+
+    public const PUBLIE = 'PUBLIE';
+    public const CANDIDATURE = 'CANDIDATURE';
+    public const PROPOSITION = 'PROPOSITION';
+    public const FAVORI = 'FAVORI';
+    public const TYPE = 'TYPE';
 
     /**
      * @param string $entityClass
