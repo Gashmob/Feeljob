@@ -22,7 +22,7 @@ class Connection
     public function __construct()
     {
         $this->connection = ClientBuilder::create()
-            ->addBoltConnection('default', 'neo4j://feal:feal@localhost:7687')
+            ->addBoltConnection('default', 'neo4j://feel:feel@localhost:7687')
             ->setDefaultConnection('default')
             ->build();
 
