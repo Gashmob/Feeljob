@@ -3,6 +3,8 @@
 
 namespace App\database\manager;
 
+use App\database\PreparedQuery;
+use App\database\Query;
 
 class EmployeManager extends Manager
 {
@@ -12,7 +14,11 @@ class EmployeManager extends Manager
      */
     public function find(int $id): string
     {
-        // TODO: Implement find() method.
+        $result = (new PreparedQuery('MATCH (e:Employe) WHERE id(e)=$id RETURN id(e) as id'))
+			->setInteger('id', $id)
+			->run()
+			->getOneOrNullResult();
+		return $result == null ? null : $result['id'];
     }
 
     /**
@@ -20,7 +26,16 @@ class EmployeManager extends Manager
      */
     public function findOneBy(array $filters): string
     {
-        // TODO: Implement findOneBy() method.
+        $query = 'MATCH (e:Employe) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(e) as id';
+
+        $result = (new Query($query))
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['id'];
     }
 
     /**
@@ -28,7 +43,9 @@ class EmployeManager extends Manager
      */
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        return (new Query('MATCH (e:Employe) RETURN id(e) as id'))
+	->run()
+	->getResult();
     }
 
     /**
@@ -36,6 +53,13 @@ class EmployeManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        // TODO: Implement findBy() method.
+        $query = 'MATCH (e:Employe) WHERE ';
+		foreach ($filters as $filter)
+			$query .= $filter . '=' . $filters[$filter];
+		$query .= ' RETURN id(e) as id';
+
+		return (new Query($query))
+			->run()
+			->getResult();
     }
 }

@@ -3,6 +3,8 @@
 
 namespace App\database\manager;
 
+use App\database\PreparedQuery;
+use App\database\Query;
 
 class AutoEntrepreneurManager extends Manager
 {
@@ -12,7 +14,11 @@ class AutoEntrepreneurManager extends Manager
      */
     public function find(int $id): string
     {
-        // TODO: Implement find() method.
+        $result = (new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE id(a)=$id RETURN id(a) as id'))
+			->setInteger('id', $id)
+			->run()
+			->getOneOrNullResult();
+		return $result == null ? null : $result['id'];
     }
 
     /**
@@ -20,7 +26,16 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findOneBy(array $filters): string
     {
-        // TODO: Implement findOneBy() method.
+        $query = 'MATCH (a:AutoEntrepreneur) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(a) as id';
+
+        $result = (new Query($query))
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['id'];
     }
 
     /**
@@ -28,7 +43,9 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+	return (new Query('MATCH (a:AutoEntrepreneur) RETURN id(a) as id'))
+	->run()
+	->getResult();
     }
 
     /**
@@ -36,6 +53,13 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        // TODO: Implement findBy() method.
+        $query = 'MATCH (a:AutoEntrepreneur) WHERE ';
+		foreach ($filters as $filter)
+			$query .= $filter . '=' . $filters[$filter];
+		$query .= ' RETURN id(a) as id';
+
+		return (new Query($query))
+			->run()
+			->getResult();
     }
 }
