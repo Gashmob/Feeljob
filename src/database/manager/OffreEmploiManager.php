@@ -5,6 +5,7 @@ namespace App\database\manager;
 
 
 use App\database\PreparedQuery;
+use App\database\Query;
 
 class OffreEmploiManager extends Manager
 {
@@ -32,7 +33,11 @@ class OffreEmploiManager extends Manager
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(o) as id';
 
+        $result = (new Query($query))
+            ->run()
+            ->getOneOrNullResult();
 
+        return $result == null ? null : $result['id'];
     }
 
     /**
@@ -40,7 +45,9 @@ class OffreEmploiManager extends Manager
      */
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        return (new Query('MATCH (o:OffreEmploi) RETURN id(o) as id'))
+            ->run()
+            ->getResult();
     }
 
     /**
@@ -48,6 +55,13 @@ class OffreEmploiManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        // TODO: Implement findBy() method.
+        $query = 'MATCH (o:OffreEmploi) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(o) as id';
+
+        return (new Query($query))
+            ->run()
+            ->getResult();
     }
 }
