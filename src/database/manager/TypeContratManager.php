@@ -4,23 +4,40 @@
 namespace App\database\manager;
 
 
+use App\database\PreparedQuery;
+use App\database\Query;
+
 class TypeContratManager extends Manager
 {
 
     /**
      * @inheritDoc
      */
-    public function find(int $id): string
+    public function find(int $id): ?string
     {
-        // TODO: Implement find() method.
+        $result = (new PreparedQuery('MATCH (t:TypeContrat) WHERE id(t)=$id RETURN t'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['nom'];
     }
 
     /**
      * @inheritDoc
      */
-    public function findOneBy(array $filters): string
+    public function findOneBy(array $filters): ?string
     {
-        // TODO: Implement findOneBy() method.
+        $query = 'MATCH (t:TypeContrat) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN t';
+
+        $result = (new Query($query))
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['nom'];
     }
 
     /**
@@ -28,7 +45,9 @@ class TypeContratManager extends Manager
      */
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        return (new Query('MATCH (t:TypeContrat) RETURN t'))
+            ->run()
+            ->getResult();
     }
 
     /**
@@ -36,6 +55,13 @@ class TypeContratManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        // TODO: Implement findBy() method.
+        $query = 'MATCH (t:TypeContrat) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN t';
+
+        return (new Query($query))
+            ->run()
+            ->getResult();
     }
 }
