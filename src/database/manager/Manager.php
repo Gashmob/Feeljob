@@ -12,15 +12,15 @@ abstract class Manager
 {
     /**
      * @param int $id
-     * @return string
+     * @return string|null
      */
-    public abstract function find(int $id) : string;
+    public abstract function find(int $id) : ?string;
 
     /**
      * @param array $filters
-     * @return string
+     * @return string|null
      */
-    public abstract function findOneBy(array $filters) : string;
+    public abstract function findOneBy(array $filters) : ?string;
 
     /**
      * @return array

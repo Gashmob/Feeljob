@@ -4,23 +4,35 @@
 namespace App\database\manager;
 
 
+use App\database\PreparedQuery;
+
 class OffreEmploiManager extends Manager
 {
 
     /**
      * @inheritDoc
      */
-    public function find(int $id): string
+    public function find(int $id): ?string
     {
-        // TODO: Implement find() method.
+        $result = (new PreparedQuery('MATCH (o:OffreEmploi) WHERE id(o)=$id RETURN id(o) as id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['id'];
     }
 
     /**
      * @inheritDoc
      */
-    public function findOneBy(array $filters): string
+    public function findOneBy(array $filters): ?string
     {
-        // TODO: Implement findOneBy() method.
+        $query = 'MATCH (o:OffreEmploi) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(o) as id';
+
+
     }
 
     /**
