@@ -69,6 +69,11 @@ class CV
      */
     private $employe;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->langues = new ArrayCollection();
@@ -282,6 +287,18 @@ class CV
         }
 
         $this->employe = $employe;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
