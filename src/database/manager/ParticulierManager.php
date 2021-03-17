@@ -4,23 +4,40 @@
 namespace App\database\manager;
 
 
+use App\database\PreparedQuery;
+use App\database\Query;
+
 class ParticulierManager extends Manager
 {
 
     /**
      * @inheritDoc
      */
-    public function find(int $id): string
+    public function find(int $id): ?string
     {
-        // TODO: Implement find() method.
+        $result = (new PreparedQuery('MATCH (p:Particulier) WHERE id(p)=$id RETURN id(p) as id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['id'];
     }
 
     /**
      * @inheritDoc
      */
-    public function findOneBy(array $filters): string
+    public function findOneBy(array $filters): ?string
     {
-        // TODO: Implement findOneBy() method.
+        $query = 'MATCH (p:Particulier) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(p) as id';
+
+        $result = (new Query($query))
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result == null ? null : $result['id'];
     }
 
     /**
@@ -28,7 +45,9 @@ class ParticulierManager extends Manager
      */
     public function findAll(): array
     {
-        // TODO: Implement findAll() method.
+        return (new Query('MATCH (p:Particulier) RETURN id(p) as id'))
+            ->run()
+            ->getResult();
     }
 
     /**
@@ -36,6 +55,13 @@ class ParticulierManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        // TODO: Implement findBy() method.
+        $query = 'MATCH (p:Particulier) WHERE ';
+        foreach ($filters as $filter)
+            $query .= $filter . '=' . $filters[$filter];
+        $query .= ' RETURN id(p) as id';
+
+        return (new Query($query))
+            ->run()
+            ->getResult();
     }
 }
