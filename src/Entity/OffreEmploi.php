@@ -82,6 +82,11 @@ class OffreEmploi
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $identity;
+
     public function __construct()
     {
         $this->createdAt = time();
@@ -245,6 +250,18 @@ class OffreEmploi
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIdentity(): ?int
+    {
+        return $this->identity;
+    }
+
+    public function setIdentity(int $identity): self
+    {
+        $this->identity = $identity;
 
         return $this;
     }

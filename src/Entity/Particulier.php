@@ -68,6 +68,11 @@ class Particulier
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $identity;
+
     public function __construct()
     {
         $this->createdAt = time();
@@ -195,6 +200,18 @@ class Particulier
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getIdentity(): ?int
+    {
+        return $this->identity;
+    }
+
+    public function setIdentity(int $identity): self
+    {
+        $this->identity = $identity;
 
         return $this;
     }
