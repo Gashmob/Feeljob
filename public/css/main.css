@@ -169,6 +169,20 @@
     }
 }
 
+.homepage-bckg {
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    position: absolute;
+    background: url("../img/wallpaper3.jpg") no-repeat center;
+    top: -10px;
+}
+
+.homeCard {
+    z-index: 3;
+}
+
 #homepageSegment {
     background-size: cover;
 }

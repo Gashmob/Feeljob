@@ -2,10 +2,11 @@
 {% block title %}Bienvenue sur FeelJob{% endblock %}
 {% block body %}
     <div>
-        <div style="min-height:700px;padding:1em 0em; position: relative; background-image: url('{{ asset('/img/wallpaper3.jpg') }}')"
+        <div style="min-height:700px;padding:1em 0em; position: relative;"
              id="homepageSegment" class="ui inverted vertical center aligned segment">
+            <div class="background homepage-bckg"></div>
             <div style="border-color: transparent !important;" class="ui large inverted pointing secondary menu">
-                <nav id="nav" class="ui container">
+                <div id="nav" class="ui container homeNav">
                     {% if app.session.get('user') %}
                         <div style="margin-top: 60px;"></div>
                     {% else %}
@@ -20,7 +21,7 @@
                                class="ui inverted button" role="button">Inscription</a>
                         </div>
                     {% endif %}
-                </nav>
+                </div>
             </div>
             <div class="ui text container masthead">
                 <h1 style="font-size:4em;font-weight:normal;margin-bottom:0;margin-top:1em" class="ui inverted header">
@@ -28,7 +29,7 @@
                 <h2 style="font-size:1.7em;font-weight:normal;margin-top:1.5em" class="ui inverted header">La valeur du
                     travail.</h2>
             </div>
-            <div style="z-index: 10; position: absolute; bottom: 0; right: 0; left: 0; transform: translateY(20%);"
+            <div style="z-index: 2; padding-top: 160px;"
                  class="ui centered stackable cards container">
                 <div class="ui card homeCard">
                     <div class="content headerContent">
@@ -88,7 +89,8 @@
                     </div>
                 </div>
             </div>
-            <svg style="position: absolute; bottom: 0; left: 0; right: 0;" xmlns="http://www.w3.org/2000/svg"
+            <svg style="z-index: 0;position: absolute; bottom: 0; left: 0; right: 0;"
+                 xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 1440 320">
                 <path fill="#ffffff" fill-opacity="1"
                       d="M0,288L60,250.7C120,213,240,139,360,122.7C480,107,600,149,720,170.7C840,192,960,192,1080,165.3C1200,139,1320,85,1380,58.7L1440,32L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
@@ -154,20 +156,24 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $('.visiteurNav').addClass('hidden');
-        $('.primaryNav').addClass('fixed');
-        // fix menu when passed
-        $('.masthead')
-            .visibility({
-                once: false,
-                onBottomPassed: function () {
-                    $('.visiteurNav').transition('fade in');
-                },
-                onBottomPassedReverse: function () {
-                    $('.visiteurNav').transition('fade out');
-                }
-            })
-        ;
+        if (screen.width <= 800) {
+            $('.homeNav').css('display', 'none');
+        } else {
+            $('.visiteurNav').addClass('hidden');
+            $('.primaryNav').addClass('fixed');
+            // fix menu when passed
+            $('.masthead')
+                .visibility({
+                    once: false,
+                    onBottomPassed: function () {
+                        $('.visiteurNav').transition('fade in');
+                    },
+                    onBottomPassedReverse: function () {
+                        $('.visiteurNav').transition('fade out');
+                    }
+                })
+            ;
+        }
 
         //Articles fade-in
         $('.fadeupAnim').addClass('transition hidden');

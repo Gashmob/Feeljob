@@ -9,6 +9,8 @@
 <body>
 <header>
     <nav>
+        <div id="nav-icon" class="nav-icon" onclick="menuDisplay()"><span></span></div>
+        <div id="nav-background" onclick="menuDisplay()"></div>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
         {% else %}
@@ -16,8 +18,7 @@
         {% endif %}
     </nav>
 </header>
-<div style="position: absolute; right: 10px; top: 40px; z-index: 10;"
-     class="ui text container positive message transition hidden">
+<div id="flashMessages" class="ui text container positive message transition hidden">
     <i class="close icon"></i>
     <p>
         {% for message in app.flashes('success') %}
