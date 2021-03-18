@@ -28,10 +28,10 @@
             </div>
             <div style="padding-top: 20px;" class="ui content annonce-content">
                 {% if not offre['deplacement'] %}
-                <p>
-                    <i class="icon map pin"></i>
-                    {{ offre['lieu'] }}
-                </p>
+                    <p>
+                        <i class="icon map pin"></i>
+                        {{ offre['lieu'] }}
+                    </p>
                 {% endif %}
                 <p>
                     <i class="icon calendar alternate"></i>
@@ -45,6 +45,9 @@
                     disponible{% if offre['nbRecrutement'] > 1 %}s{% endif %}</p>
                 <p>{{ offre['salaire'] }}.00€</p>
                 <p>{{ offre['heures'] }} heures par semaine</p>
+                <p>Description : Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur culpa debitis
+                    delectus explicabo facilis laborum odio repellendus tenetur? Beatae fugit ipsam nihil quae
+                    similique. Dolorum incidunt molestiae omnis unde veniam.</p>
             </div>
             <!-- Location carte -->
             <div style="padding-top: 20px;" class="ui content annonce-location">
