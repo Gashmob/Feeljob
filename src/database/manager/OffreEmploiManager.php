@@ -287,4 +287,16 @@ class OffreEmploiManager extends Manager
             ->setInteger('idO', $idOffre)
             ->run();
     }
+
+    /**
+     * @param int $idOffre
+     * @param string $typeContrat
+     */
+    public function changeType(int $idOffre, string $typeContrat)
+    {
+        (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[r]->(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . '{nom:$nom}) WHERE id(o)=$idO DELETE r CREATE (o)-[:' . EntityManager::TYPE . ']->(t)'))
+            ->setString('nom', $typeContrat)
+            ->setInteger('idO', $idOffre)
+            ->run();
+    }
 }

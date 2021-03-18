@@ -4,8 +4,11 @@
 namespace App\database\manager;
 
 
+use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
+use App\Entity\OffreEmploi;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TypeContratManager extends Manager
 {
@@ -63,5 +66,25 @@ class TypeContratManager extends Manager
         return (new Query($query))
             ->run()
             ->getResult();
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $typeContrat
+     * @return OffreEmploi[]
+     */
+    public function findAllOffreEmploiFromTypeContrat(EntityManagerInterface $em, string $typeContrat): array
+    {
+        $results = (new PreparedQuery('MATCH (:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom})--(o:' . EntityManager::OFFRE_EMPLOI . ') RETURN id(o) as id'))
+            ->setString('nom', $typeContrat)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
     }
 }
