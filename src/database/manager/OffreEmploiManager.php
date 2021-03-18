@@ -230,4 +230,61 @@ class OffreEmploiManager extends Manager
             ->setInteger('idO', $idOffre)
             ->run();
     }
+
+    /**
+     * @param int $idOffre
+     * @param int $idEmploye
+     * @return bool
+     */
+    public function propose(int $idOffre, int $idEmploye): bool
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO RETURN p'))
+            ->setInteger('idE', $idEmploye)
+            ->setInteger('idO', $idOffre)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (is_null($result)) {
+            (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . '), (e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO CREATE (o)-[:' . EntityManager::PROPOSITION . ']->(e)'))
+                ->setInteger('idE', $idEmploye)
+                ->setInteger('idO', $idOffre)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmploye
+     * @return OffreEmploi[]
+     */
+    public function getPropositions(EntityManagerInterface $em, int $idEmploye): array
+    {
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as id'))
+            ->setInteger('idE', $idEmploye)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param int $idOffre
+     * @param int $idEmploye
+     */
+    public function removeProposition(int $idOffre, int $idEmploye)
+    {
+        (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO DELETE p'))
+            ->setInteger('idE', $idEmploye)
+            ->setInteger('idO', $idOffre)
+            ->run();
+    }
 }
