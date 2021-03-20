@@ -12,7 +12,7 @@ class AutoEntrepreneurManager extends Manager
     /**
      * @inheritDoc
      */
-    public function find(int $id): string
+    public function find(int $id): ?string
     {
         $result = (new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE id(a)=$id RETURN id(a) as id'))
 			->setInteger('id', $id)
@@ -24,7 +24,7 @@ class AutoEntrepreneurManager extends Manager
     /**
      * @inheritDoc
      */
-    public function findOneBy(array $filters): string
+    public function findOneBy(array $filters): ?string
     {
         $query = 'MATCH (a:AutoEntrepreneur) WHERE ';
         foreach ($filters as $filter)

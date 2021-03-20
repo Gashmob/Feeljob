@@ -12,7 +12,7 @@ class EmployeurManager extends Manager
     /**
      * @inheritDoc
      */
-    public function find(int $id): string
+    public function find(int $id): ?string
     {
         $result = (new PreparedQuery('MATCH (e:Employeur) WHERE id(e)=$id RETURN id(e) as id'))
 			->setInteger('id', $id)
@@ -24,7 +24,7 @@ class EmployeurManager extends Manager
     /**
      * @inheritDoc
      */
-    public function findOneBy(array $filters): string
+    public function findOneBy(array $filters): ?string
     {
         $query = 'MATCH (e:Employeur) WHERE ';
         foreach ($filters as $filter)

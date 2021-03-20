@@ -24,7 +24,7 @@ class AnnonceManager extends Manager
 	/**
 	 * @inheritDoc
 	 */
-	public function findOneBy(array $filters): string
+	public function findOneBy(array $filters): ?string
 	{
 		$query = 'MATCH (a:Annonce) WHERE ';
         foreach ($filters as $filter)
