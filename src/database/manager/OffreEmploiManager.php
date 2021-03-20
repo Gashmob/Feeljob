@@ -187,7 +187,7 @@ class OffreEmploiManager extends Manager
             ->run()
             ->getOneOrNullResult();
 
-        $result2 = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI .')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(o)=$idO AND id(e)=$idE RETURN p'))
+        $result2 = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(o)=$idO AND id(e)=$idE RETURN p'))
             ->setInteger('idO', $idOffre)
             ->setInteger('idE', $idEmploye)
             ->run()
@@ -310,5 +310,55 @@ class OffreEmploiManager extends Manager
             ->setString('nom', $typeContrat)
             ->setInteger('idO', $idOffre)
             ->run();
+    }
+
+    /**
+     * @param int $idOffre
+     * @param int $idEmploye
+     * @return bool
+     */
+    public function acceptCandidature(int $idOffre, int $idEmploye): bool
+    {
+        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE AND id(o)=$idO RETURN c'))
+            ->setInteger('idE', $idEmploye)
+            ->setInteger('idO', $idOffre)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (!is_null($result)) {
+            (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE AND id(o)=$idO SET c.accept=true'))
+                ->setInteger('idE', $idEmploye)
+                ->setInteger('idO', $idOffre)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $idOffre
+     * @param int $idEmploye
+     * @return bool
+     */
+    public function acceptProposition(int $idOffre, int $idEmploye): bool
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO RETURN p'))
+            ->setInteger('idE', $idEmploye)
+            ->setInteger('idO', $idOffre)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (!is_null($result)) {
+            (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO SET p.accept=true'))
+                ->setInteger('idE', $idEmploye)
+                ->setInteger('idO', $idOffre)
+                ->run();
+
+            return true;
+        }
+
+        return false;
     }
 }
