@@ -4,6 +4,7 @@
 namespace App\database\manager;
 
 
+use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
 
@@ -63,5 +64,34 @@ class SecteurActiviteManager extends Manager
         return (new Query($query))
             ->run()
             ->getResult();
+    }
+
+    /**
+     * @param string $nom
+     */
+    public function create(string $nom)
+    {
+        (new PreparedQuery('CREATE (:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom})'))
+            ->setString('nom', $nom)
+            ->run();
+    }
+
+    /**
+     * @param int $id
+     * @param string $nom
+     */
+    public function update(int $id, string $nom)
+    {
+        (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ') WHERE id(s)=$id SET s.nom=$nom'))
+            ->setInteger('id', $id)
+            ->setString('nom', $nom)
+            ->run();
+    }
+
+    public function remove(int $id)
+    {
+        (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ')-[r]-() WHERE id(s)=$id DELETE r,s'))
+            ->setInteger('id', $id)
+            ->run();
     }
 }
