@@ -244,13 +244,19 @@ class OffreEmploiManager extends Manager
      */
     public function propose(int $idOffre, int $idEmploye): bool
     {
-        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO RETURN p'))
+        $result1 = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO RETURN p'))
             ->setInteger('idE', $idEmploye)
             ->setInteger('idO', $idOffre)
             ->run()
             ->getOneOrNullResult();
 
-        if (is_null($result)) {
+        $result2 = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE AND id(o)=$idO RETURN c'))
+            ->setInteger('idE', $idEmploye)
+            ->setInteger('idO', $idOffre)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (is_null($result1) && is_null($result2)) {
             (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . '), (e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO CREATE (o)-[:' . EntityManager::PROPOSITION . ']->(e)'))
                 ->setInteger('idE', $idEmploye)
                 ->setInteger('idO', $idOffre)
