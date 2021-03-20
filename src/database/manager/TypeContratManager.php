@@ -87,4 +87,36 @@ class TypeContratManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param string $nom
+     */
+    public function create(string $nom)
+    {
+        (new PreparedQuery('CREATE (:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom})'))
+            ->setString('nom', $nom)
+            ->run();
+    }
+
+    /**
+     * @param int $id
+     * @param string $nom
+     */
+    public function update(int $id, string $nom)
+    {
+        (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE id(t)=$id SET t.nom=$nom'))
+            ->setInteger('id', $id)
+            ->setString('nom', $nom)
+            ->run();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function remove(int $id)
+    {
+        (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ')-[r]-() WHERE id(t)=$id DELETE r,t'))
+            ->setInteger('id', $id)
+            ->run();
+    }
 }

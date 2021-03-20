@@ -88,6 +88,9 @@ class SecteurActiviteManager extends Manager
             ->run();
     }
 
+    /**
+     * @param int $id
+     */
     public function remove(int $id)
     {
         (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ')-[r]-() WHERE id(s)=$id DELETE r,s'))
