@@ -40,18 +40,21 @@ abstract class Utils
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
+            // Dossier ou sera mise l'image
+            $uploadFileDir = './uploads/' . $directory;
             // Changement du nom par quelque chose qui ne se répétera pas
             $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
 
             // Les extensions autorisées
             $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
 
-            if (!file_exists('./' .$directory . '/logos')) {
-                mkdir('./' . $directory . '/logos');
+            if (!file_exists($uploadFileDir)) {
+                mkdir($uploadFileDir);
             }
 
             if (in_array($fileExtension, $allowedfileExtensions)) {
-                $uploadFileDir = './' . $directory . '/logos/';
+                if (substr($uploadFileDir, -1) != '/')
+                    $uploadFileDir .= '/';
                 $dest_path = $uploadFileDir . $newFileName;
 
                 if (move_uploaded_file($fileTmpPath, $dest_path)) {
@@ -69,5 +72,35 @@ abstract class Utils
                 throw new Exception('Il y a une erreur dans le formulaire : enctype="multipart/form-data"');
             }
         }
+    }
+
+    /**
+     * Return an array with 2 values
+     * 'password' => your encrypted password
+     * 'salt' => the salt used for encryption
+     *
+     * @param string $password
+     * @return string[]
+     * @throws Exception
+     */
+    public function passwordEncrypt(string $password): array
+    {
+        $salt = $this->randomString(16);
+
+        return [
+            'password' => password_hash(hash('sha512', $password . $salt), PASSWORD_BCRYPT, ['cost' => 12]),
+            'salt' => $salt
+        ];
+    }
+
+    /**
+     * @param string $userPassword
+     * @param string $userSalt
+     * @param string $passwordToVerify
+     * @return bool
+     */
+    public function passwordVerify(string $userPassword, string $userSalt, string $passwordToVerify): bool
+    {
+        return password_verify(hash('sha512', $passwordToVerify . $userSalt), $userPassword);
     }
 }
