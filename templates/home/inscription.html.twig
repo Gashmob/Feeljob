@@ -165,7 +165,10 @@
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
-                                        <input type="text" name="siret" placeholder="N° Siret" required>
+                                        <div>
+                                            <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
+                                                   placeholder="N° Siret" required min="9">
+                                        </div>
                                     </div>
                                     <div class="field">
                                         <label>Secteur d'activité</label>
@@ -174,11 +177,11 @@
                                             <div class="default text">Secteur</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                {% for secteur in secteurActivites %}
+                                                {# {% for secteur in secteurActivites %}
                                                     <div class="item" data-value="{{ secteur }}">
                                                         {{ secteur }}
                                                     </div>
-                                                {% endfor %}
+                                                {% endfor %} #}
                                             </div>
                                         </div>
                                     </div>
@@ -298,7 +301,10 @@
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
-                                        <input type="text" name="siret" placeholder="N° Siret" required>
+                                        <div>
+                                            <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
+                                                   placeholder="N° Siret" required min="9">
+                                        </div>
                                     </div>
                                     <div class="field">
                                         <label>Secteur d'activité</label>
@@ -307,11 +313,11 @@
                                             <div class="default text">Secteur</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                {% for secteur in secteurActivites %}
+                                                {# {% for secteur in secteurActivites %}
                                                     <div class="item" data-value="{{ secteur }}">
                                                         {{ secteur }}
                                                     </div>
-                                                {% endfor %}
+                                                {% endfor %} #}
                                             </div>
                                         </div>
                                     </div>
@@ -411,6 +417,8 @@
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
         const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
+        const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
                 sender.parentNode.parentNode.classList.add('error')
@@ -418,6 +426,7 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+
         function comparePass(sender, model) {
             model = document.getElementById(model).value
             if (sender.value != model) {
@@ -426,6 +435,7 @@
                 sender.parentNode.parentNode.classList.remove('error')
             }
         }
+
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
             let eyeIcon = obj.getElementsByTagName('i')[0]
