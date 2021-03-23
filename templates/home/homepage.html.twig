@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}Bienvenue sur FeelJob{% endblock %}
 {% block body %}
-    <div style="min-height:640px;padding:1em 0em; position: relative;"
-         id="homepageSegment" class="ui inverted vertical center aligned segment">
+    <div id="homepageSegment" class="ui inverted vertical center aligned segment homepageSegment">
         <div class="background homepage-bckg"></div>
-        <div style="border-color: transparent !important;" class="ui large inverted pointing secondary menu">
+        <div class="ui large inverted pointing secondary menu">
             <div id="nav" class="ui container homeNav">
                 {% if app.session.get('user') %}
                     <div style="margin-top: 60px;"></div>
@@ -164,7 +163,7 @@
             let articles = document.querySelectorAll('.fadeupAnim')
             for (let article of articles) {
                 setTimeout(function () {
-                    if (article.getBoundingClientRect().y < 600 && article.classList.contains('hidden')) {
+                    if (article.getBoundingClientRect().y < 900 && article.classList.contains('hidden')) {
                         $(article).transition('fade up')
                     }
                 }, 500)

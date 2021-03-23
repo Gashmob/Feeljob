@@ -14,6 +14,10 @@
     margin: 0;
 }
 
+#nav .header.item {
+    margin-left: -2px;
+}
+
 #nav-icon {
     display: none;
     position: fixed;
@@ -40,7 +44,7 @@
 }
 
 .nav-icon span, .nav-icon span:before, .nav-icon span:after {
-    width: 40px;
+    width: 32px;
     height: 3px;
     background-color: #000;
     display: block;
@@ -48,11 +52,11 @@
 }
 
 .nav-icon span:before {
-    margin-top: -14px;
+    margin-top: -12px;
 }
 
 .nav-icon span:after {
-    margin-top: 14px;
+    margin-top: 12px;
 }
 
 .nav-icon span {
@@ -135,7 +139,7 @@
 }
 
 #nav-icon, #backToTop {
-    margin: 30px;
+    margin: 30px 20px;
 }
 
 .nav-background-toggled {
@@ -166,12 +170,13 @@
     }
 
     #nav.menu {
+        font-size: 1.2em;
         flex-direction: column;
         position: fixed;
         height: 100vh;
-        width: 230px !important;
+        width: 200px !important;
         max-width: 70vw;
-        padding-top: 100px;
+        padding-top: 70px;
         top: 0;
         background: #fafbfc;
         margin: 0;
@@ -205,12 +210,24 @@
     }
 }
 
+#homepageSegment {
+    min-height:640px;
+    padding:1em 0em;
+    position: relative;
+    background: unset;
+}
+
+#homepageSegment .inverted.pointing.menu {
+    border-color: transparent !important;
+}
+
 .homepage-bckg {
+    z-index: -1;
     height: 100%;
     width: 100%;
     background-size: cover;
     position: absolute;
-    background: url("../img/wallpaper3.jpg") no-repeat center;
+    background: url("../img/wallpaper3.jpg") no-repeat center -230px;
     top: -10px;
 }
 
