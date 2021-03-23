@@ -56,37 +56,67 @@
 }
 
 .nav-icon span {
-    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
-    -webkit-transition-delay: 0.2s; -o-transition-delay: 0.2s; transition-delay: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s;
+    -o-transition-delay: 0.2s;
+    transition-delay: 0.2s;
 }
 
 .nav-icon span:before {
-    -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; -o-transition-property: margin, transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform;
-    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
-    -webkit-transition-delay: 0.2s, 0s; -o-transition-delay: 0.2s, 0s; transition-delay: 0.2s, 0s;
+    -webkit-transition-property: margin, -webkit-transform;
+    transition-property: margin, -webkit-transform;
+    -o-transition-property: margin, transform;
+    transition-property: margin, transform;
+    transition-property: margin, transform, -webkit-transform;
+    -webkit-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s, 0s;
+    -o-transition-delay: 0.2s, 0s;
+    transition-delay: 0.2s, 0s;
 }
 
 .nav-icon span:after {
-    -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; -o-transition-property: margin, transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform;
-    -webkit-transition-duration: 0.2s; -o-transition-duration: 0.2s; transition-duration: 0.2s;
-    -webkit-transition-delay: 0.2s, 0s; -o-transition-delay: 0.2s, 0s; transition-delay: 0.2s, 0s;
+    -webkit-transition-property: margin, -webkit-transform;
+    transition-property: margin, -webkit-transform;
+    -o-transition-property: margin, transform;
+    transition-property: margin, transform;
+    transition-property: margin, transform, -webkit-transform;
+    -webkit-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-transition-delay: 0.2s, 0s;
+    -o-transition-delay: 0.2s, 0s;
+    transition-delay: 0.2s, 0s;
 }
 
 .nav-icon-toggled span {
-    background-color: rgba(0,0,0,0.0);
-    -webkit-transition-delay: 0s; -o-transition-delay: 0s; transition-delay: 0s;
+    background-color: rgba(0, 0, 0, 0.0);
+    -webkit-transition-delay: 0s;
+    -o-transition-delay: 0s;
+    transition-delay: 0s;
 }
 
 .nav-icon-toggled span:before {
     margin-top: 0;
-    -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg);
-    -webkit-transition-delay: 0s, 0.2s; -o-transition-delay: 0s, 0.2s; transition-delay: 0s, 0.2s;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transition-delay: 0s, 0.2s;
+    -o-transition-delay: 0s, 0.2s;
+    transition-delay: 0s, 0.2s;
 }
 
 .nav-icon-toggled span:after {
     margin-top: 0;
-    -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); transform: rotate(-45deg);
-    -webkit-transition-delay: 0s, 0.2s; -o-transition-delay: 0s, 0.2s; transition-delay: 0s, 0.2s;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transition-delay: 0s, 0.2s;
+    -o-transition-delay: 0s, 0.2s;
+    transition-delay: 0s, 0.2s;
 }
 
 #nav-background {
@@ -134,6 +164,7 @@
     #nav-icon {
         display: block;
     }
+
     #nav.menu {
         flex-direction: column;
         position: fixed;
@@ -145,12 +176,14 @@
         background: #fafbfc;
         margin: 0;
     }
+
     #nav .right {
         margin: 0 !important;
         padding: 0 !important;
         flex-direction: column;
         align-items: flex-start;
     }
+
     .primaryNav.menu {
         left: -100%;
         -webkit-transition: 400ms;
@@ -158,19 +191,21 @@
         transition: 400ms;
         font-size: 1.4em;
     }
+
     #nav .item img {
         margin-right: .5em;
     }
+
     .primaryNav .item:before {
         display: none !important;
     }
+
     .nav-displayed.menu {
         left: 0 !important;
     }
 }
 
 .homepage-bckg {
-    z-index: 0;
     height: 100%;
     width: 100%;
     background-size: cover;
@@ -206,7 +241,7 @@
     margin: auto;
 }
 
-.ui.inverted.segment.footer__additional {
+.ui.inverted.segment.footer-2 {
     background: #0e0f10;
 }
 
@@ -266,4 +301,9 @@
 
 .annonceCard .description {
     margin-bottom: 1em;
+}
+
+.footer .inverted.footer-1 {
+    background-color: #1b1c1d;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23242525' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
 }
