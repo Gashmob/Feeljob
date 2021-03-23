@@ -64,7 +64,8 @@
                     <div class="ui bottom attached tab segment active" data-tab="first">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte particulier</h3>
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte
+                                    Particulier</h3>
                                 <form class="ui form" method="post" style="width: 100%;">
                                     <div class="two fields">
                                         <div class="required field">
@@ -105,7 +106,7 @@
                                         <label>Répéter le mot de passe</label>
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpC')"
+                                            <input type="password" onkeyup="comparePass(this, 'mdpP')"
                                                    name="motdepasse2" placeholder="Mot de passe"
                                                    required>
                                         </div>
@@ -141,20 +142,24 @@
                                             <input type="text" name="nom" placeholder="Nom" required>
                                         </div>
                                     </div>
-                                    <div class="required field">
-                                        <label>Nom de l'entreprise</label>
-                                        <input type="text" name="nomEntreprise" placeholder="Nom entreprise" required>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Adresse de l'entreprise</label>
-                                        <input type="text" name="adresse" placeholder="Adresse entreprise" required>
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom de l'entreprise</label>
+                                            <input type="text" name="nomEntreprise" placeholder="Nom entreprise"
+                                                   required>
+                                        </div>
+                                        <div class="field">
+                                            <label>Logo de l'entreprise</label>
+                                            <label class="ui teal basic button" for="ae-logo">
+                                                <i class="paperclip icon"></i>
+                                                <span id="ae-label">Logo de l'entreprise</span>
+                                                <input type="file" style="display: none;" id="ae-logo" name="logo">
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="field">
-                                        <label class="ui button" for="ae-logo">
-                                            <i class="paperclip icon"></i>
-                                            <span id="ae-label">Logo de l'entreprise</span>
-                                            <input type="file" style="display: none;" id="ae-logo" name="logo">
-                                        </label>
+                                        <label>Adresse de l'entreprise</label>
+                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
@@ -263,7 +268,7 @@
                     <div class="ui bottom attached tab segment" data-tab="third">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte candidat</h3>
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte Candidat</h3>
                                 <form class="ui form" method="post" style="width: 100%;">
                                     <div class="two fields">
                                         <div class="required field">
@@ -335,7 +340,7 @@
                     <div class="ui bottom attached tab segment" data-tab="fourth">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte employeur</h3>
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte Employeur</h3>
                                 <form class="ui form" method="post" style="width: 100%;" enctype="multipart/form-data">
                                     <div class="two fields">
                                         <div class="required field">
@@ -347,21 +352,25 @@
                                             <input type="text" name="nom" placeholder="Nom" required>
                                         </div>
                                     </div>
-                                    <div class="required field">
-                                        <label>Nom de l'entreprise</label>
-                                        <input type="text" name="nomEntreprise" placeholder="Nom entreprise" required>
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom de l'entreprise</label>
+                                            <input type="text" name="nomEntreprise" placeholder="Nom entreprise"
+                                                   required>
+                                        </div>
+                                        <div class="field">
+                                            <label>Logo de l'entreprise</label>
+                                            <label class="ui teal basic button" for="employeur-logo">
+                                                <i class="paperclip icon"></i>
+                                                <span id="employeur-label">Logo de l'entreprise</span>
+                                                <input type="file" style="display: none;" id="employeur-logo"
+                                                       name="logo">
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="field">
                                         <label>Adresse de l'entreprise</label>
                                         <input type="text" name="adresse" placeholder="Adresse entreprise">
-                                    </div>
-                                    <div class="field">
-                                        <label class="ui button" for="employeur-logo">
-                                            <i class="paperclip icon"></i>
-                                            <span id="employeur-label">Logo de l'entreprise</span>
-                                            <input type="file" style="display: none;" id="employeur-logo"
-                                                   name="logo">
-                                        </label>
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
