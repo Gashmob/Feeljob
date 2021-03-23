@@ -214,4 +214,29 @@ class HomeController extends AbstractController
     {
         return $this->render('footer/conditionsUtilisation.html.twig');
     }
+
+    /**
+     * @Route("/show/{type}", name="show")
+     * @param $type
+     * @return Response
+     */
+    public function show($type): Response
+    {
+        switch ($type) {
+            case 'candidats':
+                return $this->render('home/candidats.html.twig');
+
+            case 'entreprises':
+                return $this->render('home/employeurs.html.twig');
+
+            case 'freelances':
+                return $this->render('home/freelances.html.twig');
+
+            case 'particuliers':
+                return $this->render('home/particuliers.html.twig');
+
+            default:
+                return $this->render('@Twig/Exception/error404.html.twig');
+        }
+    }
 }
