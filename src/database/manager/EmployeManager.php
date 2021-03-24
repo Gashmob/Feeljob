@@ -95,7 +95,7 @@ class EmployeManager extends Manager
      */
     public function remove(EntityManagerInterface $em, Employe $employe)
     {
-        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[r]-() DELETE r,e'))
+        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[r]-() WHERE id(e)=$id DELETE r,e'))
             ->setInteger('id', $employe->getIdentity())
             ->run();
 
