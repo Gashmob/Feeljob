@@ -62,4 +62,43 @@ class EmployeurManager extends Manager
 			->run()
 			->getResult();
     }
+
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param Entrepreneur $entrepreneur
+     */
+    public function create(EntityManagerInterface $em,Entrepreneur $entrepreneur)
+    {
+        $result = (new Query('CREATE (e:' . EntityManager::ENTREPRENEUR . ') RETURN id(e) as id'))
+            ->run()
+            ->getResult();
+
+        $entrepreneur->setIdentity($result['id']);
+
+        $em->persist($entrepreneur);
+        $em->flush(); 
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param Entrepreneur $entrepreneur
+     */
+    public function remove(EntityManagerInterface $em,Entrepreneur $entrepreneur)
+    {
+        (new PreparedQuery('MATCH (e:' . EntityManager::ENTREPRENEUR . ')-[r]-() WHERE id(e)=$id DELETE r,e'))
+            ->setInteger('id',$entrepreneur->getIdentity())
+            ->run();
+
+        $em->remove($entrepreneur);
+        $em->flush();
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function update(EntityManagerInterface $em)
+    {
+        $em->flush();
+    }
 }
