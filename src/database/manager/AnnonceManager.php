@@ -180,4 +180,67 @@ class AnnonceManager extends Manager
             ->setInteger('idO', $idAnnonce)
             ->run();
     }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     * @return bool
+     */
+    public function propose(int $idAnnonce, int $idAutoEntrepreneur): bool
+    {
+        $result1 = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA AND id(o)=$idO RETURN p'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        $result2 = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR. ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (is_null($result1) && is_null($result2)) {
+            (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . '), (e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND id(o)=$idO CREATE (o)-[:' . EntityManager::AUTO_ENTREPRENEUR . ']->(e)'))
+                ->setInteger('idA', $idAutoEntrepreneur)
+                ->setInteger('idO', $idAnnonce)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idAutoEntrepreneur
+     * @return Annonce[]
+     */
+    public function getPropositions(EntityManagerInterface $em, int $idAutoEntrepreneur): array
+    {
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA RETURN id(o) as id'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     */
+    public function removeProposition(int $idAnnonce, int $idAutoEntrepreneur)
+    {
+        (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA AND id(o)=$idO DELETE p'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run();
+    }
 }
