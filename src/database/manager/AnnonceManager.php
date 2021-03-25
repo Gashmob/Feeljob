@@ -117,4 +117,67 @@ class AnnonceManager extends Manager
     {
         $em->flush();
     }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     * @return bool
+     */
+    public function candidate(int $idAnnonce, int $idAutoEntrepreneur): bool
+    {
+        $result1 = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        $result2 = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(o)=$idO AND id(a)=$idA RETURN p'))
+            ->setInteger('idO', $idAnnonce)
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (is_null($result1) && is_null($result2)) {
+            (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . '), (o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO CREATE (e)-[:' . EntityManager::CANDIDATURE . ']->(o)'))
+                ->setInteger('idA', $idAutoEntrepreneur)
+                ->setInteger('idO', $idAnnonce)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idAutoEntrepreneur
+     * @return Annonce[]
+     */
+    public function getCandidature(EntityManagerInterface $em, int $idAutoEntrepreneur): array
+    {
+        $results = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA RETURN id(o) as id'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     */
+    public function uncandidate(int $idAnnonce, int $idAutoEntrepreneur)
+    {
+        (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO DELETE c'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run();
+    }
 }
