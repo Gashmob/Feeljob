@@ -243,4 +243,66 @@ class AnnonceManager extends Manager
             ->setInteger('idO', $idAnnonce)
             ->run();
     }
+
+    /**
+     * @param int $idAnnonce
+     * @param string $secteurActivite
+     */
+    public function changeSecteur(int $idAnnonce, string $secteurActivite)
+    {
+        (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')-[r]->(:' . EntityManager::SECTEUR_ACTIVITE . '), (s:' . EntityManager::SECTEUR_ACTIVITE . '{nom:$nom}) WHERE id(a)=$idA DELETE r CREATE (a)-[:' . EntityManager::TYPE . ']->(s)'))
+            ->setString('nom', $secteurActivite)
+            ->setInteger('idA', $idAnnonce)
+            ->run();
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     * @return bool
+     */
+    public function acceptCandidature(int $idAnnonce, int $idAutoEntrepreneur): bool
+    {
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (!is_null($result)) {
+            (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO SET c.accept=true'))
+                ->setInteger('idA', $idAutoEntrepreneur)
+                ->setInteger('idO', $idAnnonce)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     * @return bool
+     */
+    public function acceptProposition(int $idAnnonce, int $idAutoEntrepreneur): bool
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA AND id(o)=$idO RETURN p'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (!is_null($result)) {
+            (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA AND id(o)=$idO SET p.accept=true'))
+                ->setInteger('idA', $idAutoEntrepreneur)
+                ->setInteger('idO', $idAnnonce)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
 }
