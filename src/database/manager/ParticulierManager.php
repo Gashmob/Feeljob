@@ -104,7 +104,7 @@ class ParticulierManager extends Manager
             ->run()
             ->getResult();
         foreach ($annonces as $annonce) {
-            $em->remove($em->getRepository(Annonce::class)->findOneBy(['identity' => $annonce['id']])); // TODO : utiliser EntityManager::getRepository(EntityManager::ANNONCE)->remove()
+            $em->remove($em->getRepository(Annonce::class)->findOneBy(['identity' => $annonce['id']]));
         }
 
         (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')-[r1]-(a:' . EntityManager::ANNONCE . ')-[r2]-() WHERE id(p)=$id DELETE r1,r2,p,a'))

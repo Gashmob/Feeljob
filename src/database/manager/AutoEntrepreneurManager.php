@@ -71,12 +71,14 @@ class AutoEntrepreneurManager extends Manager
     /**
      * @param EntityManagerInterface $em
      * @param AutoEntrepreneur $autoEntrepreneur
+     * @param string $secteurActivite
      */
-    public function create(EntityManagerInterface $em, AutoEntrepreneur $autoEntrepreneur)
+    public function create(EntityManagerInterface $em, AutoEntrepreneur $autoEntrepreneur, string $secteurActivite)
     {
-        $result = (new Query('CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ') RETURN id(a) as id'))
+        $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) as id'))
+            ->setString('nom', $secteurActivite)
             ->run()
-            ->getResult();
+            ->getOneOrNullResult();
 
         $autoEntrepreneur->setIdentity($result['id']);
 

@@ -7,6 +7,7 @@ use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
 use App\Entity\Employeur;
+use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EmployeurManager extends Manager
@@ -71,12 +72,14 @@ class EmployeurManager extends Manager
     /**
      * @param EntityManagerInterface $em
      * @param Employeur $employeur
+     * @param string $secteurActivite
      */
-    public function create(EntityManagerInterface $em, Employeur $employeur)
+    public function create(EntityManagerInterface $em, Employeur $employeur, string $secteurActivite)
     {
-        $result = (new Query('CREATE (e:' . EntityManager::EMPLOYEUR . ') RETURN id(e) as id'))
+        $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (e:' . EntityManager::EMPLOYEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(e) as id'))
+            ->setString('nom', $secteurActivite)
             ->run()
-            ->getResult();
+            ->getOneOrNullResult();
 
         $employeur->setIdentity($result['id']);
 
@@ -90,7 +93,15 @@ class EmployeurManager extends Manager
      */
     public function remove(EntityManagerInterface $em, Employeur $employeur)
     {
-        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')-[r]-() WHERE id(e)=$id DELETE r,e'))
+        $offres = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$id RETURN id(o) AS id'))
+            ->setInteger('id', $employeur->getIdentity())
+            ->run()
+            ->getOneOrNullResult();
+        foreach ($offres as $offre) {
+            $em->remove($em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $offre['id']]));
+        }
+
+        (new PreparedQuery('MATCH ()-[r3]-(e:' . EntityManager::EMPLOYEUR . ')-[r1]-(o:' . EntityManager::OFFRE_EMPLOI . ')-[r2]-() WHERE id(e)=$id DELETE r1,r2,r3,e,o'))
             ->setInteger('id', $employeur->getIdentity())
             ->run();
 

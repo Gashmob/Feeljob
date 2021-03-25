@@ -77,7 +77,7 @@ class AnnonceManager extends Manager
      */
     public function create(EntityManagerInterface $em, Annonce $annonce, int $idParticulier, string $secteurActivite): ?int
     {
-        $result = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . '),(s:' . EntityManager::SECTEUR_ACTIVITE . '{nom:$secteur}) WHERE id(p)=$idParticulier CREATE (p)-[:' . EntityManager::PUBLIE . ']->(a: ' . EntityManager::ANNONCE . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) AS id'))
+        $result = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . '), (s:' . EntityManager::SECTEUR_ACTIVITE . '{nom:$secteur}) WHERE id(p)=$idParticulier CREATE (p)-[:' . EntityManager::PUBLIE . ']->(a: ' . EntityManager::ANNONCE . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) AS id'))
             ->setString('secteur', $secteurActivite)
             ->setInteger('idParticulier', $idParticulier)
             ->run()

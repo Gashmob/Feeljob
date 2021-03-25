@@ -34,6 +34,7 @@ abstract class EntityManager
     public const PROPOSITION = 'PROPOSITION';
     public const FAVORI = 'FAVORI';
     public const TYPE = 'TYPE';
+    public const EST_DANS = 'EST_DANS';
 
     public const UTILS = 'Utils';
 
