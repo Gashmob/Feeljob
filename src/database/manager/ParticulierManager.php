@@ -7,6 +7,7 @@ namespace App\database\manager;
 use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
+use App\Entity\Annonce;
 use App\Entity\Particulier;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -98,11 +99,19 @@ class ParticulierManager extends Manager
      */
     public function remove(EntityManagerInterface $em, Particulier $particulier)
     {
-        (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')-[r]-() DELETE r,p'))
+        $annonces = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$id RETURN id(a) AS id'))
+            ->setInteger('id', $particulier->getIdentity())
+            ->run()
+            ->getResult();
+        foreach ($annonces as $annonce) {
+            $em->remove($em->getRepository(Annonce::class)->findOneBy(['identity' => $annonce['id']])); // TODO : utiliser EntityManager::getRepository(EntityManager::ANNONCE)->remove()
+        }
+
+        (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')-[r1]-(a:' . EntityManager::ANNONCE . ')-[r2]-() WHERE id(p)=$id DELETE r1,r2,p,a'))
             ->setInteger('id', $particulier->getIdentity())
             ->run();
-
         $em->remove($particulier);
+
         $em->flush();
     }
 }
