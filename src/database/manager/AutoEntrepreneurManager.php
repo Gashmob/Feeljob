@@ -62,4 +62,43 @@ class AutoEntrepreneurManager extends Manager
 			->run()
 			->getResult();
     }
+
+
+/**
+     * @param EntityManagerInterface $em
+     * @param AutoEntrepreneur $autoEntrepreneur
+     */
+    public function create(EntityManagerInterface $em,AutoEntrepreneur $autoEntrepreneur)
+    {
+        $result = (new Query('CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ') RETURN id(a) as id'))
+            ->run()
+            ->getResult();
+
+        $autoEntrepreneur->setIdentity($result['id']);
+
+        $em->persist($autoEntrepreneur);
+        $em->flush(); 
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param AutoEntrepreneur $autoEntrepreneur
+     */
+    public function remove(EntityManagerInterface $em,AutoEntrepreneur $autoEntrepreneur)
+    {
+        (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[r]-() WHERE id(a)=$id DELETE r,a'))
+            ->setInteger('id',$autoEntrepreneur->getIdentity())
+            ->run();
+
+        $em->remove($autoEntrepreneur);
+        $em->flush();
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function update(EntityManagerInterface $em)
+    {
+        $em->flush();
+    }
 }
