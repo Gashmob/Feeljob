@@ -306,6 +306,27 @@ class ParticulierController extends AbstractController
         return $this->render('autoEntrepreneur/showOffresChantier.html.twig');
     }
 
+    /**
+     * @Route("/annonce/{id}", requirements={"id": true}, name="particulier_show_annonce")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return Response|RedirectResponse
+     */
+    public function voirAnnonce($id, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('candidat/showAnnonces.html.twig', [
+            'annonces' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id])
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
