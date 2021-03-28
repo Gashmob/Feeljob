@@ -308,11 +308,9 @@ class AnnonceManager extends Manager
 
     /**
      * @param string $secteurActivite
-     * @param int $offset
-     * @param int $limit
      * @return int[]
      */
-    public function getAnnoncesBySecteurActivite(string $secteurActivite, $offset = 0, $limit = 25): array
+    public function getAnnoncesBySecteurActivite(string $secteurActivite): array
     {
         $res = [];
 
@@ -321,13 +319,8 @@ class AnnonceManager extends Manager
             ->run()
             ->getResult();
 
-        $i = 0;
         foreach ($results as $result) {
-            if ($i < $offset + $limit && $i >= $offset) {
                 $res[] = $result['id'];
-            }
-
-            $i++;
         }
 
         return $res;
