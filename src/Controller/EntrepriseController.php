@@ -264,6 +264,27 @@ class EntrepriseController extends AbstractController
         return $this->render('candidat/createCV.html.twig');
     }
 
+    /**
+     * @Route("/cv/{id}", requirements={"id": true})
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function showCV($id, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('candidat/showCV.html.twig', [
+            'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id])
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
