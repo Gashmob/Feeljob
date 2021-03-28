@@ -103,4 +103,30 @@ class AjaxEntrepriseController extends AbstractController
 
         return $this->json(['result' => false]);
     }
+
+    /**
+     * @Route("/remove/proposition/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @param $idO
+     * @param $idE
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeProposition($idO, $idE, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->removeProposition($idO, $idE)
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
 }
