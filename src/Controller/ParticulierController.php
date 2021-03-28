@@ -290,7 +290,6 @@ class ParticulierController extends AbstractController
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-    // UTILS
 
     /**
      * @param Request $request
