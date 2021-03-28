@@ -406,6 +406,27 @@ class EntrepriseController extends AbstractController
         return $this->render('entreprise/createEmploi.html.twig');
     }
 
+    /**
+     * @Route("/offre_emploi/{id}", name="entreprise_show_offre_emploi")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function showOffreEmploi($id, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('entreprise/showEmploi.html.twig', [
+            'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id])
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
