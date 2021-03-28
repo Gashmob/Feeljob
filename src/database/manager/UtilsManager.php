@@ -98,4 +98,56 @@ class UtilsManager extends Manager
 
         return true;
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return AutoEntrepreneur|Employe|Employeur|Particulier|null
+     */
+    public function getUserFromId(EntityManagerInterface $em, int $id)
+    {
+        $type = $this->getUserTypeFromId($id);
+        switch ($type) {
+            case EntityManager::AUTO_ENTREPRENEUR:
+                return $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $id]);
+
+            case EntityManager::EMPLOYE:
+                return $em->getRepository(Employe::class)->findOneBy(['identity' => $id]);
+
+            case EntityManager::EMPLOYEUR:
+                return $em->getRepository(Employeur::class)->findOneBy(['identity' => $id]);
+
+            case EntityManager::PARTICULIER:
+                return $em->getRepository(Particulier::class)->findOneBy(['identity' => $id]);
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $mail
+     * @return AutoEntrepreneur|Employe|Employeur|Particulier|null
+     */
+    public function getUserFromMail(EntityManagerInterface $em, string $mail)
+    {
+        $type = $this->getUserTypeFromMail($em, $mail);
+        switch ($type) {
+            case EntityManager::AUTO_ENTREPRENEUR:
+                return $em->getRepository(AutoEntrepreneur::class)->findOneBy(['email' => $mail]);
+
+            case EntityManager::EMPLOYE:
+                return $em->getRepository(Employe::class)->findOneBy(['email' => $mail]);
+
+            case EntityManager::EMPLOYEUR:
+                return $em->getRepository(Employeur::class)->findOneBy(['email' => $mail]);
+
+            case EntityManager::PARTICULIER:
+                return $em->getRepository(Particulier::class)->findOneBy(['email' => $mail]);
+
+            default:
+                return null;
+        }
+    }
 }
