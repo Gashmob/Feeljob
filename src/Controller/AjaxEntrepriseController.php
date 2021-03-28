@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\Entity\CV;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -226,6 +227,53 @@ class AjaxEntrepriseController extends AbstractController
         if ($request->isMethod('POST')) {
             return $this->json([
                 'propositions' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->getPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @param $competences
+     * @param $langues
+     * @param $permis
+     * @param $limit
+     * @param $offset
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getCVs($competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            $separator = '_';
+
+            $comps = [];
+            if ($competences != 'none') {
+                $comps = explode($separator, $competences);
+            }
+
+            $langs = [];
+            if ($langues != 'none') {
+                $langs = explode($separator, $langues);
+            }
+
+            $perm = $permis;
+            if ($permis != 'none') {
+                $perm = $permis == 'on';
+            }
+
+            return $this->json([
+                'cvs' => array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $offset + $limit)
             ]);
         }
 

@@ -19,6 +19,48 @@ class CVRepository extends ServiceEntityRepository
         parent::__construct($registry, CV::class);
     }
 
+    /**
+     * @param string[] $competences
+     * @param string[] $langues
+     * @param string|bool $permis
+     * @return CV[]
+     */
+    public function findByCompetencesLanguesPermis(array $competences, array $langues, string $permis): array
+    {
+        $query = $this->createQueryBuilder('cv');
+
+        if (count($competences) > 0) {
+            $query->leftJoin('cv.competences', 'cv_competences')
+                ->leftJoin('cv_competences.competence', 'competence');
+
+            foreach ($competences as $competence) {
+                $query->andWhere('competence.nom = :nom')
+                    ->setParameter('nom', substr($competence, 0, -1))
+                    ->andWhere('cv_competences.niveau >= :niveau')
+                    ->setParameter('niveau', substr($competence, -1));
+            }
+        }
+
+        if (count($langues) > 0) {
+            $query->leftJoin('cv.langues', 'cv_langues')
+                ->leftJoin('cv_langues.langue', 'langue');
+
+            foreach ($langues as $langue) {
+                $query->andWhere('langue.nom = :nom')
+                    ->setParameter('nom', substr($langue, 0, -1))
+                    ->andWhere('cv_langues.niveau >= :niveau')
+                    ->setParameter('niveau', substr($langue, -1));
+            }
+        }
+
+        if ($permis != 'none') {
+            $query->andWhere('cv.permis = :permis')
+                ->setParameter('permis', $permis);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return CV[] Returns an array of CV objects
     //  */
