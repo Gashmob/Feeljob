@@ -5,10 +5,6 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
-use App\Entity\AutoEntrepreneur;
-use App\Entity\Employe;
-use App\Entity\Employeur;
-use App\Entity\Particulier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -222,7 +218,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/confidentiality", name="confidentiality")
+     * @Route("/confidentialite", name="confidentiality")
      * @return Response
      */
     public function confidentiality(): Response
@@ -240,7 +236,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/show/{type}", name="show")
+     * @Route("/voir/{type}", name="show")
      * @param $type
      * @return Response
      */
