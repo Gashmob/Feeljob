@@ -265,7 +265,7 @@ class EntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/cv/{id}", requirements={"id": true})
+     * @Route("/cv/{id}", requirements={"id": true}, name="entreprise_show_cv")
      * @param $id
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
@@ -283,6 +283,22 @@ class EntrepriseController extends AbstractController
         return $this->render('candidat/showCV.html.twig', [
             'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id])
         ]);
+    }
+
+    /**
+     * @Route("/cvs", name="entreprise_cvs")
+     */
+    public function listCVs()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('entreprise/showProfiles.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

@@ -146,21 +146,4 @@ class EntrepriseController extends AbstractController
             'typeContrat' => EntityManager::getAllTypeContratName()
         ]);
     }
-
-    /**
-     * @Route("/profils", name="showProfiles")
-     * @param EntityManagerInterface $em
-     * @return Response
-     */
-    public function showProfiles(EntityManagerInterface $em): Response
-    {
-        if ($this->session->get('userType') === 'Candidat')
-            return $this->redirectToRoute('userSpace');
-
-        $profil = EntityManager::getAllProfiles($em);
-
-        return $this->render('entreprise/showProfiles.html.twig', [
-            'profil' => $profil
-        ]);
-    }
 }
