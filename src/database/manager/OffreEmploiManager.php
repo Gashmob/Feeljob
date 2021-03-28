@@ -361,4 +361,26 @@ class OffreEmploiManager extends Manager
 
         return false;
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param OffreEmploi[] $preResult
+     * @param string $typeContrat
+     * @return OffreEmploi[]
+     */
+    public function findOffreEmploiByTypeContratFromPreResult(EntityManagerInterface $em, array $preResult, string $typeContrat): array
+    {
+        $res = [];
+        foreach ($preResult as $result) {
+            if ((new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
+                    ->setString('nom', $typeContrat)
+                    ->setInteger('id', $result->getIdentity())
+                    ->run()
+                    ->getOneOrNullResult() != null) {
+                $res[] = $result;
+            }
+        }
+
+        return $res;
+    }
 }

@@ -263,11 +263,11 @@ class AjaxParticulierController extends AbstractController
                     $ids = EntityManager::getRepository(EntityManager::ANNONCE)->getAnnoncesBySecteurActivite($secteur);
 
                     return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMaxFromPreResultIds($ids, $distanceMax, $addressFrom), $offset, $offset + $limit)
+                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMaxFromPreResultIds($ids, $distanceMax, $addressFrom), $offset, $limit)
                     ]);
                 } else { // $secteur == 'none'
                     return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $addressFrom), $offset, $offset + $limit)
+                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $addressFrom), $offset, $limit)
                     ]);
                 }
             } else { // $distanceMax == 'none'
@@ -275,11 +275,11 @@ class AjaxParticulierController extends AbstractController
                     $ids = EntityManager::getRepository(EntityManager::ANNONCE)->getAnnoncesBySecteurActivite($secteur);
 
                     return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByIdentity($ids), $offset, $offset + $limit)
+                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByIdentity($ids), $offset, $limit)
                     ]);
                 } else { // $secteur == 'none'
                     return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findAll(), $offset, $offset + $limit)
+                        'annonces' => array_slice($em->getRepository(Annonce::class)->findAll(), $offset, $limit)
                     ]);
                 }
             }

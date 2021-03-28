@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\EntityManager;
 use App\Entity\CV;
+use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -273,7 +274,46 @@ class AjaxEntrepriseController extends AbstractController
             }
 
             return $this->json([
-                'cvs' => array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $offset + $limit)
+                'cvs' => array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit)
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/offres_emploi/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @param $typeContrat
+     * @param $salaire
+     * @param $heures
+     * @param $loge
+     * @param $deplacement
+     * @param $teletravail
+     * @param $limit
+     * @param $offset
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getOffresEmploi($typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'offres' => array_slice(
+                    EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->findOffreEmploiByTypeContratFromPreResult(
+                        $em,
+                        $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravail($salaire, $heures, $loge, $deplacement, $teletravail),
+                        $typeContrat),
+                    $offset,
+                    $limit)
             ]);
         }
 

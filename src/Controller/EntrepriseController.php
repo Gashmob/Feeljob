@@ -427,6 +427,22 @@ class EntrepriseController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/offres_emploi", name="entreprise_offres_emploi")
+     */
+    public function listOffreEmplois()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('candidat/showAnnonces.html.twig');
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**
