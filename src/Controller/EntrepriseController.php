@@ -11,6 +11,7 @@ use App\Entity\CVLangue;
 use App\Entity\Employe;
 use App\Entity\Employeur;
 use App\Entity\Langue;
+use App\Entity\OffreEmploi;
 use App\Entity\SituationFamille;
 use App\Utils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -299,6 +300,110 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('entreprise/showProfiles.html.twig');
+    }
+
+    /**
+     * @Route("/cree/offre_emploi", name="entreprise_create_offre_emploi")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function createOffreEmploi(Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $nom = $request->get('nom');
+            $nomB = true;
+            if ($nom == '') {
+                $nomB = false;
+                $this->addFlash('nom', 'Merci de renseigner un nom');
+            }
+
+            $debut = $request->get('debut');
+            $debutB = true;
+            if ($debut == '') {
+                $debutB = false;
+                $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
+            }
+            $fin = $request->get('fin');
+
+            $loge = $request->get('loge') == null;
+
+            $heures = $request->get('heures');
+            $heuresB = true;
+            if ($heures == '') {
+                $heuresB = false;
+                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures par semaine');
+            } elseif ($heures <= 0) {
+                $heuresB = false;
+                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures supérieur à 0');
+            }
+
+            $salaire = $request->get('salaire');
+            $salaireB = true;
+            if ($salaire == '') {
+                $salaireB = false;
+                $this->addFlash('salaire', 'Merci de renseigner un salaire');
+            } elseif ($salaire <= 0) {
+                $salaireB = false;
+                $this->addFlash('salaire', 'Merci de renseigner un salaire supérieur à 0');
+            }
+
+            $deplacement = $request->get('deplacement') == null;
+
+            $rue = $request->get('rue');
+            $code_postal = $request->get('code_postal');
+            $ville = $request->get('ville');
+
+            $teletravail = $request->get('teletravail') == null;
+
+            $nbPostes = $request->get('nbPostes');
+            $nbPostesB = true;
+            if ($nbPostes == '') {
+                $nbPostesB = false;
+                $this->addFlash('nbPostes', 'Merci de renseigner un nombre de postes à pourvoir');
+            } elseif ($nbPostes <= 0) {
+                $nbPostesB = false;
+                $this->addFlash('nbPostes', 'Merci de renseigner un nombre de postes à pourvoir supérieur à 0');
+            }
+
+            $typeContrat = $request->get('typeContrat');
+
+            if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
+                $adresse = (new Adresse())
+                    ->setRue($rue)
+                    ->setCodePostal($code_postal)
+                    ->setVille($ville);
+                $em->persist($adresse);
+                $em->flush();
+
+                $offre = (new OffreEmploi())
+                    ->setNom($nom)
+                    ->setDebut($debut)
+                    ->setFin($fin)
+                    ->setLoge($loge)
+                    ->setHeures($heures)
+                    ->setSalaire($salaire)
+                    ->setDeplacement($deplacement)
+                    ->setLieu($adresse)
+                    ->setTeletravail($teletravail)
+                    ->setNbPostes($nbPostes);
+
+                EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->create($em, $offre, $this->session->get('user'), $typeContrat);
+                $this->addFlash('success', 'Votre offre d\'emploi a été publiée');
+
+                return $this->redirectToRoute('userSpace');
+            }
+        }
+
+        return $this->render('entreprise/createEmploi.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
