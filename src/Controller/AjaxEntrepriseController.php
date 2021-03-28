@@ -79,13 +79,13 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/propose/{idAnn}/{idAuto}", requirements={"idAnn": true, "idAuto": true}, methods={"POST"})
-     * @param $idAnn
-     * @param $idAuto
+     * @Route("/propose/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @param $idO
+     * @param $idE
      * @param Request $request
      * @return JsonResponse
      */
-    public function propose($idAnn, $idAuto, Request $request): JsonResponse
+    public function propose($idO, $idE, Request $request): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json(['result' => false]);
@@ -97,7 +97,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->propose($idAnn, $idAuto)
+                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->propose($idO, $idE)
             ]);
         }
 
