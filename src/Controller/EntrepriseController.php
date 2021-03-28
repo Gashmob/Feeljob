@@ -6,8 +6,12 @@ namespace App\Controller;
 
 use App\database\EntityManager;
 use App\Entity\Adresse;
+use App\Entity\CV;
+use App\Entity\CVLangue;
 use App\Entity\Employe;
 use App\Entity\Employeur;
+use App\Entity\Langue;
+use App\Entity\SituationFamille;
 use App\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Egulias\EmailValidator\EmailValidator;
@@ -179,6 +183,85 @@ class EntrepriseController extends AbstractController
             'nom' => $user->getNom(),
             'prenom' => $user->getPrenom()
         ]);
+    }
+
+    /**
+     * @Route("/cree/CV", name="entreprise_create_cv")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function createCV(Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $naissance = $request->get('naissance');
+            $naissanceB = true;
+            if ($naissance == '') {
+                $naissanceB = false;
+                $this->addFlash('naissance', 'Merci de renseigner une date de naissance');
+            }
+
+            $permis = $request->get('permis');
+
+            $situationFamille = $request->get('situationFamille');
+            $situationFamilleB = true;
+            if ($situationFamille == '') {
+                $situationFamilleB = false;
+                $this->addFlash('situationFamille', 'Merci de renseigner votre situation familiale');
+            }
+
+            // TODO : récup langues, metiers, diplomes, competences
+            // Exemple how to do for langues
+            $langues = [];
+            for ($i = 0; $i < $request->get('nbLangues'); $i++) {
+                $langue = $request->get('langue' . $i);
+                $niveau = $request->get('niveau' . $i);
+
+                $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
+                if (is_null($l)) {
+                    $l = (new Langue())
+                        ->setNom($langue);
+                    $em->persist($langue);
+                    $em->flush();
+                }
+
+                $n = (new CVLangue())
+                    ->setNiveau($niveau)
+                    ->setLangue($l);
+                $langues[] = $l;
+            }
+
+            if ($naissanceB && $situationFamilleB) {
+                $cv = (new CV())
+                    ->setNaissance($naissance)
+                    ->setPermis($permis)
+                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
+                $em->persist($cv);
+                $em->flush();
+
+                // TODO : push langues, metiers, diplomes, competences
+                // Exemple how to do for langues
+                foreach ($langues as $langue) {
+                    $langue->setCV($cv);
+                    $em->persist($langue);
+                }
+                $em->flush();
+
+                $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]);
+                $employe->setCV($cv);
+                $em->flush();
+            }
+        }
+
+        return $this->render('candidat/createCV.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
