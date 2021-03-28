@@ -150,6 +150,30 @@ class ParticulierController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/mon_espace", name="particulier_espace")
+     * @param EntityManagerInterface $em
+     * @return Response|RedirectResponse
+     */
+    public function userSpace(EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $type = EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user'));
+        if ($type == EntityManager::EMPLOYEUR || $type == EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('entreprise_espace');
+        }
+
+        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $this->session->get('user'));
+
+        return $this->render('home/profil.html.twig', [
+            'nom' => $user->getNom(),
+            'prenom' => $user->getPrenom()
+        ]);
+    }
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     /**

@@ -111,9 +111,9 @@ class HomeController extends AbstractController
         }
 
         if ($this->session->get('userType') == EntityManager::PARTICULIER || $this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
-            // TODO : redirect to /particulier/mon_espace
+            return $this->redirectToRoute('particulier_espace');
         } else {
-            // TODO : redirect to /entreprise/mon_espace
+            return $this->redirectToRoute('entreprise_espace');
         }
     }
 
