@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\database\EntityManager;
 use App\Entity\Adresse;
+use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
 use App\Entity\Particulier;
@@ -93,14 +94,18 @@ class ParticulierController extends AbstractController
                     }
 
                     if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
+                        $adresse = (new Adresse())
+                            ->setRue($data['rue'])
+                            ->setCodePostal($data['code_postal'])
+                            ->setVille($data['ville']);
+                        $em->persist($adresse);
+                        $em->flush();
+
                         $auto_entrepreneur = (new AutoEntrepreneur())
                             ->setNom($data['nom'])
                             ->setPrenom($data['prenom'])
                             ->setNomEntreprise($nomEntreprise)
-                            ->setAdresse((new Adresse())
-                                ->setRue($data['rue'])
-                                ->setCodePostal($data['code_postal'])
-                                ->setVille($data['ville']))
+                            ->setAdresse($adresse)
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
                             ->setMotdepasse($data['motdepasse'])
@@ -122,6 +127,13 @@ class ParticulierController extends AbstractController
                     $data = $this->getInscriptionData($request, $em);
 
                     if ($data['ok']) {
+                        $adresse = (new Adresse())
+                            ->setRue($data['rue'])
+                            ->setCodePostal($data['code_postal'])
+                            ->setVille($data['ville']);
+                        $em->persist($adresse);
+                        $em->flush();
+
                         $particulier = (new Particulier())
                             ->setPrenom($data['prenom'])
                             ->setNom($data['nom'])
@@ -129,10 +141,7 @@ class ParticulierController extends AbstractController
                             ->setEmail($data['email'])
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
-                            ->setAdresse((new Adresse())
-                                ->setRue($data['rue'])
-                                ->setCodePostal($data['code_postal'])
-                                ->setVille($data['ville']));
+                            ->setAdresse($adresse);
 
                         EntityManager::getRepository(EntityManager::PARTICULIER)->create($em, $particulier);
 
@@ -216,6 +225,69 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
+    }
+
+    /**
+     * @Route("/cree/annonce", name="particulier_create_annonce")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response|RedirectResponse
+     */
+    public function createAnnonce(Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::PARTICULIER) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($request->isMethod('POST')) {
+            $nom = $request->get('nom');
+            $nomB = true;
+            if ($nom == '') {
+                $nomB = false;
+                $this->addFlash('nom', 'Merci de renseigner un nom');
+            }
+
+            $description = $request->get('description');
+            $descriptionB = true;
+            if ($description == '') {
+                $descriptionB = false;
+                $this->addFlash('description', 'Merci de renseigner une description');
+            }
+
+            $rue = $request->get('rue');
+            $code_postal = $request->get('code_postal');
+            $ville = $request->get('ville');
+
+            $date = $request->get('date');
+
+            $secteurActivite = $request->get('secteurActivite');
+
+            if ($nomB && $descriptionB) {
+                $adresse = (new Adresse())
+                    ->setRue($rue)
+                    ->setCodePostal($code_postal)
+                    ->setVille($ville);
+                $em->persist($adresse);
+                $em->flush();
+
+                $annonce = (new Annonce())
+                    ->setNom($nom)
+                    ->setDescription($description)
+                    ->setAdresse($adresse)
+                    ->setDate($date);
+
+                EntityManager::getRepository(EntityManager::ANNONCE)->create($em, $annonce, $this->session->get('user'), $secteurActivite);
+                $this->addFlash('success', 'Votre annonce a été publiée !');
+
+                return $this->redirectToRoute('userSpace');
+            }
+        }
+
+        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

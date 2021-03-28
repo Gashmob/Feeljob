@@ -90,6 +90,13 @@ class EntrepriseController extends AbstractController
                     }
 
                     if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
+                        $adresse = (new Adresse())
+                            ->setRue($data['rue'])
+                            ->setCodePostal($data['code_postal'])
+                            ->setVille($data['ville']);
+                        $em->persist($adresse);
+                        $em->flush();
+
                         $employeur = (new Employeur())
                             ->setPrenom($data['prenom'])
                             ->setNom($data['nom'])
@@ -98,10 +105,7 @@ class EntrepriseController extends AbstractController
                             ->setEmail($data['email'])
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
-                            ->setAdresse((new Adresse())
-                                ->setRue($data['rue'])
-                                ->setCodePostal($data['code_postal'])
-                                ->setVille($data['ville']))
+                            ->setAdresse($adresse)
                             ->setLogo($logo)
                             ->setSiret($siret)
                             ->setDescription($description);
@@ -119,6 +123,13 @@ class EntrepriseController extends AbstractController
                     $data = $this->getInscriptionData($request, $em);
 
                     if ($data['ok']) {
+                        $adresse = (new Adresse())
+                            ->setRue($data['rue'])
+                            ->setCodePostal($data['code_postal'])
+                            ->setVille($data['ville']);
+                        $em->persist($adresse);
+                        $em->flush();
+
                         $employe = (new Employe())
                             ->setPrenom($data['prenom'])
                             ->setNom($data['nom'])
@@ -126,10 +137,7 @@ class EntrepriseController extends AbstractController
                             ->setEmail($data['email'])
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
-                            ->setAdresse((new Adresse())
-                                ->setRue($data['rue'])
-                                ->setCodePostal($data['code_postal'])
-                                ->setVille($data['ville']));
+                            ->setAdresse($adresse);
 
                         EntityManager::getRepository(EntityManager::EMPLOYE)->create($em, $employe);
 
