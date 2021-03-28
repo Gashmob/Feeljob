@@ -17,6 +17,7 @@ use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -218,6 +219,61 @@ class ParticulierController extends AbstractController
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+    // AJAX
+
+    /**
+     * @Route("/accept/proposition/{id}", requirements={"id": true}, methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function acceptProposition($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->acceptProposition($id, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/accept/candidature/{idAnn}/{idAuto}", requirements={"idAnn": true, "idAuto": true}, methods={"POST"})
+     * @param $idAnn
+     * @param $idAuto
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function acceptCandidature($idAnn, $idAuto, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::PARTICULIER) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->acceptCandidature($idAnn, $idAuto)
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+    // UTILS
 
     /**
      * @param Request $request
