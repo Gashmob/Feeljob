@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\database\EntityManager;
 use App\Entity\Adresse;
 use App\Entity\AutoEntrepreneur;
+use App\Entity\CarteVisite;
 use App\Entity\Particulier;
 use App\Utils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -172,6 +173,48 @@ class ParticulierController extends AbstractController
             'nom' => $user->getNom(),
             'prenom' => $user->getPrenom()
         ]);
+    }
+
+    /**
+     * @Route("/cree/carte", name="particulier_create_carte")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response|RedirectResponse
+     */
+    public function createCarteVisite(Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($request->isMethod('POST')) {
+            $description = $request->get('description');
+            $descriptionB = true;
+            if ($description == '') {
+                $descriptionB = false;
+                $this->addFlash('description', 'Merci de donner une description à votre carte de visite');
+            }
+
+            if ($descriptionB) {
+                $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
+
+                $carte = (new CarteVisite())
+                    ->setDescription($description);
+                $em->persist($carte);
+                $em->flush();
+
+                // TODO : get all realisations
+
+                $auto_entrepreneur->setCarteVisite($carte);
+                $em->flush();
+            }
+        }
+
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
