@@ -206,4 +206,29 @@ class AjaxEntrepriseController extends AbstractController
 
         return $this->json([]);
     }
+
+    /**
+     * @Route("/get/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->getPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
 }
