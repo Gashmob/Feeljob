@@ -154,4 +154,30 @@ class AjaxEntrepriseController extends AbstractController
 
         return $this->json(['result' => false]);
     }
+
+    /**
+     * @Route("/accept/candidature/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @param $idO
+     * @param $idE
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function acceptCandidature($idO, $idE, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->acceptCandidature($idO, $idE)
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
 }
