@@ -168,7 +168,7 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        $type = EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user'));
+        $type = $this->session->get('userType');
         if ($type == EntityManager::AUTO_ENTREPRENEUR || $type == EntityManager::PARTICULIER) {
             return $this->redirectToRoute('particulier_espace');
         }

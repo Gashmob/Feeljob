@@ -243,16 +243,16 @@ class HomeController extends AbstractController
     public function show($type): Response
     {
         switch ($type) {
-            case 'candidats':
+            case EntityManager::EMPLOYE:
                 return $this->render('home/candidats.html.twig');
 
-            case 'entreprises':
+            case EntityManager::EMPLOYEUR:
                 return $this->render('home/employeurs.html.twig');
 
-            case 'freelances':
+            case EntityManager::AUTO_ENTREPRENEUR:
                 return $this->render('home/freelances.html.twig');
 
-            case 'particuliers':
+            case EntityManager::PARTICULIER:
                 return $this->render('home/particuliers.html.twig');
 
             default:

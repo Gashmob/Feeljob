@@ -305,4 +305,31 @@ class AnnonceManager extends Manager
 
         return false;
     }
+
+    /**
+     * @param string $secteurActivite
+     * @param int $offset
+     * @param int $limit
+     * @return int[]
+     */
+    public function getAnnoncesBySecteurActivite(string $secteurActivite, $offset = 0, $limit = 25): array
+    {
+        $res = [];
+
+        $results = (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) RETURN id(a) AS id'))
+            ->setString('nom', $secteurActivite)
+            ->run()
+            ->getResult();
+
+        $i = 0;
+        foreach ($results as $result) {
+            if ($i < $offset + $limit && $i >= $offset) {
+                $res[] = $result['id'];
+            }
+
+            $i++;
+        }
+
+        return $res;
+    }
 }

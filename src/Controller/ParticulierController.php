@@ -171,7 +171,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        $type = EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user'));
+        $type = $this->session->get('userType');
         if ($type == EntityManager::EMPLOYEUR || $type == EntityManager::EMPLOYE) {
             return $this->redirectToRoute('entreprise_espace');
         }
@@ -196,7 +196,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::AUTO_ENTREPRENEUR) {
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -238,7 +238,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if (EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($this->session->get('user')) != EntityManager::PARTICULIER) {
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -287,6 +287,23 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig');
+    }
+
+    /**
+     * @Route("/annonces", name="particulier_annonces")
+     * @return Response|RedirectResponse
+     */
+    public function annonces()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('autoEntrepreneur/showOffresChantier.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
