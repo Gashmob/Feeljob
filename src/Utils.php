@@ -5,6 +5,9 @@ namespace App;
 
 
 use Exception;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 abstract class Utils
 {
@@ -13,7 +16,7 @@ abstract class Utils
      * @return string
      * @throws Exception
      */
-    private function randomString(int $n): string
+    private static function randomString(int $n): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -31,7 +34,7 @@ abstract class Utils
      * @return string
      * @throws Exception
      */
-    private function uploadImage(string $directory): string
+    public static function uploadImage(string $directory): string
     {
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé
@@ -83,9 +86,9 @@ abstract class Utils
      * @return string[]
      * @throws Exception
      */
-    public function passwordEncrypt(string $password): array
+    public static function passwordEncrypt(string $password): array
     {
-        $salt = $this->randomString(16);
+        $salt = self::randomString(16);
 
         return [
             'password' => password_hash(hash('sha512', $password . $salt), PASSWORD_BCRYPT, ['cost' => 12]),
@@ -99,8 +102,80 @@ abstract class Utils
      * @param string $passwordToVerify
      * @return bool
      */
-    public function passwordVerify(string $userPassword, string $userSalt, string $passwordToVerify): bool
+    public static function passwordVerify(string $userPassword, string $userSalt, string $passwordToVerify): bool
     {
         return password_verify(hash('sha512', $passwordToVerify . $userSalt), $userPassword);
+    }
+
+    /**
+     * @param MailerInterface $mailer
+     * @param string $email
+     * @param string $prenom
+     * @param string $nom
+     * @param int $id
+     * @return int
+     * @throws TransportExceptionInterface
+     */
+    public static function sendMailAndWait(MailerInterface $mailer, string $email, string $prenom, string $nom, int $id): int
+    {
+        $email = (new TemplatedEmail())
+            ->from('no-reply@fealjob.com')
+            ->to($email)
+            ->htmlTemplate('emails/verification.html.twig')
+            ->context([
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'id' => $id
+            ]);
+        $mailer->send($email);
+
+        return $id;
+    }
+
+    /**
+     *
+     * Author: semicolonworld
+     * Function Name: getDistance()
+     * $addressFrom => From address.
+     * $addressTo => To address.
+     * $unit => Unit type.
+     *
+     * @param string $addressFrom
+     * @param string $addressTo
+     * @param string $unit
+     * @return float
+     */
+    public static function getDistance(string $addressFrom, string $addressTo, string $unit = 'K'): float
+    {
+        //Change address format
+        $formattedAddrFrom = str_replace(' ','+',$addressFrom);
+        $formattedAddrTo = str_replace(' ','+',$addressTo);
+
+        //Send request and receive json data
+        $geocodeFrom = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.$formattedAddrFrom.'&sensor=false');
+        $outputFrom = json_decode($geocodeFrom);
+        $geocodeTo = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.$formattedAddrTo.'&sensor=false');
+        $outputTo = json_decode($geocodeTo);
+
+        //Get latitude and longitude from geo data
+        $latitudeFrom = $outputFrom->results[0]->geometry->location->lat;
+        $longitudeFrom = $outputFrom->results[0]->geometry->location->lng;
+        $latitudeTo = $outputTo->results[0]->geometry->location->lat;
+        $longitudeTo = $outputTo->results[0]->geometry->location->lng;
+
+        //Calculate distance from latitude and longitude
+        $theta = $longitudeFrom - $longitudeTo;
+        $dist = sin(deg2rad($latitudeFrom)) * sin(deg2rad($latitudeTo)) +  cos(deg2rad($latitudeFrom)) * cos(deg2rad($latitudeTo)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+        if ($unit == "K") {
+            return ($miles * 1.609344);
+        } else if ($unit == "N") {
+            return ($miles * 0.8684);
+        } else {
+            return $miles;
+        }
     }
 }

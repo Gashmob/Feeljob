@@ -4,7 +4,9 @@
 namespace App\Controller;
 
 
+use App\database\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +69,7 @@ class HomeController extends AbstractController
      * @param EntityManagerInterface $em
      * @return Response
      */
-    public function connexion(Request $request, EntityManagerInterface $em): Response // TODO : wait for dev-bdd
+    public function connexion(Request $request, EntityManagerInterface $em): Response
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -76,15 +78,15 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             $mail = $request->get('mail');
 
-            $user = EntityManager::getGenericUserFromMail($mail);
+            $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromMail($em, $mail);
             if ($user) {
                 if ($user->isVerifie()) {
                     $motdepasse = $request->get('motdepasse');
 
                     if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
                         $this->session->set('user', $user->getId());
-                        $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
-                        $this->session->set('userName', EntityManager::getNomPrenomFromId($user->getId(), $em)['prenom']);
+                        $this->session->set('userType', EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($user->getId()));
+                        $this->session->set('userName', $user->getPrenom());
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
@@ -116,6 +118,23 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/userspace", name="userSpace")
+     * @return RedirectResponse
+     */
+    public function userSpace(): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') == EntityManager::PARTICULIER || $this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('particulier_espace');
+        } else {
+            return $this->redirectToRoute('entreprise_espace');
+        }
+    }
+
+    /**
      * @Route("/mail_verifie", name="mailVerified")
      * @return Response
      */
@@ -133,27 +152,26 @@ class HomeController extends AbstractController
      * @return RedirectResponse|Response
      * @throws TransportExceptionInterface
      */
-    public function waitVerifEmail($id, Request $request, MailerInterface $mailer, EntityManagerInterface $em) // TODO : wait for dev-bdd
+    public function waitVerifEmail($id, Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
         if ($id === '') {
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getGenericUserFromId($id);
+        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $id);
         if ($user->isVerifie()) {
             return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
-            $nomPrenom = EntityManager::getNomPrenomFromId($id, $em);
             if ($user) {
                 $email = (new TemplatedEmail())
                     ->from('no-reply@fealjob.com')
                     ->to($user->getEmail())
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([
-                        'nom' => $nomPrenom['nom'],
-                        'prenom' => $nomPrenom['prenom'],
+                        'nom' => $user->getNom(),
+                        'prenom' => $user->getPrenom(),
                         'id' => $id
                     ]);
                 $mailer->send($email);
@@ -169,15 +187,16 @@ class HomeController extends AbstractController
     /**
      * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""})
      * @param $id
+     * @param EntityManagerInterface $em
      * @return RedirectResponse
      */
-    public function verifEmail($id): RedirectResponse // TODO : wait for dev-bdd
+    public function verifEmail($id, EntityManagerInterface $em): RedirectResponse
     {
         if ($id === '') {
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getGenericUserFromId($id);
+        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $id);
         if ($user) {
             $user->setVerifie(true);
             $user->flush();
@@ -216,7 +235,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/confidentiality", name="confidentiality")
+     * @Route("/confidentialite", name="confidentiality")
      * @return Response
      */
     public function confidentiality(): Response
@@ -234,23 +253,23 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/show/{type}", name="show")
+     * @Route("/voir/{type}", name="show")
      * @param $type
      * @return Response
      */
     public function show($type): Response
     {
         switch ($type) {
-            case 'candidats':
+            case EntityManager::EMPLOYE:
                 return $this->render('home/candidats.html.twig');
 
-            case 'entreprises':
+            case EntityManager::EMPLOYEUR:
                 return $this->render('home/employeurs.html.twig');
 
-            case 'freelances':
+            case EntityManager::AUTO_ENTREPRENEUR:
                 return $this->render('home/freelances.html.twig');
 
-            case 'particuliers':
+            case EntityManager::PARTICULIER:
                 return $this->render('home/particuliers.html.twig');
 
             default:
