@@ -329,3 +329,35 @@
     margin: 0;
     line-height: 1.3em;
 }
+
+.inscriptionChoiceCard {
+    height: 200px !important;
+    width: 280px !important;
+}
+
+.column.inscriptionChoiceCard .choiceCardBtn {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+}
+
+.choiceCardBtn i {
+    margin: 0 !important;
+}
+
+.choiceCardBtn .topIcon {
+    margin-bottom: .7rem !important;
+}
+
+.choiceCardBtn .bottomIcon {
+    margin-top: .7rem !important;
+}
+
