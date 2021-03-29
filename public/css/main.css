@@ -171,6 +171,9 @@
 
     #nav.menu {
         font-size: 1.2em;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
         flex-direction: column;
         position: fixed;
         height: 100vh;
@@ -185,7 +188,12 @@
     #nav .right {
         margin: 0 !important;
         padding: 0 !important;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
         flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
         align-items: flex-start;
     }
 
@@ -265,7 +273,6 @@
 .card.homeCard {
     background-color: #fafbfc;
     -webkit-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
-    -moz-box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
     box-shadow: 6px 8px 15px 0px rgba(82, 82, 82, 0.5) !important;
 }
 
@@ -336,11 +343,21 @@
 }
 
 .column.inscriptionChoiceCard .choiceCardBtn {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
     text-align: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     height: 100%;
     width: 100%;
@@ -360,4 +377,3 @@
 .choiceCardBtn .bottomIcon {
     margin-top: .7rem !important;
 }
-
