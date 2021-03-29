@@ -117,6 +117,15 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/inscription")
+     * @return Response
+     */
+    public function inscription(): Response
+    {
+        return $this->render('home/choixInscription.html.twig');
+    }
+
+    /**
      * @Route("/mail_verifie", name="mailVerified")
      * @return Response
      */
