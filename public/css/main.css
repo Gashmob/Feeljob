@@ -368,11 +368,11 @@
 }
 
 .particulierCard {
-    background-color: #21ba2b !important;
+    /*background-color: #21ba2b !important;*/
 }
 
 .particulierCard:hover {
-    background-color: #1da526 !important;
+    /*background-color: #1da526 !important;*/
 }
 
 .entrepriseCard {
