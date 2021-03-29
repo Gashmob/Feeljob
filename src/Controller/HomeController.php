@@ -37,24 +37,6 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/insc", name="inscription")
-     * @return Response
-     */
-    public function insc(): Response
-    {
-        return $this->render('home/inscription.html.twig');
-    }
-
-    /**
-     * @Route("/insc2", name="inscription2")
-     * @return Response
-     */
-    public function insc2(): Response
-    {
-        return $this->render('home/choixInscription.html.twig');
-    }
-
-    /**
      * @Route("/", name="homepage")
      * @return Response
      */

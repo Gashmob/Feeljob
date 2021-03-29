@@ -1,5 +1,5 @@
 {% extends 'init.html.twig' %}
-{% block title %}Inscription{% endblock %}
+{% block title %}Inscription Candidats/Entreprises{% endblock %}
 {% block body %}
     <style type="text/css">
         body {
@@ -56,216 +56,10 @@
             <div class="row">
                 <div class="ui container vertical segment left aligned">
                     <div class="ui top attached tabular menu">
-                        <a class="item active" data-tab="first">Particulier</a>
-                        <a class="item" data-tab="second">Freelance</a>
-                        <a class="item" data-tab="third">Candidat</a>
-                        <a class="item" data-tab="fourth">Employeur</a>
+                        <a class="item active" data-tab="first">Candidat</a>
+                        <a class="item" data-tab="second">Entreprise</a>
                     </div>
-                    <div class="ui bottom attached tab segment active" data-tab="first">
-                        <div class="ui vertical segment form--segment">
-                            <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte
-                                    Particulier</h3>
-                                <form class="ui form" method="post" style="width: 100%;">
-                                    <div class="two fields">
-                                        <div class="required field">
-                                            <label>Prénom</label>
-                                            <input type="text" name="prenom" placeholder="Prénom" required>
-                                        </div>
-                                        <div class="required field">
-                                            <label>Nom</label>
-                                            <input type="text" name="nom" placeholder="Nom" required>
-                                        </div>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Adresse e-mail</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon envelope"></i>
-                                            <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text"
-                                                   name="mail" placeholder="@mail.fr" required>
-                                        </div>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Mot de passe</label>
-                                        <div class="ui right labeled left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" id="mdpP" onkeyup="checkField(this, regexMdp)"
-                                                   name="motdepasse" placeholder="Mot de passe"
-                                                   required>
-                                            <div style="cursor: pointer" class="ui basic label"
-                                                 onclick="showPsswd(this, 'mdpP')">
-                                                <i style="margin: 0;" class="icon eye slash link"></i>
-                                            </div>
-                                        </div>
-                                        <!--<div style="padding: 1em;" class="ui pointing label">
-                                            <li>8 caractères min</li>
-                                            <li>1 chiffre min</li>
-                                        </div>-->
-                                    </div>
-                                    <div class="required field">
-                                        <label>Répéter le mot de passe</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpP')"
-                                                   name="motdepasse2" placeholder="Mot de passe"
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="ui divider"></div>
-                                    <div class="required inline field">
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" name="conditions" class="hidden" required>
-                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
-                                        </div>
-                                    </div>
-                                    <button class="ui large green fluid submit button" type="submit" name="tab"
-                                            value="candidat">
-                                        Valider
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ui bottom attached tab segment" data-tab="second">
-                        <div class="ui vertical segment form--segment">
-                            <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte
-                                    Freelance</h3>
-                                <form class="ui form" method="post" style="width: 100%;" enctype="multipart/form-data">
-                                    <div class="two fields">
-                                        <div class="required field">
-                                            <label>Prénom</label>
-                                            <input type="text" name="prenom" placeholder="Prénom" required>
-                                        </div>
-                                        <div class="required field">
-                                            <label>Nom</label>
-                                            <input type="text" name="nom" placeholder="Nom" required>
-                                        </div>
-                                    </div>
-                                    <div class="two fields">
-                                        <div class="required field">
-                                            <label>Nom de l'entreprise</label>
-                                            <input type="text" name="nomEntreprise" placeholder="Nom entreprise"
-                                                   required>
-                                        </div>
-                                        <div class="field">
-                                            <label>Logo de l'entreprise</label>
-                                            <label class="ui teal basic button" for="ae-logo">
-                                                <i class="paperclip icon"></i>
-                                                <span id="ae-label">Logo de l'entreprise</span>
-                                                <input type="file" style="display: none;" id="ae-logo" name="logo">
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label>Adresse de l'entreprise</label>
-                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
-                                    </div>
-                                    <div class="required field">
-                                        <label>N° de Siret</label>
-                                        <div>
-                                            <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
-                                                   placeholder="N° Siret" required min="9">
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label>Secteur d'activité</label>
-                                        <div class="ui selection dropdown">
-                                            <input type="hidden" name="activite">
-                                            <div class="default text">Secteur</div>
-                                            <i class="dropdown icon"></i>
-                                            <div class="menu">
-                                                {# {% for secteur in secteurActivites %}
-                                                    <div class="item" data-value="{{ secteur }}">
-                                                        {{ secteur }}
-                                                    </div>
-                                                {% endfor %} #}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label>Descriptif de l'entreprise</label>
-                                        <textarea name="description" rows="4"
-                                                  placeholder="Une description de votre entreprise."></textarea>
-                                    </div>
-                                    <div class="field">
-                                        <label>Zone géographique</label>
-                                        <div class="ui selection dropdown">
-                                            <input type="hidden" name="zone-geographique">
-                                            <div class="default text">Zone</div>
-                                            <i class="dropdown icon"></i>
-                                            <div class="menu">
-                                                <div class="item" data-value="savoie">
-                                                    Savoie
-                                                </div>
-                                                <div class="item" data-value="hsavoie">
-                                                    Haute Savoie
-                                                </div>
-                                                <div class="item" data-value="autre">
-                                                    Autre
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="two fields">
-                                        <div class="required field">
-                                            <label>Adresse e-mail</label>
-                                            <div class="ui left icon input">
-                                                <i class="icon envelope"></i>
-                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
-                                                       type="text" name="mail" placeholder="@mail.fr" required>
-                                            </div>
-                                        </div>
-                                        <div class="required field">
-                                            <label>Téléphone</label>
-                                            <div class="ui left icon input">
-                                                <i class="icon phone"></i>
-                                                <input type="text" onkeyup="checkField(this, regexPhone)"
-                                                       name="telephone" placeholder="Téléphone" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Mot de passe</label>
-                                        <div class="ui right labeled left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)"
-                                                   name="motdepasse" placeholder="Mot de passe"
-                                                   required>
-                                            <div style="cursor: pointer" class="ui basic label"
-                                                 onclick="showPsswd(this, 'mdpA')">
-                                                <i style="margin: 0;" class="icon eye slash link"></i>
-                                            </div>
-                                        </div>
-                                        <div style="padding: 1em;" class="ui pointing label">
-                                            <li>8 caractères min</li>
-                                            <li>1 chiffre min</li>
-                                        </div>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Répéter le mot de passe</label>
-                                        <div class="ui left icon input">
-                                            <i class="icon lock"></i>
-                                            <input type="password" onkeyup="comparePass(this, 'mdpA')"
-                                                   name="motdepasse2" placeholder="Mot de passe"
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="ui divider"></div>
-                                    <div class="required inline field">
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" name="conditions" class="hidden" required>
-                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
-                                        </div>
-                                    </div>
-                                    <button class="ui large green fluid submit button" type="submit"
-                                            value="auto" name="tab">Valider
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ui bottom attached tab segment" data-tab="third">
+                    <div class="ui bottom attached tab segment" data-tab="first">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
                                 <h3 class="ui header center aligned" style="width: 100%;">Création compte Candidat</h3>
@@ -337,10 +131,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ui bottom attached tab segment" data-tab="fourth">
+                    <div class="ui bottom attached tab segment" data-tab="second">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
-                                <h3 class="ui header center aligned" style="width: 100%;">Création compte Employeur</h3>
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte Entreprise</h3>
                                 <form class="ui form" method="post" style="width: 100%;" enctype="multipart/form-data">
                                     <div class="two fields">
                                         <div class="required field">
