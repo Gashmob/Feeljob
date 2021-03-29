@@ -154,7 +154,7 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('home/inscriptionParticulierFreelance.html.twig', [
-            'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAll(),
+            'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAllNames(),
             'particulier' => EntityManager::PARTICULIER,
             'auto_entrepreneur' => EntityManager::AUTO_ENTREPRENEUR
         ]);

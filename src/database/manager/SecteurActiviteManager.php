@@ -97,4 +97,19 @@ class SecteurActiviteManager extends Manager
             ->setInteger('id', $id)
             ->run();
     }
+
+    /**
+     * @return string[]
+     */
+    public function findAllNames(): array
+    {
+        $res = [];
+        $results = $this->findAll();
+
+        foreach ($results as $result) {
+            $res[] = $result['s']['nom'];
+        }
+
+        return $res;
+    }
 }
