@@ -117,7 +117,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/inscription")
+     * @Route("/inscription", name="inscription")
      * @return Response
      */
     public function inscription(): Response
