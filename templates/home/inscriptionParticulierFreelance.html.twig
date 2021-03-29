@@ -83,6 +83,14 @@
                                                    name="email" placeholder="@mail.fr" required>
                                         </div>
                                     </div>
+                                    <div class="field">
+                                        <label>Téléphone</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon phone"></i>
+                                            <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
+                                                   placeholder="Téléphone">
+                                        </div>
+                                    </div>
                                     <div class="required field mdpPop">
                                         <label>Mot de passe</label>
                                         <div class="ui right labeled left icon input">
@@ -109,8 +117,9 @@
                                     <div class="required inline field">
                                         <div class="ui checkbox">
                                             <input type="checkbox" name="conditions" class="hidden" required>
-                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                            <label>J'accepte les conditions d'utilisation</label>
                                         </div>
+                                        <a href="{{ path('conditions') }}">Voir ici</a>
                                     </div>
                                     <button class="ui large green fluid submit button" type="submit" name="tab"
                                             value="{{ particulier }}">
@@ -236,8 +245,9 @@
                                     <div class="required inline field">
                                         <div class="ui checkbox">
                                             <input type="checkbox" name="conditions" class="hidden" required>
-                                            <label>J'accepte les <a>conditions d'utilisation</a></label>
+                                            <label>J'accepte les conditions d'utilisation</label>
                                         </div>
+                                        <a href="{{ path('conditions') }}">Voir ici</a>
                                     </div>
                                     <button class="ui large green fluid submit button" type="submit"
                                             value="{{ auto_entrepreneur }}" name="tab">Valider
