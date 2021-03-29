@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\OffreEmploiManager;
 use App\Entity\CV;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +50,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->candidate($id, $this->session->get('user'))
+                'result' => (new OffreEmploiManager())->candidate($id, $this->session->get('user'))
             ]);
         }
 
@@ -73,9 +74,8 @@ class AjaxEntrepriseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->uncandidate($id, $this->session->get('user'))
-            ]);
+            (new OffreEmploiManager())->uncandidate($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
         }
 
         return $this->json(['result' => false]);
@@ -100,7 +100,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->propose($idO, $idE)
+                'result' => (new OffreEmploiManager())->propose($idO, $idE)
             ]);
         }
 
@@ -125,9 +125,8 @@ class AjaxEntrepriseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->removeProposition($idO, $idE)
-            ]);
+            (new OffreEmploiManager())->removeProposition($idO, $idE);
+            return $this->json(['result' => true]);
         }
 
         return $this->json(['result' => false]);
@@ -151,7 +150,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->acceptProposition($id, $this->session->get('user'))
+                'result' => (new OffreEmploiManager())->acceptProposition($id, $this->session->get('user'))
             ]);
         }
 
@@ -177,7 +176,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->acceptCandidature($idO, $idE)
+                'result' => (new OffreEmploiManager())->acceptCandidature($idO, $idE)
             ]);
         }
 
@@ -202,7 +201,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'candidatures' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->getCandidature($em, $this->session->get('user'))
+                'candidatures' => (new OffreEmploiManager())->getCandidature($em, $this->session->get('user'))
             ]);
         }
 
@@ -227,7 +226,7 @@ class AjaxEntrepriseController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'propositions' => EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->getPropositions($em, $this->session->get('user'))
+                'propositions' => (new OffreEmploiManager())->getPropositions($em, $this->session->get('user'))
             ]);
         }
 
@@ -308,8 +307,7 @@ class AjaxEntrepriseController extends AbstractController
         if ($request->isMethod('POST')) {
             return $this->json([
                 'offres' => array_slice(
-                    EntityManager::getRepository(EntityManager::OFFRE_EMPLOI)->findOffreEmploiByTypeContratFromPreResult(
-                        $em,
+                    (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
                         $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravail($salaire, $heures, $loge, $deplacement, $teletravail),
                         $typeContrat),
                     $offset,

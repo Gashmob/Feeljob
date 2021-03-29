@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\UtilsManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,14 +61,14 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             $mail = $request->get('mail');
 
-            $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromMail($em, $mail);
+            $user = (new UtilsManager())->getUserFromMail($em, $mail);
             if ($user) {
-                if ($user->isVerifie()) {
+                if ($user->getVerifie()) {
                     $motdepasse = $request->get('motdepasse');
 
                     if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
-                        $this->session->set('user', $user->getId());
-                        $this->session->set('userType', EntityManager::getRepository(EntityManager::UTILS)->getUserTypeFromId($user->getId()));
+                        $this->session->set('user', $user->getIdentity());
+                        $this->session->set('userType', (new UtilsManager())->getUserTypeFromId($user->getIdentity()));
                         $this->session->set('userName', $user->getPrenom());
 
                         $this->addFlash('success', 'Vous êtes connecté !');
@@ -135,24 +136,6 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/mdpOublie", name="mdpOublie")
-     * @return Response
-     */
-    public function mdpOublie(): Response
-    {
-        return $this->render('home/mdpOublie.html.twig');
-    }
-
-    /**
-     * @Route("/reinitialiserMdp", name="mdpReinitialiser")
-     * @return Response
-     */
-    public function mdpReinitialiser(): Response
-    {
-        return $this->render('home/mdpReinitialiser.html.twig');
-    }
-
-    /**
      * @Route("/verification/{id}", name="waitVerifEmail", defaults={"id"=""})
      * @param $id
      * @param Request $request
@@ -167,8 +150,8 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $id);
-        if ($user->isVerifie()) {
+        $user = (new UtilsManager())->getUserFromId($em, $id);
+        if ($user->getVerifie()) {
             return $this->redirectToRoute('userSpace');
         }
 
@@ -205,10 +188,10 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $id);
+        $user = (new UtilsManager())->getUserFromId($em, $id);
         if ($user) {
             $user->setVerifie(true);
-            $user->flush();
+            $em->flush();
 
             return $this->redirectToRoute('mailVerified');
         }
@@ -284,5 +267,31 @@ class HomeController extends AbstractController
             default:
                 return $this->render('@Twig/Exception/error404.html.twig');
         }
+    }
+
+    /**
+     * @Route("/mdp_oublie", name="mdpOublie")
+     * @return Response|RedirectResponse
+     */
+    public function mdpOublie()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('home/mdpOublie.html.twig');
+    }
+
+    /**
+     * @Route("/reinitialiser_mdp", name="mdpReinitialiser")
+     * @return Response|RedirectResponse
+     */
+    public function mdpReinitialiser()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('home/mdpReinitialiser.html.twig');
     }
 }

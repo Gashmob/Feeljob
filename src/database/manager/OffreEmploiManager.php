@@ -363,12 +363,11 @@ class OffreEmploiManager extends Manager
     }
 
     /**
-     * @param EntityManagerInterface $em
      * @param OffreEmploi[] $preResult
      * @param string $typeContrat
      * @return OffreEmploi[]
      */
-    public function findOffreEmploiByTypeContratFromPreResult(EntityManagerInterface $em, array $preResult, string $typeContrat): array
+    public function findOffreEmploiByTypeContratFromPreResult(array $preResult, string $typeContrat): array
     {
         $res = [];
         foreach ($preResult as $result) {
