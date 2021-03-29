@@ -15,8 +15,8 @@
                     <a href="{{ path('show', {type:'particuliers'}) }}" class="item">Particuliers</a>
                     <div class="right item">
                         <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
-                        {# <a href="{{ path('inscription') }}" style="margin-left:0.5em"
-                               class="ui inverted button" role="button">Inscription</a> #}
+                        <a href="{{ path('inscription') }}" style="margin-left:0.5em"
+                               class="ui inverted button" role="button">Inscription</a>
                     </div>
                 {% endif %}
             </div>
@@ -29,27 +29,6 @@
         </div>
         <div style="z-index: 2; padding-top: 160px;"
              class="ui centered stackable cards container">
-            <div class="ui card homeCard">
-                <div class="content headerContent">
-                    <div class="header">Entreprises
-                        <i class="icon arrows alternate horizontal"></i>
-                        Candidats</div>
-                    <div class="meta">
-                        <span class="date">Trouvez le candidat idéal</span>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
-                        ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
-                        repellendus repudiandae sed suscipit temporibus voluptate.
-                    </div>
-                </div>
-                <div class="ui bottom attached green button">
-                    En savoir plus
-                    <i class="right arrow icon"></i>
-                </div>
-            </div>
             <div class="ui card homeCard">
                 <div class="content headerContent">
                     <div class="header">Freelances
@@ -66,11 +45,33 @@
                         repellendus repudiandae sed suscipit temporibus voluptate.
                     </div>
                 </div>
-                <div class="ui bottom attached green icon button">
+                <a href="{{ path('particulier_inscription') }}" class="ui bottom attached green icon button">
                     En savoir plus
                     <i class="right arrow icon"></i>
-                </div>
+                </a>
             </div>
+            <div class="ui card homeCard">
+                <div class="content headerContent">
+                    <div class="header">Entreprises
+                        <i class="icon arrows alternate horizontal"></i>
+                        Candidats</div>
+                    <div class="meta">
+                        <span class="date">Trouvez le candidat idéal</span>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="description">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
+                        ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
+                        repellendus repudiandae sed suscipit temporibus voluptate.
+                    </div>
+                </div>
+                <a href="{{ path('entreprise_inscription') }}" class="ui bottom attached green button">
+                    En savoir plus
+                    <i class="right arrow icon"></i>
+                </a>
+            </div>
+
         </div>
         <svg style="z-index: 0;position: absolute; bottom: 0; left: 0; right: 0;"
              xmlns="http://www.w3.org/2000/svg"

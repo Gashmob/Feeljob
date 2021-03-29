@@ -135,6 +135,24 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/mdpOublie", name="mdpOublie")
+     * @return Response
+     */
+    public function mdpOublie(): Response
+    {
+        return $this->render('home/mdpOublie.html.twig');
+    }
+
+    /**
+     * @Route("/reinitialiserMdp", name="mdpReinitialiser")
+     * @return Response
+     */
+    public function mdpReinitialiser(): Response
+    {
+        return $this->render('home/mdpReinitialiser.html.twig');
+    }
+
+    /**
      * @Route("/verification/{id}", name="waitVerifEmail", defaults={"id"=""})
      * @param $id
      * @param Request $request

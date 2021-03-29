@@ -1,5 +1,5 @@
 {% extends 'init.html.twig' %}
-{% block title %}Connexion{% endblock %}
+{% block title %}Mot de passe oublié{% endblock %}
 {% block body %}
     <style type="text/css">
         body {
@@ -32,7 +32,7 @@
             <h2 class="ui green image header">
                 <img src="{{ asset('img/FJ200.png') }}" class="image">
                 <div class="content">
-                    Connexion
+                    Mot de passe oublié
                 </div>
             </h2>
             <form class="ui large form" method="post">
@@ -43,29 +43,23 @@
                             <input type="text" name="mail" autocomplete="username" placeholder="Adresse e-mail">
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="ui right labeled left icon input">
-                            <i class="icon lock"></i>
-                            <input id="psswdCo" type="password" name="motdepasse" autocomplete="current-password"
-                                   placeholder="Mot de passe">
-                            <div style="cursor: pointer" class="ui basic label" onclick="showPsswd(this, 'psswdCo')">
-                                <i style="margin: 0;" class="icon eye slash link"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="ui large green fluid submit button" type="submit" value="auto">Se connecter</button>
+                    <button class="ui large green fluid submit button" type="submit" value="auto">Envoyer par mail
+                    </button>
                     <div class="ui divider"></div>
                     <div>
                         Vous ne possédez pas de compte?
                         <a href="{{ path('inscription') }}">Inscrivez-vous</a>
                         <br>
-                        <a href="{{ path('mdpOublie') }}">J'ai oublié mon mot de passe.</a>
+                        <a href="{{ path('connexion') }}">Se connecter.</a>
                     </div>
                 </div>
                 <div class="ui negative message transition hidden">
                     <i class="close icon"></i>
                     <div class="header">
                         Oups !
+                    </div>
+                    <div class="content2">
+                        Aucun compte trouvé avec cette adresse.
                     </div>
                     <div class="content">
                         {% for message in app.flashes('form') %}
@@ -78,20 +72,4 @@
             </form>
         </div>
     </div>
-{% endblock %}
-{% block javascripts %}
-    <script>
-        //Oeil mdp
-        function showPsswd(obj, psswdfield) {
-            psswdfield = document.getElementById(psswdfield)
-            let eyeIcon = obj.getElementsByTagName('i')[0]
-            if (eyeIcon.classList.contains('slash')) {
-                eyeIcon.classList.remove('slash');
-                psswdfield.type = 'text';
-            } else {
-                eyeIcon.classList.add('slash');
-                psswdfield.type = 'password';
-            }
-        };
-    </script>
 {% endblock %}

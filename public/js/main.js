@@ -53,7 +53,7 @@ function menuDisplay() {
     var delay = 80
 
     for (let i = 0; i < navList.length; i++) {
-        setTimeout( function() {
+        setTimeout(function () {
             navList[i].classList.toggle('nav-item-display')
         }, delay)
         delay += 80

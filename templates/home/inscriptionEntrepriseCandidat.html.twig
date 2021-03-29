@@ -59,7 +59,7 @@
                         <a class="item active" data-tab="first">Candidat</a>
                         <a class="item" data-tab="second">Entreprise</a>
                     </div>
-                    <div class="ui bottom attached tab segment" data-tab="first">
+                    <div class="ui bottom attached tab segment active" data-tab="first">
                         <div class="ui vertical segment form--segment">
                             <div class="ui container stackable middle aligned grid">
                                 <h3 class="ui header center aligned" style="width: 100%;">Création compte Candidat</h3>
@@ -82,15 +82,15 @@
                                                    name="email" placeholder="@mail.fr" required>
                                         </div>
                                     </div>
-                                    <div class="required field">
+                                    <div class="field">
                                         <label>Téléphone</label>
                                         <div class="ui left icon input">
                                             <i class="icon phone"></i>
                                             <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
-                                                   placeholder="Téléphone" required>
+                                                   placeholder="Téléphone">
                                         </div>
                                     </div>
-                                    <div class="required field">
+                                    <div class="required field mdpPop">
                                         <label>Mot de passe</label>
                                         <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
@@ -102,10 +102,6 @@
                                                 <i style="margin: 0;" class="icon eye slash link"></i>
                                             </div>
                                         </div>
-                                        <!--<div style="padding: 1em;" class="ui pointing label">
-                                            <li>8 caractères min</li>
-                                            <li>1 chiffre min</li>
-                                        </div>-->
                                     </div>
                                     <div class="required field">
                                         <label>Répéter le mot de passe</label>
@@ -166,11 +162,21 @@
                                         <label>Adresse de l'entreprise</label>
                                         <input type="text" name="adresse" placeholder="Adresse entreprise">
                                     </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Ville</label>
+                                            <input type="text" name="adresse" placeholder="Ville">
+                                        </div>
+                                        <div class="field">
+                                            <label>Code postal</label>
+                                            <input type="text" name="adresse" placeholder="Code postal">
+                                        </div>
+                                    </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
                                         <div>
                                             <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
-                                                   placeholder="N° Siret" required min="9">
+                                                   placeholder="N° Siret" required min="14" max="14">
                                         </div>
                                     </div>
                                     <div class="field">
@@ -180,11 +186,11 @@
                                             <div class="default text">Secteur</div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
-                                                {# {% for secteur in secteurActivites %}
+                                                {% for secteur in secteurActivites %}
                                                     <div class="item" data-value="{{ secteur }}">
                                                         {{ secteur }}
                                                     </div>
-                                                {% endfor %} #}
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </div>
@@ -192,25 +198,6 @@
                                         <label>Descriptif de l'entreprise</label>
                                         <textarea rows="4" name="description"
                                                   placeholder="Une description de votre entreprise."></textarea>
-                                    </div>
-                                    <div class="field">
-                                        <label>Zone géographique</label>
-                                        <div class="ui selection dropdown">
-                                            <input type="hidden" name="zone-geographique">
-                                            <div class="default text">Zone</div>
-                                            <i class="dropdown icon"></i>
-                                            <div class="menu">
-                                                <div class="item" data-value="savoie">
-                                                    Savoie
-                                                </div>
-                                                <div class="item" data-value="hsavoie">
-                                                    Haute Savoie
-                                                </div>
-                                                <div class="item" data-value="autre">
-                                                    Autre
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="two fields">
                                         <div class="required field">
@@ -221,16 +208,16 @@
                                                        type="text" name="email" placeholder="@mail.fr" required>
                                             </div>
                                         </div>
-                                        <div class="required field">
+                                        <div class="field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
                                                 <input type="text" onkeyup="checkField(this, regexPhone)"
-                                                       name="telephone" placeholder="Téléphone" required>
+                                                       name="telephone" placeholder="Téléphone">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="required field">
+                                    <div class="required field mdpPop">
                                         <label>Mot de passe</label>
                                         <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
@@ -241,10 +228,6 @@
                                                  onclick="showPsswd(this, 'mdpE')">
                                                 <i style="margin: 0;" class="icon eye slash link"></i>
                                             </div>
-                                        </div>
-                                        <div style="padding: 1em;" class="ui pointing label">
-                                            <li>8 caractères min</li>
-                                            <li>1 chiffre min</li>
                                         </div>
                                     </div>
                                     <div class="required field">
@@ -315,15 +298,18 @@
                 psswdfield.type = 'password';
             }
         };
-        $('#ae-logo').change(function () {
-            var i = $(this).prev('label').clone();
-            var file = $('#ae-logo')[0].files[0].name;
-            $('#ae-label').text(file);
-        });
+
         $('#employeur-logo').change(function () {
             var i = $(this).prev('label').clone();
             var file = $('#employeur-logo')[0].files[0].name;
             $('#employeur-label').text(file);
         });
+
+        $('.mdpPop')
+            .popup({
+                content : '8 caractères min dont 1 chiffre',
+                on    : 'click'
+            })
+        ;
     </script>
 {% endblock %}

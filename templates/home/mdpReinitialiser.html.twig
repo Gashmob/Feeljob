@@ -1,5 +1,5 @@
 {% extends 'init.html.twig' %}
-{% block title %}Connexion{% endblock %}
+{% block title %}Réinitialiser le mot de passe{% endblock %}
 {% block body %}
     <style type="text/css">
         body {
@@ -32,35 +32,35 @@
             <h2 class="ui green image header">
                 <img src="{{ asset('img/FJ200.png') }}" class="image">
                 <div class="content">
-                    Connexion
+                    Changer de mot de passe
                 </div>
             </h2>
             <form class="ui large form" method="post">
-                <div class="ui stacked segment">
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="user icon"></i>
-                            <input type="text" name="mail" autocomplete="username" placeholder="Adresse e-mail">
-                        </div>
-                    </div>
-                    <div class="field">
+                <div class="ui stacked segment left aligned">
+                    <div class="required field mdpPop">
+                        <label>Nouveau mot de passe</label>
                         <div class="ui right labeled left icon input">
                             <i class="icon lock"></i>
-                            <input id="psswdCo" type="password" name="motdepasse" autocomplete="current-password"
-                                   placeholder="Mot de passe">
-                            <div style="cursor: pointer" class="ui basic label" onclick="showPsswd(this, 'psswdCo')">
+                            <input type="password" id="mdp" onkeyup="checkField(this, regexMdp)"
+                                   name="motdepasse" placeholder="Mot de passe"
+                                   required>
+                            <div style="cursor: pointer" class="ui basic label"
+                                 onclick="showPsswd(this, 'mdp')">
                                 <i style="margin: 0;" class="icon eye slash link"></i>
                             </div>
                         </div>
                     </div>
-                    <button class="ui large green fluid submit button" type="submit" value="auto">Se connecter</button>
-                    <div class="ui divider"></div>
-                    <div>
-                        Vous ne possédez pas de compte?
-                        <a href="{{ path('inscription') }}">Inscrivez-vous</a>
-                        <br>
-                        <a href="{{ path('mdpOublie') }}">J'ai oublié mon mot de passe.</a>
+                    <div class="required field">
+                        <label>Répéter le mot de passe</label>
+                        <div class="ui left icon input">
+                            <i class="icon lock"></i>
+                            <input type="password" onkeyup="comparePass(this, 'mdp')"
+                                   name="motdepasse2" placeholder="Mot de passe"
+                                   required>
+                        </div>
                     </div>
+                    <button class="ui large green fluid submit button" type="submit" value="auto">Confirmer
+                    </button>
                 </div>
                 <div class="ui negative message transition hidden">
                     <i class="close icon"></i>
@@ -81,6 +81,25 @@
 {% endblock %}
 {% block javascripts %}
     <script>
+        const regexMdp = /^(?=.*[a-z])(?=.*[0-9]).{8,}$/
+
+        function checkField(sender, model) {
+            if (!sender.value.match(model)) {
+                sender.parentNode.parentNode.classList.add('error')
+            } else {
+                sender.parentNode.parentNode.classList.remove('error')
+            }
+        }
+
+        function comparePass(sender, model) {
+            model = document.getElementById(model).value
+            if (sender.value != model) {
+                sender.parentNode.parentNode.classList.add('error')
+            } else {
+                sender.parentNode.parentNode.classList.remove('error')
+            }
+        }
+
         //Oeil mdp
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
