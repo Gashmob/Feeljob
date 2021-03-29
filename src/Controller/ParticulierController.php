@@ -5,6 +5,11 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\AnnonceManager;
+use App\database\manager\AutoEntrepreneurManager;
+use App\database\manager\ParticulierManager;
+use App\database\manager\SecteurActiviteManager;
+use App\database\manager\UtilsManager;
 use App\Entity\Adresse;
 use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
@@ -113,7 +118,7 @@ class ParticulierController extends AbstractController
                             ->setSiret($siret)
                             ->setDescription($description);
 
-                        EntityManager::getRepository(EntityManager::AUTO_ENTREPRENEUR)->create($em, $auto_entrepreneur, $secteurActivite);
+                        (new AutoEntrepreneurManager())->create($em, $auto_entrepreneur, $secteurActivite);
 
                         Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
@@ -142,7 +147,7 @@ class ParticulierController extends AbstractController
                             ->setSel($data['sel'])
                             ->setAdresse($adresse);
 
-                        EntityManager::getRepository(EntityManager::PARTICULIER)->create($em, $particulier);
+                        (new ParticulierManager())->create($em, $particulier);
 
                         Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
@@ -154,7 +159,7 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('home/inscriptionParticulierFreelance.html.twig', [
-            'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAllNames(),
+            'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
             'particulier' => EntityManager::PARTICULIER,
             'auto_entrepreneur' => EntityManager::AUTO_ENTREPRENEUR
         ]);
@@ -176,7 +181,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('entreprise_espace');
         }
 
-        $user = EntityManager::getRepository(EntityManager::UTILS)->getUserFromId($em, $this->session->get('user'));
+        $user = (new UtilsManager())->getUserFromId($em, $this->session->get('user'));
 
         return $this->render('home/profil.html.twig', [
             'nom' => $user->getNom(),
@@ -279,7 +284,7 @@ class ParticulierController extends AbstractController
                     ->setAdresse($adresse)
                     ->setDate($date);
 
-                EntityManager::getRepository(EntityManager::ANNONCE)->create($em, $annonce, $this->session->get('user'), $secteurActivite);
+                (new AnnonceManager())->create($em, $annonce, $this->session->get('user'), $secteurActivite);
                 $this->addFlash('success', 'Votre annonce a été publiée !');
 
                 return $this->redirectToRoute('userSpace');
@@ -365,7 +370,7 @@ class ParticulierController extends AbstractController
         if (!$validator->isValid($mail, $multipleValidations)) {
             $mailB = false;
             $this->addFlash('email', 'Merci de renseigner une adresse mail valide');
-        } elseif (!EntityManager::getRepository(EntityManager::UTILS)->isMailNotUsed($em, $mail)) {
+        } elseif (!(new UtilsManager())->isMailNotUsed($em, $mail)) {
             $mailB = false;
             $this->addFlash('email', 'Cet email est déjà utilisé');
         }
@@ -399,9 +404,9 @@ class ParticulierController extends AbstractController
             $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
         }
 
-        $res['rue'] = $request->get('rue');
-        $res['code_postal'] = $request->get('code_postal');
-        $res['ville'] = $request->get('ville');
+        $res['rue'] = $request->get('rue') == null ? '' : $request->get('rue');
+        $res['code_postal'] = $request->get('code_postal') == null ? '' : $request->get('code_postal');
+        $res['ville'] = $request->get('ville') == null ? '' : $request->get('ville');
 
 
         $res['ok'] = $prenomB && $nomB && $telephoneB & $mailB && $motdepasseB && $conditionsB;

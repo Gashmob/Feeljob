@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\AnnonceManager;
 use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +50,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->candidate($id, $this->session->get('user'))
+                'result' => (new AnnonceManager())->candidate($id, $this->session->get('user'))
             ]);
         }
 
@@ -73,9 +74,8 @@ class AjaxParticulierController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->uncandidate($id, $this->session->get('user'))
-            ]);
+            (new AnnonceManager())->uncandidate($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
         }
 
         return $this->json(['result' => false]);
@@ -100,7 +100,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->propose($idAnn, $idAuto)
+                'result' => (new AnnonceManager())->propose($idAnn, $idAuto)
             ]);
         }
 
@@ -125,9 +125,8 @@ class AjaxParticulierController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->removeProposition($idAnn, $idAuto)
-            ]);
+            (new AnnonceManager())->removeProposition($idAnn, $idAuto);
+            return $this->json(['result' => true]);
         }
 
         return $this->json(['result' => false]);
@@ -151,7 +150,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->acceptProposition($id, $this->session->get('user'))
+                'result' => (new AnnonceManager())->acceptProposition($id, $this->session->get('user'))
             ]);
         }
 
@@ -177,7 +176,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'result' => EntityManager::getRepository(EntityManager::ANNONCE)->acceptCandidature($idAnn, $idAuto)
+                'result' => (new AnnonceManager())->acceptCandidature($idAnn, $idAuto)
             ]);
         }
 
@@ -202,7 +201,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'candidatures' => EntityManager::getRepository(EntityManager::ANNONCE)->getCandidature($em, $this->session->get('user'))
+                'candidatures' => (new AnnonceManager())->getCandidature($em, $this->session->get('user'))
             ]);
         }
 
@@ -227,7 +226,7 @@ class AjaxParticulierController extends AbstractController
 
         if ($request->isMethod('POST')) {
             return $this->json([
-                'propositions' => EntityManager::getRepository(EntityManager::ANNONCE)->getPropositions($em, $this->session->get('user'))
+                'propositions' => (new AnnonceManager())->getPropositions($em, $this->session->get('user'))
             ]);
         }
 
@@ -260,7 +259,7 @@ class AjaxParticulierController extends AbstractController
             if ($distanceMax != 'none' && !is_null($adresse)) {
                 $addressFrom = $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille();
                 if ($secteur != 'none') {
-                    $ids = EntityManager::getRepository(EntityManager::ANNONCE)->getAnnoncesBySecteurActivite($secteur);
+                    $ids = (new AnnonceManager())->getAnnoncesBySecteurActivite($secteur);
 
                     return $this->json([
                         'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMaxFromPreResultIds($ids, $distanceMax, $addressFrom), $offset, $limit)
@@ -272,7 +271,7 @@ class AjaxParticulierController extends AbstractController
                 }
             } else { // $distanceMax == 'none'
                 if ($secteur != 'none') {
-                    $ids = EntityManager::getRepository(EntityManager::ANNONCE)->getAnnoncesBySecteurActivite($secteur);
+                    $ids = (new AnnonceManager())->getAnnoncesBySecteurActivite($secteur);
 
                     return $this->json([
                         'annonces' => array_slice($em->getRepository(Annonce::class)->findByIdentity($ids), $offset, $limit)

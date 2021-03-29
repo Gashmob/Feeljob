@@ -77,7 +77,7 @@ class ParticulierManager extends Manager
     {
         $result = (new Query('CREATE (p:' . EntityManager::PARTICULIER . ') RETURN id(p) as id'))
             ->run()
-            ->getResult();
+            ->getOneOrNullResult();
 
         $particulier->setIdentity($result['id']);
 
