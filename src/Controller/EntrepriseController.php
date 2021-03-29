@@ -492,7 +492,7 @@ class EntrepriseController extends AbstractController
 
         $telephone = $request->get('telephone');
         $telephoneB = true;
-        if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
+        if ($telephone != '' && !preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
             $telephoneB = false;
             $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
         }
