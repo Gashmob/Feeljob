@@ -155,7 +155,7 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('home/inscription.html.twig', [
+        return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
             'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAll(),
             'employeur' => EntityManager::EMPLOYEUR,
             'employe' => EntityManager::EMPLOYE
@@ -237,13 +237,16 @@ class EntrepriseController extends AbstractController
                 $n = (new CVLangue())
                     ->setNiveau($niveau)
                     ->setLangue($l);
-                $langues[] = $l;
+                $langues[] = $n;
             }
+
+            $description = $request->get('description');
 
             if ($naissanceB && $situationFamilleB) {
                 $cv = (new CV())
                     ->setNaissance($naissance)
                     ->setPermis($permis)
+                    ->setDescription($description)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
                 $em->persist($cv);
                 $em->flush();

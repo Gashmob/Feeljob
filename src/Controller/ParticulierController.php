@@ -153,7 +153,7 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('home/inscription.html.twig', [
+        return $this->render('home/inscriptionParticulierFreelance.html.twig', [
             'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAll(),
             'particulier' => EntityManager::PARTICULIER,
             'auto_entrepreneur' => EntityManager::AUTO_ENTREPRENEUR
@@ -322,7 +322,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('candidat/showAnnonces.html.twig', [
+        return $this->render('candidat/showOffresEmploi.html.twig', [
             'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id])
         ]);
     }
