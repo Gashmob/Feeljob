@@ -443,7 +443,7 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('candidat/showAnnonces.html.twig');
+        return $this->render('candidat/showOffresEmploi.html.twig');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

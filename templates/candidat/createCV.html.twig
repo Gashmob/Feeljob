@@ -186,7 +186,7 @@
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
             <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
-                <div class="ui segment" id="languesItem">
+                <div class="ui segment hidden" id="languesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Langue</label>
@@ -304,7 +304,7 @@
                 let div1 = document.createElement('div');
                 div1.classList.add('ui');
                 div1.classList.add('segment');
-                div1.classList.add('exp' + nbLang);
+                div1.classList.add('lang' + nbLang);
                 div1.classList.add('transition');
                 div1.classList.add('hidden');
                 div1.innerHTML = document.getElementById('languesItem').innerHTML;
