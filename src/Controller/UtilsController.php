@@ -28,19 +28,39 @@ final class UtilsController extends AbstractController
     /**
      * All SecteurActivite
      */
-    private const SECTEURS_ACTIVITE = [];
+    private const SECTEURS_ACTIVITE = ['Agriculture', 'Agro-alimentaire/Alimentation', 'Animaux',
+        'Architecture/Aménagement intérieur', 'Artisanat/Métier d\'art', 'Audiovisuel/Numérique/Multimédia',
+        'Banque/Finance/Assurance', 'Bâtiment/Travaux public', 'Biologie/Chimie/Recherche',
+        'Commerce (Vendeur/Commercial)', 'Communication/Information', 'Culture/Spectacle', 'Défense/Sécurité/Secours',
+        'Droit', 'Edition/Littérature/Imprimerie', 'Enseignement/Formation', 'Esthétique/Coiffure/Soins',
+        'Environnement/Nature/Nettoyage', 'Gestion/RH', 'Histoire/Histoire de l\'art',
+        'Hôtellerie/Restauration/Tourisme', 'Humanitaire', 'Informatique/Electronique', 'Industrie/Usine',
+        'Mécanique/Maintenance', 'Maths/Sciences/Physique', 'Santé', 'Secrétariat/Accueil',
+        'Service à la personne/Social', 'Sport/Animation', 'Transport/Logistique'];
     /**
      * All Langue
      */
-    private const LANGUES = [];
+    private const LANGUES = ['Albanais', 'Allemand', 'Anglais', 'Arabe', 'Arménien', 'Basque', 'Bengali', 'Birman',
+        'Bulgare', 'Catalan', 'Chinois', 'Cingalais', 'Coréen', 'Corse', 'Croate', 'Danois', 'Espagnol', 'Espéranto',
+        'Estonien', 'Finnois', 'Français', 'Gaélique', 'Galicien', 'Gallois', 'Géorgien', 'Grec', 'Hébreu', 'Hindi',
+        'Indonésien', 'Italien', 'Japonais', 'Javanais', 'Khmer', 'Latin', 'Letton', 'Lituanien', 'Malaisien',
+        'Néerlandais', 'Népalais', 'Norvégien', 'Polonais', 'Portugais', 'Roumain', 'Russe', 'Serbe', 'Slovaque',
+        'Slovène', 'Suédois', 'Tchèque', 'Turc', 'Ukrainien', 'Vietnamien'];
     /**
      * All SituationFamille
      */
-    private const SITUATIONS_FAMILLE = [];
+    private const SITUATIONS_FAMILLE = ['Célibataire', 'En couple'];
     /**
      * All AbonnementEntreprise
      */
-    private const ABONNEMENTS_ENTREPRISE = [];
+    private const ABONNEMENTS_ENTREPRISE = [
+        ['nom' => '1 Annonce', 'description' => '1 seule annonce', 'montant' => 20],
+        ['nom' => '5 Annonces', 'description' => 'Jusqu\'à 5 annonces', 'montant' => 16],
+        ['nom' => '20 Annonces', 'description' => 'Jusqu\'à 20 annonces', 'montant' => 14],
+        ['nom' => '30 Annonces', 'description' => 'Jusqu\'à 30 annonces', 'montant' => 12],
+        ['nom' => '40 Annonces', 'description' => 'Jusqu\'à 40 annonces', 'montant' => 10],
+        ['nom' => 'Abonnement', 'description' => 'Autant d\'annonces que vous voulez', 'montant' => 10],
+    ];
 
     /**
      * @Route("/fill")
@@ -66,12 +86,12 @@ final class UtilsController extends AbstractController
 
         // Fill SecteurActivite
         foreach (self::SECTEURS_ACTIVITE as $secteurActivite) {
-            if ((new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom) RETURN s'))
+            if ((new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) RETURN s'))
                     ->setString('nom', $secteurActivite)
                     ->run()
                     ->getOneOrNullResult() == null) { // If not exist
                 $alreadyFilled = false;
-                (new PreparedQuery('MATCH (:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom)'))
+                (new PreparedQuery('CREATE (:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom})'))
                     ->setString('nom', $secteurActivite)
                     ->run(); // Create
             }
