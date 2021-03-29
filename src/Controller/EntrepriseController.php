@@ -156,7 +156,7 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
-            'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAll(),
+            'secteurActivites' => EntityManager::getRepository(EntityManager::SECTEUR_ACTIVITE)->findAllNames(),
             'employeur' => EntityManager::EMPLOYEUR,
             'employe' => EntityManager::EMPLOYE
         ]);
