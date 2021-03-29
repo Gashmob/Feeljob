@@ -325,4 +325,25 @@ class AnnonceManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idParticulier
+     * @return Annonce[]
+     */
+    public function findAnnoncesByParticulier(EntityManagerInterface $em, int $idParticulier): array
+    {
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$id RETURN p'))
+            ->setInteger('id', $idParticulier)
+            ->run()
+            ->getResult();
+
+        $res = [];
+
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
 }

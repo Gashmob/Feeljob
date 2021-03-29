@@ -183,9 +183,21 @@ class ParticulierController extends AbstractController
 
         $user = (new UtilsManager())->getUserFromId($em, $this->session->get('user'));
 
+        $publications = [];
+        switch ($type) {
+            case EntityManager::AUTO_ENTREPRENEUR:
+                $publications = null;
+                break;
+
+            case EntityManager::PARTICULIER:
+                $publications = (new AnnonceManager())->findAnnoncesByParticulier($em, $user->getIdentity());
+                break;
+        }
+
         return $this->render('home/profil.html.twig', [
             'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom()
+            'prenom' => $user->getPrenom(),
+            'publications' => $publications
         ]);
     }
 

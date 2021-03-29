@@ -185,9 +185,24 @@ class EntrepriseController extends AbstractController
 
         $user = (new UtilsManager())->getUserFromId($em, $this->session->get('user'));
 
+        $publications = [];
+        switch ($type) {
+            case EntityManager::EMPLOYE:
+                if (!is_null($user->getCV()))
+                    $publications[] = $user->getCV();
+                else
+                    $publications = null;
+                break;
+
+            case EntityManager::EMPLOYEUR:
+                $publications = (new OffreEmploiManager())->findOffresEmploiByEmployeur($em, $user->getIdentity());
+                break;
+        }
+
         return $this->render('home/profil.html.twig', [
             'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom()
+            'prenom' => $user->getPrenom(),
+            'publications' => $publications
         ]);
     }
 

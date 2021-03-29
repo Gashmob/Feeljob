@@ -382,4 +382,23 @@ class OffreEmploiManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmployeur
+     * @return OffreEmploi[]
+     */
+    public function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI .  ') WHERE id(e)=$id RETURN id(o) AS id'))
+            ->setInteger('id', $idEmployeur);
+
+        $res = [];
+
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
 }
