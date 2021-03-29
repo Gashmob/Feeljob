@@ -237,7 +237,7 @@ class EntrepriseController extends AbstractController
                 $n = (new CVLangue())
                     ->setNiveau($niveau)
                     ->setLangue($l);
-                $langues[] = $l;
+                $langues[] = $n;
             }
 
             $description = $request->get('description');
