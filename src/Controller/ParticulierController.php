@@ -187,19 +187,21 @@ class ParticulierController extends AbstractController
         $publications = [];
         switch ($type) {
             case EntityManager::AUTO_ENTREPRENEUR:
-                $publications = null;
-                break;
+                return $this->render('autoEntrepreneur/profilFreelance.html.twig', [
+                    'nom' => $user->getNom(),
+                    'prenom' => $user->getPrenom()
+                ]);
 
             case EntityManager::PARTICULIER:
                 $publications = (new AnnonceManager())->findAnnoncesByParticulier($em, $user->getIdentity());
-                break;
+                return $this->render('particulier/profilParticulier.html.twig', [
+                    'nom' => $user->getNom(),
+                    'prenom' => $user->getPrenom(),
+                    'publications' => $publications
+                ]);
         }
 
-        return $this->render('home/profil.html.twig', [
-            'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom(),
-            'publications' => $publications
-        ]);
+        return $this->redirectToRoute('homepage');
     }
 
     /**

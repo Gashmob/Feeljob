@@ -193,18 +193,23 @@ class EntrepriseController extends AbstractController
                     $publications[] = $user->getCV();
                 else
                     $publications = null;
-                break;
+                return $this->render('candidat/profilEmploye.html.twig', [
+                    'nom' => $user->getNom(),
+                    'prenom' => $user->getPrenom(),
+                    'publications' => $publications
+                ]);
 
             case EntityManager::EMPLOYEUR:
                 $publications = (new OffreEmploiManager())->findOffresEmploiByEmployeur($em, $user->getIdentity());
-                break;
+                return $this->render('entreprise/profilEntreprise.html.twig', [
+                    'nom' => $user->getNom(),
+                    'nomEntreprise' => $user->getNomEntreprise(),
+                    'prenom' => $user->getPrenom(),
+                    'publications' => $publications
+                ]);
         }
 
-        return $this->render('home/profil.html.twig', [
-            'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom(),
-            'publications' => $publications
-        ]);
+        return $this->redirectToRoute('homepage');
     }
 
     /**
