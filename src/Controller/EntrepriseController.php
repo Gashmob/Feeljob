@@ -192,7 +192,7 @@ class EntrepriseController extends AbstractController
         switch ($type) {
             case EntityManager::EMPLOYE:
                 if (!is_null($user->getCV()))
-                    $publications[] = $user->getCV();
+                    $publications = $user->getCV();
                 else
                     $publications = null;
                 return $this->render('candidat/profilEmploye.html.twig', [
