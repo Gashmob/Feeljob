@@ -242,18 +242,13 @@ class EntrepriseController extends AbstractController
             $permis = $request->get('permis');
 
             $situationFamille = $request->get('situationFamille');
-            $situationFamilleB = true;
-            if ($situationFamille == '') {
-                $situationFamilleB = false;
-                $this->addFlash('situationFamille', 'Merci de renseigner votre situation familiale');
-            }
 
             // TODO : récup langues, metiers, diplomes, competences
             // Exemple how to do for langues
             $langues = [];
             for ($i = 0; $i < $request->get('nbLangues'); $i++) {
                 $langue = $request->get('langue' . $i);
-                $niveau = $request->get('niveau' . $i);
+                $niveau = $request->get('niveau_langue' . $i);
 
                 $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
                 if (is_null($l)) {
@@ -271,7 +266,7 @@ class EntrepriseController extends AbstractController
 
             $description = $request->get('description');
 
-            if ($naissanceB && $situationFamilleB) {
+            if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance($naissance)
                     ->setPermis($permis)
