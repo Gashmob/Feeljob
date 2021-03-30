@@ -367,7 +367,7 @@ class EntrepriseController extends AbstractController
             }
             $fin = $request->get('fin');
 
-            $loge = $request->get('loge') == null;
+            $loge = $request->get('loge') != null;
 
             $heures = $request->get('heures');
             $heuresB = true;
@@ -393,7 +393,7 @@ class EntrepriseController extends AbstractController
 
             $ville = $request->get('ville') == null ? '' : $request->get('ville');
 
-            $teletravail = $request->get('teletravail') == null;
+            $teletravail = $request->get('teletravail') != null;
 
             $nbPostes = $request->get('nbPostes');
             $nbPostesB = true;
