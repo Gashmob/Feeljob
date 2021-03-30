@@ -363,6 +363,9 @@ class EntrepriseController extends AbstractController
             if ($debut == '') {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
+            } elseif ($debut < \date('now')) {
+                $debutB = false;
+                $this->addFlash('debut', 'Merci de renseigner une date de début correcte');
             }
             $fin = $request->get('fin');
 
@@ -474,6 +477,9 @@ class EntrepriseController extends AbstractController
             if ($debut == '') {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
+            } elseif ($debut < \date('now')) {
+                $debutB = false;
+                $this->addFlash('debut', 'Merci de renseigner une date de début correcte');
             }
             $fin = $request->get('fin');
 
