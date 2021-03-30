@@ -20,6 +20,8 @@ use App\Entity\Langue;
 use App\Entity\OffreEmploi;
 use App\Entity\SituationFamille;
 use App\Utils;
+use Bolt\structures\Date;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
@@ -336,6 +338,7 @@ class EntrepriseController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function createOffreEmploi(Request $request, EntityManagerInterface $em)
     {
@@ -387,9 +390,7 @@ class EntrepriseController extends AbstractController
 
             $deplacement = $request->get('deplacement') == null;
 
-            $rue = $request->get('rue');
-            $code_postal = $request->get('code_postal');
-            $ville = $request->get('ville');
+            $ville = $request->get('ville') == null ? '' : $request->get('ville');
 
             $teletravail = $request->get('teletravail') == null;
 
@@ -407,16 +408,16 @@ class EntrepriseController extends AbstractController
 
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $adresse = (new Adresse())
-                    ->setRue($rue)
-                    ->setCodePostal($code_postal)
+                    ->setRue('')
+                    ->setCodePostal('')
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
 
                 $offre = (new OffreEmploi())
                     ->setNom($nom)
-                    ->setDebut($debut)
-                    ->setFin($fin)
+                    ->setDebut(new DateTime($debut))
+                    ->setFin(new DateTime($fin))
                     ->setLoge($loge)
                     ->setHeures($heures)
                     ->setSalaire($salaire)

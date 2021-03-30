@@ -29,7 +29,7 @@
             </div>
             <div class="field required">
                 <label>Types de contrat :</label>
-                <select id="selectTypeContrat" required class="ui dropdown" name="contrat">
+                <select id="selectTypeContrat" required class="ui dropdown" name="typeContrat">
                     {% for type in typeContrat %}
                         <option value="{{ type }}">
                             {{ type }}
@@ -39,7 +39,7 @@
             </div>
             <div class="field">
                 <label>Localisation</label>
-                <p>Si votre emploi est géolocalisé, cliquez sur le bouton ci-dessous.</p>
+                <p>Si votre emploi est fixe, cliquez sur le bouton ci-dessous.</p>
                 <div class="two fields">
                     <div style="padding-top: 6px;" class="two wide field">
                         <div style="padding-left: 10px;" class="ui toggle checkbox">
@@ -47,24 +47,24 @@
                         </div>
                     </div>
                     <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="lieu" placeholder="ex : Chambéry">
+                        <input type="text" name="ville" placeholder="ex : Chambéry">
                     </div>
                 </div>
             </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Date début</label>
-                    <input required name="dateD" placeholder="jj/mm/aaaa" type="date">
+                    <input required name="debut" placeholder="jj/mm/aaaa" type="date">
                 </div>
                 <div class="field" id="dateFinField">
                     <label>Date fin</label>
-                    <input name="dateF" placeholder="jj/mm/aaaa" type="date">
+                    <input name="fin" placeholder="jj/mm/aaaa" type="date">
                 </div>
             </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="number" min="1" name="nbRecrutement" placeholder="Nombre">
+                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre">
                 </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées/semaine</label>
