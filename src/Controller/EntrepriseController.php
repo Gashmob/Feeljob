@@ -442,6 +442,34 @@ class EntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/modifier/offre_emploi/{id}", name="entreprise_modify_offre_emploi")
+     * @param $id
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function modifyOffreEmploi($id, Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]);
+
+        if ($request->isMethod('POST')) {
+
+        }
+
+        return $this->render('entreprise/editEmploi.html.twig', [
+            'offre' => $offre
+        ]);
+    }
+
+    /**
      * @Route("/offre_emploi/{id}", name="entreprise_show_offre_emploi")
      * @param $id
      * @param EntityManagerInterface $em
