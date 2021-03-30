@@ -447,6 +447,7 @@ class EntrepriseController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function modifyOffreEmploi($id, Request $request, EntityManagerInterface $em)
     {
@@ -461,7 +462,78 @@ class EntrepriseController extends AbstractController
         $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]);
 
         if ($request->isMethod('POST')) {
+            $nom = $request->get('nom');
+            $nomB = true;
+            if ($nom == '') {
+                $nomB = false;
+                $this->addFlash('nom', 'Merci de renseigner un nom');
+            }
 
+            $debut = $request->get('debut');
+            $debutB = true;
+            if ($debut == '') {
+                $debutB = false;
+                $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
+            }
+            $fin = $request->get('fin');
+
+            $loge = $request->get('loge') == null;
+
+            $heures = $request->get('heures');
+            $heuresB = true;
+            if ($heures == '') {
+                $heuresB = false;
+                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures par semaine');
+            } elseif ($heures <= 0) {
+                $heuresB = false;
+                $this->addFlash('heures', 'Merci de renseigner un nombre d\'heures supérieur à 0');
+            }
+
+            $salaire = $request->get('salaire');
+            $salaireB = true;
+            if ($salaire == '') {
+                $salaireB = false;
+                $this->addFlash('salaire', 'Merci de renseigner un salaire');
+            } elseif ($salaire <= 0) {
+                $salaireB = false;
+                $this->addFlash('salaire', 'Merci de renseigner un salaire supérieur à 0');
+            }
+
+            $deplacement = $request->get('deplacement') == null;
+
+            $ville = $request->get('ville') == null ? '' : $request->get('ville');
+
+            $teletravail = $request->get('teletravail') == null;
+
+            $nbPostes = $request->get('nbPostes');
+            $nbPostesB = true;
+            if ($nbPostes == '') {
+                $nbPostesB = false;
+                $this->addFlash('nbPostes', 'Merci de renseigner un nombre de postes à pourvoir');
+            } elseif ($nbPostes <= 0) {
+                $nbPostesB = false;
+                $this->addFlash('nbPostes', 'Merci de renseigner un nombre de postes à pourvoir supérieur à 0');
+            }
+
+            $typeContrat = $request->get('typeContrat');
+
+            $description = $request->get('description');
+
+            if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
+                $offre->getLieu()->setVille($ville);
+                $offre->setNom($nom)
+                    ->setDebut(new DateTime($debut))
+                    ->setFin(new DateTime($fin))
+                    ->setLoge($loge)
+                    ->setHeures($heures)
+                    ->setSalaire($salaire)
+                    ->setDeplacement($deplacement)
+                    ->setTeletravail($teletravail)
+                    ->setDescription($description)
+                    ->setNbPostes($nbPostes);
+
+                (new OffreEmploiManager())->update($em, $offre, $typeContrat);
+            }
         }
 
         return $this->render('entreprise/editEmploi.html.twig', [

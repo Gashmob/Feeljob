@@ -111,9 +111,16 @@ class OffreEmploiManager extends Manager
 
     /**
      * @param EntityManagerInterface $em
+     * @param OffreEmploi $offre
+     * @param string $typeContrat
      */
-    public function update(EntityManagerInterface $em)
+    public function update(EntityManagerInterface $em, OffreEmploi $offre, string $typeContrat)
     {
+        (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[r]-(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id DELETE r CREATE (o)-[:' . EntityManager::TYPE . ']->(t)'))
+            ->setString('nom', $typeContrat)
+            ->setInteger('id', $offre->getIdentity())
+            ->run();
+
         $em->flush();
     }
 
