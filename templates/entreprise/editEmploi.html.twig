@@ -34,7 +34,8 @@
             </div>
             <div class="field required">
                 <label>Type de contrat :</label>
-                <select id="selectTypeContrat" required class="ui dropdown" name="typeContrat">
+                <select id="selectTypeContrat" required class="ui dropdown" name="typeContrat"
+                        value="{{ typeContrat }}">
                     {% for type in typesContrat %}
                         <option value="{{ type }}">
                             {{ type }}
@@ -46,20 +47,32 @@
                 <label>Localisation</label>
                 <p>Si votre emploi est fixe, cliquez sur le bouton ci-dessous.</p>
                 <div class="two fields">
-                    <div style="padding-top: 6px;" class="two wide field">
-                        <div style="padding-left: 10px;" class="ui toggle checkbox">
-                            <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
+                    {% if offre.lieu.ville|length %}
+                        <div style="padding-top: 6px;" class="two wide field">
+                            <div style="padding-left: 10px;" class="ui toggle checkbox">
+                                <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden" checked>
+                            </div>
                         </div>
-                    </div>
-                    <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="ville" placeholder="ex : Chambéry" value="{{ offre.lieu.ville }}">
-                    </div>
+                        <div class="fourteen wide field" id="lieuField">
+                            <input type="text" name="ville" placeholder="ex : Chambéry" value="{{ offre.lieu.ville }}">
+                        </div>
+                    {% else %}
+                        <div style="padding-top: 6px;" class="two wide field">
+                            <div style="padding-left: 10px;" class="ui toggle checkbox">
+                                <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
+                            </div>
+                        </div>
+                        <div class="fourteen wide field disabled" id="lieuField">
+                            <input type="text" name="ville" placeholder="ex : Chambéry">
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Date début</label>
-                    <input required name="debut" placeholder="jj/mm/aaaa" type="date" value="{{ offre.debut|date('Y-m-d') }}">
+                    <input required name="debut" placeholder="jj/mm/aaaa" type="date"
+                           value="{{ offre.debut|date('Y-m-d') }}">
                 </div>
                 <div class="field" id="dateFinField">
                     <label>Date fin</label>
@@ -69,7 +82,8 @@
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre" value="{{ offre.nbPostes }}">
+                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre"
+                           value="{{ offre.nbPostes }}">
                 </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées/semaine</label>
@@ -88,7 +102,8 @@
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant" value="{{ offre.salaire }}">
+                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant"
+                               value="{{ offre.salaire }}">
                         <div class="ui basic label">.00</div>
                     </div>
                 </div>
@@ -96,13 +111,13 @@
             <div class="ui divider"></div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="teletravail" class="hidden">
+                    <input type="checkbox" name="teletravail" class="hidden" {% if offre.teletravail %}checked{% endif %}>
                     <label>Éligible au télétravail</label>
                 </div>
             </div>
             <div class="field">
                 <div class="ui toggle checkbox">
-                    <input type="checkbox" name="loge" class="hidden">
+                    <input type="checkbox" name="loge" class="hidden" {% if offre.loge %}checked{% endif %}>
                     <label>Emploi logé</label>
                 </div>
             </div>
@@ -112,7 +127,7 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        document.addEventListener("DOMContentLoaded", function(){
+        document.addEventListener("DOMContentLoaded", function () {
             checkDateFin();
         });
         //Lieu
@@ -129,7 +144,8 @@
         const selectTypeContrat = document.getElementById('selectTypeContrat')
         const dateFinField = document.getElementById('dateFinField')
         selectTypeContrat.addEventListener('change', checkDateFin)
-        function checkDateFin(){
+
+        function checkDateFin() {
             if (selectTypeContrat.value == 'CDI') {
                 dateFinField.classList.add("disabled");
             } else {
