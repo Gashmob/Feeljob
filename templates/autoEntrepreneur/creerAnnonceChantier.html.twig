@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}Créer une offre de chantier{% endblock %}
+{% block title %}Créer une annonce{% endblock %}
 {% block body %}
     <div class="background fixed">
         <div class="relative">
@@ -19,17 +19,17 @@
     </div>
     <div class="ui text justified container">
         <h3 class="ui center aligned icon header">
-            <i class="dolly icon"></i>
-            Nouvelle offre de chantier
+            <i class="icon bullhorn"></i>
+            Nouvelle annonce
         </h3>
         <form class="ui form segment" method="post">
             <div class="required field">
-                <label>Intitulé du poste</label>
-                <input required type="text" name="nom" placeholder="Intitulé du poste">
+                <label>Intitulé de l'annonce</label>
+                <input required type="text" name="nom" placeholder="Intitulé de l'annonce">
             </div>
             <div class="required field">
-                <label>Localisation du chantier</label>
-                <input required type="text" name="lieu" placeholder="Localisation du chantier">
+                <label>Localisation</label>
+                <input required type="text" name="lieu" placeholder="Localisation">
             </div>
             <div class="field required">
                 <label>Date début</label>
