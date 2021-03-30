@@ -60,6 +60,9 @@
             </div>
             <div class="thirteen wide column">
                 <div class="ui three stackable cards">
+                    <a id="result" class="ui card" href="#">
+                        <div class="content"></div>
+                    </a>
                     <a class="ui card" href="#">
                         <div class="content">
                             <img class="ui left floated mini circular image"
@@ -92,51 +95,40 @@
                             Du 01/06 au 31/08 2021
                         </div>
                     </a>
-                    {% if profil %}
-                        {% for cv in profil %}
-                            <a class="ui card" href="{{ path('show_cv', {'id': cv['id']}) }}">
-                                <div class="content">
-                                    <img class="ui left floated mini circular image"
-                                         src="{{ asset('img/placeholders/jenny.jpg') }}">
-                                    <div class="header">{{ cv['prenom'] }} {{ cv['nom'] }}</div>
-                                    <div class="meta">
-                                        <span class="category">{{ cv['metier'] }}</span>
-                                    </div>
-                                    <div style="margin-top: 10px;" class="contract">
-                                        <div class="ui label">{{ cv['contrat'] }}</div>
-                                        {% if cv['langues'] is not empty %}
-                                            <div class="ui label">{{ cv['langues'][0] }}</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="description">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                            deserunt,
-                                            dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                            tempore
-                                            voluptate, voluptates voluptatibus? Asperiores, id.</p>
-                                        {% if cv['diplomes'][0]['nom'] is not empty %}
-                                            <p>
-                                                <i class="icon bookmark"></i>
-                                                {{ cv['diplomes'][0]['nom'] }} obtenu le {{ cv['diplomes'][0]['date'] }}
-                                            </p>
-                                        {% endif %}
-                                        {% if cv['permis'] is not null %}
-                                            <p>
-                                                <i class="icon outline check"></i>
-                                                Dispose du permis
-                                            </p>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="extra content">
-                                    <i class="icon calendar"></i>
-                                    À partir du 01/04/2021
-                                </div>
-                            </a>
-                        {% endfor %}
-                    {% else %}
-                        rien
-                    {% endif %}
+
+                    <a class="ui card" href="#">
+                        <div class="content">
+                            <img class="ui left floated mini circular image"
+                                 src="{{ asset('img/placeholders/jenny.jpg') }}">
+                            <div class="header">Prenom Nom</div>
+                            <div class="meta">
+                                <span class="category">Métier</span>
+                            </div>
+                            <div style="margin-top: 10px;" class="contract">
+                                <div class="ui label">Type contrat</div>
+                                <div class="ui label">Langues</div>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                    deserunt,
+                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                    tempore
+                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                    <p>
+                                        <i class="icon bookmark"></i>
+                                        Master informatique obtenu le 2 Avril 2020
+                                    </p>
+                                    <p>
+                                        <i class="icon circle outline check"></i>
+                                        Dispose du permis
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="icon calendar"></i>
+                            À partir du 01/04/2021
+                        </div>
+                    </a>
                     <a class="ui card" href="#">
                         <div class="content">
                             <img class="ui left floated mini circular image"
@@ -200,4 +192,36 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", (event) => {
+            console.log("DOM entièrement chargé et analysé");
+            $.ajax({
+                url: '/entreprise/get/cvs',
+                method: 'POST',
+            }).then(function (response) {
+                $('#result').text(response.cvs.cv[1]);
+            });
+        });
+
+        function searchOffre(e) {
+            e.preventDefault();
+            var $link = $(e.currentTarget);
+            $.ajax({
+                url: '/annonces/' + $link.data('direction'),
+                method: 'POST',
+                success: OnSuccess,
+                error: OnErrorCall,
+            });
+        }
+
+        function onSuccess(response) {
+
+        }
+
+        function onErrorCall(response) {
+
+        }
+    </script>
 {% endblock %}
