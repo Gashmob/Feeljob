@@ -3,7 +3,7 @@
         <img src="{{ asset('img/FJ200.png') }}"/>
         Accueil
     </a>
-    <a href="#" class="item">Annonces</a>
+    <a href="{{ path('particulier_cartes') }}" class="item">Cartes de visite</a>
     <div class="right menu">
         <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
             <i class="icon bell"></i>
@@ -45,7 +45,7 @@
             <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             <div class="content person-summary">
                 <div class="ui sub header" style="max-width: 117px;">{{ app.session.get('userName') }}</div>
-                <div>{{ app.session.get('userType') }}</div>
+                <div>Particulier</div>
             </div>
         </a>
         <div class="ui dropdown item">
