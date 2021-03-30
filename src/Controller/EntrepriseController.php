@@ -313,12 +313,14 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+        $owner = $em->getRepository(CV::class)->isOwner($id, $this->session->get('user'));
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR && !$owner) {
             return $this->redirectToRoute('userSpace');
         }
 
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id])
+            'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id]),
+            'owner' => $owner
         ]);
     }
 

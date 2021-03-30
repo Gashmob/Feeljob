@@ -61,6 +61,18 @@ class CVRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * @param int $idCV
+     * @param int $idEmploye
+     * @return bool
+     */
+    public function isOwner(int $idCV, int $idEmploye): bool
+    {
+        $cv = $this->findOneBy(['id' => $idCV]);
+
+        return is_null($cv) ? false : $cv->getEmploye()->getIdentity() == $idEmploye;
+    }
+
     // /**
     //  * @return CV[] Returns an array of CV objects
     //  */
