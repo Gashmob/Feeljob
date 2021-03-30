@@ -4,10 +4,10 @@
     <div id="homepageSegment" class="ui inverted vertical center aligned segment homepageSegment">
         <div class="background homepage-bckg"></div>
         <div class="ui large inverted pointing secondary menu">
-            <div id="nav" class="ui container homeNav">
-                {% if app.session.get('user') %}
-                    <div style="margin-top: 60px;"></div>
-                {% else %}
+            {% if app.session.get('user') %}
+                <div style="margin-top: 60px;"></div>
+            {% else %}
+                <div id="nav" class="ui container homeNav">
                     <a href="{{ path('homepage') }}" class="active item">Accueil</a>
                     <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
                     <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
@@ -16,10 +16,10 @@
                     <div class="right item">
                         <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
                         <a href="{{ path('inscription') }}" style="margin-left:0.5em"
-                               class="ui inverted button" role="button">Inscription</a>
+                           class="ui inverted button" role="button">Inscription</a>
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
         <div class="ui text container masthead">
             <h1 style="font-size:4em;font-weight:normal;margin-bottom:0;margin-top:1em" class="ui inverted header">
@@ -32,8 +32,9 @@
             <div class="ui card homeCard">
                 <div class="content headerContent">
                     <div class="header">Freelances
-                    <i class="icon arrows alternate horizontal"></i>
-                    Particuliers</div>
+                        <i class="icon arrows alternate horizontal"></i>
+                        Particuliers
+                    </div>
                     <div class="meta">
                         <span class="date">Vous faire valoir en ligne</span>
                     </div>
@@ -54,7 +55,8 @@
                 <div class="content headerContent">
                     <div class="header">Entreprises
                         <i class="icon arrows alternate horizontal"></i>
-                        Candidats</div>
+                        Candidats
+                    </div>
                     <div class="meta">
                         <span class="date">Trouvez le candidat idéal</span>
                     </div>
