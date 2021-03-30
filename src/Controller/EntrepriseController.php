@@ -570,7 +570,7 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        (new OffreEmploiManager())->remove($em, $id);
+        (new OffreEmploiManager())->remove($em, $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]));
 
         $this->addFlash('success', 'Votre offre d\'emploi a été supprimée !');
         return $this->redirectToRoute('userSpace');
