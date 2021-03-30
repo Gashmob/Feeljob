@@ -232,6 +232,12 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
+        $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]);
+        if (!is_null($employe->getCV())) {
+            $this->addFlash('fail', 'Vous avez déjà un CV, modifiez-le !');
+            return $this->redirectToRoute('userSpace');
+        }
+
         if ($request->isMethod('POST')) {
             $naissance = $request->get('naissance');
             $naissanceB = true;
@@ -284,7 +290,6 @@ class EntrepriseController extends AbstractController
                 }
                 $em->flush();
 
-                $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]);
                 $employe->setCV($cv);
                 $em->flush();
             }
