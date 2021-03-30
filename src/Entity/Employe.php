@@ -79,6 +79,11 @@ class Employe
      */
     private $identity;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $photo;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -230,6 +235,18 @@ class Employe
     public function setIdentity(int $identity): self
     {
         $this->identity = $identity;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

@@ -70,9 +70,9 @@
             <div class="ui segments">
                 {% for diplome in cv.diplomes %}
                     <div class="ui segment formation1">
-                        <h5 class="ui header">{{ diplome.nom }}</h5>
-                        <div>{{ diplome.nom }}</div>
-                        <div>{{ diplome.date }}</div>
+                        <h5 class="ui header">{{ diplome.diplome.nom }}</h5>
+                        <div>{{ diplome.diplome.nom }}</div>
+                        <div>{{ diplome.diplome.date }}</div>
                     </div>
                 {% endfor %}
                 <div class="ui segment formation2">
@@ -87,11 +87,11 @@
                 <div class="content">Expérience professionnelle</div>
             </h3>
             <div class="ui segments">
-                {% for experience in cv.metier %}
+                {% for experience in cv.metiers %}
                     <div class="ui segment experience1">
-                        <h5 class="ui header">{{ experience.poste }}</h5>
-                        <div>{{ experience.nomEntreprise }}</div>
-                        <div>{{ experience.duree }}</div>
+                        <h5 class="ui header">{{ experience.metier.poste }}</h5>
+                        <div>{{ experience.metier.nomEntreprise }}</div>
+                        <div>{{ experience.metier.duree }}</div>
                     </div>
                 {% endfor %}
                 <div class="ui segment experience2">
@@ -106,11 +106,11 @@
                 <div class="content">Langues parlées</div>
             </h3>
             <ul>
-                {% for langue in cv.langues.langue %}
+                {% for langue in cv.langues %}
                     <div class="ui segment experience1">
-                        <h5 class="ui header">{{ langue.nom }}</h5>
-                        <div>{{ langue.nom }}</div>
-                        <div>{{ langue.nom }}</div>
+                        <h5 class="ui header">{{ langue.langue.nom }}</h5>
+                        <div>{{ langue.langue.nom }}</div>
+                        <div>{{ langue.langue.nom }}</div>
                     </div>
                 {% endfor %}
                 <li>Français - langue maternelle</li>

@@ -273,6 +273,8 @@ class EntrepriseController extends AbstractController
 
             $description = $request->get('description');
 
+            $photo = Utils::uploadImage('photo');
+
             if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance(new DateTime($naissance))
@@ -299,6 +301,11 @@ class EntrepriseController extends AbstractController
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
             'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')])
         ]);
+    }
+
+    public function modifyCV()
+    {
+
     }
 
     /**
