@@ -55,7 +55,11 @@
                 <p>{{ offre.salaire }}.00€</p>
                 <p>{{ offre.heures }} heures par semaine</p>
                 {% if offre.description|length %}
-                    <p>{{ offre.description }}</p>
+                    <p>
+                        {# {% apply markdown_to_html %}  #}
+                            {{ offre.description }}
+                        {# {% endapply %} #}
+                    </p>
                 {% else %}
                     <p class="meta">** L'employeur n'a pas renseigné de description **</p>
                 {% endif %}
