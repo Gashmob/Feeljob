@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CVRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,8 +81,8 @@ class CV
         $this->competences = new ArrayCollection();
         $this->diplomes = new ArrayCollection();
         $this->metiers = new ArrayCollection();
-        $this->createdAt = time();
-        $this->updatedAt = time();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): ?int
