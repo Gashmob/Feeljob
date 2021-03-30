@@ -31,14 +31,6 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3>Bio</h3>
-        <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consequuntur, cupiditate eum exercitationem
-            fugiat illum itaque laboriosam non pariatur praesentium quis reprehenderit rerum sunt? Maiores minus
-            obcaecati recusandae reprehenderit voluptate!
-        </div>
-    </div>
-    <div class="ui vertical segment">
         <h3>Vos offres d'emploi</h3>
         <div class="ui four stackable cards">
             {% for publication in publications %}
@@ -65,7 +57,7 @@
                     <a href="{{ path('entreprise_create_offre_emploi') }}" class="ui row labeled icon">
                         <button class="ui blue labeled icon button">
                             <i class="plus icon"></i>
-                            Nouvelle annonce
+                            Nouvelle offre
                         </button>
                     </a>
                 </div>

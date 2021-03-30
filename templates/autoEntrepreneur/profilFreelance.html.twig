@@ -20,20 +20,37 @@
                 <i class="icon green check circle outline"></i>
                 Téléphone vérifié
             </div>
-            <br><br>
-            <div>
-                <i class="icon newspaper outline"></i>
-                Crédit annonces restantes : 2
-            </div>
-            <a href="#">Ajouter des crédits</a>
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3>Bio</h3>
-        <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consequuntur, cupiditate eum exercitationem
-            fugiat illum itaque laboriosam non pariatur praesentium quis reprehenderit rerum sunt? Maiores minus
-            obcaecati recusandae reprehenderit voluptate!
+        <h3>Votre carte de visite</h3>
+        <div class="ui two stackable cards">
+            {% if publications %}
+                <a href="{{ path('particulier_create_carte') }}" class="ui card">
+                    <div class="ui image">
+                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
+                    </div>
+                    <div class="extra content">
+                        <i class="check icon"></i>
+                        Vue 62 fois
+                    </div>
+                </a>
+            {% else %}
+                <div style="border: none; width: auto; box-shadow: none;"
+                     class="ui card grid middle aligned center aligned">
+                    <div class="column">
+                        <div class="ui row labeled icon">
+                            <a href="{{ path('particulier_create_carte') }}" class="ui blue labeled icon button"
+                               for="profile-carte">
+                                <i class="plus icon"></i>
+                                Ajouter carte visite
+                                <a href="{{ path('particulier_create_carte') }}" style="display: none;"
+                                   name="carte"></a>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="ui vertical segment">
@@ -69,37 +86,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
-    </div>
-    <div class="ui vertical segment">
-        <h3>Votre carte de visite</h3>
-        <div class="ui two stackable cards">
-            {% if publications %}
-                <a href="{{ path('particulier_create_carte') }}" class="ui card">
-                    <div class="ui image">
-                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vue 62 fois
-                    </div>
-                </a>
-            {% else %}
-                <div style="border: none; width: auto; box-shadow: none;"
-                     class="ui card grid middle aligned center aligned">
-                    <div class="column">
-                        <div class="ui row labeled icon">
-                            <a href="{{ path('particulier_create_carte') }}" class="ui blue labeled icon button"
-                               for="profile-carte">
-                                <i class="plus icon"></i>
-                                Ajouter carte visite
-                                <a href="{{ path('particulier_create_carte') }}" style="display: none;"
-                                   name="carte"></a>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
     <div class="ui vertical segment">
