@@ -14,6 +14,7 @@ use App\Entity\Adresse;
 use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
+use App\Entity\Employeur;
 use App\Entity\Particulier;
 use App\Utils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -341,6 +342,49 @@ class ParticulierController extends AbstractController
 
         return $this->render('candidat/showOffresEmploi.html.twig', [
             'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id])
+        ]);
+    }
+
+    /**
+     * @Route("/cartes", name="particulier_cartes")
+     */
+    public function listCarteVisite()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('particulier/showCartesVisite.html.twig');
+    }
+
+    /**
+     * @Route("/carte/{id}", name="particulier_show_carte")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
+    public function voirCarteVisite($id, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $carte = $em->getRepository(CarteVisite::class)->findOneBy(['id' => $id]);
+
+        if (is_null($carte)) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('', [
+            'carte' => $carte
         ]);
     }
 
