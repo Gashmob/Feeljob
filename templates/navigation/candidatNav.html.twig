@@ -3,10 +3,10 @@
         <img src="{{ asset('img/FJ200.png') }}"/>
         Accueil
     </a>
-    <a href="{{ path('showAnnonces') }}" class="item">Annonces</a>
-    <a href="{{ path('create_cv') }}" class="item">Nouveau CV</a>
+    <a href="{{ path('entreprise_offres_emploi') }}" class="item">Offres</a>
+    <a href="{{ path('entreprise_create_cv') }}" class="item">Nouveau CV</a>
     <div class="right menu">
-        <a href="{{ path('contrats') }}" class="ui dropdown item" onmouseover="loadNotifications()">
+        <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
             <i class="icon bell"></i>
             <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
             <div class="menu">
@@ -55,7 +55,7 @@
             <div class="menu">
                 <a href="#" class="item">Ajout crédits</a>
                 <a href="#" class="item">Éditer le profil</a>
-                <a href="{{ path('preferences') }}" class="item">Préférences</a>
+                <a href="#" class="item">Préférences</a>
                 <div class="divider"></div>
                 <a class="item red" href="{{ path('deconnexion') }}">Déconnexion
                     <i class="icon sign-out"></i>

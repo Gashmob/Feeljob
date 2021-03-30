@@ -8,12 +8,10 @@
         <div class="ten wide column">
             <h2 class="ui header">
                 <div class="content">Profil de {{ prenom }} {{ nom }}
-                    {% if app.session.get('userType') == 'Entreprise' %}
-                        <div class="sub header">{{ nomEntreprise }}</div>
-                    {% endif %}
+                    <div class="sub header">{{ nomEntreprise }}</div>
                 </div>
             </h2>
-            <div class="ui label">{{ app.session.get('userType') }}</div>
+            <div class="ui label">Entreprise</div>
         </div>
         <div class="four wide column">
             <div>
@@ -24,14 +22,12 @@
                 <i class="icon green check circle outline"></i>
                 Téléphone vérifié
             </div>
-            {% if app.session.get('userType') == 'Entreprise' %}
-                <br><br>
-                <div>
-                    <i class="icon newspaper outline"></i>
-                    Crédit annonces restantes : 2
-                </div>
-                <a href="#">Ajouter des crédits</a>
-            {% endif %}
+            <br><br>
+            <div>
+                <i class="icon newspaper outline"></i>
+                Crédit annonces restantes : 2
+            </div>
+            <a href="#">Ajouter des crédits</a>
         </div>
     </div>
     <div class="ui vertical segment">
@@ -43,116 +39,7 @@
         </div>
     </div>
     <div class="ui vertical segment">
-    {% if app.session.get('userType') == 'Employe' %}
-        <h3>Vos contrats</h3>
-        <div class="ui segment">
-            {% for i in 1..2 %}
-                <div class="ui vertical segment">
-                    <div class="content">
-                        <div class="header">
-                            <i class="icon green check"></i>
-                            Accepté
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
-                                exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
-                                unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            {% for i in 1..2 %}
-                <div class="ui vertical segment">
-                    <div class="content">
-                        <div class="header">
-                            <i class="icon red times"></i>
-                            Refusé
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
-                                dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
-                                placeat praesentium rem velit. Harum nobis officia praesentium.</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        </div>
-        <div class="ui vertical segment">
-        <h3>Vos CV</h3>
-        <div class="ui four stackable cards">
-            {% for publication in publications %}
-                <a href="{{ path('entreprise_show_cv', {'id': publication['id']}) }}" class="ui card">
-                    <div class="content">
-                        <div class="header">{{ publication['intitule'] }}</div>
-                        <div class="meta">Créé le 12 novembre 2020</div>
-                        <div class="description">
-                            <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for
-                                their
-                                adorable faces, others for their tiny stature, and even others for their massive
-                                size.</p>
-                            <div class="extra">
-                                <div class="ui label">{{ publication['contrat'] }}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vu {{ publication['id'] }} fois
-                    </div>
-                </a>
-            {% endfor %}
-            <div style="border: none; width: auto; box-shadow: none;"
-                 class="ui card grid middle aligned center aligned">
-                <div class="column">
-                    <div class="ui row labeled icon">
-                        <label class="ui labeled icon button" for="profile-cv">
-                            <i class="download icon"></i>
-                            Télécharger
-                            <input type="file" style="display: none;" id="profile-cv" name="cv">
-                        </label>
-                    </div>
-                    <div style="margin: .5em 0;" class="row">Ou</div>
-                    <a href="{{ path('entreprise_create_cv') }}" class="ui row labeled icon">
-                        <button class="ui blue labeled icon button">
-                            <i class="plus icon"></i>
-                            Créer
-                        </button>
-                    </a>
-                </div>
-            </div>
-        </div>
-    {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
-        <h3>Votre carte de visite</h3>
-        <div class="ui two stackable cards">
-            {% if publications %}
-                <a href="{{ path('particulier_create_carte') }}" class="ui card">
-                    <div class="ui image">
-                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vue 62 fois
-                    </div>
-                </a>
-            {% else %}
-                <div style="border: none; width: auto; box-shadow: none;"
-                     class="ui card grid middle aligned center aligned">
-                    <div class="column">
-                        <div class="ui row labeled icon">
-                            <a href="{{ path('particulier_create_carte') }}" class="ui blue labeled icon button"
-                               for="profile-carte">
-                                <i class="plus icon"></i>
-                                Ajouter carte visite
-                                <a href="{{ path('particulier_create_carte') }}" style="display: none;" name="carte"></a>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    {% else %}
-        <h3>Vos annonces</h3>
+        <h3>Vos offres d'emploi</h3>
         <div class="ui four stackable cards">
             {% for publication in publications %}
                 <a href="{{ path('entreprise_show_offre_emploi', {'id': publication['id']}) }}" class="ui card">
@@ -198,7 +85,7 @@
     {% endif %}
     </div>
     <div class="ui vertical segment">
-        <h3>Avis des employeurs</h3>
+        <h3>Avis des employés</h3>
         <div class="ui three stackable cards">
             {% for i in 0..4 %}
                 <div class="ui card">
