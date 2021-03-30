@@ -550,6 +550,32 @@ class EntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/supprime/offre_emploi/{id}", name="entreprise_delete_offre_emploi")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function deleteOffreEmploi($id, EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!(new OffreEmploiManager())->isOwner($this->session->get('user'), $id)) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        (new OffreEmploiManager())->remove($em, $id);
+
+        $this->addFlash('success', 'Votre offre d\'emploi a été supprimée !');
+        return $this->redirectToRoute('userSpace');
+    }
+
+    /**
      * @Route("/offre_emploi/{id}", name="entreprise_show_offre_emploi")
      * @param $id
      * @param EntityManagerInterface $em
