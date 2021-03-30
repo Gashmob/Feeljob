@@ -207,7 +207,8 @@ class EntrepriseController extends AbstractController
                     'nom' => $user->getNom(),
                     'nomEntreprise' => $user->getNomEntreprise(),
                     'prenom' => $user->getPrenom(),
-                    'publications' => $publications
+                    'publications' => $publications,
+                    'typesContrat' => (new OffreEmploiManager())->getTypes($publications)
                 ]);
         }
 

@@ -438,4 +438,19 @@ class OffreEmploiManager extends Manager
             ->run()
             ->getOneOrNullResult() != null;
     }
+
+    /**
+     * @param OffreEmploi[] $offres
+     * @return string[]
+     */
+    public function getTypes(array $offres): array
+    {
+        $res = [];
+
+        foreach ($offres as $offre) {
+            $res[] = $this->getType($offre->getIdentity());
+        }
+
+        return $res;
+    }
 }
