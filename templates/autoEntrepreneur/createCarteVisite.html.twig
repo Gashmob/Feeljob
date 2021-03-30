@@ -26,7 +26,7 @@
             <label class="ui blue labeled icon button" for="profile-carte">
                 <i class="download icon"></i>
                 <span id="profile-carte-label">Télécharger votre carte de visite</span>
-                <input onchange="readURL(this);" href="{{ path('create_carte') }}" type="file" style="display: none;" id="profile-carte" name="carte">
+                <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file" style="display: none;" id="profile-carte" name="carte">
             </label>
             <button type="submit" class="ui green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
