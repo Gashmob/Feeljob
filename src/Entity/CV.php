@@ -67,6 +67,11 @@ class CV
     private $langues;
 
     /**
+     * @ORM\OneToOne(targetEntity=Employe::class, mappedBy="CV", cascade={"persist", "remove"})
+     */
+    private $employe;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
@@ -262,6 +267,28 @@ class CV
                 $langue->setCV(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEmploye(): ?Employe
+    {
+        return $this->employe;
+    }
+
+    public function setEmploye(?Employe $employe): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($employe === null && $this->employe !== null) {
+            $this->employe->setCV(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($employe !== null && $employe->getCV() !== $this) {
+            $employe->setCV($this);
+        }
+
+        $this->employe = $employe;
 
         return $this;
     }
