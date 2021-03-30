@@ -309,6 +309,20 @@ class OffreEmploiManager extends Manager
 
     /**
      * @param int $idOffre
+     * @return string
+     */
+    public function getType(int $idOffre): string
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ') WHERE id(o)=$idO RETURN t'))
+            ->setInteger('idO', $idOffre)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result['t']['nom'];
+    }
+
+    /**
+     * @param int $idOffre
      * @param string $typeContrat
      */
     public function changeType(int $idOffre, string $typeContrat)
