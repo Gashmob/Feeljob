@@ -107,4 +107,26 @@ class AutoEntrepreneurManager extends Manager
     {
         $em->flush();
     }
+
+    /**
+     * @param AutoEntrepreneur[] $preResult
+     * @param string $secteur
+     * @return AutoEntrepreneur[]
+     */
+    public function findBySecteurActiviteFromPreResult(array $preResult, string $secteur): array
+    {
+        $res = [];
+
+        foreach ($preResult as $result) {
+            if ((new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')--(s:' . EntityManager::SECTEUR_ACTIVITE .' {nom:$nom}) WHERE id(a)=$id RETURN a'))
+                ->setString('nom', $secteur)
+                ->setInteger('id', $result->getIdentity())
+                ->run()
+                ->getOneOrNullResult() != null) {
+                $res[] = $result;
+            }
+        }
+
+        return $res;
+    }
 }
