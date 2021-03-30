@@ -216,7 +216,7 @@ class EntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/cree/CV", name="entreprise_create_cv")
+     * @Route("/creer/CV", name="entreprise_create_cv")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
@@ -337,7 +337,7 @@ class EntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/cree/offre_emploi", name="entreprise_create_offre_emploi")
+     * @Route("/creer/offre_emploi", name="entreprise_create_offre_emploi")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response

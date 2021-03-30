@@ -206,7 +206,7 @@ class ParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/cree/carte", name="particulier_create_carte")
+     * @Route("/creer/carte", name="particulier_create_carte")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
@@ -248,7 +248,7 @@ class ParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/cree/annonce", name="particulier_create_annonce")
+     * @Route("/creer/annonce", name="particulier_create_annonce")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
