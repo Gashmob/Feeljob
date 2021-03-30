@@ -406,6 +406,8 @@ class EntrepriseController extends AbstractController
 
             $typeContrat = $request->get('typeContrat');
 
+            $description = $request->get('description');
+
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $adresse = (new Adresse())
                     ->setRue('')
@@ -424,6 +426,7 @@ class EntrepriseController extends AbstractController
                     ->setDeplacement($deplacement)
                     ->setLieu($adresse)
                     ->setTeletravail($teletravail)
+                    ->setDescription($description)
                     ->setNbPostes($nbPostes);
 
                 (new OffreEmploiManager())->create($em, $offre, $this->session->get('user'), $typeContrat);

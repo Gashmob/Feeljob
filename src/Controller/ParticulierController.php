@@ -278,8 +278,6 @@ class ParticulierController extends AbstractController
                 $this->addFlash('description', 'Merci de renseigner une description');
             }
 
-            $rue = $request->get('rue');
-            $code_postal = $request->get('code_postal');
             $ville = $request->get('ville');
 
             $date = $request->get('date');
@@ -288,8 +286,8 @@ class ParticulierController extends AbstractController
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
-                    ->setRue($rue)
-                    ->setCodePostal($code_postal)
+                    ->setRue('')
+                    ->setCodePostal('')
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
