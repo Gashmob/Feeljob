@@ -59,11 +59,11 @@
             <div class="two fields">
                 <div class="field required">
                     <label>Date début</label>
-                    <input required name="debut" placeholder="jj/mm/aaaa" type="date" value="{{ offre.debut|date('d/m/Y') }}">
+                    <input required name="debut" placeholder="jj/mm/aaaa" type="date" value="{{ offre.debut|date('d-m-Y') }}">
                 </div>
                 <div class="field" id="dateFinField">
                     <label>Date fin</label>
-                    <input name="fin" placeholder="jj/mm/aaaa" type="date" value="{{ offre.fin|date('d/m/Y') }}">
+                    <input name="fin" placeholder="jj/mm/aaaa" type="date" value="{{ offre.fin|date('d-m-Y') }}">
                 </div>
             </div>
             <div class="two fields">
