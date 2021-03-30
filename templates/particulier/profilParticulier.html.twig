@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <h3>Vos annonces</h3>
+    <h3 class="ui header green">Vos annonces</h3>
     <div class="ui four stackable cards">
         {% for publication in publications %}
             <a href="{{ path('entreprise_show_offre_emploi', {'id': publication['id']}) }}" class="ui card">
@@ -61,7 +61,7 @@
     </div>
     <div class="ui vertical segment">
         <div class="ui vertical segment">
-            <h3>Vos contrats</h3>
+            <h3 class="ui header green">Vos contrats</h3>
             <div class="ui segment">
                 {% for i in 1..2 %}
                     <div class="ui vertical segment">
