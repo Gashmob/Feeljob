@@ -428,7 +428,7 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('entreprise/createEmploi.html.twig', [
-            'typeContrat' => (new TypeContratManager())
+            'typeContrat' => (new TypeContratManager())->findAllNames()
         ]);
     }
 
