@@ -543,7 +543,9 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('entreprise/editEmploi.html.twig', [
-            'offre' => $offre
+            'offre' => $offre,
+            'typeContrat' => (new OffreEmploiManager())->getType($id),
+            'employeur' => $em->getRepository(Employeur::class)->findOneBy(['identity' => $this->session->get('user')])
         ]);
     }
 
