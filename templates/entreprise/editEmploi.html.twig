@@ -1,0 +1,98 @@
+{% extends 'page.html.twig' %}
+{% block title %}Modifier une offre d'emploi{% endblock %}
+{% block body %}
+    <div style="position: relative;" class="ui text justified container">
+        <a href="{{ path('showAnnonces') }}" class="ui compact labeled icon button"
+           style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+            <i class="left arrow icon"></i>
+            Retour aux annonces
+        </a>
+        <a href="#">
+            <button class="ui red labeled icon button">
+                <i class="times icon"></i>
+                Supprimer
+            </button>
+        </a>
+        <div class="ui segment annonce">
+            <div class="ui two column grid annonce-header">
+                <div class="column ten wide">
+                    <h2 class="ui header">{{ offre['nom'] }}</h2>
+                    <div>
+                        <div class="ui label">{{ offre['typeContrat'] }}</div>
+                    </div>
+                </div>
+                <div class="six wide column">
+                    <a href="{{ path('userSpace') }}" class="ui header small">
+                        {% if offre['logo'] is not empty %}
+                            <img src="{{ asset('uploads/logos/' ~ offre['logo']) }}" class="ui circular image">
+                        {% else %}
+                            <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
+                        {% endif %}
+                        {{ offre['nomEntreprise'] }}
+                    </a>
+                </div>
+            </div>
+            <div style="padding-top: 20px;" class="ui content annonce-content">
+                {% if not offre['deplacement'] %}
+                    <p>
+                        <i class="icon map pin"></i>
+                        {{ offre['lieu'] }}
+                    </p>
+                {% endif %}
+                <p>
+                    <i class="icon calendar alternate"></i>
+                    {% if offre['typeContrat'] == 'CDI' %}
+                        <span class="cinema">À partir du {{ offre['debut'] }}</span>
+                    {% else %}
+                        <span class="cinema">Du {{ offre['debut'] }} au {{ offre['fin'] }}</span>
+                    {% endif %}
+                </p>
+                <p>{{ offre['nbRecrutement'] }} recrutement{% if offre['nbRecrutement'] > 1 %}s{% endif %}
+                    disponible{% if offre['nbRecrutement'] > 1 %}s{% endif %}</p>
+                <p>{{ offre['salaire'] }}.00€</p>
+                <p>{{ offre['heures'] }} heures par semaine</p>
+                <p>Description : Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur culpa debitis
+                    delectus explicabo facilis laborum odio repellendus tenetur? Beatae fugit ipsam nihil quae
+                    similique. Dolorum incidunt molestiae omnis unde veniam.</p>
+            </div>
+            <!-- Location carte -->
+            <div style="padding-top: 20px;" class="ui content annonce-location">
+                <h3 class="ui dividing header">
+                    <i class="icon map pin"></i>
+                    <div class="content">Location sur la carte</div>
+                </h3>
+                <div>
+                    <!--
+                    <div class="ui embed"
+                         data-url="https://www.google.com/maps/embed/v1/place?q=université+savoie+mont+blanc&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+                         data-placeholder="{ asset('img/placeholders/grey-frame.png') }">
+                    </div>
+                    -->
+                    <div class="ui embed"
+                         data-url="https://www.google.com/maps/embed/v1/place?q=université+savoie+mont+blanc&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8">
+                    </div>
+                </div>
+            </div>
+            <!-- Autres -->
+            <h3 class="ui dividing header">
+                <i class="icon question circle outline"></i>
+                <div class="content">Informations additionnelles</div>
+            </h3>
+            <div class="ui segment">
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['teletravail'] %}check{% else %}times{% endif %}"></i>
+                    Éligible au télétravail
+                </div>
+                <div class="ui left float icon">
+                    <i class="icon {% if offre['loge'] %}check{% else %}times{% endif %}"></i>
+                    Logé
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        $('.ui.embed').embed();
+    </script>
+{% endblock %}

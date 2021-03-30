@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3>Votre carte de visite</h3>
+        <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
             {% if publications %}
                 <a href="{{ path('particulier_create_carte') }}" class="ui card">
@@ -54,7 +54,7 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3>Vos contrats</h3>
+        <h3 class="ui header green">Vos contrats</h3>
         <div class="ui segment">
             {% for i in 1..2 %}
                 <div class="ui vertical segment">
@@ -89,7 +89,7 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3>Avis reçus</h3>
+        <h3 class="ui header green">Avis reçus</h3>
         <div class="ui three stackable cards">
             {% for i in 0..4 %}
                 <div class="ui card">
