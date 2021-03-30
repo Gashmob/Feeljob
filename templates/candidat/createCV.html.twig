@@ -23,26 +23,11 @@
             Nouveau CV
         </h3>
         <form class="ui form segment" method="post">
-            <div class="inline field">
-                <label>Nom du CV :</label>
-                <div class="ui input">
-                    <input type="text" name="nomCV"
-                           value="{% if cv is not empty %}{{ cv['intitule'] }}{% else %}CV #1{% endif %}">
-                </div>
-            </div>
-            <div class="inline field">
-                <label>Types de contrat :</label>
-                <select class="ui dropdown" name="typeContrat">
-                    {% for type in typeContrats %}
-                        <option value="{{ type }}">{{ type }}</option>
-                    {% endfor %}
-                </select>
-            </div>
             <!-- Identité -->
             <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid stackable">
                 <div class="ui four wide column middle aligned">
-                    <img src="{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}"
+                    <img src="{{ asset('img/placeholders/elyse.png') }}"
                          alt="photo de profil"
                          id="pdp"
                          class="ui small circular centered image">
@@ -51,36 +36,17 @@
                     <div class="two fields">
                         <div class="field disabled">
                             <label>Prénom</label>
-                            <input type="text" name="prenom" value="{{ prenom }}">
+                            <input type="text" name="prenom" value="{{ employe.prenom }}">
                         </div>
                         <div class="field disabled">
                             <label>Nom</label>
-                            <input type="text" name="nom" value="{{ nom }}">
+                            <input type="text" name="nom" value="{{ employe.nom }}">
                         </div>
                     </div>
                     <div class="two fields">
-                        <div class="field">
+                        <div class="required field">
                             <label>Né le</label>
-                            <input type="date" name="dateNaissance" placeholder="18/09/1989"
-                                   value="{% if cv is not empty %}{{ cv['naissance'] }}{% endif %}">
-                        </div>
-                        <div class="field">
-                            <label>Profil</label>
-                            <select class="ui dropdown" name="metier">
-                                {% for metier in metiers %}
-                                    <option value="{{ metier }}">{{ metier }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="two fields">
-                        <div class="field">
-                            <label>Sexe</label>
-                            <select class="ui dropdown" name="sexe">
-                                <option value="N">Non précisé</option>
-                                <option value="H">Homme</option>
-                                <option value="F">Femme</option>
-                            </select>
+                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" required>
                         </div>
                         <div class="field">
                             <label>Photo de profil</label>
@@ -94,6 +60,16 @@
                                 <div class="ui button" id="pdpClear"><i class="times icon"></i></div>
                             </div>
                         </div>
+                        {#
+                        <div class="field">
+                            <label>Profil</label>
+                            <select class="ui dropdown" name="metier">
+                                {% for metier in metiers %}
+                                    <option>{{ metier }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        #}
                     </div>
                 </div>
             </div>
@@ -103,15 +79,14 @@
                         <label>E-mail</label>
                         <div class="ui left icon input">
                             <i class="icon envelope"></i>
-                            <input type="text" name="mail" placeholder="Email"
-                                   value="{{ email }}">
+                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}">
                         </div>
                     </div>
                     <div class="field">
                         <label>Téléphone</label>
                         <div class="ui left icon input">
                             <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ telephone }}">
+                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}">
                         </div>
                     </div>
                 </div>
@@ -125,9 +100,9 @@
                     </div>
                     <div class="field">
                         <label>Situation familiale</label>
-                        <select class="ui dropdown" name="famille">
+                        <select class="ui dropdown" name="situationFamille">
                             {% for situation in situations %}
-                                <option value="{{ situation }}">{{ situation }}</option>
+                                <option>{{ situation.nom }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -183,6 +158,12 @@
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
             </div>
+            <!-- Description -->
+            <h3 class="ui dividing green header">Description</h3>
+            <div class="field">
+                <textarea rows="8" name="description"
+                          placeholder="Rajoutez des informations à votre sujet."></textarea>
+            </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
             <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
@@ -214,6 +195,29 @@
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_lang()" id="langPlus"></i>
             </div>
+            <!-- Compétences
+            <h3 class="ui dividing green header">Compétences</h3>
+            <div style="margin-bottom: 10px;" class="formations-list" id="formationsList">
+                <div class="ui segment" id="formationsItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du diplôme</label>
+                            <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                        </div>
+                        <div class="field">
+                            <label>Date d'obtention</label>
+                            <input type="date" name="dates" placeholder="26/04/2013">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Nom de l'établissement</label>
+                        <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
+                    </div>
+                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
+            </div> -->
             <!-- Autres -->
             <h3 class="ui dividing green header">Autres informations</h3>
             <div class="ui segment">
@@ -256,7 +260,7 @@
         $('#pdpClear').on('click', function () {
             $('#photo-profil').val('');
             $('#pdpLabel').text('Sélectionner');
-            $('#pdp').attr('src', '{% if cv is not empty %}{{ asset('uploads/photos/' ~ cv['photo']) }}{% else %}{{ asset('img/placeholders/elyse.png') }}{% endif %}');
+            $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
         var nbForm = nbExp = nbLang = 1
