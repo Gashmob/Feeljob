@@ -14,9 +14,6 @@
                    class="ui blue basic button">
                     Éditer
                 </a>
-                <a href="#" class="ui red basic button">
-                    Supprimer
-                </a>
             </div>
         {% endif %}
         <div class="ui segment annonce">
@@ -42,7 +39,7 @@
                 {% if not offre.deplacement %}
                     <p>
                         <i class="icon map pin"></i>
-                        {{ offre.lieu }}
+                        {{ offre.lieu.ville }}
                     </p>
                 {% endif %}
                 <p>
@@ -57,9 +54,11 @@
                     disponible{% if offre.nbPostes > 1 %}s{% endif %}</p>
                 <p>{{ offre.salaire }}.00€</p>
                 <p>{{ offre.heures }} heures par semaine</p>
-                <p>Description : Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur culpa debitis
-                    delectus explicabo facilis laborum odio repellendus tenetur? Beatae fugit ipsam nihil quae
-                    similique. Dolorum incidunt molestiae omnis unde veniam.</p>
+                {% if offre.description|length %}
+                    <p>{{ offre.description }}</p>
+                {% else %}
+                    <p class="meta">** L'employeur n'a pas renseigné de description **</p>
+                {% endif %}
             </div>
             <!-- Location carte -->
             <div style="padding-top: 20px;" class="ui content annonce-location">
