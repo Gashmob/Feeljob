@@ -13,12 +13,14 @@
         <div id="nav-background" onclick="menuDisplay()"></div>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
-        {% elseif app.session.get('userType') == 'Candidat' %}
+        {% elseif app.session.get('userType') == 'Employe' %}
             {% include('navigation/candidatNav.html.twig') %}
-        {% elseif app.session.get('userType') == 'Entreprise' %}
+        {% elseif app.session.get('userType') == 'Employeur' %}
             {% include('navigation/entrepriseNav.html.twig') %}
-        {% elseif app.session.get('userType') == 'Freelance' %}
+        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
             {% include('navigation/freelanceNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Particulier' %}
+            {% include('navigation/particulierNav.html.twig') %}
         {% endif %}
     </nav>
 </header>
