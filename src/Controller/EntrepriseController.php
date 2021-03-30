@@ -297,7 +297,7 @@ class EntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/cv/{id}", requirements={"id": true}, name="entreprise_show_cv")
+     * @Route("/cv/{id}", name="entreprise_show_cv")
      * @param $id
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response

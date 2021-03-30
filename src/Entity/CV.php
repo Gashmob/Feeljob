@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CVRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -90,12 +91,12 @@ class CV
         return $this->id;
     }
 
-    public function getNaissance(): ?\DateTimeInterface
+    public function getNaissance(): ?DateTimeInterface
     {
         return $this->naissance;
     }
 
-    public function setNaissance(\DateTimeInterface $naissance): self
+    public function setNaissance(DateTimeInterface $naissance): self
     {
         $this->naissance = $naissance;
 
@@ -126,24 +127,24 @@ class CV
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
