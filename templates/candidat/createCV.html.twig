@@ -102,7 +102,7 @@
                         <label>Situation familiale</label>
                         <select class="ui dropdown" name="situationFamille">
                             {% for situation in situations %}
-                                <option>{{ situation.nom }}</option>
+                                <option value="{{ situation.nom }}">{{ situation.nom }}</option>
                             {% endfor %}
                         </select>
                     </div>
