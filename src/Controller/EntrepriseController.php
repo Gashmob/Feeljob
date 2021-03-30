@@ -553,12 +553,14 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::EMPLOYE && !(new OffreEmploiManager())->isOwner($this->session->get('user'), $id)) {
+        $owner = (new OffreEmploiManager())->isOwner($this->session->get('user'), $id);
+        if ($this->session->get('userType') != EntityManager::EMPLOYE && !$owner) {
             return $this->redirectToRoute('userSpace');
         }
 
         return $this->render('entreprise/showEmploi.html.twig', [
-            'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id])
+            'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]),
+            'owner' => $owner
         ]);
     }
 
