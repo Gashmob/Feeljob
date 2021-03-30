@@ -220,6 +220,7 @@ class EntrepriseController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function createCV(Request $request, EntityManagerInterface $em)
     {
@@ -268,7 +269,7 @@ class EntrepriseController extends AbstractController
 
             if ($naissanceB) {
                 $cv = (new CV())
-                    ->setNaissance($naissance)
+                    ->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
