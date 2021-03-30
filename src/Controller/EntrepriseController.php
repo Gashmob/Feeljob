@@ -20,7 +20,6 @@ use App\Entity\Langue;
 use App\Entity\OffreEmploi;
 use App\Entity\SituationFamille;
 use App\Utils;
-use Bolt\structures\Date;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Egulias\EmailValidator\EmailValidator;
@@ -36,6 +35,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function date;
 
 /**
  * Class EntrepriseController
@@ -364,7 +364,7 @@ class EntrepriseController extends AbstractController
             if ($debut == '') {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
-            } elseif ($debut < \date('now')) {
+            } elseif ($debut < date('now')) {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début correcte');
             }
@@ -478,7 +478,7 @@ class EntrepriseController extends AbstractController
             if ($debut == '') {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début de contrat');
-            } elseif ($debut < \date('now')) {
+            } elseif ($debut < date('now')) {
                 $debutB = false;
                 $this->addFlash('debut', 'Merci de renseigner une date de début correcte');
             }
@@ -546,7 +546,8 @@ class EntrepriseController extends AbstractController
         return $this->render('entreprise/editEmploi.html.twig', [
             'offre' => $offre,
             'typeContrat' => (new OffreEmploiManager())->getType($id),
-            'employeur' => $em->getRepository(Employeur::class)->findOneBy(['identity' => $this->session->get('user')])
+            'employeur' => $em->getRepository(Employeur::class)->findOneBy(['identity' => $this->session->get('user')]),
+            'typesContrat' => (new TypeContratManager())->findAllNames()
         ]);
     }
 
