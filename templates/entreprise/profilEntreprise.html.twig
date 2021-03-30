@@ -19,8 +19,8 @@
                 E-mail vérifié
             </div>
             <div>
-                <i class="icon green check circle outline"></i>
-                Téléphone vérifié
+                <i class="icon grey question mark circle outline"></i>
+                Téléphone non vérifié
             </div>
             <br><br>
             <div>
@@ -37,14 +37,19 @@
                 <a href="{{ path('entreprise_show_offre_emploi', {'id': publication.identity}) }}" class="ui card">
                     <div class="content">
                         <div class="header">{{ publication.nom }}</div>
-                        <div class="meta">Créée le {{ publication.createdAt|date('d/m/Y :i') }}</div>
+                        <div class="meta">Créée le {{ publication.createdAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publication.createdAt|date('H:i') }}</div>
+                        <br>
                         <div class="description">
-                            <p>{{ publication.description }}</p>
+                            {% if publication.description|length %}
+                                <p>{{ publication.description }}</p>
+                            {% else %}
+                                <p class="meta">** Pas de description **</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="extra content">
-                        <i class="check icon"></i>
-                        Vu {{ publication.identity }} fois
+                        <div class="ui label">Remplir type contrat</div>
                     </div>
                 </a>
             {% endfor %}
@@ -63,6 +68,8 @@
     </div>
     <div class="ui vertical segment">
         <h3 class="ui header green">Avis des employés</h3>
+        <div class="meta">&emsp; ** Pas encore d'avis reçus **</div>
+        <br>
         <div class="ui three stackable cards">
             {% for i in 0..4 %}
                 <div class="ui card">
