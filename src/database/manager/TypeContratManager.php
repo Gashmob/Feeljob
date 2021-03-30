@@ -119,4 +119,19 @@ class TypeContratManager extends Manager
             ->setInteger('id', $id)
             ->run();
     }
+
+    /**
+     * @return string[]
+     */
+    public function findAllNames(): array
+    {
+        $res = [];
+        $results = $this->findAll();
+
+        foreach ($results as $result) {
+            $res[] = $result['t']['nom'];
+        }
+
+        return $res;
+    }
 }
