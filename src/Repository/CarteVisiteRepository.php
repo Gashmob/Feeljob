@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +18,21 @@ class CarteVisiteRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CarteVisite::class);
+    }
+
+    /**
+     * @param AutoEntrepreneur[] $autoEntrepreneurs
+     * @return CarteVisite[]
+     */
+    public function findByAutoEntrepreneur(array $autoEntrepreneurs): array
+    {
+        $res = [];
+        foreach ($autoEntrepreneurs as $autoEntrepreneur) {
+            if (!is_null($autoEntrepreneur->getCarteVisite()))
+                $res[] = $autoEntrepreneur->getCarteVisite();
+        }
+
+        return $res;
     }
 
     // /**
