@@ -410,4 +410,18 @@ class OffreEmploiManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param int $idEmployeur
+     * @param int $idOffre
+     * @return bool
+     */
+    public function isOwner(int $idEmployeur, int $idOffre): bool
+    {
+        return (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(o)=$idO AND id(e)=$idE RETURN e'))
+            ->setInteger('idO', $idOffre)
+            ->setInteger('idE', $idEmployeur)
+            ->run()
+            ->getOneOrNullResult() != null;
+    }
 }

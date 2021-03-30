@@ -553,7 +553,7 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+        if ($this->session->get('userType') != EntityManager::EMPLOYE && !(new OffreEmploiManager())->isOwner($this->session->get('user'), $id)) {
             return $this->redirectToRoute('userSpace');
         }
 
