@@ -391,7 +391,9 @@ class OffreEmploiManager extends Manager
     public function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
     {
         $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI .  ') WHERE id(e)=$id RETURN id(o) AS id'))
-            ->setInteger('id', $idEmployeur);
+            ->setInteger('id', $idEmployeur)
+            ->run()
+            ->getResult();
 
         $res = [];
 
