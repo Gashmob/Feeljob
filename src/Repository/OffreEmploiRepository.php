@@ -32,25 +32,27 @@ class OffreEmploiRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('o');
 
         if ($salaire != 'none') {
-            $query->andWhere('o.salaire >= :salaire')
+            $query = $query->andWhere('o.salaire >= :salaire')
                 ->setParameter('salaire', $salaire);
         }
         if ($heures != 'none') {
-            $query->andWhere('o.heures <= :heures')
+            $query = $query->andWhere('o.heures <= :heures')
                 ->setParameter('heures', $heures);
         }
         if ($loge != 'none') {
-            $query->andWhere('o.loge = :loge')
+            $query = $query->andWhere('o.loge = :loge')
                 ->setParameter('loge', $loge);
         }
         if ($deplacement != 'none') {
-            $query->andWhere('o.deplacement = :deplacement')
+            $query = $query->andWhere('o.deplacement = :deplacement')
                 ->setParameter('deplacement', $deplacement);
         }
         if ($teletravail != 'none') {
-            $query->andWhere('o.teletravail = :teletravail')
+            $query = $query->andWhere('o.teletravail = :teletravail')
                 ->setParameter('teletravail', $teletravail);
         }
+
+        $query = $query->andWhere('o.nbPostes > 0');
 
         return $query->getQuery()->getResult();
     }
