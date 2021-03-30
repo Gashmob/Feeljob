@@ -9,6 +9,7 @@ use App\database\manager\EmployeManager;
 use App\database\manager\EmployeurManager;
 use App\database\manager\OffreEmploiManager;
 use App\database\manager\SecteurActiviteManager;
+use App\database\manager\TypeContratManager;
 use App\database\manager\UtilsManager;
 use App\Entity\Adresse;
 use App\Entity\CV;
@@ -426,7 +427,9 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('entreprise/createEmploi.html.twig');
+        return $this->render('entreprise/createEmploi.html.twig', [
+            'typeContrat' => (new TypeContratManager())->findAllNames()
+        ]);
     }
 
     /**
