@@ -199,9 +199,9 @@
             console.log("DOM entièrement chargé et analysé");
             $.ajax({
                 url: '/entreprise/get/cvs',
-                method: 'POST',
+                type: 'POST',
             }).then(function (response) {
-                $('#result').text(response.cvs.cv[1]);
+                $('#result').text(response.cvs[0].naissance);
             });
         });
 
@@ -209,8 +209,8 @@
             e.preventDefault();
             var $link = $(e.currentTarget);
             $.ajax({
-                url: '/annonces/' + $link.data('direction'),
-                method: 'POST',
+                url: '/entreprise/get/cvs' + $link.data('direction'),
+                type: 'POST',
                 success: OnSuccess,
                 error: OnErrorCall,
             });
