@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="ui vertical segment">
-    {% if app.session.get('userType') == 'Candidat' %}
+    {% if app.session.get('userType') == 'Employe' %}
         <h3>Vos contrats</h3>
         <div class="ui segment">
             {% for i in 1..2 %}
@@ -82,7 +82,7 @@
         <h3>Vos CV</h3>
         <div class="ui four stackable cards">
             {% for publication in publications %}
-                <a href="{{ path('show_cv', {'id': publication['id']}) }}" class="ui card">
+                <a href="{{ path('entreprise_show_cv', {'id': publication['id']}) }}" class="ui card">
                     <div class="content">
                         <div class="header">{{ publication['intitule'] }}</div>
                         <div class="meta">Créé le 12 novembre 2020</div>
@@ -113,7 +113,7 @@
                         </label>
                     </div>
                     <div style="margin: .5em 0;" class="row">Ou</div>
-                    <a href="{{ path('create_cv') }}" class="ui row labeled icon">
+                    <a href="{{ path('entreprise_create_cv') }}" class="ui row labeled icon">
                         <button class="ui blue labeled icon button">
                             <i class="plus icon"></i>
                             Créer
@@ -122,11 +122,11 @@
                 </div>
             </div>
         </div>
-    {% elseif app.session.get('userType') == 'Freelance' %}
+    {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
         <h3>Votre carte de visite</h3>
         <div class="ui two stackable cards">
             {% if publications %}
-                <a href="{{ path('create_carte') }}" class="ui card">
+                <a href="{{ path('particulier_create_carte') }}" class="ui card">
                     <div class="ui image">
                         <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
                     </div>
@@ -140,11 +140,11 @@
                      class="ui card grid middle aligned center aligned">
                     <div class="column">
                         <div class="ui row labeled icon">
-                            <a href="{{ path('create_carte') }}" class="ui blue labeled icon button"
+                            <a href="{{ path('particulier_create_carte') }}" class="ui blue labeled icon button"
                                for="profile-carte">
                                 <i class="plus icon"></i>
                                 Ajouter carte visite
-                                <a href="{{ path('create_carte') }}" style="display: none;" name="carte"></a>
+                                <a href="{{ path('particulier_create_carte') }}" style="display: none;" name="carte"></a>
                             </a>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
         <h3>Vos annonces</h3>
         <div class="ui four stackable cards">
             {% for publication in publications %}
-                <a href="{{ path('show_emploi', {'id': publication['id']}) }}" class="ui card">
+                <a href="{{ path('entreprise_show_offre_emploi', {'id': publication['id']}) }}" class="ui card">
                     <div class="content">
                         <div class="header">{{ publication['nom'] }}</div>
                         <div class="meta">Créé le 12 novembre 2020</div>
@@ -186,7 +186,7 @@
                         </label>
                     </div>
                     <div style="margin: .5em 0;" class="row">Ou</div>
-                    <a href="{{ path('create_emploi') }}" class="ui row labeled icon">
+                    <a href="{{ path('entreprise_create_offre_emploi') }}" class="ui row labeled icon">
                         <button class="ui blue labeled icon button">
                             <i class="plus icon"></i>
                             Nouvelle annonce
