@@ -189,7 +189,8 @@ class ParticulierController extends AbstractController
             case EntityManager::AUTO_ENTREPRENEUR:
                 return $this->render('autoEntrepreneur/profilFreelance.html.twig', [
                     'nom' => $user->getNom(),
-                    'prenom' => $user->getPrenom()
+                    'prenom' => $user->getPrenom(),
+                    'publications' => $user->getCarteVisite()
                 ]);
 
             case EntityManager::PARTICULIER:
