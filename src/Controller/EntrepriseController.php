@@ -240,7 +240,7 @@ class EntrepriseController extends AbstractController
                 $this->addFlash('naissance', 'Merci de renseigner une date de naissance');
             }
 
-            $permis = $request->get('permis');
+            $permis = $request->get('permis') != null;
 
             $situationFamille = $request->get('situationFamille');
 
