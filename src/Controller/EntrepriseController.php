@@ -299,6 +299,7 @@ class EntrepriseController extends AbstractController
 
         return $this->render('candidat/createCV.html.twig', [
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
+            'langues' => $em->getRepository(Langue::class)->findAll(),
             'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')])
         ]);
     }
@@ -394,6 +395,7 @@ class EntrepriseController extends AbstractController
 
         return $this->render('', [
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
+            'langues' => $em->getRepository(Langue::class)->findAll(),
             'cv' => $cv,
             'employe' => $employe
         ]);
