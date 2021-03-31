@@ -111,7 +111,7 @@
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
             <div style="margin-bottom: 10px;" id="formationsList">
-                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this);'></i>
+                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
                 <div class="ui segment formation__item" id="formationsItem">
                     <div class="two fields">
                         <div class="field">
@@ -120,14 +120,16 @@
                         </div>
                         <div class="field">
                             <label>Nom de l'établissement</label>
-                            <input type="text" class="etablissement" name="etablissement0" placeholder="Nom de l'établissement">
+                            <input type="text" class="etablissement" name="etablissement0"
+                                   placeholder="Nom de l'établissement">
                         </div>
 
                     </div>
                     <div class="two fields">
                         <div class="field">
                             <label>Mention</label>
-                            <input type="text" class="mention" name="mention0" placeholder="Laissez vide si inapplicable">
+                            <input type="text" class="mention" name="mention0"
+                                   placeholder="Laissez vide si inapplicable">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
@@ -137,7 +139,7 @@
                 </div>
             </div>
             <div class="ui container center aligned">
-                <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
+                <i class="icon plus circle big green" onclick="add_formation();" id="feedPlus"></i>
             </div>
             <!-- Expériences -->
             <h3 class="ui dividing green header">Expérience professionnelle</h3>
@@ -147,19 +149,27 @@
                         <div class="field">
                             <label>Intitulé du poste</label>
                             <div class="field">
-                                <input type="text" name="postes" placeholder="Intitulé du poste">
+                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste">
                             </div>
                         </div>
                         <div class="field">
-                            <label>Durée</label>
-                            <input type="text" name="durees" placeholder="Durée">
+                            <label>Nom de l'entreprise</label>
+                            <div class="field">
+                                <input type="text" class="nomEntreprise" name="nomEntreprise"
+                                       placeholder="Nom de l'entreprise">
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label>Nom de l'entreprise</label>
+                    <div class="two fields">
                         <div class="field">
-                            <input type="text" name="nomEntreprises" placeholder="Nom de l'entreprise">
+                            <label>Date début</label>
+                            <input type="text" class="dateDebut" name="dateDebut" placeholder="Date début">
                         </div>
+                        <div class="field">
+                            <label>Date fin</label>
+                            <input type="text" class="dateFin" name="dateFin" placeholder="Date fin">
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -175,30 +185,56 @@
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
             <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
-                <div class="ui segment hidden" id="languesItem">
+                <div class="ui segment" id="languesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
-                                <select class="ui dropdown" name="langue">
-                                    <option value="FR">Français</option>
-                                    <option value="EN">Anglais</option>
-                                    <option value="IT">Italien</option>
+                                <select class="ui dropdown nomLangue" name="nomLangue0">
+                                    {% for langue in langues %}
+                                        <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="field">
                             <label>Niveau</label>
-                            <select class="ui dropdown" name="niveau">
-                                <option value="1">Basique</option>
-                                <option value="2">Intermédiaire</option>
-                                <option value="3">Avancé</option>
+                            <select class="ui dropdown niveauLangue" name="niveauLangue0">
+                                <option value="5" selected>Langue Maternelle</option>
                                 <option value="4">Bilingue</option>
-                                <option value="5">Langue Maternelle</option>
+                                <option value="3">Avancé</option>
+                                <option value="2">Intermédiaire</option>
+                                <option value="1">Basique</option>
                             </select>
                         </div>
                     </div>
                 </div>
+                {% for i in 1..6 %}
+                    <div style="display: none;" class="ui segment hidden transition langueNb{{ i }}">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Langue</label>
+                                <div class="field">
+                                    <select class="ui dropdown nomLangue" name="nomLangue{{ i }}">
+                                        {% for langue in langues %}
+                                            <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Niveau</label>
+                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ i }}">
+                                    <option value="5" selected>Langue Maternelle</option>
+                                    <option value="4">Bilingue</option>
+                                    <option value="3">Avancé</option>
+                                    <option value="2">Intermédiaire</option>
+                                    <option value="1">Basique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_lang()" id="langPlus"></i>
@@ -271,70 +307,99 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = nbExp = nbLang = 0;
-        //nbDiplomes = nombre de diplomes à renvoyer, commence à 1
+        var nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
+        const maxForm = 8;
+        const maxExp = 12;
+        const maxLang = 8;
+        const maxComp = 15;
 
-        //date1
-        //etablissement1
-        //mention1
-        //nom1
-
-        function add_feed() {
-            if (nbForm < 8) {
+        function add_formation() {
+            if (nbForm < maxForm) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
-                let div1 = document.createElement('div');
+                let newItem = document.createElement('div');
 
-                div1.classList.add('ui');
-                div1.classList.add('segment');
-                div1.classList.add('transition');
-                div1.classList.add('hidden');
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
 
-                div1.innerHTML = document.getElementById('formationsItem').innerHTML;
-                document.getElementById('formationsList').appendChild(div1);
-                $(div1).transition('scale')
+                newItem.innerHTML = document.getElementById('formationsItem').innerHTML;
+
+                newItem.querySelector('.nomDiplome').setAttribute("name", "nomDiplome" + nbForm);
+                newItem.querySelector('.etablissement').setAttribute("name", "etablissement" + nbForm);
+                newItem.querySelector('.mention').setAttribute("name", "mention" + nbForm);
+                newItem.querySelector('.date').setAttribute("name", "date" + nbForm);
+
+                document.getElementById('formationsList').appendChild(newItem);
+                $(newItem).transition('scale')
             } else {
                 $('#feedPlus').transition('shake');
             }
         }
 
         function add_exp() {
-            if (nbExp < 12) {
+            if (nbExp < maxExp) {
                 $('#expPlus').transition('jiggle');
                 nbExp += 1;
-                let div1 = document.createElement('div');
-                div1.classList.add('ui');
-                div1.classList.add('segment');
-                div1.classList.add('exp' + nbExp);
-                div1.classList.add('transition');
-                div1.classList.add('hidden');
-                div1.innerHTML = document.getElementById('experiencesItem').innerHTML;
-                document.getElementById('experiencesList').appendChild(div1);
-                $(div1).transition('scale')
+                let newItem = document.createElement('div');
+
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('experiencesItem').innerHTML;
+
+                newItem.querySelector('.nomMetier').setAttribute("name", "nomMetier" + nbExp);
+                newItem.querySelector('.nomEntreprise').setAttribute("name", "nomEntreprise" + nbExp);
+                newItem.querySelector('.dateDebut').setAttribute("name", "dateDebut" + nbExp);
+                newItem.querySelector('.dateFin').setAttribute("name", "dateFin" + nbExp);
+
+                document.getElementById('experiencesList').appendChild(newItem);
+                $(newItem).transition('scale')
             } else {
                 $('#expPlus').transition('shake');
             }
         }
 
         function add_lang() {
-            if (nbLang < 5) {
+            if (nbLang < maxLang) {
                 $('#langPlus').transition('jiggle');
                 nbLang += 1;
-                let div1 = document.createElement('div');
-                div1.classList.add('ui');
-                div1.classList.add('segment');
-                div1.classList.add('lang' + nbLang);
-                div1.classList.add('transition');
-                div1.classList.add('hidden');
-                div1.innerHTML = document.getElementById('languesItem').innerHTML;
-                document.getElementById('languesList').appendChild(div1);
-                $(div1).transition('scale')
+
+                let languesList = document.getElementById('#languesList')
+                let item = document.querySelector('langueNb'+nbLang);
+                console.log('langueNb'+nbLang);
+                item.style.display = 'block';
+
+                $(item).transition('scale')
             } else {
                 $('#langPlus').transition('shake');
             }
         }
 
-        function removeItem(e) {
+        function add_competence() {
+
+        }
+
+        function removeItem(e, type) {
+            switch (type) {
+                case 'form':
+                    nbForm -= 1;
+                    break;
+                case 'exp':
+                    nbExp -= 1;
+                    break;
+                case 'lang':
+                    nbLang -= 1;
+                    break;
+                case 'comp':
+                    nbComp -= 1;
+                    break;
+                default:
+                    console.log('erreur suppression item');
+            }
             e.parentNode.remove();
         }
 
