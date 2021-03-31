@@ -67,7 +67,7 @@ class CV
     private $langues;
 
     /**
-     * @ORM\OneToOne(targetEntity=Employe::class, mappedBy="CV", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Employe::class, mappedBy="CV")
      */
     private $employe;
 
