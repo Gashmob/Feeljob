@@ -15,7 +15,7 @@
                     <div class="item">Auto-entrepreneurs</div>
                 </div>
             </div>
-            <div id="searchBtn" class="ui button">Rechercher</div>
+            <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
         </div>
         <div class="ui grid stackable">
             <div class="five wide column">
@@ -123,6 +123,7 @@
         var httpRequest;
         var results;
 
+        //Cherche tous les résultats
         function makeRequest() {
             httpRequest = new XMLHttpRequest();
 
@@ -135,11 +136,29 @@
             httpRequest.send();
         }
 
+        //Cherche les résultats par le nom entré barre recherche
+        function makeRequestByName(name) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayOffres;
+            httpRequest.open('POST', '/entreprise/get/offres_emploi/'+name);
+            httpRequest.send();
+        }
+
+        //Affiche les résultats dans 'offresList'
+        var offresList = document.getElementById('offresList');
         function displayOffres() {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === 200) {
-                    //console.log(JSON.parse(httpRequest.responseText));
+                    // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
+                    // Réinitialise la liste
+                    offresList.innerHTML = '';
+                    // Pour chaque offre du tableau offres
                     for (var i = 0; i < results.offres.length; i++) {
                         console.log(results.offres[i]);
                         var card = `
@@ -176,62 +195,22 @@
             }
         }
 
-        function searchOffre(e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/entreprise/get/cvs' + $link.data('direction'),
-                type: 'POST',
-                success: OnSuccess,
-                error: OnErrorCall,
-            });
-        }
+        var searchInput = document.getElementById('searchInput');
 
-        /*function retrieveOffres(response) {
-            response.forEach(displayOffre());
-        }*/
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchOffres();
+            }
+        });
 
-        const offresList = document.getElementById('offresList');
-
-        function displayOffre(item, index) {
-            var card = `
-            <div class="card annonceCard">
-                <div class="content">
-                    <a class="header">` + item.nom + `</a>
-                    <div class="meta">
-                        <span>
-                            <i class="icon map pin"></i>
-                            Aix-les-Bains,
-                        </span>
-                        <span>du 12/06 au 12/07</span>
-                    </div>
-                    <div class="description">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
-                            blanditiis delectus distinctio dolor dolorum ducimus molestiae, natus nostrum
-                            perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
-                    </div>
-                    <div class="extra">
-                        <div class="ui label">CDD</div>
-                        <div class="ui label">CDI</div>
-                        <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                        <a href="#"
-                           class="ui right floated green button">
-                            Voir l'annonce
-                            <i class="right chevron icon"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            `;
-            offresList.innerHTML += card;
-        }
-
-        function onSuccess() {
-            console.log('onSuccess');
-        }
-
-        function onErrorCall() {
-            console.log('onErrorCall');
+        function searchOffres() {
+            var inputValue = searchInput.value;
+            if(inputValue != '' && inputValue != null) {
+                makeRequestByName(inputValue);
+            }
+            else {
+                makeRequest();
+            }
         }
     </script>
 {% endblock %}
