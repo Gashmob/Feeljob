@@ -35,7 +35,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use function date;
 
 /**
  * Class EntrepriseController
@@ -303,9 +302,97 @@ class EntrepriseController extends AbstractController
         ]);
     }
 
-    public function modifyCV()
+    /**
+     * @Route("/modifier/cv/{id}", name="entreprise_modifier_cv")
+     * @param $id
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    public function modifyCV($id, Request $request, EntityManagerInterface $em)
     {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
 
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!$em->getRepository(CV::class)->isOwner($id, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $cv = $em->getRepository(CV::class)->find($id);
+        $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]);
+
+        if ($request->isMethod('POST')) {
+            $naissance = $request->get('naissance');
+            $naissanceB = true;
+            if ($naissance == '') {
+                $naissanceB = false;
+                $this->addFlash('naissance', 'Merci de renseigner une date de naissance');
+            }
+
+            $permis = $request->get('permis') != null;
+
+            $situationFamille = $request->get('situationFamille');
+
+            // Clear langues, metiers, diplomes, competences
+            $cv->clearCompetence()->clearDiplome()->clearLangue()->clearMetier();
+
+            // TODO : récup langues, metiers, diplomes, competences
+            // Exemple how to do for langues
+            $langues = [];
+            for ($i = 0; $i < $request->get('nbLangues'); $i++) {
+                $langue = $request->get('langue' . $i);
+                $niveau = $request->get('niveau_langue' . $i);
+
+                $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
+                if (is_null($l)) {
+                    $l = (new Langue())
+                        ->setNom($langue);
+                    $em->persist($langue);
+                    $em->flush();
+                }
+
+                $n = (new CVLangue())
+                    ->setNiveau($niveau)
+                    ->setLangue($l);
+                $langues[] = $n;
+            }
+
+            $description = $request->get('description');
+
+            $photo = Utils::uploadImage('photo');
+
+            if ($naissanceB) {
+                $cv = (new CV())
+                    ->setNaissance(new DateTime($naissance))
+                    ->setPermis($permis)
+                    ->setDescription($description)
+                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
+                $em->persist($cv);
+                $em->flush();
+
+                // TODO : push langues, metiers, diplomes, competences
+                // Exemple how to do for langues
+                foreach ($langues as $langue) {
+                    $langue->setCV($cv);
+                    $em->persist($langue);
+                }
+                $em->flush();
+
+                $employe->setCV($cv);
+                $em->flush();
+            }
+        }
+
+        return $this->render('', [
+            'cv' => $cv,
+            'employe' => $employe
+        ]);
     }
 
     /**

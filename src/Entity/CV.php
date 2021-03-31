@@ -82,6 +82,7 @@ class CV
         $this->competences = new ArrayCollection();
         $this->diplomes = new ArrayCollection();
         $this->metiers = new ArrayCollection();
+
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
@@ -189,6 +190,15 @@ class CV
         return $this;
     }
 
+    public function clearCompetence(): self
+    {
+        foreach ($this->competences as $competence) {
+            $this->removeCompetence($competence);
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection|CVDiplome[]
      */
@@ -214,6 +224,15 @@ class CV
             if ($diplome->getCV() === $this) {
                 $diplome->setCV(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function clearDiplome(): self
+    {
+        foreach ($this->diplomes as $diplome) {
+            $this->removeDiplome($diplome);
         }
 
         return $this;
@@ -249,6 +268,15 @@ class CV
         return $this;
     }
 
+    public function clearMetier(): self
+    {
+        foreach ($this->metiers as $metier) {
+            $this->removeMetier($metier);
+        }
+
+        return $this;
+    }
+
     public function addLangue(CVLangue $langue): self
     {
         if (!$this->langues->contains($langue)) {
@@ -266,6 +294,15 @@ class CV
             if ($langue->getCV() === $this) {
                 $langue->setCV(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function clearLangue(): self
+    {
+        foreach ($this->langues as $langue) {
+            $this->removeLangue($langue);
         }
 
         return $this;
