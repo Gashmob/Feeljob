@@ -62,9 +62,9 @@
             <div class="ui segments">
                 {% for diplome in cv.diplomes %}
                     <div class="ui segment formation1">
-                        <h5 class="ui header">{{ diplome.diplome.nom }}</h5>
-                        <div>{{ diplome.diplome.nom }}</div>
-                        <div>{{ diplome.diplome.date }}</div>
+                        <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
+                        <div>{{ diplome.date|date('d/m/Y') }}</div>
+                        <div>{{ diplome.mention }}</div>
                     </div>
                 {% endfor %}
             </div>
@@ -74,14 +74,23 @@
                 <div class="content">Expérience professionnelle</div>
             </h3>
             <div class="ui segments">
-                {% for experience in cv.metiers %}
-                    <div class="ui segment experience1">
-                        <h5 class="ui header">{{ experience.metier.poste }}</h5>
-                        <div>{{ experience.metier.nomEntreprise }}</div>
-                        <div>{{ experience.metier.duree }}</div>
+                {% for metier in cv.metiers %}
+                    <div class="ui segment">
+                        <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
+                        <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
                     </div>
                 {% endfor %}
             </div>
+            {% if cv.description %}
+                <!-- Bio -->
+                <h3 class="ui dividing header">
+                    <i class="icon info"></i>
+                    <div class="content">Biographie</div>
+                </h3>
+                <div class="ui segment">
+                    <p>{{ cv.description }}</p>
+                </div>
+            {% endif %}
             <!-- Langues parlées -->
             <h3 class="ui dividing header">
                 <i class="icon globe"></i>
@@ -89,7 +98,17 @@
             </h3>
             <ul>
                 {% for langue in cv.langues %}
-                    <li>{{ langue.langue.nom }} - {{ langue.langue.niveau }}</li>
+                    <li>{{ langue.langue.nom }} - {{ langue.niveau }}</li>
+                {% endfor %}
+            </ul>
+            <!-- Compétences -->
+            <h3 class="ui dividing header">
+                <i class="icon settings"></i>
+                <div class="content">Compétences</div>
+            </h3>
+            <ul>
+                {% for competence in cv.competences %}
+                    <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
                 {% endfor %}
             </ul>
             <!-- Autres -->
@@ -98,20 +117,13 @@
                 <div class="content">Autres informations</div>
             </h3>
             <div class="ui segment">
-                <p>Bio : Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ad alias asperiores
-                    consequuntur cumque debitis error, explicabo facere inventore iure labore libero, magnam
-                    necessitatibus nihil, odio quasi tenetur. Dolor, totam.</p>
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if cv.permis %}check{% else %}times{% endif %}"></i>
                     Dispose du permis B
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if cv.permis %}check{% else %}times{% endif %}"></i>
                     Dispose d'un moyen de transport
-                </div>
-                <div class="ui left float icon">
-                    <i class="icon times"></i>
-                    Pas plus de 50km
                 </div>
             </div>
         </form>
