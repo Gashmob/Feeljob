@@ -174,10 +174,11 @@
                         <span>du 12/06 au 12/07</span>
                     </div>
                     <div class="description">
-                        <p>` + results.offres[i].description + `</p>
+                        <p>` + truncate(results.offres[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
                     </div>
                     <div class="extra">
-                        <div class="ui label">CDD</div>
+                        <div class="ui label">` + results.offres[i].salaire + `€/mois</div>
+                        <div class="ui label">` + results.offres[i].heures + `h/semaine</div>
                         <a href="{{ path('entreprise_show_cv', {'id': 1}) }}"
                            class="ui right floated green button">
                             Voir l'annonce
@@ -212,5 +213,15 @@
                 makeRequest();
             }
         }
+
+        const MAX_DESCRIPTION_LENGTH = 300;
+        // Tronque les descriptions
+        function truncate( str, n, useWordBoundary ){
+            if (str.length <= n) { return str; }
+            const subString = str.substr(0, n-1); // the original check
+            return (useWordBoundary
+                ? subString.substr(0, subString.lastIndexOf(" "))
+                : subString) + " &hellip;";
+        };
     </script>
 {% endblock %}
