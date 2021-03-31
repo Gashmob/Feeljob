@@ -390,9 +390,37 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('', [
+            'situations' => $em->getRepository(SituationFamille::class)->findAll(),
             'cv' => $cv,
             'employe' => $employe
         ]);
+    }
+
+    /**
+     * @Route("/supprime/CV/{id}", name="entreprise_delete_cv")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function deleteCV($id, EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!$em->getRepository(CV::class)->isOwner($id, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $em->remove($em->getRepository(CV::class)->find($id));
+        $em->flush();
+
+        $this->addFlash('success', 'Votre CV a été supprimé !');
+        return $this->redirectToRoute('userSpace');
     }
 
     /**
