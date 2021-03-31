@@ -387,6 +387,8 @@ class EntrepriseController extends AbstractController
 
                 $employe->setCV($cv);
                 $em->flush();
+
+                return $this->redirectToRoute('userSpace');
             }
         }
 
