@@ -298,7 +298,8 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/offres_emploi/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/offres_emploi/{nom}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @param $nom
      * @param $typeContrat
      * @param $salaire
      * @param $heures
@@ -311,7 +312,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getOffresEmploi($typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -325,7 +326,7 @@ class AjaxEntrepriseController extends AbstractController
             return $this->json([
                 'offres' => array_slice(
                     (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
-                        $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravail($salaire, $heures, $loge, $deplacement, $teletravail),
+                        $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
                         $typeContrat),
                     $offset,
                     $limit)

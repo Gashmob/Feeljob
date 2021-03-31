@@ -20,6 +20,7 @@ class OffreEmploiRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $nom
      * @param float|string $salaire
      * @param float|string $heures
      * @param bool|string $loge
@@ -27,10 +28,14 @@ class OffreEmploiRepository extends ServiceEntityRepository
      * @param bool|string $teletravail
      * @return OffreEmploi[]
      */
-    public function findBySalaireHeuresLogeDeplacementTeletravail($salaire, $heures, $loge, $deplacement, $teletravail): array
+    public function findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail): array
     {
         $query = $this->createQueryBuilder('o');
 
+        if ($nom != 'none') {
+            $query = $query->andWhere('o.nom LIKE :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
         if ($salaire != 'none') {
             $query = $query->andWhere('o.salaire >= :salaire')
                 ->setParameter('salaire', $salaire);
