@@ -360,7 +360,6 @@ class EntrepriseController extends AbstractController
                 $em->persist($cv);
                 $em->flush();
 
-                // TODO : push metiers, competences
                 foreach ($diplomes as $diplome) {
                     $diplome->setCV($cv);
                     $em->persist($diplome);
@@ -388,6 +387,8 @@ class EntrepriseController extends AbstractController
                 $employe->setCV($cv)
                     ->setPhoto($photo);
                 $em->flush();
+
+                return $this->redirectToRoute('userSpace');
             }
         }
 
