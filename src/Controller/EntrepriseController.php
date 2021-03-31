@@ -291,7 +291,8 @@ class EntrepriseController extends AbstractController
                 }
                 $em->flush();
 
-                $employe->setCV($cv);
+                $employe->setCV($cv)
+                    ->setPhoto($photo);
                 $em->flush();
             }
         }
