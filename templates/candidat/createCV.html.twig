@@ -108,30 +108,38 @@
                     </div>
                 </div>
             </div>
-            <!-- Formation -->
+            <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
-            <div style="margin-bottom: 10px;" class="formations-list" id="formationsList">
-                <div class="ui segment" id="formationsItem">
+            <div style="margin-bottom: 10px;" id="formationsList">
+                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this);'></i>
+                <div class="ui segment formation__item" id="formationsItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du diplôme</label>
-                            <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme">
+                        </div>
+                        <div class="field">
+                            <label>Nom de l'établissement</label>
+                            <input type="text" class="etablissement" name="etablissement0" placeholder="Nom de l'établissement">
+                        </div>
+
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Mention</label>
+                            <input type="text" class="mention" name="mention0" placeholder="Laissez vide si inapplicable">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
-                            <input type="date" name="dates" placeholder="26/04/2013">
+                            <input type="date" class="date" name="date0" placeholder="jj/mm/aaaa">
                         </div>
-                    </div>
-                    <div class="field">
-                        <label>Nom de l'établissement</label>
-                        <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
                     </div>
                 </div>
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
             </div>
-            <!-- Expérience -->
+            <!-- Expériences -->
             <h3 class="ui dividing green header">Expérience professionnelle</h3>
             <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
                 <div class="ui segment" id="experiencesItem">
@@ -197,7 +205,7 @@
             </div>
             <!-- Compétences
             <h3 class="ui dividing green header">Compétences</h3>
-            <div style="margin-bottom: 10px;" class="formations-list" id="formationsList">
+            <div style="margin-bottom: 10px;" class="competences-list" id="formationsList">
                 <div class="ui segment" id="formationsItem">
                     <div class="two fields">
                         <div class="field">
@@ -263,18 +271,25 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = nbExp = nbLang = 1
+        var nbForm = nbExp = nbLang = 0;
+        //nbDiplomes = nombre de diplomes à renvoyer, commence à 1
+
+        //date1
+        //etablissement1
+        //mention1
+        //nom1
 
         function add_feed() {
             if (nbForm < 8) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
                 let div1 = document.createElement('div');
+
                 div1.classList.add('ui');
                 div1.classList.add('segment');
-                div1.classList.add('form' + nbForm);
                 div1.classList.add('transition');
                 div1.classList.add('hidden');
+
                 div1.innerHTML = document.getElementById('formationsItem').innerHTML;
                 document.getElementById('formationsList').appendChild(div1);
                 $(div1).transition('scale')
@@ -317,6 +332,10 @@
             } else {
                 $('#langPlus').transition('shake');
             }
+        }
+
+        function removeItem(e) {
+            e.parentNode.remove();
         }
 
         function readURL(input) {

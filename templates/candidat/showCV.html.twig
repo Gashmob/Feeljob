@@ -8,16 +8,18 @@
         </h2>
         <div>
             <div class="ui buttons">
-                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}" class="ui grey basic button">
-                        Télécharger
+                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}"
+                   class="ui grey basic button">
+                    Télécharger
                 </a>
                 {% if owner %}
                     <a href="{{ path('entreprise_modifier_cv', {id: cv.id}) }}"
                        class="ui blue basic button">
                         Éditer
                     </a>
-                    <a href="{{ path('entreprise_delete_cv', {id: cv.id}) }}" class="ui red basic button">
-                            Supprimer
+                    <a href="{{ path('entreprise_delete_cv', {id: cv.id}) }}"
+                       class="ui red basic button">
+                        Supprimer
                     </a>
                 {% endif %}
             </div>
@@ -30,9 +32,8 @@
             </h3>
             <div class="ui two column grid">
                 <div class="column four wide">
-                    {#
                     {% if cv.employe.photo is not empty %}
-                        <img src="{{ asset('uploads/photos/' ~ cv.employe.photo) }}"
+                        <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
                              alt="photo de profil"
                              class="ui small circular image">
                     {% else %}
@@ -40,14 +41,11 @@
                              alt="photo de profil"
                              class="ui small circular image">
                     {% endif %}
-                    #}
-                    <img src="{{ asset('img/placeholders/matthew.png') }}"
-                         alt="photo de profil"
-                         class="ui small circular image">
                 </div>
                 <div class="column ten wide">
                     <div>{{ cv.employe.prenom }} {{ cv.employe.nom }}</div>
                     <div>Homme</div>
+                    <div>Né le {{ cv.naissance|date('d/m/Y') }}</div>
                     <div>{{ cv.situationFamille.nom }}</div>
                     <div class="ui divider"></div>
                     {% if app.session.get('user') %}
@@ -69,11 +67,6 @@
                         <div>{{ diplome.diplome.date }}</div>
                     </div>
                 {% endfor %}
-                <div class="ui segment formation2">
-                    <h5 class="ui header">Licence Informatique</h5>
-                    <div>Université de Bretagne</div>
-                    <div>2015-2016</div>
-                </div>
             </div>
             <!-- Expérience -->
             <h3 class="ui dividing header">
@@ -88,11 +81,6 @@
                         <div>{{ experience.metier.duree }}</div>
                     </div>
                 {% endfor %}
-                <div class="ui segment experience2">
-                    <h5 class="ui header">Développeur C++</h5>
-                    <div>Sopra Steria</div>
-                    <div>2016-2018</div>
-                </div>
             </div>
             <!-- Langues parlées -->
             <h3 class="ui dividing header">
@@ -101,15 +89,8 @@
             </h3>
             <ul>
                 {% for langue in cv.langues %}
-                    <div class="ui segment experience1">
-                        <h5 class="ui header">{{ langue.langue.nom }}</h5>
-                        <div>{{ langue.langue.nom }}</div>
-                        <div>{{ langue.langue.nom }}</div>
-                    </div>
+                    <li>{{ langue.langue.nom }} - {{ langue.langue.niveau }}</li>
                 {% endfor %}
-                <li>Français - langue maternelle</li>
-                <li>Anglais - couramment</li>
-                <li>Italien - quelques notions</li>
             </ul>
             <!-- Autres -->
             <h3 class="ui dividing header">
