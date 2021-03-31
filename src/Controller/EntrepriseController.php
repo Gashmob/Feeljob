@@ -417,7 +417,10 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        $em->remove($em->getRepository(CV::class)->find($id));
+        $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]);
+        $cv = $employe->getCV();
+        $employe->setCV(null);
+        $em->remove($cv);
         $em->flush();
 
         $this->addFlash('success', 'Votre CV a été supprimé !');
