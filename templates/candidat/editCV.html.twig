@@ -1,0 +1,449 @@
+{% extends 'page.html.twig' %}
+{% block title %}Modifier un CV{% endblock %}
+{% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0099ff" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0069fa" fill-opacity="1"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0029f8" fill-opacity="1"
+                      d="M0,320L48,293.3C96,267,192,213,288,197.3C384,181,480,203,576,197.3C672,192,768,160,864,128C960,96,1056,64,1152,53.3C1248,43,1344,53,1392,58.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Modifier le CV
+        </h3>
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <!-- Identité -->
+            <h3 class="ui dividing green header">Identité</h3>
+            <div class="ui two column grid stackable">
+                <div class="ui four wide column middle aligned">
+                    <img src="{{ asset('img/placeholders/elyse.png') }}"
+                         alt="photo de profil"
+                         id="pdp"
+                         class="ui small circular centered image">
+                </div>
+                <div class="ui twelve wide column">
+                    <div class="two fields">
+                        <div class="field disabled">
+                            <label>Prénom</label>
+                            <input type="text" name="prenom" value="{{ employe.prenom }}">
+                        </div>
+                        <div class="field disabled">
+                            <label>Nom</label>
+                            <input type="text" name="nom" value="{{ employe.nom }}">
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Né le</label>
+                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" required>
+                        </div>
+                        <div class="field">
+                            <label>Photo de profil</label>
+                            <div class="ui small basic icon buttons">
+                                <label style="width: 150px;" class="ui button" id="pdpLabel" for="photo-profil">
+                                    <i class="paperclip icon"></i>
+                                    Sélectionner
+                                </label>
+                                <input type="file" style="display: none;" id="photo-profil"
+                                       name="photo" onchange="readURL(this);">
+                                <div class="ui button" id="pdpClear"><i class="times icon"></i></div>
+                            </div>
+                        </div>
+                        {#
+                        <div class="field">
+                            <label>Profil</label>
+                            <select class="ui dropdown" name="metier">
+                                {% for metier in metiers %}
+                                    <option>{{ metier }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        #}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>E-mail</label>
+                        <div class="ui left icon input">
+                            <i class="icon envelope"></i>
+                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Téléphone</label>
+                        <div class="ui left icon input">
+                            <i class="icon phone"></i>
+                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Adresse</label>
+                        <div class="ui left icon input">
+                            <i class="icon home"></i>
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Situation familiale</label>
+                        <select class="ui dropdown" name="situationFamille">
+                            {% for situation in situations %}
+                                <option value="{{ situation.nom }}">{{ situation.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Formations -->
+            <h3 class="ui dividing green header">Formation</h3>
+            <div style="margin-bottom: 10px;" id="formationsList">
+                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
+                <div class="ui segment formation__item" id="formationsItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du diplôme</label>
+                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme">
+                        </div>
+                        <div class="field">
+                            <label>Nom de l'établissement</label>
+                            <input type="text" class="etablissement" name="etablissement0"
+                                   placeholder="Nom de l'établissement">
+                        </div>
+
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Mention</label>
+                            <input type="text" class="mention" name="mention0"
+                                   placeholder="Laissez vide si inapplicable">
+                        </div>
+                        <div class="field">
+                            <label>Date d'obtention</label>
+                            <input type="date" class="date" name="date0" placeholder="jj/mm/aaaa">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_formation();" id="feedPlus"></i>
+            </div>
+            <!-- Expériences -->
+            <h3 class="ui dividing green header">Expérience professionnelle</h3>
+            <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
+                <div class="ui segment" id="experiencesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Intitulé du poste</label>
+                            <div class="field">
+                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Nom de l'entreprise</label>
+                            <div class="field">
+                                <input type="text" class="nomEntreprise" name="nomEntreprise"
+                                       placeholder="Nom de l'entreprise">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Date début</label>
+                            <input type="date" class="dateDebut" name="dateDebut" placeholder="Date début">
+                        </div>
+                        <div class="field">
+                            <label>Date fin</label>
+                            <input type="date" class="dateFin" name="dateFin" placeholder="Date fin">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
+            </div>
+            <!-- Description -->
+            <h3 class="ui dividing green header">Description</h3>
+            <div class="field">
+                <textarea rows="8" name="description"
+                          placeholder="Rajoutez des informations à votre sujet."></textarea>
+            </div>
+            <!-- Langues -->
+            <h3 class="ui dividing green header">Langues</h3>
+            <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
+                <div class="ui segment" id="languesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Langue</label>
+                            <div class="field">
+                                <select class="ui dropdown nomLangue" name="nomLangue0">
+                                    {% for langue in langues %}
+                                        <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Niveau</label>
+                            <select class="ui dropdown niveauLangue" name="niveauLangue0">
+                                <option value="5" selected>Langue Maternelle</option>
+                                <option value="4">Bilingue</option>
+                                <option value="3">Avancé</option>
+                                <option value="2">Intermédiaire</option>
+                                <option value="1">Basique</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% for i in 1..6 %}
+                    <div style="display: none;" class="ui segment hidden transition langueNb{{ i }}">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Langue</label>
+                                <div class="field">
+                                    <select class="ui dropdown nomLangue" name="nomLangue{{ i }}">
+                                        {% for langue in langues %}
+                                            <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Niveau</label>
+                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ i }}">
+                                    <option value="5" selected>Langue Maternelle</option>
+                                    <option value="4">Bilingue</option>
+                                    <option value="3">Avancé</option>
+                                    <option value="2">Intermédiaire</option>
+                                    <option value="1">Basique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_lang()" id="langPlus"></i>
+            </div>
+            <!-- Compétences -->
+            <h3 class="ui dividing green header">Compétences</h3>
+            <div style="margin-bottom: 10px;" class="competences-list" id="competencesList">
+                <div class="ui segment" id="competencesItem">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Nom compétence</label>
+                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
+                        </div>
+                        <div class="field">
+                            <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
+                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5" value="5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_competence();" id="compPlus"></i>
+            </div>
+            <!-- Autres -->
+            <h3 class="ui dividing green header">Autres informations</h3>
+            <div class="ui segment">
+                <div class="field">
+                    <div class="ui toggle checkbox">
+                        <input type="checkbox" name="permis" class="hidden">
+                        <label>Je dispose du permis B</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui toggle checkbox">
+                        <input type="checkbox" name="transport" class="hidden">
+                        <label>J'ai un moyen de transport</label>
+                    </div>
+                </div>
+            </div>
+            <div style="display: none;" id="numberOfRows">
+                <input id="nbFormInput" type="number" name="nbMetiers" value="1">
+                <input id="nbExpInput" type="number" name="nbDiplomes" value="1">
+                <input id="nbLangInput" type="number" name="nbLangues" value="1">
+                <input id="nbCompInput" type="number" name="nbCompetences" value="1">
+            </div>
+            <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
+            <div class="ui negative message transition hidden">
+                <i class="close icon"></i>
+                <div class="header">
+                    Erreur !
+                </div>
+                <p>
+                    {% for message in app.flashes('fail') %}
+                        {{ message }}
+                    {% endfor %}
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#photo-profil').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#photo-profil')[0].files[0].name;
+            $('#pdpLabel').text(file);
+        });
+
+        $('#pdpClear').on('click', function () {
+            $('#photo-profil').val('');
+            $('#pdpLabel').text('Sélectionner');
+            $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
+        });
+
+        var nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
+        const maxForm = 8;
+        const maxExp = 12;
+        const maxLang = 8;
+        const maxComp = 15;
+        const nbFormInput = document.getElementById('nbFormInput');
+        const nbExpInput = document.getElementById('nbExpInput');
+        const nbLangInput = document.getElementById('nbLangInput');
+        const nbCompInput = document.getElementById('nbCompInput');
+
+        function add_formation() {
+            if (nbForm < maxForm) {
+                $('#feedPlus').transition('jiggle');
+                nbForm += 1;
+                nbFormInput.setAttribute("value", nbForm+1);
+                let newItem = document.createElement('div');
+
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('formationsItem').innerHTML;
+
+                newItem.querySelector('.nomDiplome').setAttribute("name", "nomDiplome" + nbForm);
+                newItem.querySelector('.etablissement').setAttribute("name", "etablissement" + nbForm);
+                newItem.querySelector('.mention').setAttribute("name", "mention" + nbForm);
+                newItem.querySelector('.date').setAttribute("name", "date" + nbForm);
+
+                document.getElementById('formationsList').appendChild(newItem);
+                $(newItem).transition('scale')
+            } else {
+                $('#feedPlus').transition('shake');
+            }
+        }
+
+        function add_exp() {
+            if (nbExp < maxExp) {
+                $('#expPlus').transition('jiggle');
+                nbExp += 1;
+                nbExpInput.setAttribute("value", nbExp+1);
+                let newItem = document.createElement('div');
+
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('experiencesItem').innerHTML;
+
+                newItem.querySelector('.nomMetier').setAttribute("name", "nomMetier" + nbExp);
+                newItem.querySelector('.nomEntreprise').setAttribute("name", "nomEntreprise" + nbExp);
+                newItem.querySelector('.dateDebut').setAttribute("name", "dateDebut" + nbExp);
+                newItem.querySelector('.dateFin').setAttribute("name", "dateFin" + nbExp);
+
+                document.getElementById('experiencesList').appendChild(newItem);
+                $(newItem).transition('scale')
+            } else {
+                $('#expPlus').transition('shake');
+            }
+        }
+
+        function add_lang() {
+            if (nbLang < maxLang) {
+                $('#langPlus').transition('jiggle');
+                nbLang += 1;
+                nbLangInput.setAttribute("value", nbLang+1);
+
+                let item = document.querySelector('.langueNb'+nbLang);
+                $(item).transition('scale')
+
+            } else {
+                $('#langPlus').transition('shake');
+            }
+        }
+
+        function add_competence() {
+            if (nbComp < maxComp) {
+                $('#compPlus').transition('jiggle');
+                nbComp += 1;
+                nbCompInput.setAttribute("value", nbComp+1);
+                let newItem = document.createElement('div');
+
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('competencesItem').innerHTML;
+
+                newItem.querySelector('.nomCompetence').setAttribute("name", "nomCompetence" + nbComp);
+                newItem.querySelector('.niveauCompetence').setAttribute("name", "niveauCompetence" + nbComp);
+
+                document.getElementById('competencesList').appendChild(newItem);
+                $(newItem).transition('scale')
+            } else {
+                $('#compPlus').transition('shake');
+            }
+        }
+
+        function removeItem(e, type) {
+            switch (type) {
+                case 'form':
+                    nbForm -= 1;
+                    nbFormInput.setAttribute("value", nbForm);
+                    break;
+                case 'exp':
+                    nbExp -= 1;
+                    nbExpInput.setAttribute("value", nbExp);
+                    break;
+                case 'lang':
+                    nbLang -= 1;
+                    nbLangInput.setAttribute("value", nbLang);
+                    break;
+                case 'comp':
+                    nbComp -= 1;
+                    nbCompInput.setAttribute("value", nbComp);
+                    break;
+                default:
+                    console.log('erreur suppression item');
+            }
+            e.parentNode.remove();
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#pdp')
+                        .attr('src', e.target.result)
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+{% endblock %}
