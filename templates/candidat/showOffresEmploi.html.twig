@@ -52,10 +52,8 @@
                 </div>
             </div>
             <div class="eleven wide column justified">
-                <div class="ui two stackable cards">
-                    <a id="result" class="ui card annonceCard" href="#">
-                        <div class="content"></div>
-                    </a>
+                <div id="offresList" class="ui two stackable cards">
+                    <!--
                     <div class="card annonceCard">
                         <div class="content">
                             <a class="header">Pâtissier</a>
@@ -83,6 +81,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
@@ -118,15 +117,64 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            $.ajax({
-                url: '/entreprise/get/offres_emploi',
-                type: 'POST',
-            }).then(function (response) {
-                console.log(response)
-                $('#result').text(
-                );
-            });
+            makeRequest()
         });
+
+        var httpRequest;
+        var results;
+
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayOffres;
+            httpRequest.open('POST', '/entreprise/get/offres_emploi');
+            httpRequest.send();
+        }
+
+        function displayOffres() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    //console.log(JSON.parse(httpRequest.responseText));
+                    results = JSON.parse(httpRequest.responseText)
+                    for (var i = 0; i < results.offres.length; i++) {
+                        console.log(results.offres[i]);
+                        var card = `
+            <div class="card annonceCard">
+                <div class="content">
+                    <a class="header">` + results.offres[i].nom + `</a>
+                    <div class="meta">
+                        <span>
+                            <i class="icon map pin"></i>
+                            ` + results.offres[i].lieu.ville + `,
+                        </span>
+                        <br>
+                        <span>du 12/06 au 12/07</span>
+                    </div>
+                    <div class="description">
+                        <p>` + results.offres[i].description + `</p>
+                    </div>
+                    <div class="extra">
+                        <div class="ui label">CDD</div>
+                        <a href="{{ path('entreprise_show_cv', {'id': 1}) }}"
+                           class="ui right floated green button">
+                            Voir l'annonce
+                            <i class="right chevron icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `;
+                        offresList.innerHTML += card;
+                    }
+                } else {
+                    alert('Il y a eu un problème avec la requête.');
+                }
+            }
+        }
 
         function searchOffre(e) {
             e.preventDefault();
@@ -139,12 +187,51 @@
             });
         }
 
-        function onSuccess(response) {
+        /*function retrieveOffres(response) {
+            response.forEach(displayOffre());
+        }*/
 
+        const offresList = document.getElementById('offresList');
+
+        function displayOffre(item, index) {
+            var card = `
+            <div class="card annonceCard">
+                <div class="content">
+                    <a class="header">` + item.nom + `</a>
+                    <div class="meta">
+                        <span>
+                            <i class="icon map pin"></i>
+                            Aix-les-Bains,
+                        </span>
+                        <span>du 12/06 au 12/07</span>
+                    </div>
+                    <div class="description">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
+                            blanditiis delectus distinctio dolor dolorum ducimus molestiae, natus nostrum
+                            perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
+                    </div>
+                    <div class="extra">
+                        <div class="ui label">CDD</div>
+                        <div class="ui label">CDI</div>
+                        <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                        <a href="#"
+                           class="ui right floated green button">
+                            Voir l'annonce
+                            <i class="right chevron icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `;
+            offresList.innerHTML += card;
         }
 
-        function onErrorCall(response) {
+        function onSuccess() {
+            console.log('onSuccess');
+        }
 
+        function onErrorCall() {
+            console.log('onErrorCall');
         }
     </script>
 {% endblock %}
