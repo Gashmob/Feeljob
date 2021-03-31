@@ -145,14 +145,20 @@
                 return false;
             }
             httpRequest.onreadystatechange = displayOffres;
-            httpRequest.open('POST', '/entreprise/get/offres_emploi/'+name);
+            httpRequest.open('POST', '/entreprise/get/offres_emploi/' + name);
             httpRequest.send();
         }
 
         //Affiche les résultats dans 'offresList'
         var offresList = document.getElementById('offresList');
+
         function displayOffres() {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                offresList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === 200) {
                     // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
@@ -160,7 +166,6 @@
                     offresList.innerHTML = '';
                     // Pour chaque offre du tableau offres
                     for (var i = 0; i < results.offres.length; i++) {
-                        console.log(results.offres[i]);
                         var card = `
             <div class="card annonceCard">
                 <div class="content">
@@ -179,7 +184,7 @@
                     <div class="extra">
                         <div class="ui label">` + results.offres[i].salaire + `€/mois</div>
                         <div class="ui label">` + results.offres[i].heures + `h/semaine</div>
-                        <a href="{{ path('entreprise_show_cv', {'id': 1}) }}"
+                        <a href="{{ path('entreprise_show_offre_emploi', {'id': 1}) }}`.slice(0, -1) + results.offres[i].identity + `"
                            class="ui right floated green button">
                             Voir l'annonce
                             <i class="right chevron icon"></i>
@@ -206,19 +211,21 @@
 
         function searchOffres() {
             var inputValue = searchInput.value;
-            if(inputValue != '' && inputValue != null) {
+            if (inputValue != '' && inputValue != null) {
                 makeRequestByName(inputValue);
-            }
-            else {
+            } else {
                 makeRequest();
             }
         }
 
         const MAX_DESCRIPTION_LENGTH = 300;
+
         // Tronque les descriptions
-        function truncate( str, n, useWordBoundary ){
-            if (str.length <= n) { return str; }
-            const subString = str.substr(0, n-1); // the original check
+        function truncate(str, n, useWordBoundary) {
+            if (str.length <= n) {
+                return str;
+            }
+            const subString = str.substr(0, n - 1); // the original check
             return (useWordBoundary
                 ? subString.substr(0, subString.lastIndexOf(" "))
                 : subString) + " &hellip;";
