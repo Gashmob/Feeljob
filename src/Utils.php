@@ -72,7 +72,8 @@ abstract class Utils
             if (isset($_FILES['uploadedFile']['error'])) {
                 throw new Exception('Il y eu a une erreur lors du téléchargement : ' . $_FILES['uploadedFile']['error']);
             } else {
-                throw new Exception('Il y a une erreur dans le formulaire : enctype="multipart/form-data"');
+                return '';
+                //throw new Exception('Il y a une erreur dans le formulaire : enctype="multipart/form-data"');
             }
         }
     }
