@@ -290,7 +290,8 @@ class AjaxEntrepriseController extends AbstractController
             }
 
             return $this->json([
-                'cvs' => $results
+                'cvs' => $results,
+                'quantity' => count($results)
             ]);
         }
 
@@ -323,13 +324,16 @@ class AjaxEntrepriseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
+                $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
+                $typeContrat);
+
             return $this->json([
                 'offres' => array_slice(
-                    (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
-                        $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
-                        $typeContrat),
+                    $results,
                     $offset,
-                    $limit)
+                    $limit),
+                'quantity' => count($results)
             ]);
         }
 
