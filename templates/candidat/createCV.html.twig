@@ -239,29 +239,25 @@
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_lang()" id="langPlus"></i>
             </div>
-            <!-- Compétences
+            <!-- Compétences -->
             <h3 class="ui dividing green header">Compétences</h3>
-            <div style="margin-bottom: 10px;" class="competences-list" id="formationsList">
-                <div class="ui segment" id="formationsItem">
+            <div style="margin-bottom: 10px;" class="competences-list" id="competencesList">
+                <div class="ui segment" id="competencesItem">
                     <div class="two fields">
                         <div class="field">
-                            <label>Intitulé du diplôme</label>
-                            <input type="text" name="diplomes" placeholder="Intitulé du diplôme">
+                            <label>Nom compétence</label>
+                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
                         </div>
                         <div class="field">
-                            <label>Date d'obtention</label>
-                            <input type="date" name="dates" placeholder="26/04/2013">
+                            <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
+                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5" value="5">
                         </div>
-                    </div>
-                    <div class="field">
-                        <label>Nom de l'établissement</label>
-                        <input type="text" name="nomEtablissements" placeholder="Nom de l'établissement">
                     </div>
                 </div>
             </div>
             <div class="ui container center aligned">
-                <i class="icon plus circle big green" onclick="add_feed()" id="feedPlus"></i>
-            </div> -->
+                <i class="icon plus circle big green" onclick="add_competence();" id="compPlus"></i>
+            </div>
             <!-- Autres -->
             <h3 class="ui dividing green header">Autres informations</h3>
             <div class="ui segment">
@@ -277,6 +273,12 @@
                         <label>J'ai un moyen de transport</label>
                     </div>
                 </div>
+            </div>
+            <div style="display: none;" id="numberOfRows">
+                <input id="nbFormInput" type="number" name="nbMetiers" value="1">
+                <input id="nbExpInput" type="number" name="nbDiplomes" value="1">
+                <input id="nbLangInput" type="number" name="nbLangues" value="1">
+                <input id="nbCompInput" type="number" name="nbCompetences" value="1">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -312,11 +314,16 @@
         const maxExp = 12;
         const maxLang = 8;
         const maxComp = 15;
+        const nbFormInput = document.getElementById('nbFormInput');
+        const nbExpInput = document.getElementById('nbExpInput');
+        const nbLangInput = document.getElementById('nbLangInput');
+        const nbCompInput = document.getElementById('nbCompInput');
 
         function add_formation() {
             if (nbForm < maxForm) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
+                nbFormInput.setAttribute("value", nbForm+1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -342,6 +349,7 @@
             if (nbExp < maxExp) {
                 $('#expPlus').transition('jiggle');
                 nbExp += 1;
+                nbExpInput.setAttribute("value", nbExp+1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -367,35 +375,57 @@
             if (nbLang < maxLang) {
                 $('#langPlus').transition('jiggle');
                 nbLang += 1;
+                nbLangInput.setAttribute("value", nbLang+1);
 
-                let languesList = document.getElementById('#languesList')
-                let item = document.querySelector('langueNb'+nbLang);
-                console.log('langueNb'+nbLang);
-                item.style.display = 'block';
-
+                let item = document.querySelector('.langueNb'+nbLang);
                 $(item).transition('scale')
+
             } else {
                 $('#langPlus').transition('shake');
             }
         }
 
         function add_competence() {
+            if (nbComp < maxComp) {
+                $('#compPlus').transition('jiggle');
+                nbComp += 1;
+                nbCompInput.setAttribute("value", nbComp+1);
+                let newItem = document.createElement('div');
 
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('competencesItem').innerHTML;
+
+                newItem.querySelector('.nomCompetence').setAttribute("name", "nomCompetence" + nbComp);
+                newItem.querySelector('.niveauCompetence').setAttribute("name", "niveauCompetence" + nbComp);
+
+                document.getElementById('competencesList').appendChild(newItem);
+                $(newItem).transition('scale')
+            } else {
+                $('#compPlus').transition('shake');
+            }
         }
 
         function removeItem(e, type) {
             switch (type) {
                 case 'form':
                     nbForm -= 1;
+                    nbFormInput.setAttribute("value", nbForm);
                     break;
                 case 'exp':
                     nbExp -= 1;
+                    nbExpInput.setAttribute("value", nbExp);
                     break;
                 case 'lang':
                     nbLang -= 1;
+                    nbLangInput.setAttribute("value", nbLang);
                     break;
                 case 'comp':
                     nbComp -= 1;
+                    nbCompInput.setAttribute("value", nbComp);
                     break;
                 default:
                     console.log('erreur suppression item');
