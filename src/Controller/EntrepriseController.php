@@ -439,25 +439,96 @@ class EntrepriseController extends AbstractController
             // Clear langues, metiers, diplomes, competences
             $cv->clearCompetence()->clearDiplome()->clearLangue()->clearMetier();
 
-            // TODO : récup langues, metiers, diplomes, competences
-            // Exemple how to do for langues
+            $diplomes = [];
+            for ($i = 0; $i < $request->get('nbDiplomes'); $i++) {
+                $nom = $request->get('nomDiplome' . $i);
+                $etablissement = $request->get('etablissement' . $i);
+                if ($nom != '' && $etablissement != '') {
+                    $date = $request->get('date' . $i);
+                    $mention = $request->get('mention' . $i);
+
+                    $d = $em->getRepository(Diplome::class)->findOneBy(['nom' => $nom, 'etablissement' => $etablissement]);
+                    if (is_null($d)) {
+                        $d = (new Diplome())
+                            ->setNom($nom)
+                            ->setEtablissement($etablissement);
+                        $em->persist($d);
+                        $em->flush();
+                    }
+
+                    $n = (new CVDiplome())
+                        ->setDate(new DateTime($date))
+                        ->setMention($mention)
+                        ->setDiplome($d);
+                    $diplomes[] = $n;
+                }
+            }
+
+            $metiers = [];
+            for ($i = 0; $i < $request->get('nbMetiers'); $i++) {
+                $nom = $request->get('nomMetier' . $i);
+                $nomEntreprise = $request->get('nomEntreprise' . $i);
+                if ($nom != '' && $nomEntreprise != '') {
+                    $dateDebut = $request->get('dateDebut' . $i);
+                    $dateFin = $request->get('dateFin' . $i);
+
+                    $m = $em->getRepository(Metier::class)->findOneBy(['nom' => $nom, 'nomEntreprise' => $nomEntreprise]);
+                    if (is_null($m)) {
+                        $m = (new Metier())
+                            ->setNom($nom)
+                            ->setNomEntreprise($nomEntreprise);
+                        $em->persist($m);
+                        $em->flush();
+                    }
+
+                    $n = (new CVMetier())
+                        ->setDateDebut(new DateTime($dateDebut))
+                        ->setDateFin(new DateTime($dateFin))
+                        ->setMetier($m);
+                    $metiers[] = $n;
+                }
+            }
+
             $langues = [];
             for ($i = 0; $i < $request->get('nbLangues'); $i++) {
-                $langue = $request->get('langue' . $i);
-                $niveau = $request->get('niveau_langue' . $i);
+                $nom = $request->get('nomLangue' . $i);
+                if ($nom != '') {
+                    $niveau = $request->get('niveauLangue' . $i);
 
-                $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
-                if (is_null($l)) {
-                    $l = (new Langue())
-                        ->setNom($langue);
-                    $em->persist($langue);
-                    $em->flush();
+                    $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $nom]);
+                    if (is_null($l)) {
+                        $l = (new Langue())
+                            ->setNom($nom);
+                        $em->persist($l);
+                        $em->flush();
+                    }
+
+                    $n = (new CVLangue())
+                        ->setNiveau($niveau)
+                        ->setLangue($l);
+                    $langues[] = $n;
                 }
+            }
 
-                $n = (new CVLangue())
-                    ->setNiveau($niveau)
-                    ->setLangue($l);
-                $langues[] = $n;
+            $competences = [];
+            for ($i = 0; $i < $request->get('nbCompetences'); $i++) {
+                $nom = $request->get('nomCompetence' . $i);
+                if ($nom != '') {
+                    $niveau = $request->get('niveauCompetence' . $i);
+
+                    $c = $em->getRepository(Competence::class)->findOneBy(['nom' => $nom]);
+                    if (is_null($c)) {
+                        $c = (new Competence())
+                            ->setNom($nom);
+                        $em->persist($c);
+                        $em->flush();
+                    }
+
+                    $n = (new CVCompetences())
+                        ->setNiveau($niveau)
+                        ->setCompetence($c);
+                    $competences[] = $n;
+                }
             }
 
             $description = $request->get('description');
@@ -465,7 +536,7 @@ class EntrepriseController extends AbstractController
             $photo = Utils::uploadImage('photo');
 
             if ($naissanceB) {
-                $cv = (new CV())
+                $cv = $cv
                     ->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
@@ -473,15 +544,32 @@ class EntrepriseController extends AbstractController
                 $em->persist($cv);
                 $em->flush();
 
-                // TODO : push langues, metiers, diplomes, competences
-                // Exemple how to do for langues
+                foreach ($diplomes as $diplome) {
+                    $diplome->setCV($cv);
+                    $em->persist($diplome);
+                }
+                $em->flush();
+
+                foreach ($metiers as $metier) {
+                    $metier->setCV($cv);
+                    $em->persist($metier);
+                }
+                $em->flush();
+
                 foreach ($langues as $langue) {
                     $langue->setCV($cv);
                     $em->persist($langue);
                 }
                 $em->flush();
 
-                $employe->setCV($cv);
+                foreach ($competences as $competence) {
+                    $competence->setCV($cv);
+                    $em->persist($competence);
+                }
+                $em->flush();
+
+                $employe->setCV($cv)
+                    ->setPhoto($photo);
                 $em->flush();
 
                 return $this->redirectToRoute('userSpace');
