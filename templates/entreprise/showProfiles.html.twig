@@ -193,6 +193,7 @@
                 url: '/entreprise/get/cvs',
                 type: 'POST',
             }).then(function (response) {
+                console.log(response);
                 $('#result').text(
                     response.cvs[0].naissance +
                     response.cvs[0].permis +

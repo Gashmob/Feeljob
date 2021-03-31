@@ -122,10 +122,8 @@
                 url: '/entreprise/get/offres_emploi',
                 type: 'POST',
             }).then(function (response) {
+                console.log(response)
                 $('#result').text(
-                    response.offres[0].nom +
-                    response.offres[0].heures +
-                    response.offres[0].salaire
                 );
             });
         });
