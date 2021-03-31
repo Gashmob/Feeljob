@@ -36,7 +36,7 @@ abstract class Utils
      */
     public static function uploadImage(string $directory): string
     {
-        if (isset($_FILES[$directory]) && $_FILES[$directory]['error'] === UPLOAD_ERR_OK) {
+        if (isset($_FILES[$directory]) && $_FILES['uploadedFile']['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé
             $fileTmpPath = $_FILES[$directory]['tmp_name'];
             $fileName = $_FILES[$directory]['name'];
