@@ -576,7 +576,7 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('', [
+        return $this->render('candidat/editCV.html.twig', [
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
             'langues' => $em->getRepository(Langue::class)->findAll(),
             'cv' => $cv,
