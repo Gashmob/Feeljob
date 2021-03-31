@@ -7,26 +7,20 @@
             CV de {{ cv.employe.prenom }} {{ cv.employe.nom }}
         </h2>
         <div>
-            <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
-                <button class="ui labeled icon button">
-                    <i class="download icon"></i>
-                    Télécharger
-                </button>
-            </a>
-            {% if owner %}
-                <a href="{{ path('entreprise_modify_offre_emploi', {id: cv.id}) }}">
-                    <button class="ui blue labeled icon button">
-                        <i class="pencil icon"></i>
+            <div class="ui buttons">
+                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}" class="ui grey basic button">
+                        Télécharger
+                </a>
+                {% if owner %}
+                    <a href="{{ path('entreprise_modifier_cv', {id: cv.id}) }}"
+                       class="ui blue basic button">
                         Éditer
-                    </button>
-                </a>
-                <a href="#">
-                    <button class="ui red labeled icon button">
-                        <i class="times icon"></i>
-                        Supprimer
-                    </button>
-                </a>
-            {% endif %}
+                    </a>
+                    <a href="{{ path('entreprise_delete_cv', {id: cv.id}) }}" class="ui red basic button">
+                            Supprimer
+                    </a>
+                {% endif %}
+            </div>
         </div>
         <form class="ui form segment">
             <!-- Identité -->
