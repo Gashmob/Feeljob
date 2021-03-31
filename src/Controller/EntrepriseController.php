@@ -254,20 +254,22 @@ class EntrepriseController extends AbstractController
             $langues = [];
             for ($i = 0; $i < $request->get('nbLangues'); $i++) {
                 $langue = $request->get('langue' . $i);
-                $niveau = $request->get('niveau_langue' . $i);
+                if ($langue != '') {
+                    $niveau = $request->get('niveau_langue' . $i);
 
-                $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
-                if (is_null($l)) {
-                    $l = (new Langue())
-                        ->setNom($langue);
-                    $em->persist($langue);
-                    $em->flush();
+                    $l = $em->getRepository(Langue::class)->findOneBy(['nom' => $langue]);
+                    if (is_null($l)) {
+                        $l = (new Langue())
+                            ->setNom($langue);
+                        $em->persist($langue);
+                        $em->flush();
+                    }
+
+                    $n = (new CVLangue())
+                        ->setNiveau($niveau)
+                        ->setLangue($l);
+                    $langues[] = $n;
                 }
-
-                $n = (new CVLangue())
-                    ->setNiveau($niveau)
-                    ->setLangue($l);
-                $langues[] = $n;
             }
 
             $description = $request->get('description');
