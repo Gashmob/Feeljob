@@ -908,11 +908,12 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
+        $offre = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]);
         return $this->render('entreprise/showEmploi.html.twig', [
-            'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $id]),
+            'offre' => $offre,
             'typeContrat' => (new OffreEmploiManager())->getType($id),
             'owner' => $owner,
-            'employeur' => $em->getRepository(Employeur::class)->findOneBy(['identity' => $this->session->get('user')])
+            'employeur' => (new OffreEmploiManager())->getOwner($em, $offre->getIdentity())
         ]);
     }
 

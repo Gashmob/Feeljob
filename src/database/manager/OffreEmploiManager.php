@@ -7,6 +7,7 @@ namespace App\database\manager;
 use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
+use App\Entity\Employeur;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -412,8 +413,7 @@ class OffreEmploiManager extends Manager
      * @param int $idEmployeur
      * @return OffreEmploi[]
      */
-    public
-    function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
+    public function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
     {
         $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$id RETURN id(o) AS id'))
             ->setInteger('id', $idEmployeur)
@@ -434,8 +434,7 @@ class OffreEmploiManager extends Manager
      * @param int $idOffre
      * @return bool
      */
-    public
-    function isOwner(int $idEmployeur, int $idOffre): bool
+    public function isOwner(int $idEmployeur, int $idOffre): bool
     {
         return (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(o)=$idO AND id(e)=$idE RETURN e'))
                 ->setInteger('idO', $idOffre)
@@ -448,8 +447,7 @@ class OffreEmploiManager extends Manager
      * @param OffreEmploi[] $offres
      * @return string[]
      */
-    public
-    function getTypes(array $offres): array
+    public function getTypes(array $offres): array
     {
         $res = [];
 
@@ -458,5 +456,20 @@ class OffreEmploiManager extends Manager
         }
 
         return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $id
+     * @return Employeur|null
+     */
+    public function getOwner(EntityManagerInterface $em, int $id): ?Employeur
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(e:' . EntityManager::EMPLOYEUR . ') WHERE id(o)=$id RETURN id(e) AS id'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $em->getRepository(Employeur::class)->findOneBy(['identity' => $result['id']]);
     }
 }
