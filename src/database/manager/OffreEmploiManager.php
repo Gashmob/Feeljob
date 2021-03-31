@@ -391,8 +391,11 @@ class OffreEmploiManager extends Manager
     public function findOffreEmploiByTypeContratFromPreResult(array $preResult, string $typeContrat): array
     {
         $res = [];
+
         foreach ($preResult as $result) {
-            if ((new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
+            if ($typeContrat == 'none') {
+                $res[] = $result;
+            } elseif ((new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
                     ->setString('nom', $typeContrat)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
@@ -409,9 +412,10 @@ class OffreEmploiManager extends Manager
      * @param int $idEmployeur
      * @return OffreEmploi[]
      */
-    public function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
+    public
+    function findOffresEmploiByEmployeur(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI .  ') WHERE id(e)=$id RETURN id(o) AS id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$id RETURN id(o) AS id'))
             ->setInteger('id', $idEmployeur)
             ->run()
             ->getResult();
@@ -430,20 +434,22 @@ class OffreEmploiManager extends Manager
      * @param int $idOffre
      * @return bool
      */
-    public function isOwner(int $idEmployeur, int $idOffre): bool
+    public
+    function isOwner(int $idEmployeur, int $idOffre): bool
     {
         return (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(o)=$idO AND id(e)=$idE RETURN e'))
-            ->setInteger('idO', $idOffre)
-            ->setInteger('idE', $idEmployeur)
-            ->run()
-            ->getOneOrNullResult() != null;
+                ->setInteger('idO', $idOffre)
+                ->setInteger('idE', $idEmployeur)
+                ->run()
+                ->getOneOrNullResult() != null;
     }
 
     /**
      * @param OffreEmploi[] $offres
      * @return string[]
      */
-    public function getTypes(array $offres): array
+    public
+    function getTypes(array $offres): array
     {
         $res = [];
 
