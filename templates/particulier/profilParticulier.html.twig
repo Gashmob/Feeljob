@@ -25,9 +25,9 @@
     <h3 class="ui header green">Vos annonces</h3>
     <div class="ui four stackable cards">
         {% for publication in publications %}
-            <a href="{{ path('entreprise_show_offre_emploi', {'id': publication['id']}) }}" class="ui card">
+            <a href="{{ path('entreprise_show_offre_emploi', {'id': publication.id}) }}" class="ui card">
                 <div class="content">
-                    <div class="header">{{ publication['nom'] }}</div>
+                    <div class="header">{{ publication.nom }}</div>
                     <div class="meta">Créé le 12 novembre 2020</div>
                     <div class="description">
                         <p>Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for
@@ -35,13 +35,13 @@
                             adorable faces, others for their tiny stature, and even others for their massive
                             size.</p>
                         <div class="extra">
-                            <div class="ui label">{{ publication['typeContrat'] }}</div>
+                            <div class="ui label">type contrat</div>
                         </div>
                     </div>
                 </div>
                 <div class="extra content">
                     <i class="check icon"></i>
-                    Vu {{ publication['id'] }} fois
+                    Vu {{ publication.id }} fois
                 </div>
             </a>
         {% endfor %}
