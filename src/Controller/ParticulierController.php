@@ -17,6 +17,7 @@ use App\Entity\CarteVisite;
 use App\Entity\Employeur;
 use App\Entity\Particulier;
 use App\Utils;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
@@ -252,6 +253,7 @@ class ParticulierController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
+     * @throws Exception
      */
     public function createAnnonce(Request $request, EntityManagerInterface $em)
     {
@@ -282,7 +284,7 @@ class ParticulierController extends AbstractController
 
             $date = $request->get('date');
 
-            $secteurActivite = $request->get('secteurActivite');
+            $secteurActivite = $request->get('secteurActivite') == null;
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
@@ -296,7 +298,7 @@ class ParticulierController extends AbstractController
                     ->setNom($nom)
                     ->setDescription($description)
                     ->setAdresse($adresse)
-                    ->setDate($date);
+                    ->setDate(new DateTime($date));
 
                 (new AnnonceManager())->create($em, $annonce, $this->session->get('user'), $secteurActivite);
                 $this->addFlash('success', 'Votre annonce a été publiée !');
@@ -305,7 +307,9 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig');
+        return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames()
+        ]);
     }
 
     /**
