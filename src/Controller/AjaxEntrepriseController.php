@@ -234,7 +234,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
      * @param $competences
      * @param $langues
      * @param $permis
@@ -254,48 +254,44 @@ class AjaxEntrepriseController extends AbstractController
             return $this->json([]);
         }
 
-        if ($request->isMethod('POST')) {
-            $separator = '_';
+        $separator = '_';
 
-            $comps = [];
-            if ($competences != 'none') {
-                $comps = explode($separator, $competences);
-            }
-
-            $langs = [];
-            if ($langues != 'none') {
-                $langs = explode($separator, $langues);
-            }
-
-            $perm = $permis;
-            if ($permis != 'none') {
-                $perm = $permis == 'on';
-            }
-
-            $results = array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit);
-            foreach ($results as $result) {
-                $result->getEmploye()->setCV(null);
-                foreach ($result->getCompetences() as $competence) {
-                    $competence->setCV(null);
-                }
-                foreach ($result->getMetiers() as $metier) {
-                    $metier->setCV(null);
-                }
-                foreach ($result->getDiplomes() as $diplome) {
-                    $diplome->setCV(null);
-                }
-                foreach ($result->getLangues() as $langue) {
-                    $langue->setCV(null);
-                }
-            }
-
-            return $this->json([
-                'cvs' => $results,
-                'quantity' => count($results)
-            ]);
+        $comps = [];
+        if ($competences != 'none') {
+            $comps = explode($separator, $competences);
         }
 
-        return $this->json([]);
+        $langs = [];
+        if ($langues != 'none') {
+            $langs = explode($separator, $langues);
+        }
+
+        $perm = $permis;
+        if ($permis != 'none') {
+            $perm = $permis == 'on';
+        }
+
+        $results = array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit);
+        foreach ($results as $result) {
+            $result->getEmploye()->setCV(null);
+            foreach ($result->getCompetences() as $competence) {
+                $competence->setCV(null);
+            }
+            foreach ($result->getMetiers() as $metier) {
+                $metier->setCV(null);
+            }
+            foreach ($result->getDiplomes() as $diplome) {
+                $diplome->setCV(null);
+            }
+            foreach ($result->getLangues() as $langue) {
+                $langue->setCV(null);
+            }
+        }
+
+        return $this->json([
+            'cvs' => $results,
+            'quantity' => count($results)
+        ]);
     }
 
     /**
