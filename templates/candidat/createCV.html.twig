@@ -191,6 +191,7 @@
                             <label>Langue</label>
                             <div class="field">
                                 <select class="ui dropdown nomLangue" name="nomLangue0">
+                                    <option value="">Choisissez</option>
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                     {% endfor %}

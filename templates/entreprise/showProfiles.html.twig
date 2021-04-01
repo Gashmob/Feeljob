@@ -206,7 +206,7 @@
                     for (var i = 0; i < results.cvs.length; i++) {
                         var card = `
             <div class="ui card cvCard" href="#">
-                <i onclick="addFav(this);" class="icon star"></i>
+                <i onclick="addFav(this);" class="icon star outline"></i>
                         <div class="content">
                             <img class="ui left floated mini circular image"
                                  src="{{ asset('uploads/photo/') }}` + results.cvs[i].employe.photo + `">
@@ -278,8 +278,10 @@
             $(e).transition('pulse');
             if (e.classList.contains('yellow')) {
                 e.classList.remove('yellow');
+                e.classList.add('outline');
             } else {
                 e.classList.add('yellow');
+                e.classList.remove('outline');
             }
         };
     </script>
