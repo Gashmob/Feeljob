@@ -17,20 +17,20 @@
                 E-mail vérifié
             </div>
             <div>
-                <i class="icon green check circle outline"></i>
-                Téléphone vérifié
+                <i class="icon grey question mark circle outline"></i>
+                Téléphone non vérifié
             </div>
         </div>
     </div>
     <h3 class="ui header green">Vos annonces</h3>
     <div class="ui four stackable cards">
         {% for publication in publications %}
-            <a href="{{ path('entreprise_show_offre_emploi', {'id': publication.identity}) }}" class="ui card">
+            <a href="{{ path('particulier_show_annonce', {'id': publication.identity}) }}" class="ui card">
                 <div class="content">
                     <div class="header">{{ publication.nom }}</div>
                     <div class="meta">Créé le 12 novembre 2020</div>
                     <div class="description">
-                        <p>{{ publication.description }}</p>
+                        <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                     </div>
                 </div>
                 <div class="extra content">
