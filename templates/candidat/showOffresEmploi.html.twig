@@ -170,7 +170,7 @@
                     for (var i = 0; i < results.offres.length; i++) {
                         var card = `
             <div class="card annonceCard">
-                <i onclick="addFav(this);" class="icon star"></i>
+                <i onclick="addFav(this);" class="icon star outline"></i>
                 <div class="content">
                     <div class="header">` + results.offres[i].nom + `</div>
                     <div class="meta">
@@ -236,11 +236,12 @@
 
         function addFav(e) {
             $(e).transition('pulse');
-            if( e.classList.contains('yellow') ) {
+            if (e.classList.contains('yellow')) {
                 e.classList.remove('yellow');
-            }
-            else {
+                e.classList.add('outline');
+            } else {
                 e.classList.add('yellow');
+                e.classList.remove('outline');
             }
         };
     </script>
