@@ -14,6 +14,10 @@
                    class="ui blue basic button">
                     Éditer
                 </a>
+                <a href="#"
+                   class="ui red basic button">
+                    Supprimer
+                </a>
             </div>
         {% endif %}
         <div class="ui segment annonce">
@@ -21,19 +25,19 @@
                 <div class="column ten wide">
                     <h2 class="ui header">{{ annonce.nom }}</h2>
                     <div>
-                        <div class="ui label">type contrat</div>
+                        <div class="ui label">secteur activité</div>
                     </div>
                 </div>
             </div>
             <div style="padding-top: 20px;" class="ui content annonce-content">
                 <p>
                     <i class="icon map pin"></i>
-                    {{ annonce.lieu.ville }}
+                    {{ annonce.adresse.ville }}
                 </p>
-                <p>{{ annonce.lieu.adresse }}</p>
-                <p>{{ annonce.lieu.codePostal }}</p>
+                <p>{{ annonce.adresse.rue }}</p>
+                <p>{{ annonce.adresse.codePostal }}</p>
                 <p>{{ annonce.date|date('d/m/Y') }}</p>
-                {% if offre.description|length %}
+                {% if annonce.description|length %}
                     <p>
                         {# {% apply markdown_to_html %} #}
                         {{ annonce.description }}
