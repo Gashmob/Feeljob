@@ -53,9 +53,7 @@
             </div>
             <div class="eleven wide column">
                 <div id="cvsList" class="ui three stackable cards">
-                    <a id="result" class="ui card" href="#">
-                        <div class="content"></div>
-                    </a>
+                    <!--
                     <a class="ui card" href="#">
                         <div class="content">
                             <img class="ui left floated mini circular image"
@@ -115,7 +113,7 @@
                             <i class="icon calendar"></i>
                             Disponible dès maintenaint
                         </div>
-                    </a>
+                    </a> -->
                     {% for i in 0..5 %}
                         <div class="ui card">
                             <div class="content">
@@ -201,33 +199,29 @@
                 if (httpRequest.status === 200) {
                     // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
+                    console.log(results);
                     // Réinitialise la liste
                     cvsList.innerHTML = '';
                     // Pour chaque cv du tableau cvs
                     for (var i = 0; i < results.cvs.length; i++) {
                         var card = `
-            <a class="ui card cvCard" href="#">
+            <div class="ui card cvCard" href="#">
                 <i onclick="addFav(this);" class="icon star"></i>
                         <div class="content">
                             <img class="ui left floated mini circular image"
-                                 src="` + results.cvs[i].employe.photo + `">
+                                 src="{{ asset('uploads/photo/') }}` + results.cvs[i].employe.photo + `">
                             <div class="header">` + results.cvs[i].employe.prenom + ` ` + results.cvs[i].employe.nom + `</div>
                             <div class="meta">
                                 <span class="category">Métier</span>
                             </div>
                             <div style="margin-top: 10px;" class="contract">
-                                <div class="ui label">Type contrat</div>
-                                <div class="ui label">Langues</div>
+                                <div class="ui label">` + results.cvs[i].langues[0].langue.nom + `</div>
                             </div>
                             <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                    deserunt,
-                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                    tempore
-                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                <p>` + truncate(results.cvs[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
                                     <p>
                                         <i class="icon bookmark"></i>
-                                        Master informatique obtenu le 2 Avril 2020
+                                        ` + results.cvs[i].diplomes[0].diplome.nom + ` de ` + results.cvs[i].diplomes[0].diplome.etablissement + `
                                     </p>
                                     <p>
                                         <i class="icon circle outline check"></i>
@@ -235,11 +229,12 @@
                                     </p>
                             </div>
                         </div>
-                        <div class="extra content">
-                            <i class="icon calendar"></i>
-                            À partir du 01/04/2021
-                        </div>
-                    </a>
+                        <a href="{{ path('entreprise_show_cv', {'id': 1}) }}`.slice(0, -1) + results.cvs[i].id + `"
+                           class="ui right floated green button">
+                            Voir le CV
+                            <i class="right chevron icon"></i>
+                        </a>
+                    </div>
             `;
                         cvsList.innerHTML += card;
                     }
