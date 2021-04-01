@@ -317,7 +317,7 @@
     bottom: 65px;
 }
 
-.annonceCard {
+.annonceCard, .cvCard {
     position: relative;
 }
 
@@ -331,7 +331,7 @@
     margin-bottom: 1em;
 }
 
-.annonceCard .star {
+.annonceCard .star, .cvCard .star {
     cursor: pointer;
     position: absolute;
     top: 10px;

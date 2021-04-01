@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="eleven wide column">
-                <div class="ui three stackable cards">
+                <div id="cvsList" class="ui three stackable cards">
                     <a id="result" class="ui card" href="#">
                         <div class="content"></div>
                     </a>
@@ -89,39 +89,6 @@
                         </div>
                     </a>
 
-                    <a class="ui card" href="#">
-                        <div class="content">
-                            <img class="ui left floated mini circular image"
-                                 src="{{ asset('img/placeholders/jenny.jpg') }}">
-                            <div class="header">Prenom Nom</div>
-                            <div class="meta">
-                                <span class="category">Métier</span>
-                            </div>
-                            <div style="margin-top: 10px;" class="contract">
-                                <div class="ui label">Type contrat</div>
-                                <div class="ui label">Langues</div>
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
-                                    deserunt,
-                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
-                                    tempore
-                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
-                                    <p>
-                                        <i class="icon bookmark"></i>
-                                        Master informatique obtenu le 2 Avril 2020
-                                    </p>
-                                    <p>
-                                        <i class="icon circle outline check"></i>
-                                        Dispose du permis
-                                    </p>
-                            </div>
-                        </div>
-                        <div class="extra content">
-                            <i class="icon calendar"></i>
-                            À partir du 01/04/2021
-                        </div>
-                    </a>
                     <a class="ui card" href="#">
                         <div class="content">
                             <img class="ui left floated mini circular image"
@@ -187,38 +154,138 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script type="text/javascript">
+    <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            $.ajax({
-                url: '/entreprise/get/cvs',
-                type: 'POST',
-            }).then(function (response) {
-                console.log(response);
-                $('#result').text(
-                    response.cvs[0].naissance +
-                    response.cvs[0].permis +
-                    response.cvs[0].sitationFamille
-                );
-            });
+            makeRequest()
         });
 
-        function searchOffre(e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/entreprise/get/cvs' + $link.data('direction'),
-                type: 'POST',
-                success: OnSuccess,
-                error: OnErrorCall,
-            });
+        var httpRequest;
+        var results;
+
+        //Cherche tous les résultats
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayCVS;
+            httpRequest.open('POST', '/entreprise/get/cvs');
+            httpRequest.send();
         }
 
-        function onSuccess(response) {
+        //Cherche les résultats par le nom entré barre recherche
+        function makeRequestByCompetence(competence) {
+            httpRequest = new XMLHttpRequest();
 
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayCVS;
+            httpRequest.open('POST', '/entreprise/get/cvs/' + competence);
+            httpRequest.send();
         }
 
-        function onErrorCall(response) {
+        //Affiche les résultats dans 'cvsList'
+        var cvsList = document.getElementById('cvsList');
 
+        function displayCVS() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                cvsList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    // Réinitialise la liste
+                    cvsList.innerHTML = '';
+                    // Pour chaque cv du tableau cvs
+                    for (var i = 0; i < results.cvs.length; i++) {
+                        var card = `
+            <a class="ui card cvCard" href="#">
+                <i onclick="addFav(this);" class="icon star"></i>
+                        <div class="content">
+                            <img class="ui left floated mini circular image"
+                                 src="` + results.cvs[i].employe.photo + `">
+                            <div class="header">` + results.cvs[i].employe.prenom + ` ` + results.cvs[i].employe.nom + `</div>
+                            <div class="meta">
+                                <span class="category">Métier</span>
+                            </div>
+                            <div style="margin-top: 10px;" class="contract">
+                                <div class="ui label">Type contrat</div>
+                                <div class="ui label">Langues</div>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet atque aut
+                                    deserunt,
+                                    dicta distinctio dolorem earum, ipsa non numquam pariatur quia quidem quos
+                                    tempore
+                                    voluptate, voluptates voluptatibus? Asperiores, id.</p>
+                                    <p>
+                                        <i class="icon bookmark"></i>
+                                        Master informatique obtenu le 2 Avril 2020
+                                    </p>
+                                    <p>
+                                        <i class="icon circle outline check"></i>
+                                        Dispose du permis
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="icon calendar"></i>
+                            À partir du 01/04/2021
+                        </div>
+                    </a>
+            `;
+                        cvsList.innerHTML += card;
+                    }
+                } else {
+                    alert('Il y a eu un problème avec la requête.');
+                }
+            }
         }
+
+        var searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchCVS();
+            }
+        });
+
+        function searchCVS() {
+            var inputValue = searchInput.value;
+            if (inputValue != '' && inputValue != null) {
+                makeRequestByCompetence(inputValue);
+            } else {
+                makeRequest();
+            }
+        }
+
+        const MAX_DESCRIPTION_LENGTH = 300;
+
+        // Tronque les descriptions
+        function truncate(str, n, useWordBoundary) {
+            if (str.length <= n) {
+                return str;
+            }
+            const subString = str.substr(0, n - 1); // the original check
+            return (useWordBoundary
+                ? subString.substr(0, subString.lastIndexOf(" "))
+                : subString) + " &hellip;";
+        };
+
+        function addFav(e) {
+            $(e).transition('pulse');
+            if (e.classList.contains('yellow')) {
+                e.classList.remove('yellow');
+            } else {
+                e.classList.add('yellow');
+            }
+        };
     </script>
 {% endblock %}
