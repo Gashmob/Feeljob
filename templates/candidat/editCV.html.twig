@@ -27,7 +27,7 @@
             <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid stackable">
                 <div class="ui four wide column middle aligned">
-                    <img src="{{ asset('img/placeholders/elyse.png') }}"
+                    <img {% if cv.employe.photo %}src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"{% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
                          alt="photo de profil"
                          id="pdp"
                          class="ui small circular centered image">
@@ -46,7 +46,7 @@
                     <div class="two fields">
                         <div class="required field">
                             <label>Né le</label>
-                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" required>
+                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" value="{{ cv.naissance|date('Y-m-d') }}" required>
                         </div>
                         <div class="field">
                             <label>Photo de profil</label>
