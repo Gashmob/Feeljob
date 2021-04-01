@@ -331,7 +331,6 @@ class ParticulierController extends AbstractController
 
     /**
      * @Route("/annonce/{id}", name="particulier_show_annonce")
-     * @Route("/annonce/{id}", name="particulier_show_annonce")
      * @param $id
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
@@ -347,7 +346,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('candidat/showOffresEmploi.html.twig', [
+        return $this->render('autoEntrepreneur/showAnnonce.html.twig', [
             'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id]),
             'owner' => $owner
         ]);
