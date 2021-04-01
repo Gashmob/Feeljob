@@ -25,19 +25,30 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé de l'annonce</label>
-                <input required type="text" name="nom" placeholder="Intitulé de l'annonce">
+                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
             </div>
-            <div class="required field">
-                <label>Localisation</label>
-                <input required type="text" name="ville" placeholder="Localisation">
+            <div class="field">
+                <label>Secteur d'activité</label>
+                <select class="ui dropdown" name="secteurActivite">
+                    <option value="">Choisir</option>
+                    {% for secteur in secteurs %}
+                        <option value="{{ secteur }}">{{ secteur }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="field required">
-                <label>Date début</label>
-                <input required name="date" placeholder="jj/mm/aaaa" type="date">
+            <div class="two fields">
+                <div class="required field">
+                    <label>Localisation</label>
+                    <input required type="text" name="ville" placeholder="Localisation" maxlength="48">
+                </div>
+                <div class="field required">
+                    <label>Date début</label>
+                    <input required name="date" placeholder="jj/mm/aaaa" type="date">
+                </div>
             </div>
             <div class="required field">
                 <label>Description</label>
-                <textarea name="description" cols="30" rows="4" required maxlength="3000"></textarea>
+                <textarea name="description" cols="30" rows="12" required maxlength="3000"></textarea>
             </div>
             <button class="ui fluid large green submit button" type="submit">Créer</button>
         </form>
