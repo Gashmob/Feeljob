@@ -333,7 +333,7 @@ class AnnonceManager extends Manager
      */
     public function findAnnoncesByParticulier(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$id RETURN p'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$id RETURN id(a) AS id'))
             ->setInteger('id', $idParticulier)
             ->run()
             ->getResult();

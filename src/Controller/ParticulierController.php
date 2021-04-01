@@ -284,7 +284,7 @@ class ParticulierController extends AbstractController
 
             $date = $request->get('date');
 
-            $secteurActivite = $request->get('secteurActivite') == null;
+            $secteurActivite = $request->get('secteurActivite');
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
