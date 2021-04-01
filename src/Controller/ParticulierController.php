@@ -330,7 +330,8 @@ class ParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/annonce/{id}", requirements={"id": true}, name="particulier_show_annonce")
+     * @Route("/annonce/{id}", name="particulier_show_annonce")
+     * @Route("/annonce/{id}", name="particulier_show_annonce")
      * @param $id
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
@@ -341,12 +342,14 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+        $owner = (new AnnonceManager())->isOwner($id, $this->session->get('user'));
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR && !$owner) {
             return $this->redirectToRoute('userSpace');
         }
 
         return $this->render('candidat/showOffresEmploi.html.twig', [
-            'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id])
+            'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id]),
+            'owner' => $owner
         ]);
     }
 

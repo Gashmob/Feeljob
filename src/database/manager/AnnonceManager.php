@@ -346,4 +346,18 @@ class AnnonceManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idParticulier
+     * @return bool
+     */
+    public function isOwner(int $idAnnonce, int $idParticulier): bool
+    {
+        return (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$idP AND id(a)=$idA RETURN p'))
+            ->setInteger('idP', $idParticulier)
+            ->setInteger('idA', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult() != null;
+    }
 }
