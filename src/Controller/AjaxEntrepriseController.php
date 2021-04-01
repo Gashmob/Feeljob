@@ -273,7 +273,9 @@ class AjaxEntrepriseController extends AbstractController
 
         $results = array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit);
         foreach ($results as $result) {
-            //$result->getEmploye()->setCV(null);
+            if (!is_null($result->getEmploye())) {
+                $result->getEmploye()->setCV(null);
+            }
             foreach ($result->getCompetences() as $competence) {
                 $competence->setCV(null);
             }
