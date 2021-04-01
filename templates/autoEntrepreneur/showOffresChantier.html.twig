@@ -1,10 +1,10 @@
 {% extends 'page.html.twig' %}
-{% block title %}FealJob - Résultats offres de chantier{% endblock %}
+{% block title %}Résultats annonces{% endblock %}
 {% block body %}
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input type="text" placeholder="Rechercher">
+            <input id="searchInput" type="text" placeholder="Rechercher">
             <div class="ui basic floating dropdown button">
                 <div class="text">Tous les résultats</div>
                 <i class="dropdown icon"></i>
@@ -15,17 +15,10 @@
                     <div class="item">Auto-entrepreneurs</div>
                 </div>
             </div>
-            <div class="ui button">Rechercher</div>
+            <div id="searchInput" class="ui button">Rechercher</div>
         </div>
-        <div style="margin-bottom: 10px;" class="ui tiny breadcrumb">
-            <a class="section">Home</a>
-            <i class="right chevron icon divider"></i>
-            <a class="section">Registration</a>
-            <i class="right chevron icon divider"></i>
-            <div class="active section">Personal Information</div>
-        </div>
-        <div class="ui grid">
-            <div class="three wide column">
+        <div class="ui grid stackable">
+            <div class="four wide column">
                 <div class="ui vertical menu">
                     <div class="item">
                         <div class="header">Products</div>
@@ -58,64 +51,8 @@
                     </div>
                 </div>
             </div>
-            <div class="thirteen wide column">
-                <div class="ui two stackable cards">
-                    <div class="card annonceCard">
-                        <div class="content">
-                            <a class="header">Pâtissier</a>
-                            <div class="meta">
-                                <span>
-                                    <i class="icon map pin"></i>
-                                    Aix-les-Bains,
-                                </span>
-                                <span>du 12/06 au 12/07</span>
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
-                                    blanditiis delectus distinctio dolor dolorum ducimus molestiae, natus nostrum
-                                    perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
-                            </div>
-                            <div class="extra">
-                                <div class="ui label">CDD</div>
-                                <div class="ui label">CDI</div>
-                                <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                                <a href="#"
-                                   class="ui right floated green button">
-                                    Voir l'offre
-                                    <i class="right chevron icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% for offre in offres %}
-                        <div class="card annonceCard">
-                            <div class="content">
-                                <a class="header">{{ offre['nom'] }}</a>
-                                <div class="meta">
-                                    {% if offre['adresse'] is not empty %}
-                                        <span>
-                                            <i class="icon map pin"></i>
-                                            {{ offre['adresse'] }},
-                                        </span>
-                                    {% endif %}
-                                    <span>pour le {{ offre['date'] }}</span>
-                                </div>
-                                <div class="actions">
-                                    <i class="icon star addFav"></i>
-                                </div>
-                                <div class="description">
-                                    <p>{{ offre['description'] }}</p>
-                                </div>
-                                <div class="extra">
-                                    <a href="#"
-                                       class="ui right floated green button">
-                                        Voir l'offre
-                                        <i class="right chevron icon"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+            <div class="eleven wide column">
+                <div id="annoncesList" class="ui two stackable cards">
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
@@ -150,30 +87,131 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        /**
-         * Simple (ugly) code to handle the comment vote up/down
-         */
-        var button = $('.js-vote-arrows');
-        button.on('click', function (e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/comments/10/vote/' + $link.data('direction'),
-                method: 'GET'
-            }).then(function (response) {
-                button.text(response.votes);
-            });
+        window.addEventListener("DOMContentLoaded", (event) => {
+            makeRequest()
         });
 
-        function searchOffre(e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/offres/' + $link.data('direction'),
-                method: 'GET'
-            }).then(function (response) {
-                $container.find('.js-vote-total').text(response.votes);
-            });
+        var httpRequest;
+        var results;
+
+        //Cherche tous les résultats
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayAnnonces;
+            httpRequest.open('POST', '/particulier/get/annonces');
+            httpRequest.send();
         }
+
+        //Cherche les résultats par le nom entré barre recherche
+        function makeRequestBySecteur(secteur) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayAnnonces;
+            httpRequest.open('POST', '/particulier/get/annonces/' + secteur);
+            httpRequest.send();
+        }
+
+        //Affiche les résultats dans 'annoncesList'
+        var annoncesList = document.getElementById('annoncesList');
+
+        function displayAnnonces() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                annoncesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    console.log(results);
+                    // Réinitialise la liste
+                    annoncesList.innerHTML = '';
+                    // Pour chaque cv du tableau annonces
+                    for (var i = 0; i < results.annonces.length; i++) {
+                        var card = `
+                <div class="card annonceCard">
+                    <div class="content">
+                        <a class="header">` + results.annonces[i].nom + `</a>
+                        <div class="meta">
+                            <span>
+                                <i class="icon map pin"></i>
+                                ` + results.annonces[i].adresse.ville + `
+                            </span>
+                            <span>Pour le 15/05</span>
+                        </div>
+                        <div class="description">
+                            <p>` + truncate(results.annonces[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
+                        </div>
+                        <div class="extra">
+                            <div class="ui label">CDD</div>
+                            <div class="ui label">CDI</div>
+                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                            <a href="{{ path('particulier_show_annonce', {'id': 1}) }}`.slice(0, -1) + results.annonces[i].identity + `"
+                               class="ui right floated green button">
+                                Voir l'offre
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+                        annoncesList.innerHTML += card;
+                    }
+                } else {
+                    alert('Il y a eu un problème avec la requête.');
+                }
+            }
+        }
+
+        var searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchAnnonces();
+            }
+        });
+
+        function searchAnnonces() {
+            var inputValue = searchInput.value;
+            if (inputValue != '' && inputValue != null) {
+                makeRequestBySecteur(inputValue);
+            } else {
+                makeRequest();
+            }
+        }
+
+        const MAX_DESCRIPTION_LENGTH = 300;
+
+        // Tronque les descriptions
+        function truncate(str, n, useWordBoundary) {
+            if (str.length <= n) {
+                return str;
+            }
+            const subString = str.substr(0, n - 1); // the original check
+            return (useWordBoundary
+                ? subString.substr(0, subString.lastIndexOf(" "))
+                : subString) + " &hellip;";
+        };
+
+        function addFav(e) {
+            $(e).transition('pulse');
+            if (e.classList.contains('yellow')) {
+                e.classList.remove('yellow');
+                e.classList.add('outline');
+            } else {
+                e.classList.add('yellow');
+                e.classList.remove('outline');
+            }
+        };
     </script>
 {% endblock %}

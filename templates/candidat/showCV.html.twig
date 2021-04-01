@@ -1,26 +1,35 @@
 {% extends 'page.html.twig' %}
-{% block title %}FealJob - Voir un CV{% endblock %}
+{% block title %}Voir un CV{% endblock %}
 {% block body %}
-    <div class="ui text justified container">
+    <div style="position: relative" class="ui text justified container">
+        {% if not owner %}
+            <a href="{{ path('entreprise_cvs') }}" class="ui compact labeled icon button"
+               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+                <i class="left arrow icon"></i>
+                Retour aux CV
+            </a>
+        {% endif %}
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
-            CV de {{ cv['prenom'] }} {{ cv['nom'] }}
+            CV de {{ cv.employe.prenom }} {{ cv.employe.nom }}
         </h2>
         <div>
-            <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}">
-                <button class="ui labeled icon button">
-                    <i class="download icon"></i>
-                    Télécharger le CV
-                </button>
-            </a>
-            {% if modify %}
-                <a href="{{ path('create_cv') }}?id={{ cv['id'] }}">
-                    <button class="ui blue labeled icon button">
-                        <i class="pencil icon"></i>
-                        Éditer le CV
-                    </button>
+            <div class="ui buttons">
+                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}"
+                   class="ui grey basic button">
+                    Télécharger
                 </a>
-            {% endif %}
+                {% if owner %}
+                    <a href="{{ path('entreprise_modifier_cv', {id: cv.id}) }}"
+                       class="ui blue basic button">
+                        Éditer
+                    </a>
+                    <a href="{{ path('entreprise_delete_cv', {id: cv.id}) }}"
+                       class="ui red basic button">
+                        Supprimer
+                    </a>
+                {% endif %}
+            </div>
         </div>
         <form class="ui form segment">
             <!-- Identité -->
@@ -30,8 +39,8 @@
             </h3>
             <div class="ui two column grid">
                 <div class="column four wide">
-                    {% if cv['photo'] is not empty %}
-                        <img src="{{ asset('uploads/photos/' ~ cv['photo']) }}"
+                    {% if cv.employe.photo is not empty %}
+                        <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
                              alt="photo de profil"
                              class="ui small circular image">
                     {% else %}
@@ -41,14 +50,14 @@
                     {% endif %}
                 </div>
                 <div class="column ten wide">
-                    <div>{{ cv['prenom'] }} {{ cv['nom'] }}</div>
+                    <div>{{ cv.employe.prenom }} {{ cv.employe.nom }}</div>
                     <div>Homme</div>
-                    <div>{{ cv['famille'] }}</div>
+                    <div>Né le {{ cv.naissance|date('d/m/Y') }}</div>
+                    <div>{{ cv.situationFamille.nom }}</div>
                     <div class="ui divider"></div>
-                    <div>{{ cv['metier'] }}</div>
                     {% if app.session.get('user') %}
-                        <div>{{ cv['email'] }}</div>
-                        <div>{{ cv['telephone'] }}</div>
+                        <div>{{ cv.employe.email }}</div>
+                        <div>{{ cv.employe.telephone }}</div>
                     {% endif %}
                 </div>
             </div>
@@ -58,18 +67,13 @@
                 <div class="content">Formation</div>
             </h3>
             <div class="ui segments">
-                {% for diplome in cv['diplomes'] %}
+                {% for diplome in cv.diplomes %}
                     <div class="ui segment formation1">
-                        <h5 class="ui header">{{ diplome['nom'] }}</h5>
-                        <div>{{ diplome['nom'] }}</div>
-                        <div>{{ diplome['date'] }}</div>
+                        <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
+                        <div>{{ diplome.date|date('d/m/Y') }}</div>
+                        <div>{{ diplome.mention }}</div>
                     </div>
                 {% endfor %}
-                <div class="ui segment formation2">
-                    <h5 class="ui header">Licence Informatique</h5>
-                    <div>Université de Bretagne</div>
-                    <div>2015-2016</div>
-                </div>
             </div>
             <!-- Expérience -->
             <h3 class="ui dividing header">
@@ -77,28 +81,42 @@
                 <div class="content">Expérience professionnelle</div>
             </h3>
             <div class="ui segments">
-                {% for experience in cv['experiences'] %}
-                    <div class="ui segment experience1">
-                        <h5 class="ui header">{{ experience['poste'] }}</h5>
-                        <div>{{ experience['nomEntreprise'] }}</div>
-                        <div>{{ experience['duree'] }}</div>
+                {% for metier in cv.metiers %}
+                    <div class="ui segment">
+                        <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
+                        <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
                     </div>
                 {% endfor %}
-                <div class="ui segment experience2">
-                    <h5 class="ui header">Développeur C++</h5>
-                    <div>Sopra Steria</div>
-                    <div>2016-2018</div>
-                </div>
             </div>
+            {% if cv.description %}
+                <!-- Bio -->
+                <h3 class="ui dividing header">
+                    <i class="icon info"></i>
+                    <div class="content">Biographie</div>
+                </h3>
+                <div class="ui segment">
+                    <p>{{ cv.description }}</p>
+                </div>
+            {% endif %}
             <!-- Langues parlées -->
             <h3 class="ui dividing header">
                 <i class="icon globe"></i>
                 <div class="content">Langues parlées</div>
             </h3>
             <ul>
-                <li>Français - langue maternelle</li>
-                <li>Anglais - couramment</li>
-                <li>Italien - quelques notions</li>
+                {% for langue in cv.langues %}
+                    <li>{{ langue.langue.nom }} - {{ langue.niveau }}</li>
+                {% endfor %}
+            </ul>
+            <!-- Compétences -->
+            <h3 class="ui dividing header">
+                <i class="icon settings"></i>
+                <div class="content">Compétences</div>
+            </h3>
+            <ul>
+                {% for competence in cv.competences %}
+                    <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
+                {% endfor %}
             </ul>
             <!-- Autres -->
             <h3 class="ui dividing header">
@@ -107,16 +125,12 @@
             </h3>
             <div class="ui segment">
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if cv.permis %}check{% else %}times{% endif %}"></i>
                     Dispose du permis B
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon check"></i>
+                    <i class="icon {% if cv.permis %}check{% else %}times{% endif %}"></i>
                     Dispose d'un moyen de transport
-                </div>
-                <div class="ui left float icon">
-                    <i class="icon times"></i>
-                    Pas plus de 50km
                 </div>
             </div>
         </form>

@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}FealJob - Propositions de contrat{% endblock %}
+{% block title %}Propositions de contrat{% endblock %}
 {% block body %}
     <h2 class="ui centered aligned header">
         <i class="briefcase icon"></i>
@@ -8,7 +8,7 @@
     <div class="ui segment stacked">
         {% for i in 1..2 %}
             <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
-                <div class="ui left floated fourteen wide column">
+                <div class="ui left floated ten wide column">
                     <img class="ui left floated mini circular image"
                          src="{{ asset('img/placeholders/matthew.png') }}">
                     <div class="header">{{ i }} - Matt Romney</div>
@@ -16,15 +16,16 @@
                         <span class="date">15 Février 2021</span>
                     </div>
                 </div>
-                <div class="ui right floated two wide column">
-                    <!--<button class="ui button red btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                    <button class="ui button green btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
+                <div class="ui right floated three wide column">
+                    <a href="#" class="ui blue button btnAccept">Voir</a>
+                    <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
+                    <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
                 </div>
             </div>
         {% endfor %}
         {% for contrat in contrats %}
             <div id="{{ contrat['id'] }}" class="proposition ui vertical segment grid">
-                <div class="ui left floated fourteen wide column">
+                <div class="ui left floated ten wide column">
                     <img class="ui left floated mini circular image"
                          src="{{ asset('img/placeholders/matthew.png') }}">
                     <div class="header">{{ contrat['nom'] }}</div>
@@ -36,9 +37,10 @@
                         {{ contrat['description'] }}
                     </div>
                 </div>
-                <div class="ui right floated two wide column">
-                    <!--<button class="ui button red btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                    <a href="{{ path('accept', {'id': contrat['id']}) }}" class="ui button green btnAccept">Accepter</a>
+                <div class="ui right floated three wide column">
+                    <a href="#" class="ui blue button btnAccept">Voir</a>
+                    <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
+                    <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
                 </div>
             </div>
         {% endfor %}

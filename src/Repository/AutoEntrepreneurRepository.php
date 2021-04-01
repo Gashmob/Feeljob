@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AutoEntrepreneur;
+use App\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,27 @@ class AutoEntrepreneurRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AutoEntrepreneur::class);
+    }
+
+    /**
+     * @param AutoEntrepreneur[] $preResult
+     * @param float $distanceMax
+     * @param string $addressFrom
+     * @return AutoEntrepreneur[]
+     */
+    public function findByDistanceMaxFromPreResult(array $preResult, float $distanceMax, string $addressFrom): array
+    {
+        $res = [];
+        foreach ($preResult as $result) {
+            $adresse = $result->getAdresse();
+            if (!is_null($adresse)) {
+                if (Utils::getDistance($addressFrom, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()) <= $distanceMax) {
+                    $res[] = $result;
+                }
+            }
+        }
+
+        return $res;
     }
 
     // /**

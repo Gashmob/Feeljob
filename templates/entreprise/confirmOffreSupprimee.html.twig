@@ -1,0 +1,17 @@
+{% extends 'page.html.twig' %}
+{% block title %}Offre supprimée{% endblock %}
+{% block body %}
+    <div class="ui segment center aligned">
+        <h2 class="ui center aligned icon header">
+            <i class="horn icon"></i>
+            Votre offre a bien été supprimée.
+        </h2>
+        <div>
+            <div class="ui large buttons">
+                <a href="{{ path('userSpace') }}" class="ui green button">Mon profil</a>
+                <div class="or" data-text="ou"></div>
+                <a href="{{ path('homepage') }}" class="ui button">Page d'accueil</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

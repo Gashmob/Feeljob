@@ -1,0 +1,248 @@
+{% extends 'page.html.twig' %}
+{% block title %}Offres d'emploi{% endblock %}
+{% block body %}
+    <div style="margin-top: 20px  !important; margin-bottom: 40px;">
+        <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
+            <i class="search icon"></i>
+            <input id="searchInput" type="text" placeholder="Rechercher">
+            <div class="ui basic floating dropdown button">
+                <div class="text">Tous les résultats</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="active item">Tous les résultats</div>
+                    <div class="item">Offres d'emploi</div>
+                    <div class="item">Candidats</div>
+                    <div class="item">Auto-entrepreneurs</div>
+                </div>
+            </div>
+            <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
+        </div>
+        <div class="ui grid stackable">
+            <div class="five wide column">
+                <div class="ui vertical menu">
+                    <div class="item">
+                        <div class="header">Type contrat</div>
+                        <div class="menu">
+                            <a class="item">CDI</a>
+                            <a class="item">CDD</a>
+                            <a class="item">Saisonnier</a>
+                            <a class="item">Intérim</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">CMS Solutions</div>
+                        <div class="menu">
+                            <a class="item">Rails</a>
+                            <a class="item">Python</a>
+                            <a class="item">PHP</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">Hosting</div>
+                        <div class="menu">
+                            <a class="item">Shared</a>
+                            <a class="item">Dedicated</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">Support</div>
+                        <div class="menu">
+                            <a class="item">E-mail Support</a>
+                            <a class="item">FAQs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="eleven wide column justified">
+                <div id="offresList" class="ui two stackable cards">
+                    <!--
+                    <div class="card annonceCard">
+                        <div class="content">
+                            <a class="header">Pâtissier</a>
+                            <div class="meta">
+                                <span>
+                                    <i class="icon map pin"></i>
+                                    Aix-les-Bains,
+                                </span>
+                                <span>du 12/06 au 12/07</span>
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aut
+                                    blanditiis delectus distinctio dolor dolorum ducimus molestiae, natus nostrum
+                                    perspiciatis quaerat quam repellendus, sapiente vel veniam vitae. Iure, nihil.</p>
+                            </div>
+                            <div class="extra">
+                                <div class="ui label">CDD</div>
+                                <div class="ui label">CDI</div>
+                                <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                                <a href="#"
+                                   class="ui right floated green button">
+                                    Voir l'annonce
+                                    <i class="right chevron icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                    {% for i in 0..6 %}
+                        <div class="item">
+                            <div class="image">
+                                <div class="ui placeholder">
+                                    <div class="square image"></div>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="very short line"></div>
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        window.addEventListener("DOMContentLoaded", (event) => {
+            makeRequest()
+        });
+
+        var httpRequest;
+        var results;
+
+        //Cherche tous les résultats
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayOffres;
+            httpRequest.open('POST', '/entreprise/get/offres_emploi');
+            httpRequest.send();
+        }
+
+        //Cherche les résultats par le nom entré barre recherche
+        function makeRequestByName(name) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayOffres;
+            httpRequest.open('POST', '/entreprise/get/offres_emploi/' + name);
+            httpRequest.send();
+        }
+
+        //Affiche les résultats dans 'offresList'
+        var offresList = document.getElementById('offresList');
+
+        function displayOffres() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                offresList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    // Réinitialise la liste
+                    offresList.innerHTML = '';
+                    // Pour chaque offre du tableau offres
+                    for (var i = 0; i < results.offres.length; i++) {
+                        var card = `
+            <div class="card annonceCard">
+                <i onclick="addFav(this);" class="icon star outline"></i>
+                <div class="content">
+                    <div class="header">` + results.offres[i].nom + `</div>
+                    <div class="meta">
+                        <span>
+                            <i class="icon map pin"></i>
+                            ` + results.offres[i].lieu.ville + `,
+                        </span>
+                        <br>
+                        <span>du 12/06 au 12/07</span>
+                    </div>
+                    <div class="description">
+                        <p>` + truncate(results.offres[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
+                    </div>
+                    <div class="extra">
+                        <div class="ui label">` + results.offres[i].salaire + `€/mois</div>
+                        <div class="ui label">` + results.offres[i].heures + `h/semaine</div>
+                        <a href="{{ path('entreprise_show_offre_emploi', {'id': 1}) }}`.slice(0, -1) + results.offres[i].identity + `"
+                           class="ui right floated green button">
+                            Voir l'annonce
+                            <i class="right chevron icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `;
+                        offresList.innerHTML += card;
+                    }
+                } else {
+                    alert('Il y a eu un problème avec la requête.');
+                }
+            }
+        }
+
+        var searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchOffres();
+            }
+        });
+
+        function searchOffres() {
+            var inputValue = searchInput.value;
+            if (inputValue != '' && inputValue != null) {
+                makeRequestByName(inputValue);
+            } else {
+                makeRequest();
+            }
+        }
+
+        const MAX_DESCRIPTION_LENGTH = 300;
+
+        // Tronque les descriptions
+        function truncate(str, n, useWordBoundary) {
+            if (str.length <= n) {
+                return str;
+            }
+            const subString = str.substr(0, n - 1); // the original check
+            return (useWordBoundary
+                ? subString.substr(0, subString.lastIndexOf(" "))
+                : subString) + " &hellip;";
+        };
+
+        function addFav(e) {
+            $(e).transition('pulse');
+            if (e.classList.contains('yellow')) {
+                e.classList.remove('yellow');
+                e.classList.add('outline');
+            } else {
+                e.classList.add('yellow');
+                e.classList.remove('outline');
+            }
+        };
+    </script>
+{% endblock %}

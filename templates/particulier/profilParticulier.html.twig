@@ -1,0 +1,93 @@
+{% extends 'page.html.twig' %}
+{% block title %}Votre profil{% endblock %}
+{% block body %}
+    <div class="ui segment grid identity stackable">
+        <div class="two wide column">
+            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+        </div>
+        <div class="ten wide column">
+            <h2 class="ui header">
+                <div class="content">Profil de {{ prenom }} {{ nom }}</div>
+            </h2>
+            <div class="ui label">{{ app.session.get('userType') }}</div>
+        </div>
+        <div class="four wide column">
+            <div>
+                <i class="icon green check circle outline"></i>
+                E-mail vérifié
+            </div>
+            <div>
+                <i class="icon grey question mark circle outline"></i>
+                Téléphone non vérifié
+            </div>
+        </div>
+    </div>
+    <h3 class="ui header green">Vos annonces</h3>
+    <div class="ui four stackable cards">
+        {% for publication in publications %}
+            <a href="{{ path('particulier_show_annonce', {'id': publication.identity}) }}" class="ui card">
+                <div class="content">
+                    <div class="header">{{ publication.nom }}</div>
+                    <div class="meta">Créé le 12 novembre 2020</div>
+                    <div class="description">
+                        <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <i class="check icon"></i>
+                    Vu {{ publication.identity }} fois
+                </div>
+            </a>
+        {% endfor %}
+        <div style="border: none; width: auto; box-shadow: none;"
+             class="ui card grid middle aligned center aligned">
+            <div class="column">
+                <div class="ui row labeled icon">
+                    <a href="{{ path('particulier_create_annonce') }}" class="ui row labeled icon">
+                        <button class="ui blue labeled icon button">
+                            <i class="plus icon"></i>
+                            Nouvelle annonce
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui vertical segment">
+        <div class="ui vertical segment">
+            <h3 class="ui header green">Vos contrats</h3>
+            <div class="ui segment">
+                {% for i in 1..2 %}
+                    <div class="ui vertical segment">
+                        <div class="content">
+                            <div class="header">
+                                <i class="icon green check"></i>
+                                Accepté
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
+                                    exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
+                                    unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for i in 1..2 %}
+                    <div class="ui vertical segment">
+                        <div class="content">
+                            <div class="header">
+                                <i class="icon red times"></i>
+                                Refusé
+                            </div>
+                            <div class="description">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
+                                    dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
+                                    placeat praesentium rem velit. Harum nobis officia praesentium.</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

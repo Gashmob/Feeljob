@@ -5,16 +5,8 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
-use App\database\exceptions\UserNotFoundException;
-use App\Entity\AutoEntrepreneur;
-use App\Entity\Candidat;
-use App\Entity\Entreprise;
+use App\database\manager\UtilsManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\DNSCheckValidation;
-use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\RFCValidation;
-use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,6 +17,10 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class HomeController
+ * @package App\Controller
+ */
 class HomeController extends AbstractController
 {
     /**
@@ -51,42 +47,10 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/mailVérifié", name="mailVerified")
-     * @return Response
-     */
-    public function mailVerified(): Response
-    {
-        return $this->render('home/mailVerified.html.twig');
-    }
-
-    /**
-     * @Route("/show/{type}", name="show")
-     * @param $type
-     * @return Response
-     */
-    public function show($type): Response
-    {
-        switch ($type) {
-            case 'candidats':
-                return $this->render('home/candidat.html.twig');
-
-            case 'entreprises':
-                return $this->render('home/employeur.html.twig');
-
-            case 'auto-entrepreneurs':
-                return $this->render('home/autoEntrepreneurs.html.twig');
-
-            default:
-                return $this->render('@Twig/Exception/error404.html.twig');
-        }
-    }
-
-    /**
      * @Route("/connexion", name="connexion")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
-     * @throws UserNotFoundException
      */
     public function connexion(Request $request, EntityManagerInterface $em): Response
     {
@@ -97,15 +61,15 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             $mail = $request->get('mail');
 
-            $user = EntityManager::getGenericUserFromMail($mail);
+            $user = (new UtilsManager())->getUserFromMail($em, $mail);
             if ($user) {
-                if ($user->isVerifie()) {
+                if ($user->getVerifie()) {
                     $motdepasse = $request->get('motdepasse');
 
                     if (password_verify(hash('sha512', $motdepasse . $user->getSel()), $user->getMotdepasse())) {
-                        $this->session->set('user', $user->getId());
-                        $this->session->set('userType', EntityManager::getUserTypeFromId($user->getId()));
-                        $this->session->set('userName', EntityManager::getNomPrenomFromId($user->getId(), $em)['prenom']);
+                        $this->session->set('user', $user->getIdentity());
+                        $this->session->set('userType', (new UtilsManager())->getUserTypeFromId($user->getIdentity()));
+                        $this->session->set('userName', $user->getPrenom());
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
@@ -126,6 +90,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/deconnexion", name="deconnexion")
+     * @return RedirectResponse
      */
     public function deconnexion(): RedirectResponse
     {
@@ -136,136 +101,38 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="inscription")
-     * @param Request $request
-     * @param MailerInterface $mailer
-     * @param EntityManagerInterface $em
-     * @return Response
-     * @throws TransportExceptionInterface
+     * @Route("/userspace", name="userSpace")
+     * @return RedirectResponse
      */
-    public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
+    public function userSpace(): RedirectResponse
     {
-        if ($this->session->get('user')) {
-            return $this->redirectToRoute('userSpace');
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
         }
 
-        if ($request->isMethod('POST')) {
-            switch ($request->get('tab')) {
-                case 'candidat':
-                    $data = $this->getInscriptionData($request);
-
-                    if ($data['ok']) {
-                        $candidat = new Candidat();
-                        $candidat->setPrenom($data['prenom'])
-                            ->setNom($data['nom'])
-                            ->setTelephone($data['telephone']);
-                        EntityManager::createCandidat($candidat, $em, $data['motdepasse'], $data['salt'], $data['mail']);
-
-                        return $this->sendMailAndWait($mailer, $data['mail'], $candidat->getPrenom(), $candidat->getNom(), $candidat->getIdentity());
-                    }
-                    break;
-
-                case 'entreprise':
-                    $nomEntreprise = $request->get('nomEntreprise');
-                    $nomEntrepriseB = true;
-                    if ($nomEntreprise === '') {
-                        $nomEntrepriseB = false;
-                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom d\'entreprise');
-                    }
-
-                    $adresse = $request->get('adresse');
-                    $adresseB = true;
-                    if ($adresse === '') {
-                        $adresseB = false;
-                        $this->addFlash('adresse', 'Merci de renseigner une adresse');
-                    }
-
-                    $logo = $this->uploadImage();
-
-                    $siret = $request->get('siret');
-                    $siretB = true;
-                    if ($siret === '') {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Merci de renseigner le numéro siret');
-                    }
-
-                    $activite = $request->get('activite');
-                    if (is_string($activite)) {
-                        $activite = [$activite];
-                    }
-
-                    $description = $request->get('description');
-
-                    $data = $this->getInscriptionData($request);
-
-                    if ($nomEntrepriseB && $adresseB && $siretB && $data['ok']) {
-                        $entreprise = new Entreprise();
-                        $entreprise->setNom($data['nom'])
-                            ->setPrenom($data['prenom'])
-                            ->setNomEntreprise($nomEntreprise)
-                            ->setLogo($logo)
-                            ->setSiret($siret)
-                            ->setDescription($description)
-                            ->setTelephone($data['telephone']);
-                        EntityManager::createEntreprise($entreprise, $em, $data['motdepasse'], $data['salt'], $data['mail'], $activite);
-
-                        return $this->sendMailAndWait($mailer, $data['mail'], $entreprise->getPrenom(), $entreprise->getNom(), $entreprise->getIdentity());
-                    }
-                    break;
-
-                case 'auto':
-                    $nomEntreprise = $request->get('nomEntreprise');
-                    $nomEntrepriseB = true;
-                    if ($nomEntreprise === '') {
-                        $nomEntrepriseB = false;
-                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom d\'entreprise');
-                    }
-
-                    $adresse = $request->get('adresse');
-                    $adresseB = true;
-                    if ($adresse === '') {
-                        $adresseB = false;
-                        $this->addFlash('adresse', 'Merci de renseigner une adresse pour l\'entreprise');
-                    }
-
-                    $logo = $this->uploadImage();
-
-                    $siret = $request->get('siret');
-                    $siretB = true;
-                    if ($siret === '') {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Merci de renseigner un siret');
-                    }
-
-                    $activite = $request->get('activite');
-
-                    $description = $request->get('description');
-
-                    $data = $this->getInscriptionData($request);
-
-                    if ($nomEntrepriseB && $adresseB && $siretB && $data['ok']) {
-                        $autoEntrepreneur = new AutoEntrepreneur();
-                        $autoEntrepreneur->setPrenom($data['prenom'])
-                            ->setNom($data['nom'])
-                            ->setTelephone($data['telephone'])
-                            ->setDescription($description)
-                            ->setSiret($siret)
-                            ->setLogo($logo)
-                            ->setNomEntreprise($nomEntreprise)
-                            ->setAbonne(false);
-                        EntityManager::createAutoEntrepreneur($autoEntrepreneur, $em, $data['motdepasse'], $data['salt'], $data['mail'], $activite);
-
-                        return $this->sendMailAndWait($mailer, $data['mail'], $autoEntrepreneur->getPrenom(), $autoEntrepreneur->getNom(), $autoEntrepreneur->getIdentity());
-                    }
-                    break;
-
-                default:
-            }
+        if ($this->session->get('userType') == EntityManager::PARTICULIER || $this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('particulier_espace');
+        } else {
+            return $this->redirectToRoute('entreprise_espace');
         }
+    }
 
-        return $this->render('home/inscription.html.twig', [
-            'secteurActivites' => EntityManager::getAllActivitySectorName()
-        ]);
+    /**
+     * @Route("/inscription", name="inscription")
+     * @return Response
+     */
+    public function inscription(): Response
+    {
+        return $this->render('home/choixInscription.html.twig');
+    }
+
+    /**
+     * @Route("/mail_verifie", name="mailVerified")
+     * @return Response
+     */
+    public function mailVerified(): Response
+    {
+        return $this->render('home/mailVerified.html.twig');
     }
 
     /**
@@ -276,7 +143,6 @@ class HomeController extends AbstractController
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws TransportExceptionInterface
-     * @throws UserNotFoundException
      */
     public function waitVerifEmail($id, Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
@@ -284,21 +150,20 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getGenericUserFromId($id);
-        if ($user->isVerifie()) {
+        $user = (new UtilsManager())->getUserFromId($em, $id);
+        if ($user->getVerifie()) {
             return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
-            $nomPrenom = EntityManager::getNomPrenomFromId($id, $em);
             if ($user) {
                 $email = (new TemplatedEmail())
                     ->from('no-reply@fealjob.com')
                     ->to($user->getEmail())
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([
-                        'nom' => $nomPrenom['nom'],
-                        'prenom' => $nomPrenom['prenom'],
+                        'nom' => $user->getNom(),
+                        'prenom' => $user->getPrenom(),
                         'id' => $id
                     ]);
                 $mailer->send($email);
@@ -314,18 +179,19 @@ class HomeController extends AbstractController
     /**
      * @Route("/verif/{id}", name="verifEmail", defaults={"id"=""})
      * @param $id
+     * @param EntityManagerInterface $em
      * @return RedirectResponse
      */
-    public function verifEmail($id): RedirectResponse
+    public function verifEmail($id, EntityManagerInterface $em): RedirectResponse
     {
         if ($id === '') {
             return $this->redirectToRoute('homepage');
         }
 
-        $user = EntityManager::getGenericUserFromId($id);
+        $user = (new UtilsManager())->getUserFromId($em, $id);
         if ($user) {
             $user->setVerifie(true);
-            $user->flush();
+            $em->flush();
 
             return $this->redirectToRoute('mailVerified');
         }
@@ -361,7 +227,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/confidentiality", name="confidentiality")
+     * @Route("/confidentialite", name="confidentiality")
      * @return Response
      */
     public function confidentiality(): Response
@@ -378,165 +244,54 @@ class HomeController extends AbstractController
         return $this->render('footer/conditionsUtilisation.html.twig');
     }
 
-    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
     /**
-     * @param int $n
-     * @return string
+     * @Route("/voir/{type}", name="show")
+     * @param $type
+     * @return Response
      */
-    private function randomString(int $n): string
+    public function show($type): Response
     {
-        $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $charactersLength = strlen($characters);
-        $randomString = "";
-        for ($i = 0; $i < $n; $i++) {
-            try {
-                $randomString .= $characters[random_int(0, $charactersLength - 1)];
-            } catch (Exception $e) {
-            }
+        switch ($type) {
+            case EntityManager::EMPLOYE:
+                return $this->render('home/candidats.html.twig');
+
+            case EntityManager::EMPLOYEUR:
+                return $this->render('home/employeurs.html.twig');
+
+            case EntityManager::AUTO_ENTREPRENEUR:
+                return $this->render('home/freelances.html.twig');
+
+            case EntityManager::PARTICULIER:
+                return $this->render('home/particuliers.html.twig');
+
+            default:
+                return $this->render('@Twig/Exception/error404.html.twig');
         }
-        return $randomString;
     }
 
     /**
-     * @return string
+     * @Route("/mdp_oublie", name="mdpOublie")
+     * @return Response|RedirectResponse
      */
-    private function uploadImage(): string
+    public function mdpOublie()
     {
-        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-            // Infos sur le fichier téléchargé
-            $fileTmpPath = $_FILES['logo']['tmp_name'];
-            $fileName = $_FILES['logo']['name'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
-
-            // Changement du nom par quelque chose qui ne se répétera pas
-            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-
-            // Les extensions autorisées
-            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'svg');
-
-            if (!file_exists('./uploads/logos')) {
-                mkdir('./uploads/logos');
-            }
-
-            if (in_array($fileExtension, $allowedfileExtensions)) {
-                $uploadFileDir = './uploads/logos/';
-                $dest_path = $uploadFileDir . $newFileName;
-
-                if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                    return $newFileName;
-                } else {
-                    $this->addFlash('fail', 'L\'image n\'a pas pu être téléchargée, les droits d\'écriture ne sont pas accordés');
-                }
-            } else {
-                $this->addFlash('fail', 'L\'image n\'a pas pu être téléchargée, l\'extension doit être : ' . implode(',', $allowedfileExtensions));
-            }
-        } else {
-            $this->addFlash('fail', 'Il y eu a une erreur lors du téléchargement : ' . $_FILES['uploadedFile']['error']);
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
         }
 
-        return "";
+        return $this->render('home/mdpOublie.html.twig');
     }
 
     /**
-     * @param MailerInterface $mailer
-     * @param string $email
-     * @param string $prenom
-     * @param string $nom
-     * @param int $id
-     * @return RedirectResponse
-     * @throws TransportExceptionInterface
+     * @Route("/reinitialiser_mdp", name="mdpReinitialiser")
+     * @return Response|RedirectResponse
      */
-    private function sendMailAndWait(MailerInterface $mailer, string $email, string $prenom, string $nom, int $id): RedirectResponse
+    public function mdpReinitialiser()
     {
-        $email = (new TemplatedEmail())
-            ->from('no-reply@fealjob.com')
-            ->to($email)
-            ->htmlTemplate('emails/verification.html.twig')
-            ->context([
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'id' => $id
-            ]);
-        $mailer->send($email);
-
-        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-        return $this->redirectToRoute('waitVerifEmail', ['id' => $id]);
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function getInscriptionData(Request $request): array
-    {
-        $res = [];
-
-        $nom = $request->get('nom');
-        $nomB = true;
-        if ($nom === '') {
-            $nomB = false;
-            $this->addFlash('nom', 'Merci de renseigner un nom');
-        }
-        $res['nom'] = $nom;
-
-        $prenom = $request->get('prenom');
-        $prenomB = true;
-        if ($prenom === '') {
-            $prenomB = false;
-            $this->addFlash('prenom', 'Merci de renseigner un prénom');
-        }
-        $res['prenom'] = $prenom;
-
-        $mail = $request->get('mail');
-        $mailB = true;
-        $validator = new EmailValidator();
-        $multipleValidations = new MultipleValidationWithAnd([
-            new RFCValidation(),
-            new DNSCheckValidation()
-        ]);
-        if (!$validator->isValid($mail, $multipleValidations)) {
-            $mailB = false;
-            $this->addFlash('mail', 'Merci de renseigner une adresse mail valide');
-        } elseif (EntityManager::isMailUsed($mail)) {
-            $mailB = false;
-            $this->addFlash('mail', 'Cet email est déjà utilisé');
-        }
-        $res['mail'] = $mail;
-
-        $telephone = $request->get('telephone');
-        $telephoneB = true;
-        if (!preg_match('/^((([+][0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
-            $telephoneB = false;
-            $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
-        }
-        $res['telephone'] = $telephone;
-
-        $motdepasse = $request->get('motdepasse');
-        $motdepasse2 = $request->get('motdepasse2');
-        $motdepasseB = true;
-        if (!preg_match('/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[0-9]).*$/', $motdepasse)) {
-            $motdepasseB = false;
-            $this->addFlash('motdepasse', 'Merci de renseigner un mot de passe valide</br>Au minimum : <ul><li>1 lettre majuscule</li><li>1 lettre minuscule</li><li>1 chiffre</li><li>1 caractères spécial</li><li>une longueur de 8 caractères</li></ul>');
-        } else if ($motdepasse != $motdepasse2) {
-            $motdepasseB = false;
-            $this->addFlash('motdepasse2', 'Les mots de passe ne concordent pas');
-        }
-        $salt = $this->randomString(16);
-        $motdepasse = password_hash(hash('sha512', $motdepasse . $salt), PASSWORD_BCRYPT, ['cost' => 12]);
-        $res['motdepasse'] = $motdepasse;
-        $res['salt'] = $salt;
-
-        $conditionsB = true;
-        if (!$request->get('conditions')) {
-            $conditionsB = false;
-            $this->addFlash('condition', 'Vous devez acceptez les conditions d\'utilisation');
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
         }
 
-
-        $res['ok'] = $prenomB && $nomB && $telephoneB & $mailB && $motdepasseB && $conditionsB;
-
-        return $res;
+        return $this->render('home/mdpReinitialiser.html.twig');
     }
 }
