@@ -68,11 +68,11 @@
                                     <div class="two fields">
                                         <div class="required field">
                                             <label>Prénom</label>
-                                            <input type="text" name="prenom" placeholder="Prénom" required>
+                                            <input type="text" name="prenom" placeholder="Prénom" maxlength="48" required>
                                         </div>
                                         <div class="required field">
                                             <label>Nom</label>
-                                            <input type="text" name="nom" placeholder="Nom" required>
+                                            <input type="text" name="nom" placeholder="Nom" maxlength="48" required>
                                         </div>
                                     </div>
                                     <div class="required field">
@@ -80,7 +80,7 @@
                                         <div class="ui left icon input">
                                             <i class="icon envelope"></i>
                                             <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text"
-                                                   name="email" placeholder="@mail.fr" required>
+                                                   name="email" placeholder="@mail.fr" maxlength="100" required>
                                         </div>
                                     </div>
                                     <div class="field">
@@ -88,7 +88,7 @@
                                         <div class="ui left icon input">
                                             <i class="icon phone"></i>
                                             <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
-                                                   placeholder="Téléphone">
+                                                   placeholder="Téléphone" maxlength="14">
                                         </div>
                                     </div>
                                     <div class="required field mdpPop">
@@ -96,7 +96,7 @@
                                         <div class="ui right labeled left icon input">
                                             <i class="icon lock"></i>
                                             <input type="password" id="mdpP" onkeyup="checkField(this, regexMdp)"
-                                                   name="motdepasse" placeholder="Mot de passe"
+                                                   name="motdepasse" placeholder="Mot de passe" maxlength="48"
                                                    required>
                                             <div style="cursor: pointer" class="ui basic label"
                                                  onclick="showPsswd(this, 'mdpP')">
@@ -109,7 +109,7 @@
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
                                             <input type="password" onkeyup="comparePass(this, 'mdpP')"
-                                                   name="motdepasse2" placeholder="Mot de passe"
+                                                   name="motdepasse2" placeholder="Mot de passe" maxlength="48"
                                                    required>
                                         </div>
                                     </div>
@@ -138,18 +138,18 @@
                                     <div class="two fields">
                                         <div class="required field">
                                             <label>Prénom</label>
-                                            <input type="text" name="prenom" placeholder="Prénom" required>
+                                            <input type="text" name="prenom" placeholder="Prénom" maxlength="48" required>
                                         </div>
                                         <div class="required field">
                                             <label>Nom</label>
-                                            <input type="text" name="nom" placeholder="Nom" required>
+                                            <input type="text" name="nom" placeholder="Nom" maxlength="48" required>
                                         </div>
                                     </div>
                                     <div class="two fields">
                                         <div class="required field">
                                             <label>Nom de l'entreprise</label>
                                             <input type="text" name="nomEntreprise" placeholder="Nom entreprise"
-                                                   required>
+                                                   maxlength="48" required>
                                         </div>
                                         <div class="field">
                                             <label>Logo de l'entreprise</label>
@@ -162,23 +162,23 @@
                                     </div>
                                     <div class="field">
                                         <label>Adresse de l'entreprise</label>
-                                        <input type="text" name="adresse" placeholder="Adresse entreprise">
+                                        <input type="text" name="adresse" placeholder="Adresse entreprise" maxlength="48">
                                     </div>
                                     <div class="two fields">
                                         <div class="field">
                                             <label>Ville</label>
-                                            <input type="text" name="adresse" placeholder="Ville">
+                                            <input type="text" name="adresse" placeholder="Ville" maxlength="48">
                                         </div>
                                         <div class="field">
                                             <label>Code postal</label>
-                                            <input type="text" name="adresse" placeholder="Code postal">
+                                            <input type="text" name="adresse" placeholder="Code postal" maxlength="8">
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
                                         <div>
                                             <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
-                                                   placeholder="N° Siret" required min="14" max="14">
+                                                   placeholder="N° Siret" required min="7" max="14">
                                         </div>
                                     </div>
                                     <div class="field">
@@ -199,7 +199,7 @@
                                     <div class="field">
                                         <label>Descriptif de l'entreprise</label>
                                         <textarea name="description" rows="4"
-                                                  placeholder="Une description de votre entreprise."></textarea>
+                                                  placeholder="Une description de votre entreprise." maxlength="300"></textarea>
                                     </div>
                                     <div class="two fields">
                                         <div class="required field">
@@ -207,7 +207,7 @@
                                             <div class="ui left icon input">
                                                 <i class="icon envelope"></i>
                                                 <input class="mailInput" onkeyup="checkField(this, regexMail)"
-                                                       type="text" name="email" placeholder="@mail.fr" required>
+                                                       type="text" name="email" placeholder="@mail.fr" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="field">
@@ -215,7 +215,7 @@
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
                                                 <input type="text" onkeyup="checkField(this, regexPhone)"
-                                                       name="telephone" placeholder="Téléphone">
+                                                       name="telephone" placeholder="Téléphone" maxlength="14">
                                             </div>
                                         </div>
                                     </div>
@@ -225,7 +225,7 @@
                                             <i class="icon lock"></i>
                                             <input type="password" id="mdpA" onkeyup="checkField(this, regexMdp)"
                                                    name="motdepasse" placeholder="Mot de passe"
-                                                   required>
+                                                   maxlength="48" required>
                                             <div style="cursor: pointer" class="ui basic label"
                                                  onclick="showPsswd(this, 'mdpA')">
                                                 <i style="margin: 0;" class="icon eye slash link"></i>
@@ -237,7 +237,7 @@
                                         <div class="ui left icon input">
                                             <i class="icon lock"></i>
                                             <input type="password" onkeyup="comparePass(this, 'mdpA')"
-                                                   name="motdepasse2" placeholder="Mot de passe"
+                                                   name="motdepasse2" placeholder="Mot de passe" maxlength="48"
                                                    required>
                                         </div>
                                     </div>
