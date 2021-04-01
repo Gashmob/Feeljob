@@ -36,11 +36,11 @@
                     <div class="two fields">
                         <div class="field disabled">
                             <label>Prénom</label>
-                            <input type="text" name="prenom" value="{{ employe.prenom }}">
+                            <input type="text" value="{{ employe.prenom }}">
                         </div>
                         <div class="field disabled">
                             <label>Nom</label>
-                            <input type="text" name="nom" value="{{ employe.nom }}">
+                            <input type="text" value="{{ employe.nom }}">
                         </div>
                     </div>
                     <div class="two fields">
@@ -79,14 +79,14 @@
                         <label>E-mail</label>
                         <div class="ui left icon input">
                             <i class="icon envelope"></i>
-                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}">
+                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}" max="250">
                         </div>
                     </div>
                     <div class="field">
                         <label>Téléphone</label>
                         <div class="ui left icon input">
                             <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}">
+                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}" max="48">
                         </div>
                     </div>
                 </div>
@@ -116,12 +116,12 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du diplôme</label>
-                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme">
+                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Nom de l'établissement</label>
                             <input type="text" class="etablissement" name="etablissement0"
-                                   placeholder="Nom de l'établissement">
+                                   placeholder="Nom de l'établissement" maxlength="48">
                         </div>
 
                     </div>
@@ -129,7 +129,7 @@
                         <div class="field">
                             <label>Mention</label>
                             <input type="text" class="mention" name="mention0"
-                                   placeholder="Laissez vide si inapplicable">
+                                   placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
@@ -149,14 +149,14 @@
                         <div class="field">
                             <label>Intitulé du poste</label>
                             <div class="field">
-                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste">
+                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste" maxlength="48">
                             </div>
                         </div>
                         <div class="field">
                             <label>Nom de l'entreprise</label>
                             <div class="field">
                                 <input type="text" class="nomEntreprise" name="nomEntreprise"
-                                       placeholder="Nom de l'entreprise">
+                                       placeholder="Nom de l'entreprise" maxlength="48">
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
             <h3 class="ui dividing green header">Description</h3>
             <div class="field">
                 <textarea rows="8" name="description"
-                          placeholder="Rajoutez des informations à votre sujet."></textarea>
+                          placeholder="Rajoutez des informations à votre sujet." maxlength="800"></textarea>
             </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
@@ -246,7 +246,7 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Nom compétence</label>
-                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
+                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>

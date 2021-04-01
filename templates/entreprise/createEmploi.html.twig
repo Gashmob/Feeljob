@@ -25,7 +25,7 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input required type="text" name="nom" placeholder="Intitulé du poste">
+                <input required type="text" name="nom" placeholder="Intitulé du poste" maxlength="48">
             </div>
             <div class="field required">
                 <label>Type de contrat :</label>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="ville" placeholder="ex : Chambéry">
+                        <input type="text" name="ville" placeholder="ex : Chambéry" maxlength="48">
                     </div>
                 </div>
             </div>
@@ -64,24 +64,24 @@
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre">
+                    <input required type="number" min="1" max="20" name="nbPostes" placeholder="Nombre">
                 </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées/semaine</label>
-                    <input type="number" min="0" name="heures" placeholder="Nombre">
+                    <input type="number" min="0" max="60" name="heures" placeholder="Nombre">
                 </div>
             </div>
             <div class="field">
                 <label>Description de l'offre</label>
                 <textarea rows="8" name="description"
-                          placeholder="La description de votre offre d'emploi."></textarea>
+                          placeholder="La description de votre offre d'emploi." maxlength="5000"></textarea>
             </div>
             <div class="two fields">
                 <div class="field">
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant">
+                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant" id="montant">
                         <div class="ui basic label">.00</div>
                     </div>
                 </div>

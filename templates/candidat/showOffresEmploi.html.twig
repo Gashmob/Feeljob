@@ -21,10 +21,12 @@
             <div class="five wide column">
                 <div class="ui vertical menu">
                     <div class="item">
-                        <div class="header">Products</div>
+                        <div class="header">Type contrat</div>
                         <div class="menu">
-                            <a class="item">Enterprise</a>
-                            <a class="item">Consumer</a>
+                            <a class="item">CDI</a>
+                            <a class="item">CDD</a>
+                            <a class="item">Saisonnier</a>
+                            <a class="item">Intérim</a>
                         </div>
                     </div>
                     <div class="item">
@@ -168,8 +170,9 @@
                     for (var i = 0; i < results.offres.length; i++) {
                         var card = `
             <div class="card annonceCard">
+                <i onclick="addFav(this);" class="icon star"></i>
                 <div class="content">
-                    <a class="header">` + results.offres[i].nom + `</a>
+                    <div class="header">` + results.offres[i].nom + `</div>
                     <div class="meta">
                         <span>
                             <i class="icon map pin"></i>
@@ -229,6 +232,16 @@
             return (useWordBoundary
                 ? subString.substr(0, subString.lastIndexOf(" "))
                 : subString) + " &hellip;";
+        };
+
+        function addFav(e) {
+            $(e).transition('pulse');
+            if( e.classList.contains('yellow') ) {
+                e.classList.remove('yellow');
+            }
+            else {
+                e.classList.add('yellow');
+            }
         };
     </script>
 {% endblock %}
