@@ -164,13 +164,11 @@
         $('.fadeupAnim').addClass('transition hidden');
         window.addEventListener('scroll', function () {
             let articles = document.querySelectorAll('.fadeupAnim')
-            for (let article of articles) {
-                setTimeout(function () {
-                    if (article.getBoundingClientRect().y < 900 && article.classList.contains('hidden')) {
-                        $(article).transition('fade up')
-                    }
-                }, 500)
-            }
+            articles.forEach(a => {
+                if (a.getBoundingClientRect().y < 200 && a.classList.contains('hidden')) {
+                    $(a).transition('fade up')
+                }
+            })
         })
 
     </script>

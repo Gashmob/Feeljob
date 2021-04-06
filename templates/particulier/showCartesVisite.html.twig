@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}Offres d'emploi{% endblock %}
+{% block title %}Cartes de visite{% endblock %}
 {% block body %}
     <div style="margin-top: 20px  !important; margin-bottom: 40px;">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
@@ -80,45 +80,6 @@
                             </div>
                         </div>
                     </div>
-                    {% for annonce in offres %}
-                        <div class="card annonceCard">
-                            <div class="content">
-                                <a class="header">{{ annonce['nom'] }}</a>
-                                <div class="meta">
-                                    {% if annonce['lieu'] is not empty %}
-                                        <span>
-                                            <i class="icon map pin"></i>
-                                            {{ annonce['lieu'] }},
-                                        </span>
-                                    {% endif %}
-                                    {% if annonce['typeContrat'] == 'CDI' %}
-                                        <span>à partir du {{ annonce['debut'] }}</span>
-                                    {% else %}
-                                        <span>du {{ annonce['debut'] }} au {{ annonce['fin'] }}</span>
-                                    {% endif %}
-                                </div>
-                                <div class="actions">
-                                    <i class="icon star addFav"></i>
-                                </div>
-                                <div class="description">
-                                    <p>{{ annonce['nbRecrutement'] }} Recrutement(s) possible(s)</p>
-                                    <p>{{ annonce['salaire'] }}€/mois</p>
-                                    <p>{{ annonce['heures'] }}h/semaine</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aspernatur beatae
-                                        commodi, dolore est, exercitationem expedita hic magnam nisi non officia quo
-                                        repellendus? Ex minus nisi qui quod sed temporibus!</p>
-                                </div>
-                                <div class="extra">
-                                    <div class="ui label">{{ annonce['typeContrat'] }}</div>
-                                    <a href="{{ path('show_emploi', {'id': annonce['id']}) }}"
-                                       class="ui right floated green button">
-                                        Voir l'annonce
-                                        <i class="right chevron icon"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
@@ -152,32 +113,132 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script src="{{ '/js/app.js' }}" type="text/javascript"></script>
     <script type='text/javascript'>
-        /**
-         * Simple (ugly) code to handle the comment vote up/down
-         */
-        var button = $('.js-vote-arrows');
-        button.on('click', function (e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/comments/10/vote/' + $link.data('direction'),
-                method: 'GET'
-            }).then(function (response) {
-                button.text(response.votes);
-            });
+        window.addEventListener("DOMContentLoaded", (event) => {
+            makeRequest()
         });
 
-        function searchOffre(e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            $.ajax({
-                url: '/annonces/' + $link.data('direction'),
-                method: 'GET'
-            }).then(function (response) {
-                $container.find('.js-vote-total').text(response.votes);
-            });
+        var httpRequest;
+        var results;
+
+        //Cherche tous les résultats
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayAnnonces;
+            httpRequest.open('POST', '/particulier/get/annonces');
+            httpRequest.send();
         }
+
+        //Cherche les résultats par le nom entré barre recherche
+        function makeRequestBySecteur(secteur) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = displayAnnonces;
+            httpRequest.open('POST', '/particulier/get/annonces/' + secteur);
+            httpRequest.send();
+        }
+
+        //Affiche les résultats dans 'annoncesList'
+        var annoncesList = document.getElementById('annoncesList');
+
+        function displayAnnonces() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                annoncesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    console.log(results);
+                    // Réinitialise la liste
+                    annoncesList.innerHTML = '';
+                    // Pour chaque cv du tableau annonces
+                    for (var i = 0; i < results.annonces.length; i++) {
+                        var card = `
+                <div class="card annonceCard">
+                    <div class="content">
+                        <div class="header">` + results.annonces[i].nom + `</div>
+                        <div class="meta">
+                            <span>
+                                <i class="icon map pin"></i>
+                                ` + results.annonces[i].adresse.ville + `
+                            </span>
+                            <span>Pour le 15/05</span>
+                        </div>
+                        <div class="description">
+                            <p>` + truncate(results.annonces[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
+                        </div>
+                        <div class="extra">
+                            <div class="ui label">CDD</div>
+                            <div class="ui label">CDI</div>
+                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                            <a href="{{ path('particulier_show_annonce', {'id': 1}) }}`.slice(0, -1) + results.annonces[i].identity + `"
+                               class="ui right floated green button">
+                                Voir l'offre
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+                        annoncesList.innerHTML += card;
+                    }
+                } else {
+                    alert('Il y a eu un problème avec la requête.');
+                }
+            }
+        }
+
+        var searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchAnnonces();
+            }
+        });
+
+        function searchAnnonces() {
+            var inputValue = searchInput.value;
+            if (inputValue != '' && inputValue != null) {
+                makeRequestBySecteur(inputValue);
+            } else {
+                makeRequest();
+            }
+        }
+
+        const MAX_DESCRIPTION_LENGTH = 300;
+
+        // Tronque les descriptions
+        function truncate(str, n, useWordBoundary) {
+            if (str.length <= n) {
+                return str;
+            }
+            const subString = str.substr(0, n - 1); // the original check
+            return (useWordBoundary
+                ? subString.substr(0, subString.lastIndexOf(" "))
+                : subString) + " &hellip;";
+        };
+
+        function addFav(e) {
+            $(e).transition('pulse');
+            if (e.classList.contains('yellow')) {
+                e.classList.remove('yellow');
+                e.classList.add('outline');
+            } else {
+                e.classList.add('yellow');
+                e.classList.remove('outline');
+            }
+        };
     </script>
 {% endblock %}
