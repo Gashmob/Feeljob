@@ -91,13 +91,12 @@
 {% block javascripts %}
     <!--<script type='text/javascript' src="{{ asset('js/annonceCard.js') }}"></script>-->
     <script type='text/javascript'>
-
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequest()
+            searchInput.focus();
         });
 
-        var httpRequest, results;
-
+        let httpRequest, results;
         //Cherche tous les résultats
         function makeRequest() {
             httpRequest = new XMLHttpRequest();
@@ -130,38 +129,40 @@
         //Classe AnnonceCard
         class AnnonceCard {
             constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
-                if (!nom.length > 0) nom = 'Annonce n°'+id;
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
                 let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
-<div class="card annonceCard">
-    <div class="content">
-        <div class="header">${nom}</div>
-        <div class="meta">
-            <span>
-                <i class="icon map pin"></i>
-                ${ville}
-            </span>
-            <span>Pour le ${date}</span>
-        </div>
-        <div class="description">
-            <p>${description}</p>
-        </div>
-        <div class="extra">
-            <div class="ui label">CDD</div>
-            <div class="ui label">CDI</div>
-            <div class="ui label"><i class="globe icon"></i>Anglais</div>
-            <a href=${url}
-               class="ui right floated green button">
-                Voir l'annonce
-                <i class="right chevron icon"></i>
-            </a>
-        </div>
-    </div>
-</div>
-              `;
+                <div class="card annonceCard">
+                    <div class="content">
+                        <div class="header">${nom}</div>
+                        <div class="meta">
+                            <li>
+                                <i class="icon map pin"></i>
+                                ${ville}
+                            </li>
+                            <li>
+                                <i class="icon calendar"></i>
+                                 Pour le ${date}
+                            </li>
+                        </div>
+                        <div class="description">
+                            <p>${description}</p>
+                        </div>
+                        <div class="extra">
+                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
+                            <a href=${url}
+                               class="ui right floated green button">
+                                Voir l'annonce
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
             }
         }
 
@@ -178,19 +179,25 @@
                     console.log(results);
                     // Réinitialise la liste
                     annoncesList.innerHTML = '';
+
+                    // Il n'y a pas de résultats :
+                    if (results.annonces === undefined || results.annonces.length == 0) {
+                        annoncesList.innerHTML = `<div>Pas de résultat trouvé.</div>`;
+                    }
+
+                    // Il y a des résultats :
                     // Pour chaque cv du tableau annonces
                     results.annonces.forEach(a => {
                         let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                         annoncesList.innerHTML += card.cardTemplate;
                     })
                 } else {
-                    alert('Il y a eu un problème avec la requête.');
+                    annoncesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
                 }
             }
         }
 
-        var searchInput = document.getElementById('searchInput');
-
+        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 searchAnnonces();
@@ -198,8 +205,9 @@
         });
 
         function searchAnnonces() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
+            let inputValue = searchInput.value;
+            inputValue = inputValue.trim();
+            if (inputValue != undefined && inputValue.length > 0) {
                 makeRequestBySecteur(inputValue);
             } else {
                 makeRequest();

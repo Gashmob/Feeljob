@@ -321,6 +321,11 @@
     position: relative;
 }
 
+.annonceCard .meta {
+    list-style: none !important;
+    text-decoration: none !important;
+}
+
 .annonceCard .actions {
     position: absolute;
     top: 10px;
