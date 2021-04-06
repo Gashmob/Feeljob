@@ -89,15 +89,14 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script type='text/javascript' src="{{ asset('js/annonceCard.js') }}"></script>
+    <!--<script type='text/javascript' src="{{ asset('js/annonceCard.js') }}"></script>-->
     <script type='text/javascript'>
+
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequest()
-        })
-        ;
+        });
 
-        var httpRequest;
-        var results;
+        var httpRequest, results;
 
         //Cherche tous les résultats
         function makeRequest() {
@@ -128,6 +127,44 @@
         //Affiche les résultats dans 'annoncesList'
         var annoncesList = document.getElementById('annoncesList');
 
+        //Classe AnnonceCard
+        class AnnonceCard {
+            constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
+                if (!nom.length > 0) nom = 'Annonce n°'+id;
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+
+                this.cardTemplate = `
+<div class="card annonceCard">
+    <div class="content">
+        <div class="header">${nom}</div>
+        <div class="meta">
+            <span>
+                <i class="icon map pin"></i>
+                ${ville}
+            </span>
+            <span>Pour le ${date}</span>
+        </div>
+        <div class="description">
+            <p>${description}</p>
+        </div>
+        <div class="extra">
+            <div class="ui label">CDD</div>
+            <div class="ui label">CDI</div>
+            <div class="ui label"><i class="globe icon"></i>Anglais</div>
+            <a href=${url}
+               class="ui right floated green button">
+                Voir l'annonce
+                <i class="right chevron icon"></i>
+            </a>
+        </div>
+    </div>
+</div>
+              `;
+            }
+        }
+
         function displayAnnonces() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -142,36 +179,10 @@
                     // Réinitialise la liste
                     annoncesList.innerHTML = '';
                     // Pour chaque cv du tableau annonces
-                    for (var i = 0; i < results.annonces.length; i++) {
-                        var card = `
-                <div class="card annonceCard">
-                    <div class="content">
-                        <div class="header">` + results.annonces[i].nom + `</div>
-                        <div class="meta">
-                            <span>
-                                <i class="icon map pin"></i>
-                                ` + results.annonces[i].adresse.ville + `
-                            </span>
-                            <span>Pour le 15/05</span>
-                        </div>
-                        <div class="description">
-                            <p>` + truncate(results.annonces[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
-                        </div>
-                        <div class="extra">
-                            <div class="ui label">CDD</div>
-                            <div class="ui label">CDI</div>
-                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                            <a href="{{ path('particulier_show_annonce', {'id': 1}) }}`.slice(0, -1) + results.annonces[i].identity + `"
-                               class="ui right floated green button">
-                                Voir l'annonce
-                                <i class="right chevron icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-                        annoncesList.innerHTML += card;
-                    }
+                    results.annonces.forEach(a => {
+                        let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                        annoncesList.innerHTML += card.cardTemplate;
+                    })
                 } else {
                     alert('Il y a eu un problème avec la requête.');
                 }
@@ -184,8 +195,7 @@
             if (e.key === 'Enter') {
                 searchAnnonces();
             }
-        })
-        ;
+        });
 
         function searchAnnonces() {
             var inputValue = searchInput.value;
