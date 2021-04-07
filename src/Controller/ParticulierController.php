@@ -42,6 +42,15 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 class ParticulierController extends AbstractController
 {
     /**
+     * @Route("/contrats", name="contrats")
+     * @return Response
+     */
+    public function homepage(): Response
+    {
+        return $this->render('utilisateurs/contrats.html.twig');
+    }
+
+    /**
      * @var SessionInterface
      */
     private SessionInterface $session;

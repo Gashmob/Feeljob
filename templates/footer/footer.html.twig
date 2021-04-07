@@ -50,4 +50,8 @@
     <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
+    {% if not app.session.get('user') %}
+    {% else %}
+        <script type='text/javascript' src='{{ asset('js/user.js') }}'></script>
+    {% endif %}
 </footer>

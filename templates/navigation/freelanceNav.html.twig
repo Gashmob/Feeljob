@@ -6,7 +6,7 @@
     <a href="{{ path('particulier_annonces') }}" class="item">Annonces</a>
     <a href="{{ path('particulier_create_carte') }}" class="item">Modifier votre carte</a>
     <div class="right menu">
-        <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
+        <a href="#" class="ui dropdown item" onmouseover="loadContratsFeed();">
             <i class="icon bell"></i>
             <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
             <div class="menu">
@@ -24,8 +24,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="ui item feed">
                     <div class="event">
                         <div class="label">
                             <img src="{{ asset('img/placeholders/elyse.png') }}">

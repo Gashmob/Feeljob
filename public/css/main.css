@@ -425,3 +425,13 @@
     right: 6px;
     top: 6px;
 }
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flexWidth {
+    width: auto;
+}
