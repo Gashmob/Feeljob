@@ -118,14 +118,16 @@ class ParticulierController extends AbstractController
                             ->setSel($data['sel'])
                             ->setLogo($logo)
                             ->setSiret($siret)
-                            ->setDescription($description);
+                            ->setDescription($description)
+                            ->setVerifie(true);
 
                         (new AutoEntrepreneurManager())->create($em, $auto_entrepreneur, $secteurActivite);
 
-                        Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $auto_entrepreneur->getIdentity()]);
+                        return $this->redirectToRoute('connexion');
+                        //return $this->redirectToRoute('waitVerifEmail', ['id' => $auto_entrepreneur->getIdentity()]);
                     }
                     break;
 
@@ -147,14 +149,16 @@ class ParticulierController extends AbstractController
                             ->setEmail($data['email'])
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
-                            ->setAdresse($adresse);
+                            ->setAdresse($adresse)
+                            ->setVerifie(true);
 
                         (new ParticulierManager())->create($em, $particulier);
 
-                        Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $particulier->getIdentity()]);
+                        return $this->redirectToRoute('connexion');
+                        //return $this->redirectToRoute('waitVerifEmail', ['id' => $particulier->getIdentity()]);
                     }
                     break;
             }
