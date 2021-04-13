@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\OffreEmploi;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,57 +20,46 @@ class OffreEmploiRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $identity
-     * @param float|null $salaire
-     * @param int|null $heures
-     * @param bool|null $deplacement
-     * @return OffreEmploi|null
-     * @throws NonUniqueResultException
-     */
-    public function findEmploiWithFiltersAndIdentity($identity, float $salaire = null, int $heures = null, bool $deplacement = null): ?OffreEmploi
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.salaire >= :salaire')
-            ->setParameter('salaire', $salaire)
-            ->andWhere('o.heures = :heures')
-            ->setParameter('heures', $heures)
-            ->andWhere('o.deplacement = :deplacement')
-            ->setParameter('deplacement', $deplacement)
-            ->andWhere('o.identity = :identity')
-            ->setParameter('identity', $identity)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    /**
-     * @param string $nom
+     * @param $nom
+     * @param float|string $salaire
+     * @param float|string $heures
+     * @param bool|string $loge
+     * @param bool|string $deplacement
+     * @param bool|string $teletravail
      * @return OffreEmploi[]
      */
-    public function findAllEmploiWithNameLike(string $nom): array
+    public function findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail): array
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.nom LIKE :nom')
-            ->setParameter('nom', '%' . $nom . '%')
-            ->getQuery()
-            ->getResult();
-    }
+        $query = $this->createQueryBuilder('o');
 
-    /**
-     * @param string $nom
-     * @param int[] $ids
-     * @return OffreEmploi[]
-     */
-    public function findAllEmploiWithNameLikeFromPreResultIds(string $nom, array $ids): array
-    {
-        $res = [];
-        foreach ($ids as $id) {
-            $offre = $this->findOneBy(['identity' => $id['id']]);
-            if (stristr($offre->getNom(), $nom) != false) {
-                $res[] = $offre;
-            }
+        if ($nom != 'none') {
+            $query = $query->andWhere('o.nom LIKE :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
+        if ($salaire != 'none') {
+            $query = $query->andWhere('o.salaire >= :salaire')
+                ->setParameter('salaire', $salaire);
+        }
+        if ($heures != 'none') {
+            $query = $query->andWhere('o.heures <= :heures')
+                ->setParameter('heures', $heures);
+        }
+        if ($loge != 'none') {
+            $query = $query->andWhere('o.loge = :loge')
+                ->setParameter('loge', $loge);
+        }
+        if ($deplacement != 'none') {
+            $query = $query->andWhere('o.deplacement = :deplacement')
+                ->setParameter('deplacement', $deplacement);
+        }
+        if ($teletravail != 'none') {
+            $query = $query->andWhere('o.teletravail = :teletravail')
+                ->setParameter('teletravail', $teletravail);
         }
 
-        return $res;
+        $query = $query->andWhere('o.nbPostes > 0');
+
+        return $query->getQuery()->getResult();
     }
 
     // /**

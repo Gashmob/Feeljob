@@ -1,0 +1,117 @@
+{% extends 'page.html.twig' %}
+{% block title %}Votre profil{% endblock %}
+{% block body %}
+    <div class="ui segment grid identity stackable">
+        <div class="two wide column">
+            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+        </div>
+        <div class="ten wide column">
+            <h2 class="ui header">
+                <div class="content">Profil de {{ prenom }} {{ nom }}</div>
+            </h2>
+            <div class="ui label">Freelance</div>
+        </div>
+        <div class="four wide column">
+            <div>
+                <i class="icon green check circle outline"></i>
+                E-mail vérifié
+            </div>
+            <div>
+                <i class="icon green check circle outline"></i>
+                Téléphone vérifié
+            </div>
+        </div>
+    </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Votre carte de visite</h3>
+        <div class="ui two stackable cards">
+            {% if publications %}
+                <a href="{{ path('particulier_create_carte') }}" class="ui card">
+                    <div class="ui image">
+                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
+                    </div>
+                    <div class="extra content">
+                        <i class="check icon"></i>
+                        Vue 62 fois
+                    </div>
+                </a>
+            {% else %}
+                <div style="border: none; width: auto; box-shadow: none;"
+                     class="ui card grid middle aligned center aligned">
+                    <div class="column">
+                        <div class="ui row labeled icon">
+                            <a href="{{ path('particulier_create_carte') }}" class="ui blue labeled icon button"
+                               for="profile-carte">
+                                <i class="plus icon"></i>
+                                Ajouter carte visite
+                                <a href="{{ path('particulier_create_carte') }}" style="display: none;"
+                                   name="carte"></a>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Vos contrats</h3>
+        <div class="ui segment">
+            {% for i in 1..2 %}
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Accepté
+                        </div>
+                        <div class="description">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
+                                exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
+                                unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for i in 1..2 %}
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon red times"></i>
+                            Refusé
+                        </div>
+                        <div class="description">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
+                                dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
+                                placeat praesentium rem velit. Harum nobis officia praesentium.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Avis reçus</h3>
+        <div class="ui three stackable cards">
+            {% for i in 0..4 %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="header">Superbe expérience !</div>
+                        <div class="meta">
+                            <span class="right floated time">2 days ago</span>
+                            <span class="category">Nom entreprise</span>
+                        </div>
+                        <div class="description">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
+                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
+                                rem sunt veniam veritatis? Ipsa.</p>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <div class="right floated author">
+                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

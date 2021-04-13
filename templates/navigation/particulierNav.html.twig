@@ -1,0 +1,65 @@
+<div id="nav" class="ui menu primaryNav">
+    <a href="{{ path('homepage') }}" class="header item">
+        <img src="{{ asset('img/FJ200.png') }}"/>
+        Accueil
+    </a>
+    <a href="{{ path('particulier_cartes') }}" class="item">Cartes de visite</a>
+    <div class="right menu">
+        <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
+            <i class="icon bell"></i>
+            <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
+            <div class="menu">
+                <div id="notifications" class="ui item feed">
+                    <div class="event">
+                        <div class="label">
+                            <img src="{{ asset('img/placeholders/matt.jpg') }}">
+                        </div>
+                        <div class="content">
+                            <div class="date">
+                                Il y a 3 jours
+                            </div>
+                            <div class="summary">
+                                Matt vous a envoyé un message.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui item feed">
+                    <div class="event">
+                        <div class="label">
+                            <img src="{{ asset('img/placeholders/elyse.png') }}">
+                        </div>
+                        <div class="content">
+                            <div class="date">
+                                Il y a plus d'une semaine
+                            </div>
+                            <div class="summary">
+                                Clément a déposé une nouvelle annonce.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a href="{{ path('userSpace') }}" class="ui dropdown item">
+            <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            <div class="content person-summary">
+                <div class="ui sub header" style="max-width: 117px;">{{ app.session.get('userName') }}</div>
+                <div>Particulier</div>
+            </div>
+        </a>
+        <div class="ui dropdown item">
+            <i class="icon settings"></i>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <a href="#" class="item">Ajout crédits</a>
+                <a href="#" class="item">Éditer le profil</a>
+                <a href="#" class="item">Préférences</a>
+                <div class="divider"></div>
+                <a class="item red" href="{{ path('deconnexion') }}">Déconnexion
+                    <i class="icon sign-out"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

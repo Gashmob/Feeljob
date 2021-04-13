@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OffreEmploiRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,12 +24,12 @@ class OffreEmploi
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="datetime")
      */
     private $debut;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $fin;
 
@@ -43,7 +44,7 @@ class OffreEmploi
     private $heures;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $salaire;
 
@@ -53,7 +54,7 @@ class OffreEmploi
     private $deplacement;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToOne(targetEntity=Adresse::class, cascade={"persist", "remove"})
      */
     private $lieu;
 
@@ -65,12 +66,33 @@ class OffreEmploi
     /**
      * @ORM\Column(type="integer")
      */
-    private $nbRecrutement;
+    private $nbPostes;
 
     /**
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="integer")
      */
     private $identity;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -89,24 +111,24 @@ class OffreEmploi
         return $this;
     }
 
-    public function getDebut(): ?string
+    public function getDebut(): ?\DateTimeInterface
     {
         return $this->debut;
     }
 
-    public function setDebut(string $debut): self
+    public function setDebut(\DateTimeInterface $debut): self
     {
         $this->debut = $debut;
 
         return $this;
     }
 
-    public function getFin(): ?string
+    public function getFin(): ?\DateTimeInterface
     {
         return $this->fin;
     }
 
-    public function setFin(?string $fin): self
+    public function setFin(?\DateTimeInterface $fin): self
     {
         $this->fin = $fin;
 
@@ -142,7 +164,7 @@ class OffreEmploi
         return $this->salaire;
     }
 
-    public function setSalaire(float $salaire): self
+    public function setSalaire(?float $salaire): self
     {
         $this->salaire = $salaire;
 
@@ -161,12 +183,12 @@ class OffreEmploi
         return $this;
     }
 
-    public function getLieu(): ?string
+    public function getLieu(): ?Adresse
     {
         return $this->lieu;
     }
 
-    public function setLieu(?string $lieu): self
+    public function setLieu(?Adresse $lieu): self
     {
         $this->lieu = $lieu;
 
@@ -185,14 +207,50 @@ class OffreEmploi
         return $this;
     }
 
-    public function getNbRecrutement(): ?int
+    public function getNbPostes(): ?int
     {
-        return $this->nbRecrutement;
+        return $this->nbPostes;
     }
 
-    public function setNbRecrutement(int $nbRecrutement): self
+    public function setNbPostes(int $nbPostes): self
     {
-        $this->nbRecrutement = $nbRecrutement;
+        $this->nbPostes = $nbPostes;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

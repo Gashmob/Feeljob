@@ -17,7 +17,7 @@ class Query
     /**
      * @var string
      */
-    private static string $graph = 'fealjob';
+    private static string $graph = 'feeljob';
 
     /**
      * @var string

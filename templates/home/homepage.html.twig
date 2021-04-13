@@ -1,98 +1,86 @@
 {% extends 'base.html.twig' %}
-{% block title %}Bienvenue sur FealJob{% endblock %}
+{% block title %}Bienvenue sur FeelJob{% endblock %}
 {% block body %}
-    <div>
-        <div style="min-height:700px;padding:1em 0em; position: relative; background-image: url('{{ asset('/img/wallpaper3.jpg') }}')"
-             id="homepageSegment" class="ui inverted vertical center aligned segment">
-            <div style="border-color: transparent !important;" class="ui large inverted pointing secondary menu">
-                <div class="ui container">
-                    {% if app.session.get('user') %}
-                        <div style="margin-top: 60px;"></div>
-                    {% else %}
-                        <a href="{{ path('homepage') }}" class="active item">Accueil</a>
-                        <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
-                        <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
-                        <a href="{{ path('show', {type:'auto-entrepreneurs'}) }}" class="item">Freelances</a>
-                        <div class="right item">
-                            <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
-                            <a href="{{ path('inscription') }}" style="margin-left:0.5em"
-                               class="ui inverted button" role="button">Inscription</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="ui text container masthead">
-                <h1 style="font-size:4em;font-weight:normal;margin-bottom:0;margin-top:1em" class="ui inverted header">
-                    Fealjob</h1>
-                <h2 style="font-size:1.7em;font-weight:normal;margin-top:1.5em" class="ui inverted header">La valeur du
-                    travail.</h2>
-            </div>
-            <div style="z-index: 10; position: absolute; bottom: 0; right: 0; left: 0; transform: translateY(20%);"
-                 class="ui centered stackable cards container">
-                <div class="ui card homeCard">
-                    <div class="content headerContent">
-                        <div class="header">Entreprises</div>
-                        <div class="meta">
-                            <span class="date">Trouvez le candidat idéal</span>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <div class="description">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
-                            ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
-                            repellendus repudiandae sed suscipit temporibus voluptate.
-                        </div>
-                    </div>
-                    <div class="ui bottom attached green button">
-                        En savoir plus
-                        <i class="right arrow icon"></i>
+    <div id="homepageSegment" class="ui inverted vertical center aligned segment homepageSegment">
+        <div class="background homepage-bckg"></div>
+        <div class="ui large inverted pointing secondary menu">
+            {% if app.session.get('user') %}
+                <div style="margin-top: 60px;"></div>
+            {% else %}
+                <div id="nav" class="ui container homeNav">
+                    <a href="{{ path('homepage') }}" class="active item">Accueil</a>
+                    <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
+                    <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
+                    <a href="{{ path('show', {type:'freelances'}) }}" class="item">Freelances</a>
+                    <a href="{{ path('show', {type:'particuliers'}) }}" class="item">Particuliers</a>
+                    <div class="right item">
+                        <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
+                        <a href="{{ path('inscription') }}" style="margin-left:0.5em"
+                           class="ui inverted button" role="button">Inscription</a>
                     </div>
                 </div>
-                <div class="ui card homeCard">
-                    <div class="content headerContent">
-                        <div class="header">Candidats</div>
-                        <div class="meta">
-                            <span class="date">Décrocher un travail en 2 clics</span>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <div class="description">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
-                            ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
-                            repellendus repudiandae sed suscipit temporibus voluptate.
-                        </div>
-                    </div>
-                    <div class="ui bottom attached green button">
-                        En savoir plus
-                        <i class="right arrow icon"></i>
-                    </div>
-                </div>
-                <div class="ui card homeCard">
-                    <div class="content headerContent">
-                        <div class="header">Freelances</div>
-                        <div class="meta">
-                            <span class="date">Vous faire valoir en ligne</span>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <div class="description">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
-                            ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
-                            repellendus repudiandae sed suscipit temporibus voluptate.
-                        </div>
-                    </div>
-                    <div class="ui bottom attached green icon button">
-                        En savoir plus
-                        <i class="right arrow icon"></i>
-                    </div>
-                </div>
-            </div>
-            <svg style="position: absolute; bottom: 0; left: 0; right: 0;" xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 1440 320">
-                <path fill="#ffffff" fill-opacity="1"
-                      d="M0,288L60,250.7C120,213,240,139,360,122.7C480,107,600,149,720,170.7C840,192,960,192,1080,165.3C1200,139,1320,85,1380,58.7L1440,32L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-            </svg>
+            {% endif %}
         </div>
+        <div class="ui text container masthead">
+            <h1 style="font-size:4em;font-weight:normal;margin-bottom:0;margin-top:1em" class="ui inverted header">
+                Feeljob</h1>
+            <h2 style="font-size:1.7em;font-weight:normal;margin-top:1.5em" class="ui inverted header">La valeur du
+                travail.</h2>
+        </div>
+        <div style="z-index: 2; padding-top: 160px;"
+             class="ui centered stackable cards container">
+            <div class="ui card homeCard">
+                <div class="content headerContent">
+                    <div class="header">Freelances
+                        <i class="icon arrows alternate horizontal"></i>
+                        Particuliers
+                    </div>
+                    <div class="meta">
+                        <span class="date">Vous faire valoir en ligne</span>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="description">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
+                        ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
+                        repellendus repudiandae sed suscipit temporibus voluptate.
+                    </div>
+                </div>
+                <a href="{{ path('particulier_inscription') }}" class="ui bottom attached green icon button">
+                    S'inscire
+                    <i class="right arrow icon"></i>
+                </a>
+            </div>
+            <div class="ui card homeCard">
+                <div class="content headerContent">
+                    <div class="header">Entreprises
+                        <i class="icon arrows alternate horizontal"></i>
+                        Candidats
+                    </div>
+                    <div class="meta">
+                        <span class="date">Trouvez le candidat idéal</span>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="description">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque consectetur doloribus earum,
+                        ex facilis inventore maiores mollitia, non praesentium quas quasi quibusdam, recusandae rem
+                        repellendus repudiandae sed suscipit temporibus voluptate.
+                    </div>
+                </div>
+                <a href="{{ path('entreprise_inscription') }}" class="ui bottom attached green button">
+                    S'inscire
+                    <i class="right arrow icon"></i>
+                </a>
+            </div>
+
+        </div>
+        <svg style="z-index: 0;position: absolute; bottom: 0; left: 0; right: 0;"
+             xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 1440 320">
+            <path fill="#ffffff" fill-opacity="1"
+                  d="M0,288L60,250.7C120,213,240,139,360,122.7C480,107,600,149,720,170.7C840,192,960,192,1080,165.3C1200,139,1320,85,1380,58.7L1440,32L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
     </div>
     <div style="min-height: 710px; padding:8em 0em 8em 0em;" class="ui vertical segment">
         <div class="ui container stackable middle aligned grid fadeupAnim">
@@ -153,20 +141,24 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $('.visiteurNav').addClass('hidden');
-        $('.primaryNav').addClass('fixed');
-        // fix menu when passed
-        $('.masthead')
-            .visibility({
-                once: false,
-                onBottomPassed: function () {
-                    $('.visiteurNav').transition('fade in');
-                },
-                onBottomPassedReverse: function () {
-                    $('.visiteurNav').transition('fade out');
-                }
-            })
-        ;
+        if (screen.width <= 800) {
+            $('.homeNav').css('display', 'none');
+        } else {
+            $('.visiteurNav').addClass('hidden');
+            $('.primaryNav').addClass('fixed');
+            // fix menu when passed
+            $('.masthead')
+                .visibility({
+                    once: false,
+                    onBottomPassed: function () {
+                        $('.visiteurNav').transition('fade in');
+                    },
+                    onBottomPassedReverse: function () {
+                        $('.visiteurNav').transition('fade out');
+                    }
+                })
+            ;
+        }
 
         //Articles fade-in
         $('.fadeupAnim').addClass('transition hidden');
@@ -174,7 +166,7 @@
             let articles = document.querySelectorAll('.fadeupAnim')
             for (let article of articles) {
                 setTimeout(function () {
-                    if (article.getBoundingClientRect().y < 600 && article.classList.contains('hidden')) {
+                    if (article.getBoundingClientRect().y < 900 && article.classList.contains('hidden')) {
                         $(article).transition('fade up')
                     }
                 }, 500)

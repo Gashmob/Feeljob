@@ -1,0 +1,156 @@
+{% extends 'page.html.twig' %}
+{% block title %}Modifier une offre d'emploi{% endblock %}
+{% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0099ff" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0069fa" fill-opacity="1"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0029f8" fill-opacity="1"
+                      d="M0,320L48,293.3C96,267,192,213,288,197.3C384,181,480,203,576,197.3C672,192,768,160,864,128C960,96,1056,64,1152,53.3C1248,43,1344,53,1392,58.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
+            <i class="briefcase icon"></i>
+            Modifier l'offre d'emploi
+        </h3>
+        <div class="ui buttons">
+            <a href="{{ path('entreprise_delete_offre_emploi', {id: offre.identity}) }}" class="ui red basic button">
+                Supprimer
+            </a>
+        </div>
+        <form class="ui form segment" method="post">
+            <div class="required field">
+                <label>Intitulé du poste</label>
+                <input required type="text" name="nom" placeholder="Intitulé du poste" value="{{ offre.nom }}">
+            </div>
+            <div class="field required">
+                <label>Type de contrat :</label>
+                <select id="selectTypeContrat" required class="ui dropdown" name="typeContrat"
+                        value="{{ typeContrat }}">
+                    {% for type in typesContrat %}
+                        <option value="{{ type }}">
+                            {{ type }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label>Localisation</label>
+                <p>Si votre emploi est fixe, cliquez sur le bouton ci-dessous.</p>
+                <div class="two fields">
+                    {% if offre.lieu.ville|length %}
+                        <div style="padding-top: 6px;" class="two wide field">
+                            <div style="padding-left: 10px;" class="ui toggle checkbox">
+                                <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden" checked>
+                            </div>
+                        </div>
+                        <div class="fourteen wide field" id="lieuField">
+                            <input type="text" name="ville" placeholder="ex : Chambéry" value="{{ offre.lieu.ville }}">
+                        </div>
+                    {% else %}
+                        <div style="padding-top: 6px;" class="two wide field">
+                            <div style="padding-left: 10px;" class="ui toggle checkbox">
+                                <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
+                            </div>
+                        </div>
+                        <div class="fourteen wide field disabled" id="lieuField">
+                            <input type="text" name="ville" placeholder="ex : Chambéry">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field required">
+                    <label>Date début</label>
+                    <input required name="debut" placeholder="jj/mm/aaaa" type="date"
+                           value="{{ offre.debut|date('Y-m-d') }}">
+                </div>
+                <div class="field" id="dateFinField">
+                    <label>Date fin</label>
+                    <input name="fin" placeholder="jj/mm/aaaa" type="date" value="{{ offre.fin|date('Y-m-d') }}">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field required">
+                    <label>Nombre de postes à pourvoir</label>
+                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre"
+                           value="{{ offre.nbPostes }}">
+                </div>
+                <div class="field">
+                    <label>Nombre d'heures travaillées/semaine</label>
+                    <input type="number" min="0" name="heures" placeholder="Nombre" value="{{ offre.heures }}">
+                </div>
+            </div>
+            <div class="field">
+                <label>Description de l'offre</label>
+                <textarea rows="8" name="description"
+                          placeholder="La description de votre offre d'emploi.">
+                    {{ offre.description }}
+                </textarea>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Montant du salaire</label>
+                    <div class="ui right labeled input">
+                        <label for="montant" class="ui label">€</label>
+                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant"
+                               value="{{ offre.salaire }}">
+                        <div class="ui basic label">.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="teletravail" class="hidden" {% if offre.teletravail %}checked{% endif %}>
+                    <label>Éligible au télétravail</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="loge" class="hidden" {% if offre.loge %}checked{% endif %}>
+                    <label>Emploi logé</label>
+                </div>
+            </div>
+            <button class="ui fluid large green submit button" type="submit">Valider</button>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded", function () {
+            checkDateFin();
+        });
+        //Lieu
+        const lieuBtn = document.getElementById('lieuBtn')
+        const lieuField = document.getElementById('lieuField')
+        lieuBtn.addEventListener('change', (event) => {
+            if (event.currentTarget.checked) {
+                lieuField.classList.remove("disabled");
+            } else {
+                lieuField.classList.add("disabled");
+            }
+        })
+        //Date fin
+        const selectTypeContrat = document.getElementById('selectTypeContrat')
+        const dateFinField = document.getElementById('dateFinField')
+        selectTypeContrat.addEventListener('change', checkDateFin)
+
+        function checkDateFin() {
+            if (selectTypeContrat.value == 'CDI') {
+                dateFinField.classList.add("disabled");
+            } else {
+                dateFinField.classList.remove("disabled");
+            }
+        }
+    </script>
+{% endblock %}

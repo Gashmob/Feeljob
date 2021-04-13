@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     {% include('head.html.twig') %}
-    <title>{% block title %}Fealjob{% endblock %}</title>
+    <title>{% block title %}Feeljob{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 <header>
     <nav>
+        <div id="nav-icon" class="nav-icon" onclick="menuDisplay()"><span></span></div>
+        <div id="nav-background" onclick="menuDisplay()"></div>
         {% if not app.session.get('user') %}
             {% include('navigation/visiteurNav.html.twig') %}
-        {% else %}
+        {% elseif app.session.get('userType') == 'Employe' %}
             {% include('navigation/candidatNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Employeur' %}
+            {% include('navigation/entrepriseNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
+            {% include('navigation/freelanceNav.html.twig') %}
+        {% elseif app.session.get('userType') == 'Particulier' %}
+            {% include('navigation/particulierNav.html.twig') %}
         {% endif %}
     </nav>
 </header>
-<div style="position: absolute; right: 10px; top: 40px; z-index: 10;"
-     class="ui text container positive message transition hidden">
+<div id="flashMessages" class="ui text container positive message transition hidden">
     <i class="close icon"></i>
     <p>
         {% for message in app.flashes('success') %}
