@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 {% block title %}Bienvenue sur FeelJob{% endblock %}
 {% block body %}
-    <div id="homepageSegment" class="ui inverted vertical center aligned segment homepageSegment">
+    <div
+            {% if app.session.get('user') %}
+                style="margin-top: 60px;"
+            {% endif %}
+            id="homepageSegment" class="ui inverted vertical center aligned segment homepageSegment">
         <div class="background homepage-bckg"></div>
         <div class="ui large inverted pointing secondary menu">
-            {% if app.session.get('user') %}
-                <div style="margin-top: 60px;"></div>
-            {% else %}
+            {% if not app.session.get('user') %}
                 <div id="nav" class="ui container homeNav">
                     <a href="{{ path('homepage') }}" class="active item">Accueil</a>
                     <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>

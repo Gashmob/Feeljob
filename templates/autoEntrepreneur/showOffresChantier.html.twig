@@ -31,6 +31,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="item">
+                    <div class="header">Favoris</div>
+                    <div class="menu">
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" name="favoris" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item"></div>
             </div>
             <div class="ui center aligned">
                 <div id="annoncesList" class="ui two stackable cards">
@@ -126,6 +137,7 @@
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
+                    <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
                         <div class="header">${nom}</div>
                         <div class="meta">
