@@ -88,7 +88,8 @@
             searchInput.focus();
         });
 
-        let httpRequest, results;
+        if (httpRequest == undefined) {let httpRequest}
+        if (results == undefined) {let results}
         //Cherche tous les résultats
         function makeRequest() {
             httpRequest = new XMLHttpRequest();

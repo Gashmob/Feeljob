@@ -113,18 +113,19 @@ function displayContratsFeed() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
+            console.log('ok');
             // Réinitialise la liste
             notificationsFeed.innerHTML = '';
 
+
             // Il n'y a pas de résultats :
-            if (results.propositions === undefined || results.propositions.length == 0) {
+            if (results.annonces === undefined || results.annonces.length == 0) {
                 notificationsFeed.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
 
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
-            results.propositions.forEach(a => {
+            results.annonces.forEach(a => {
                 let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 notificationsFeed.innerHTML += card.contratEventTemplate;
             })
@@ -188,7 +189,7 @@ function displayCandidatures() {
 
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
-            results.propositions.forEach(a => {
+            results.candidatures.forEach(a => {
                 let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
