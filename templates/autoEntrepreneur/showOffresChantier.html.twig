@@ -5,46 +5,35 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher">
-            <div class="ui basic floating dropdown button">
-                <div class="text">Tous les résultats</div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <div class="active item">Tous les résultats</div>
-                    <div class="item">Offres d'emploi</div>
-                    <div class="item">Candidats</div>
-                    <div class="item">Auto-entrepreneurs</div>
-                </div>
-            </div>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
-        <div class="ui grid stackable">
-            <div class="five wide left floated column">
-                <div class="ui vertical menu">
-                    <div class="item">
-                        <div class="header">Distance max</div>
-                        <div class="menu">
-                            <div class="item" id="rangeLabel">Désactivé</div>
-                            <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="500" value="0" step="10"
-                                                     oninput="updateRangeLabel(this.value);"></div>
-                        </div>
+        <div class="ui vertical segment stackable">
+            <div class="ui vertical menu left floated">
+                <div class="item">
+                    <div class="header">Distance max</div>
+                    <div class="menu">
+                        <div class="item" id="rangeLabel">Désactivé</div>
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="500"
+                                                 value="0" step="10"
+                                                 oninput="updateRangeLabel(this.value);"></div>
                     </div>
-                    <div class="item">
-                        <div class="header">Secteur d'activité</div>
-                        <div class="menu">
-                            <div class="item">
-                                <select class="ui dropdown" id="secteurSelect">
-                                    <option value="">Choisir</option>
-                                    {# {% for secteur in secteurs %}
+                </div>
+                <div class="item">
+                    <div class="header">Secteur d'activité</div>
+                    <div class="menu">
+                        <div class="item">
+                            <select class="ui dropdown" id="secteurSelect">
+                                <option value="">Choisir</option>
+                                {# {% for secteur in secteurs %}
                                         <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %}  #}
-                                </select>
-                            </div>
+                                    {% endfor %} #}
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="eleven wide column">
-                <div id="annoncesList" class="ui stackable cards">
+            <div class="ui center aligned">
+                <div id="annoncesList" class="ui two stackable cards">
                     <noscript>
                         <p>Veuillez activer JavaScript pour afficher les résultats en AJAX.</p>
                     </noscript>
@@ -88,8 +77,13 @@
             searchInput.focus();
         });
 
-        if (httpRequest == undefined) {let httpRequest}
-        if (results == undefined) {let results}
+        if (httpRequest == undefined) {
+            let httpRequest
+        }
+        if (results == undefined) {
+            let results
+        }
+
         //Cherche tous les résultats
         function makeRequest() {
             httpRequest = new XMLHttpRequest();
@@ -148,7 +142,6 @@
                             <p>${description}</p>
                         </div>
                         <div class="extra">
-                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
                             <a href=${url}
                                class="ui right floated green button">
                                 Voir l'annonce

@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-        {% if not owner %}
+        {% if app.session.get('userType') == 'AutoEntrepreneur' %}
             <button id="applyBtn" class="ui green button" onclick="apply()">
                 Candidater
             </button>
