@@ -81,10 +81,9 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-    <!--<script type='text/javascript' src="{{ asset('js/annonceCard.js') }}"></script>-->
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            makeRequest()
+            makeRequestLoadAll()
             searchInput.focus();
         });
 
@@ -96,7 +95,7 @@
         }
 
         //Cherche tous les résultats
-        function makeRequest() {
+        function makeRequestLoadAll() {
             httpRequest = new XMLHttpRequest();
 
             if (!httpRequest) {
@@ -212,7 +211,7 @@
             if (inputValue != undefined && inputValue.length > 0) {
                 makeRequestFiltered(inputValue, distanceMax, limit, offset);
             } else {
-                makeRequest();
+                makeRequestLoadAll();
             }
         }
 

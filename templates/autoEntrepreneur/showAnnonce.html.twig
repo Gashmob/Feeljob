@@ -88,7 +88,7 @@
                 return false;
             }
             httpRequest.onreadystatechange = candidatureResponse();
-            httpRequest.open('POST', '/particulier/candidate/{{ annonce.id }}');
+            httpRequest.open('POST', '/particulier/candidate/{{ annonce.identity }}');
             httpRequest.send();
         }
 
@@ -104,7 +104,7 @@
                     // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
                     // Succès
-                    applyBtn.innerHTML = 'Validé';
+                    applyBtn.innerHTML = '<div>Validé</div>';
                 } else {
                     applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
                 }

@@ -94,7 +94,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
-    makeRequest('/particulier/get/propositions', changeContratsAmount);
+    makeRequestByORSC('/particulier/get/propositions', changeContratsAmount);
 }
 
 // Update le compteur du nombre de contrats
@@ -110,24 +110,24 @@ function changeContratsAmount() {
 
 // Charge les propositions de contrat au survol de l'icone de mallette dans la nav
 function loadContratsFeed() {
-    makeRequest('/particulier/get/propositions', displayContratsFeed);
+    makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
     contratsAmount.innerHTML = '0';
 }
 
 // Charge les contrats dans la vue contrat et les affiche
 function loadContrats() {
-    makeRequest('/particulier/get/propositions', displayContrats);
+    makeRequestByORSC('/particulier/get/propositions', displayContrats);
 }
 
 // Charge les candidatures dans la vue contrat et les affiche
 function loadCandidatures() {
-    makeRequest('/particulier/get/candidatures', displayCandidatures);
+    makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
 }
 
 // Créé une requête xmlhttp
 let httpRequest, results;
 
-function makeRequest(url, orscFunction) {
+function makeRequestByORSC(url, orscFunction) {
     httpRequest = new XMLHttpRequest();
     if (!httpRequest) {
         alert('Abandon :( Impossible de créer une instance de XMLHTTP');
@@ -153,7 +153,6 @@ function displayContratsFeed() {
             // results = httpRequest.responseText
             // Réinitialise la liste
             notificationsFeed.innerHTML = '';
-            console.log("displayContratsFeed : " + results)
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
@@ -185,13 +184,12 @@ function displayContrats() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
             // Réinitialise la liste
             contratsList.innerHTML = '';
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
-                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
+                contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
             }
 
             // Il y a des résultats :
@@ -219,13 +217,12 @@ function displayCandidatures() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
             // Réinitialise la liste
             candidaturesList.innerHTML = '';
 
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
-                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
+                candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
             }
 
             // Il y a des résultats :
