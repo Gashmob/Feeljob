@@ -36,7 +36,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/candidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/candidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -61,7 +61,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/uncandidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/uncandidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -85,7 +85,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/propose/{idAnn}/{idAuto}", requirements={"idAnn": true, "idAuto": true}, methods={"POST"})
+     * @Route("/propose/{idAnn}/{idAuto}", methods={"POST"})
      * @param $idAnn
      * @param $idAuto
      * @param Request $request
@@ -111,7 +111,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/remove/proposition/{idAnn}/{idAuto}", requirements={"idAnn": true, "idAuto": true}, methods={"POST"})
+     * @Route("/remove/proposition/{idAnn}/{idAuto}", methods={"POST"})
      * @param $idAnn
      * @param $idAuto
      * @param Request $request
@@ -136,7 +136,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/accept/proposition/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -161,7 +161,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/accept/candidature/{idAnn}/{idAuto}", requirements={"idAnn": true, "idAuto": true}, methods={"POST"})
+     * @Route("/accept/candidature/{idAnn}/{idAuto}", methods={"POST"})
      * @param $idAnn
      * @param $idAuto
      * @param Request $request
