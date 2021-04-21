@@ -1,0 +1,86 @@
+{% extends 'page.html.twig' %}
+{% block title %}Voir carte de visite{% endblock %}
+{% block body %}
+    <div style="position: relative" class="ui text justified container">
+        {# {% if not owner %}
+            <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button"
+               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+                <i class="left arrow icon"></i>
+                Retour aux cartes
+            </a>
+        {% endif %} #}
+        <h2 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
+        </h2>
+        <div>
+            <div class="ui buttons">
+                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/carte.png') }}"
+                   class="ui grey basic button">
+                    Télécharger
+                </a>
+                {# {% if owner %}
+                    <a href="{{ path('entreprise_modifier_cv', {id: carte.id}) }}"
+                       class="ui blue basic button">
+                        Éditer
+                    </a>
+                    <a href="{{ path('entreprise_delete_cv', {id: carte.id}) }}"
+                       class="ui red basic button">
+                        Supprimer
+                    </a>
+                {% endif %} #}
+            </div>
+        </div>
+        <form class="ui form segment">
+            <!-- Identité -->
+            <h3 class="ui dividing header">
+                <i class="icon user"></i>
+                <div class="content">Identité</div>
+            </h3>
+            {{ dump(carte) }}
+            <div class="ui two column grid">
+                <div class="column ten wide">
+                    <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
+                    <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
+                    <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                         alt="logo de {{ carte.autoEntrepreneur.nomEntreprise }}">
+                    {# <div>Né le {{ carte.naissance|date('d/m/Y') }}</div>
+                    <div>{{ carte.situationFamille.nom }}</div> #}
+                    <div class="ui divider"></div>
+                    {% if app.session.get('user') %}
+                        <div title="Vous devez envoyer une proposition de contrat">
+                            Mail :
+                            <span class="textblur">mailplaceholder@mail.fr</span>
+                        </div>
+                        <div title="Vous devez envoyer une proposition de contrat">
+                            Téléphone :
+                            <span class="textblur">0612345678</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Bio -->
+            {% if carte.description %}
+                <h3 class="ui dividing header">
+                    <i class="icon info"></i>
+                    <div class="content">Biographie</div>
+                </h3>
+                <div class="ui segment">
+                    <p>{{ carte.description }}</p>
+                </div>
+            {% endif %}
+            <!-- Réalisations -->
+            <h3 class="ui dividing header">
+                <i class="icon pencil alternate"></i>
+                <div class="content">Réalisations</div>
+            </h3>
+            <div class="ui segments">
+                {% for realisation in carte.realisations %}
+                    <div class="ui segment">
+                        <h4 class="ui header">{{ dump(realisation) }}</h4>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
