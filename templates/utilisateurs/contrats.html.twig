@@ -147,6 +147,33 @@
             setTimeout(loadCandidatures, 2000);
         });
 
+        /*
+         * classe correspondant à l'item candidature dans la vue contrats
+         */
+        class Candidature {
+            constructor(id, nom, rue, codePostal, ville, createdAt, date, description) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+
+                this.candidatureTemplate = `
+                <div class="candidature ui vertical segment grid">
+                    <div class="ui left floated ten wide column">
+                        <div class="header">${id} - ${nom}</div>
+                        <div class="meta">
+                            <span class="date">${createdAt}</span>
+                        </div>
+                    </div>
+                    <div class="ui right floated three wide column">
+                        <a href="${url}" class="ui blue button btnAccept">Voir</a>
+                        <!--<button class="ui red button btnDecline" onclick="showModalDecline(1)">Décliner</button>-->
+                        <button class="ui green button btnAccept" onclick="showModalAccept(1)">Accepter</button>
+                    </div>
+                </div>`;
+            }
+        }
+
         function showModalAccept(contratID) {
             $('#modalAccept')
                 .modal('setting', 'transition', 'fade up')

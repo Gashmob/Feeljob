@@ -80,6 +80,7 @@
         if (results == undefined) {
             let results
         }
+
         function apply() {
             httpRequest = new XMLHttpRequest();
 
@@ -87,12 +88,13 @@
                 alert('Abandon :( Impossible de créer une instance de XMLHTTP');
                 return false;
             }
-            httpRequest.onreadystatechange = candidatureResponse();
+            httpRequest.onreadystatechange = candidatureResponse;
             httpRequest.open('POST', '/particulier/candidate/{{ annonce.identity }}');
             httpRequest.send();
         }
 
         const applyBtn = document.querySelector("#applyBtn")
+
         function candidatureResponse() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -104,8 +106,14 @@
                     // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
                     console.log(results)
-                    // Succès
-                    applyBtn.innerHTML = '<div>Validé</div>';
+                    // Candidature posée
+                    if (results.result) {
+                        applyBtn.innerHTML = '<div>Validé</div>';
+                    }
+                    // Candidature retirée
+                    else {
+                        applyBtn.innerHTML = '<div>Déjà candidaté</div>';
+                    }
                 } else {
                     applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
                 }

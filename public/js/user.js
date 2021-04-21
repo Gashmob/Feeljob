@@ -59,33 +59,6 @@ class Contrat {
     }
 }
 
-/*
- * classe correspondant à l'item candidature dans la vue contrats
- */
-class Candidature {
-    constructor(id, nom, date) {
-        if (!nom.length > 0) nom = 'Annonce n°' + id;
-        date = date.substr(0, 10).split('-');
-        date = date[2] + '-' + date[1] + '-' + date[0];
-        let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
-
-        this.candidatureTemplate = `
-        <div class="event">
-            <div class="label">
-                <img src="{{ asset('img/placeholders/matt.jpg') }}">
-            </div>
-            <div class="content">
-                <div class="date">
-                    Il y a 3 jours
-                </div>
-                <div class="summary">
-                    Matt vous a envoyé un message.
-                </div>
-            </div>
-        </div>`;
-    }
-}
-
 const contratsAmount = document.querySelector("#contratsAmount")
 // Le DOM est chargé
 window.addEventListener("DOMContentLoaded", function () {
@@ -103,7 +76,9 @@ function changeContratsAmount() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            contratsAmount.innerHTML = results.contrats.length;
+            console.log('changeContratsAmount : ')
+            console.log(httpRequest)
+            contratsAmount.innerHTML = results.propositions.length;
         }
     }
 }
@@ -220,6 +195,9 @@ function displayCandidatures() {
             // Réinitialise la liste
             candidaturesList.innerHTML = '';
 
+            console.log('results : ')
+            console.log(results)
+
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
                 candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
@@ -228,7 +206,8 @@ function displayCandidatures() {
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
             results.candidatures.forEach(a => {
-                let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                console.log(a)
+                let card = new Candidature(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
         } else {
