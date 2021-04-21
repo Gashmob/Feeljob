@@ -14,7 +14,6 @@ use App\Entity\Adresse;
 use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
-use App\Entity\Employeur;
 use App\Entity\Particulier;
 use App\Entity\Realisation;
 use App\Utils;

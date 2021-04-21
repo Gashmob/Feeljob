@@ -42,7 +42,7 @@ class CarteVisiteRepository extends ServiceEntityRepository
      */
     public function isOwner(CarteVisite $carteVisite, int $id): bool
     {
-        return $carteVisite->getAutoEntrepreneur()->getId() == $id;
+        return $carteVisite->getAutoEntrepreneur()->getIdentity() == $id;
     }
 
     // /**
