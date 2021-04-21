@@ -103,6 +103,7 @@
                 if (httpRequest.status === 200) {
                     // stocke les résultats parsé en JSON dans une variable
                     results = JSON.parse(httpRequest.responseText)
+                    console.log(results)
                     // Succès
                     applyBtn.innerHTML = '<div>Validé</div>';
                 } else {
