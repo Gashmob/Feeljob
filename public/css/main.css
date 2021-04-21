@@ -224,6 +224,8 @@
 
 #homepageSegment {
     min-height:640px;
+    max-height: 880px;
+    height: 100vh;
     padding:1em 0em;
     position: relative;
     background: unset;

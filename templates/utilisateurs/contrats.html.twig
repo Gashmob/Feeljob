@@ -1,29 +1,23 @@
 {% extends 'page.html.twig' %}
 {% block title %}Propositions de contrat{% endblock %}
 {% block body %}
-    <div class="contrats">
-        <h2 class="ui centered aligned header">
-            <i class="briefcase icon"></i>
+    <div class="contrats" style="margin-top: 20px;">
+        <h2 class="ui center aligned header">
             <div class="content">Vos propositions de contrat</div>
         </h2>
         <div id="contratsList" class="ui segment stacked">
-            {% for i in 1..2 %}
-                <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
-                    <div class="ui left floated ten wide column">
-                        <img class="ui left floated mini circular image"
-                             src="{{ asset('img/placeholders/matthew.png') }}">
-                        <div class="header">{{ i }} - Matt Romney</div>
-                        <div class="meta">
-                            <span class="date">15 Février 2021</span>
-                        </div>
-                    </div>
-                    <div class="ui right floated three wide column">
-                        <a href="#" class="ui blue button btnAccept">Voir</a>
-                        <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                        <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
-                    </div>
+            <div class="ui placeholder">
+                <div class="image header">
+                    <div class="short line"></div>
+                    <div class="medium line"></div>
                 </div>
-            {% endfor %}
+            </div>
+            <div class="ui placeholder">
+                <div class="image header">
+                    <div class="short line"></div>
+                    <div class="medium line"></div>
+                </div>
+            </div>
         </div>
         <div id="modalAccept" class="ui modal">
             <i class="close icon"></i>
@@ -76,29 +70,23 @@
             </div>
         </div>
     </div>
-    <div class="candidatures">
-        <h2 class="ui centered aligned header">
-            <i class="briefcase icon"></i>
+    <div class="candidatures" style="margin-top: 20px;">
+        <h2 class="ui center aligned header">
             <div class="content">Vos candidatures</div>
         </h2>
         <div id="candidaturesList" class="ui segment stacked">
-            {% for i in 1..2 %}
-                <div id="candidature{{ i }}" class="candidature ui vertical segment grid">
-                    <div class="ui left floated ten wide column">
-                        <img class="ui left floated mini circular image"
-                             src="{{ asset('img/placeholders/matthew.png') }}">
-                        <div class="header">{{ i }} - Matt Romney</div>
-                        <div class="meta">
-                            <span class="date">15 Février 2021</span>
-                        </div>
-                    </div>
-                    <div class="ui right floated three wide column">
-                        <a href="#" class="ui blue button btnAccept">Voir</a>
-                        <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                        <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
-                    </div>
+            <div class="ui placeholder">
+                <div class="image header">
+                    <div class="short line"></div>
+                    <div class="medium line"></div>
                 </div>
-            {% endfor %}
+            </div>
+            <div class="ui placeholder">
+                <div class="image header">
+                    <div class="short line"></div>
+                    <div class="medium line"></div>
+                </div>
+            </div>
         </div>
         <div id="modalAccept" class="ui modal">
             <i class="close icon"></i>
@@ -156,7 +144,7 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadContrats();
-            loadCandidatures();
+            setTimeout(loadCandidatures, 500);
         });
 
         function showModalAccept(contratID) {

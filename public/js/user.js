@@ -3,6 +3,9 @@
  * ex : candidat, particulier, entreprise, freelance
  */
 
+/*
+ * classe correspondant à l'event affiché lorsqu'on survole la mallette dans la navigation
+ */
 class ContratEvent {
     constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
         if (!nom.length > 0) nom = 'Annonce n°' + id;
@@ -27,6 +30,9 @@ class ContratEvent {
     }
 }
 
+/*
+ * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
+ */
 class Contrat {
     constructor(id, nom, date) {
         if (!nom.length > 0) nom = 'Annonce n°' + id;
@@ -53,6 +59,9 @@ class Contrat {
     }
 }
 
+/*
+ * classe correspondant à l'item candidature dans la vue contrats
+ */
 class Candidature {
     constructor(id, nom, date) {
         if (!nom.length > 0) nom = 'Annonce n°' + id;
@@ -77,21 +86,48 @@ class Candidature {
     }
 }
 
+const contratsAmount = document.querySelector("#contratsAmount")
+// Le DOM est chargé
+window.addEventListener("DOMContentLoaded", function () {
+    loadContratsAmount()
+});
+
+// Charge le nombre de contrats en pending
+function loadContratsAmount() {
+    makeRequestByORSC('/particulier/get/propositions', changeContratsAmount);
+}
+
+// Update le compteur du nombre de contrats
+function changeContratsAmount() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+            // stocke les résultats parsé en JSON dans une variable
+            results = JSON.parse(httpRequest.responseText)
+            contratsAmount.innerHTML = results.contrats.length;
+        }
+    }
+}
+
+// Charge les propositions de contrat au survol de l'icone de mallette dans la nav
 function loadContratsFeed() {
-    makeRequest('/particulier/get/propositions', displayContratsFeed);
+    makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
+    contratsAmount.innerHTML = '0';
 }
 
+// Charge les contrats dans la vue contrat et les affiche
 function loadContrats() {
-    makeRequest('/particulier/get/propositions', displayContrats);
+    makeRequestByORSC('/particulier/get/propositions', displayContrats);
 }
 
+// Charge les candidatures dans la vue contrat et les affiche
 function loadCandidatures() {
-    makeRequest('/particulier/get/candidatures', displayCandidatures);
+    makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
 }
 
+// Créé une requête xmlhttp
 let httpRequest, results;
-// créé une requête xmlhttp
-function makeRequest(url, orscFunction) {
+
+function makeRequestByORSC(url, orscFunction) {
     httpRequest = new XMLHttpRequest();
     if (!httpRequest) {
         alert('Abandon :( Impossible de créer une instance de XMLHTTP');
@@ -102,6 +138,7 @@ function makeRequest(url, orscFunction) {
     httpRequest.send();
 }
 
+// Affiche les propositions de contrat dans la nav au survol de la mallette
 const notificationsFeed = document.getElementById('notifications');
 function displayContratsFeed() {
     //En cours de chargement
@@ -113,7 +150,7 @@ function displayContratsFeed() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
+            // results = httpRequest.responseText
             // Réinitialise la liste
             notificationsFeed.innerHTML = '';
 
@@ -134,7 +171,9 @@ function displayContratsFeed() {
     }
 }
 
+// Affiche la liste des contrats dans la vue contrats
 const contratsList = document.getElementById('contratsList');
+
 function displayContrats() {
     //En cours de chargement
     if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -145,13 +184,12 @@ function displayContrats() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
             // Réinitialise la liste
             contratsList.innerHTML = '';
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
-                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
+                contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
             }
 
             // Il y a des résultats :
@@ -166,7 +204,9 @@ function displayContrats() {
     }
 }
 
+// Affiche la liste des candidatures dans la vue contrats
 const candidaturesList = document.getElementById('candidaturesList');
+
 function displayCandidatures() {
     //En cours de chargement
     if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -177,18 +217,17 @@ function displayCandidatures() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log(results);
             // Réinitialise la liste
             candidaturesList.innerHTML = '';
 
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
-                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
+                candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
             }
 
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
-            results.propositions.forEach(a => {
+            results.candidatures.forEach(a => {
                 let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
