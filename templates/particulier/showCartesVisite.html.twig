@@ -1,46 +1,50 @@
 {% extends 'page.html.twig' %}
 {% block title %}Cartes de visite{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px  !important; margin-bottom: 40px;">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher">
-            <div id="searchBtn" class="ui button">Rechercher</div>
+            <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Products</div>
+                    <div class="header">Distance max</div>
                     <div class="menu">
-                        <a class="item">Enterprise</a>
-                        <a class="item">Consumer</a>
+                        <div class="item" id="rangeLabel">Désactivé</div>
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
+                                                 value="0" step="10"
+                                                 oninput="updateRangeLabel(this.value);"></div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">CMS Solutions</div>
+                    <div class="header">Secteur d'activité</div>
                     <div class="menu">
-                        <a class="item">Rails</a>
-                        <a class="item">Python</a>
-                        <a class="item">PHP</a>
+                        <div class="item">
+                            <select class="ui dropdown" id="secteurSelect">
+                                <option value="">Choisir</option>
+                                {# {% for secteur in secteurs %}
+                                        <option value="{{ secteur }}">{{ secteur }}</option>
+                                    {% endfor %} #}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">Hosting</div>
+                    <div class="header">Favoris</div>
                     <div class="menu">
-                        <a class="item">Shared</a>
-                        <a class="item">Dedicated</a>
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" name="favoris" class="hidden">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="header">Support</div>
-                    <div class="menu">
-                        <a class="item">E-mail Support</a>
-                        <a class="item">FAQs</a>
-                    </div>
-                </div>
+                <div class="item"></div>
             </div>
             <div class="ui center aligned">
-                <div class="ui two stackable cards">
+                <div id="cartesVisiteList" class="ui two stackable cards">
                     <div class="card annonceCard">
                         <div class="content">
                             <a class="header">Pâtissier</a>
@@ -103,45 +107,89 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            makeRequest()
+            makeRequestLoadAll()
+            searchInput.focus();
         });
 
-        var httpRequest;
-        var results;
+        if (httpRequest == undefined) {
+            let httpRequest
+        }
+        if (results == undefined) {
+            let results
+        }
 
         //Cherche tous les résultats
-        function makeRequest() {
+        function makeRequestLoadAll() {
             httpRequest = new XMLHttpRequest();
 
             if (!httpRequest) {
                 alert('Abandon :( Impossible de créer une instance de XMLHTTP');
                 return false;
             }
-            httpRequest.onreadystatechange = displayAnnonces;
-            httpRequest.open('POST', '/particulier/get/annonces');
+            httpRequest.onreadystatechange = displayCartesVisite;
+            httpRequest.open('POST', '/particulier/get/cartes');
             httpRequest.send();
         }
 
         //Cherche les résultats par le nom entré barre recherche
-        function makeRequestBySecteur(secteur) {
+        function makeRequestFiltered(nom, secteur, distanceMax, limit, offset) {
             httpRequest = new XMLHttpRequest();
 
             if (!httpRequest) {
                 alert('Abandon :( Impossible de créer une instance de XMLHTTP');
                 return false;
             }
-            httpRequest.onreadystatechange = displayAnnonces;
-            httpRequest.open('POST', '/particulier/get/annonces/' + secteur);
+            httpRequest.onreadystatechange = displayCartesVisite;
+            //let url = '/particulier/get/cartes';
+            httpRequest.open('POST', '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset);
             httpRequest.send();
         }
 
-        //Affiche les résultats dans 'annoncesList'
-        var annoncesList = document.getElementById('annoncesList');
+        //Affiche les résultats dans 'cartesVisiteList'
+        const cartesVisiteList = document.getElementById('cartesVisiteList');
+        //Classe carteVisiteCard
+        class carteVisiteCard {
+            constructor(id, prenom, nom, nomEntreprise, logoEntreprise, createdAt, date, description) {
+                if (!nom.length > 0) nom = 'Carte n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
-        function displayAnnonces() {
+                this.cardTemplate = `
+                <div class="card carteVisiteCard">
+                    <i onclick="addFav(this);" class="icon star outline"></i>
+                    <div class="content">
+                        <div class="header">${prenom} ${nom}</div>
+                        <div class="meta">
+                            <li>
+                                ${nomEntreprise}
+                            </li>
+                            <li>
+                                <i class="icon calendar"></i>
+                                 Pour le ${date}
+                            </li>
+                        </div>
+                        <div class="description">
+                            <p>${description}</p>
+                        </div>
+                        <div class="extra">
+                            <a href=${url}
+                               class="ui right floated green button">
+                                Voir l'annonce
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function displayCartesVisite() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                annoncesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+                cartesVisiteList.innerHTML = `<i class="notched circle loading icon"></i>`;
             }
             //Chargé
             else if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -150,46 +198,26 @@
                     results = JSON.parse(httpRequest.responseText)
                     console.log(results);
                     // Réinitialise la liste
-                    annoncesList.innerHTML = '';
-                    // Pour chaque cv du tableau annonces
-                    for (var i = 0; i < results.annonces.length; i++) {
-                        var card = `
-                <div class="card annonceCard">
-                    <div class="content">
-                        <div class="header">` + results.annonces[i].nom + `</div>
-                        <div class="meta">
-                            <span>
-                                <i class="icon map pin"></i>
-                                ` + results.annonces[i].adresse.ville + `
-                            </span>
-                            <span>Pour le 15/05</span>
-                        </div>
-                        <div class="description">
-                            <p>` + truncate(results.annonces[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
-                        </div>
-                        <div class="extra">
-                            <div class="ui label">CDD</div>
-                            <div class="ui label">CDI</div>
-                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                            <a href="{{ path('particulier_show_annonce', {'id': 1}) }}`.slice(0, -1) + results.annonces[i].identity + `"
-                               class="ui right floated green button">
-                                Voir l'offre
-                                <i class="right chevron icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-                        annoncesList.innerHTML += card;
+                    cartesVisiteList.innerHTML = '';
+
+                    // Il n'y a pas de résultats :
+                    if (results.cartes === undefined || results.cartes.length == 0) {
+                        cartesVisiteList.innerHTML = `<div>Pas de résultat trouvé.</div>`;
                     }
+
+                    // Il y a des résultats :
+                    // Pour chaque cv du tableau annonces
+                    results.cartes.forEach(carte => {
+                        let card = new carteVisiteCard(carte.identity, carte.prenom, carte.nom, carte.nomEntreprise, carte.logo, carte.createdAt, carte.date, carte.description);
+                        cartesVisiteList.innerHTML += card.cardTemplate;
+                    })
                 } else {
-                    alert('Il y a eu un problème avec la requête.');
+                    cartesVisiteList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
                 }
             }
         }
 
-        var searchInput = document.getElementById('searchInput');
-
+        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 searchAnnonces();
@@ -197,18 +225,29 @@
         });
 
         function searchAnnonces() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestBySecteur(inputValue);
+            // String nom
+            let nom = searchInput.value;
+            // String secteur
+            let secteur = 'none';
+            // Float distance max
+            let distanceMax = -1;
+            // Int limit
+            let limit = 25;
+            // Int offset
+            let offset = 0;
+            nom = nom.trim();
+            if (nom != undefined && nom.length > 0) {
+                makeRequestFiltered(nom, secteur, distanceMax, limit, offset);
             } else {
-                makeRequest();
+                makeRequestLoadAll();
             }
         }
 
         const MAX_DESCRIPTION_LENGTH = 300;
 
         // Tronque les descriptions
-        function truncate(str, n, useWordBoundary) {
+        function truncate(str, n, useWordBoundary
+        ) {
             if (str.length <= n) {
                 return str;
             }
@@ -228,5 +267,16 @@
                 e.classList.remove('outline');
             }
         };
+
+        const rangeLabel = document.getElementById('rangeLabel');
+
+        function updateRangeLabel(value) {
+            if (value == 0) {
+                rangeLabel.innerHTML = 'Désactivé';
+            } else {
+                rangeLabel.innerHTML = value + ' km.'
+            }
+            ;
+        }
     </script>
 {% endblock %}
