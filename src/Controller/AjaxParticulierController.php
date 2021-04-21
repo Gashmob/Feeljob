@@ -260,7 +260,7 @@ class AjaxParticulierController extends AbstractController
             $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $auto_entrepreneur->getAdresse();
             $results = (new AnnonceManager())->getAnnoncesBySecteurActiviteFromPreResult(
-                $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse),
+                $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()),
                 $secteur
             );
 
