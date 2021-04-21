@@ -11,10 +11,10 @@
             {% if not app.session.get('user') %}
                 <div id="nav" class="ui container homeNav">
                     <a href="{{ path('homepage') }}" class="active item">Accueil</a>
-                    <a href="{{ path('show', {type:'entreprises'}) }}" class="item">Entreprises</a>
-                    <a href="{{ path('show', {type:'candidats'}) }}" class="item">Candidats</a>
-                    <a href="{{ path('show', {type:'freelances'}) }}" class="item">Freelances</a>
-                    <a href="{{ path('show', {type:'particuliers'}) }}" class="item">Particuliers</a>
+                    <a href="{{ path('show', {type:'Employeur'}) }}" class="item">Entreprises</a>
+                    <a href="{{ path('show', {type:'Employe'}) }}" class="item">Candidats</a>
+                    <a href="{{ path('show', {type:'AutoEntrepreneur'}) }}" class="item">Freelances</a>
+                    <a href="{{ path('show', {type:'Particulier'}) }}" class="item">Particuliers</a>
                     <div class="right item">
                         <a href="{{ path('connexion') }}" class="ui inverted button" role="button">Connexion</a>
                         <a href="{{ path('inscription') }}" style="margin-left:0.5em"

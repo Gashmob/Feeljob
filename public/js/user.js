@@ -76,8 +76,6 @@ function changeContratsAmount() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
-            console.log('changeContratsAmount : ')
-            console.log(httpRequest)
             contratsAmount.innerHTML = results.propositions.length;
         }
     }
@@ -194,10 +192,6 @@ function displayCandidatures() {
             results = JSON.parse(httpRequest.responseText)
             // Réinitialise la liste
             candidaturesList.innerHTML = '';
-
-            console.log('results : ')
-            console.log(results)
-
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
                 candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
@@ -206,7 +200,6 @@ function displayCandidatures() {
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
             results.candidatures.forEach(a => {
-                console.log(a)
                 let card = new Candidature(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
