@@ -234,6 +234,31 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/get/favoris", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getFavoris(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'favoris' => (new OffreEmploiManager())->getFavoris($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
      * @param $competences
      * @param $langues
