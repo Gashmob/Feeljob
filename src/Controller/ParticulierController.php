@@ -16,6 +16,7 @@ use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
 use App\Entity\Employeur;
 use App\Entity\Particulier;
+use App\Entity\Realisation;
 use App\Utils;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -220,6 +221,7 @@ class ParticulierController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
+     * @throws Exception
      */
     public function createCarteVisite(Request $request, EntityManagerInterface $em)
     {
@@ -247,7 +249,19 @@ class ParticulierController extends AbstractController
                 $em->persist($carte);
                 $em->flush();
 
-                // TODO : get all realisations
+                for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
+                    $image = Utils::uploadImage('realisations', 'image' . $i);
+                    $descriptionR = $request->get('description' . $i);
+
+                    if ($image != '' && $descriptionR != '') {
+                        $r = (new Realisation())
+                            ->setImage($image)
+                            ->setDescription($descriptionR)
+                            ->setCarteVisite($carte);
+                        $em->persist($r);
+                        $em->flush();
+                    }
+                }
 
                 $auto_entrepreneur->setCarteVisite($carte);
                 $em->flush();
