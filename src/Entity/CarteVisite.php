@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\CarteVisiteRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function Symfony\Component\Translation\t;
 
 /**
  * @ORM\Entity(repositoryClass=CarteVisiteRepository::class)
@@ -48,8 +48,8 @@ class CarteVisite
     public function __construct()
     {
         $this->realisations = new ArrayCollection();
-        $this->createdAt = time();
-        $this->updatedAt = time();
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     public function getId(): ?int
