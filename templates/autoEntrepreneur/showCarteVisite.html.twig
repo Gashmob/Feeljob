@@ -78,7 +78,7 @@
             <div class="ui segments">
                 {% for realisation in carte.realisations %}
                     <div class="ui segment">
-                        <h4 class="ui header">{{ realisation.description }}</h4>
+                        <h4 class="ui header">{{ realisation.description|nl2br }}</h4>
                         <img class="ui image" src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
                     </div>
                 {% endfor %}

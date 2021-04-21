@@ -57,7 +57,7 @@
                 {% if offre.description|length %}
                     <p>
                         {# {% apply markdown_to_html %}  #}
-                            {{ offre.description }}
+                            {{ offre.description|nl2br }}
                         {# {% endapply %} #}
                     </p>
                 {% else %}

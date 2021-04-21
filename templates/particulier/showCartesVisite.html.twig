@@ -189,7 +189,7 @@
         function displayCartesVisite() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                cartesVisiteList.innerHTML = `<i class="notched circle loading icon"></i>`;
+                cartesVisiteList.innerHTML = `<i style="margin: 60px auto;" class="notched circle loading icon"></i>`;
             }
             //Chargé
             else if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -202,7 +202,7 @@
 
                     // Il n'y a pas de résultats :
                     if (results.cartes === undefined || results.cartes.length == 0) {
-                        cartesVisiteList.innerHTML = `<div>Pas de résultat trouvé.</div>`;
+                        cartesVisiteList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
                     }
 
                     // Il y a des résultats :
@@ -212,7 +212,7 @@
                         cartesVisiteList.innerHTML += card.cardTemplate;
                     })
                 } else {
-                    cartesVisiteList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                    cartesVisiteList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
                 }
             }
         }
