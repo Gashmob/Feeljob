@@ -138,7 +138,7 @@ class AnnonceManager extends Manager
             ->getOneOrNullResult();
 
         if (is_null($result1) && is_null($result2)) {
-            (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . '), (o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO CREATE (e)-[:' . EntityManager::CANDIDATURE . ']->(o)'))
+            (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . '), (o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO CREATE (a)-[:' . EntityManager::CANDIDATURE . ']->(o)'))
                 ->setInteger('idA', $idAutoEntrepreneur)
                 ->setInteger('idO', $idAnnonce)
                 ->run();
