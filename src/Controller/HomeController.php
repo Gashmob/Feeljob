@@ -296,7 +296,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/ajout/credits")
+     * @Route("/ajout/credits", name="ajoutCredits")
      * @return Response|RedirectResponse
      */
     public function ajoutCredit()
