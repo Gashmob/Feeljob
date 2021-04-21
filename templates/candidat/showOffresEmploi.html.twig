@@ -84,10 +84,7 @@
             makeRequest()
         });
 
-        var httpRequest;
-        var results;
-
-        //Cherche tous les résultats
+        // Cherche tous les résultats
         function makeRequest() {
             httpRequest = new XMLHttpRequest();
 
@@ -166,14 +163,15 @@
             }
         }
 
+        // Event listener barre de recherche
         var searchInput = document.getElementById('searchInput');
-
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 searchOffres();
             }
         });
 
+        // Fonction liée au event listener de la barre de recherche
         function searchOffres() {
             var inputValue = searchInput.value;
             if (inputValue != '' && inputValue != null) {
@@ -182,19 +180,6 @@
                 makeRequest();
             }
         }
-
-        const MAX_DESCRIPTION_LENGTH = 300;
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');

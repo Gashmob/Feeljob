@@ -1,7 +1,7 @@
 {% extends 'page.html.twig' %}
 {% block title %}Voir carte de visite{% endblock %}
 {% block body %}
-    <div style="position: relative" class="ui text justified container">
+    <div style="position: relative" class="ui justified container">
         {# {% if not owner %}
             <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button"
                style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
@@ -37,13 +37,14 @@
                 <i class="icon user"></i>
                 <div class="content">Identité</div>
             </h3>
-            {{ dump(carte) }}
             <div class="ui two column grid">
                 <div class="column ten wide">
                     <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
                     <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
-                    <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                    {% if carte.autoEntrepreneur.logo %}
+                    <img class="ui small circular image" src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
                          alt="logo de {{ carte.autoEntrepreneur.nomEntreprise }}">
+                    {% endif %}
                     {# <div>Né le {{ carte.naissance|date('d/m/Y') }}</div>
                     <div>{{ carte.situationFamille.nom }}</div> #}
                     <div class="ui divider"></div>
@@ -75,11 +76,11 @@
                 <i class="icon pencil alternate"></i>
                 <div class="content">Réalisations</div>
             </h3>
-            <div class="ui segments">
+            <div class="ui divided items">
                 {% for realisation in carte.realisations %}
-                    <div class="ui segment">
-                        <h4 class="ui header">{{ realisation.description|nl2br }}</h4>
-                        <img class="ui image" src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
+                    <div class="ui item">
+                        <h4 class="ui middle aligned content">{{ realisation.description|nl2br }}</h4>
+                        <img class="ui image medium right floated" src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
                     </div>
                 {% endfor %}
             </div>

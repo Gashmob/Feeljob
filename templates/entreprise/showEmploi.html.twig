@@ -1,6 +1,11 @@
 {% extends 'page.html.twig' %}
 {% block title %}Voir une offre d'emploi{% endblock %}
 {% block body %}
+    <style type="text/css">
+        body {
+            background-color: #fafbfc;
+        }
+    </style>
     <div style="position: relative;" class="ui text justified container">
         {% if not owner %}
             <a href="{{ path('entreprise_offres_emploi') }}" class="ui compact labeled icon button"

@@ -6,7 +6,7 @@
             <i class="arrow alternate circle down outline"></i>
             <div class="content">Propositions reçues</div>
         </h2>
-        <div id="contratsList" class="ui segment stacked">
+        <div id="contratsList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -26,7 +26,7 @@
             <i class="paper plane outline"></i>
             <div class="content">Candidatures envoyées</div>
         </h2>
-        <div id="candidaturesList" class="ui segment stacked items">
+        <div id="candidaturesList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -57,6 +57,37 @@
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
             makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
+        }
+
+        /*
+         * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
+         */
+        class Contrat {
+            constructor(id, nom, date) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+
+                this.contratTemplate = `
+                <div class="contrat ui item">
+                    <div class="content">
+                        <div class="ui left floated">
+                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="meta">
+                                <span class="date">Pour le ${date}</span>
+                            </div>
+                        <div class="description">${description}</div>
+                        </div>
+                        <div class="extra">
+                            <div class="ui right floated buttons">
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
         }
 
         /*

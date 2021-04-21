@@ -30,35 +30,6 @@ class ContratEvent {
     }
 }
 
-/*
- * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
- */
-class Contrat {
-    constructor(id, nom, date) {
-        if (!nom.length > 0) nom = 'Annonce n°' + id;
-        date = date.substr(0, 10).split('-');
-        date = date[2] + '-' + date[1] + '-' + date[0];
-        let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
-
-        this.contratTemplate = `
-        <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
-            <div class="ui left floated ten wide column">
-                <img class="ui left floated mini circular image"
-                     src="{{ asset('img/placeholders/matthew.png') }}">
-                <div class="header">{{ i }} - Matt Romney</div>
-                <div class="meta">
-                    <span class="date">15 Février 2021</span>
-                </div>
-            </div>
-            <div class="ui right floated three wide column">
-                <a href="#" class="ui blue button btnAccept">Voir</a>
-                <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
-            </div>
-        </div>`;
-    }
-}
-
 // Le DOM est chargé
 window.addEventListener("DOMContentLoaded", function () {
     loadContratsAmount()
