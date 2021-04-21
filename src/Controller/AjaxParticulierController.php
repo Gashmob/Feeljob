@@ -237,7 +237,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/annonces/{secteur}/{distanceMax}/{limit}/{offset}", methods={"POST"}, defaults={"secteur":"none", "distanceMax":"none", "limit":25, "offset":0})
+     * @Route("/get/annonces/{secteur}/{distanceMax}/{limit}/{offset}", defaults={"secteur":"none", "distanceMax":"none", "limit":25, "offset":0})
      * @param $secteur
      * @param $distanceMax
      * @param $limit
@@ -259,32 +259,19 @@ class AjaxParticulierController extends AbstractController
         if ($request->isMethod('POST')) {
             $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $auto_entrepreneur->getAdresse();
-            if ($distanceMax != 'none' && !is_null($adresse)) {
-                $addressFrom = $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille();
-                if ($secteur != 'none') {
-                    $ids = (new AnnonceManager())->getAnnoncesBySecteurActivite($secteur);
+            $results = (new AnnonceManager())->getAnnoncesBySecteurActiviteFromPreResult(
+                $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse),
+                $secteur
+            );
 
-                    return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMaxFromPreResultIds($ids, $distanceMax, $addressFrom), $offset, $limit)
-                    ]);
-                } else { // $secteur == 'none'
-                    return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $addressFrom), $offset, $limit)
-                    ]);
-                }
-            } else { // $distanceMax == 'none'
-                if ($secteur != 'none') {
-                    $ids = (new AnnonceManager())->getAnnoncesBySecteurActivite($secteur);
-
-                    return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findByIdentity($ids), $offset, $limit)
-                    ]);
-                } else { // $secteur == 'none'
-                    return $this->json([
-                        'annonces' => array_slice($em->getRepository(Annonce::class)->findAll(), $offset, $limit)
-                    ]);
-                }
-            }
+            return $this->json([
+                'annonces' => array_slice(
+                    $results,
+                    $offset,
+                    $limit
+                ),
+                'quantity' => count($results)
+            ]);
         }
 
         return $this->json([]);

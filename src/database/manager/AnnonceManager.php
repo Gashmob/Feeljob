@@ -90,8 +90,8 @@ class AnnonceManager extends Manager
             $em->flush();
 
             return $idAnnonce;
-		}
-        
+        }
+
         return null;
     }
 
@@ -194,7 +194,7 @@ class AnnonceManager extends Manager
             ->run()
             ->getOneOrNullResult();
 
-        $result2 = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR. ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
+        $result2 = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
             ->setInteger('idA', $idAutoEntrepreneur)
             ->setInteger('idO', $idAnnonce)
             ->run()
@@ -307,20 +307,24 @@ class AnnonceManager extends Manager
     }
 
     /**
+     * @param Annonce[] $preResult
      * @param string $secteurActivite
      * @return int[]
      */
-    public function getAnnoncesBySecteurActivite(string $secteurActivite): array
+    public function getAnnoncesBySecteurActiviteFromPreResult(array $preResult, string $secteurActivite): array
     {
         $res = [];
 
-        $results = (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) RETURN id(a) AS id'))
-            ->setString('nom', $secteurActivite)
-            ->run()
-            ->getResult();
-
-        foreach ($results as $result) {
-                $res[] = $result['id'];
+        foreach ($preResult as $result) {
+            if ($secteurActivite == 'none') {
+                $res[] = $result;
+            } elseif ((new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) WHERE id(a)=$id RETURN id(a) AS id'))
+                    ->setString('nom', $secteurActivite)
+                    ->setInteger('id', $result->getIdentity())
+                    ->run()
+                    ->getOneOrNullResult() != null) {
+                $res[] = $result;
+            }
         }
 
         return $res;
@@ -355,9 +359,9 @@ class AnnonceManager extends Manager
     public function isOwner(int $idAnnonce, int $idParticulier): bool
     {
         return (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ') WHERE id(p)=$idP AND id(a)=$idA RETURN p'))
-            ->setInteger('idP', $idParticulier)
-            ->setInteger('idA', $idAnnonce)
-            ->run()
-            ->getOneOrNullResult() != null;
+                ->setInteger('idP', $idParticulier)
+                ->setInteger('idA', $idAnnonce)
+                ->run()
+                ->getOneOrNullResult() != null;
     }
 }
