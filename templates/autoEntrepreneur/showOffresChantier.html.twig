@@ -205,8 +205,8 @@
         function searchAnnonces() {
             let inputValue = searchInput.value;
             let distanceMax = 'none';
-            let limit = 'none';
-            let offset = 'none';
+            let limit = '25';
+            let offset = '0';
             inputValue = inputValue.trim();
             if (inputValue != undefined && inputValue.length > 0) {
                 makeRequestFiltered(inputValue, distanceMax, limit, offset);
