@@ -26,13 +26,21 @@
         <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
             {% if publications %}
-                <a href="{{ path('particulier_create_carte') }}" class="ui card">
-                    <div class="ui image">
-                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vue 62 fois
+                <a href="{{ path('particulier_show_carte', {'id': publications.id}) }}" class="ui card">
+                    <div class="content">
+                        <div class="ui image">
+                            <img src="{{ asset('uploads/realisations/' ~ publications.realisations[0].image) }}"
+                                 alt="carte visite">
+                        </div>
+                        <div class="meta">Créée le {{ publications.createdAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
+                        <div class="description">
+                            {% if publications.description|length %}
+                                <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                            {% else %}
+                                <p class="meta">** Pas de description **</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
             {% else %}
