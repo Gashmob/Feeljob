@@ -33,7 +33,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/candidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/candidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -58,7 +58,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/uncandidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/uncandidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -82,7 +82,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/propose/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/propose/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
@@ -108,7 +108,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/remove/proposition/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/remove/proposition/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
@@ -133,7 +133,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/accept/proposition/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -158,7 +158,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/accept/candidature/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/accept/candidature/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
