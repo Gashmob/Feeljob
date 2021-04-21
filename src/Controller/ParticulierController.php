@@ -265,6 +265,8 @@ class ParticulierController extends AbstractController
 
                 $auto_entrepreneur->setCarteVisite($carte);
                 $em->flush();
+
+                return $this->redirectToRoute('userSpace');
             }
         }
 
@@ -403,13 +405,14 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         $carte = $em->getRepository(CarteVisite::class)->findOneBy(['id' => $id]);
 
         if (is_null($carte)) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $owner = $em->getRepository(CarteVisite::class)->isOwner($carte, $this->session->get('user'));
+        if ($this->session->get('userType') != EntityManager::PARTICULIER && !$owner) {
             return $this->redirectToRoute('userSpace');
         }
 
