@@ -34,7 +34,9 @@ class AnnonceRepository extends ServiceEntityRepository
         $res = [];
         foreach ($annonces as $annonce) {
             $adresse = $annonce->getAdresse();
-            if (!is_null($adresse)) {
+            if ($distanceMax == -1) {
+                $res[] = $annonce;
+            } elseif (!is_null($adresse)) {
                 if (Utils::getDistance($addressFrom, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()) <= $distanceMax) {
                     $res[] = $annonce;
                 }
