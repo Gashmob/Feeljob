@@ -162,16 +162,28 @@
                     <div class="ui left floated ten wide column">
                         <div class="header">${id} - ${nom}</div>
                         <div class="meta">
-                            <span class="date">${createdAt}</span>
+                            <span class="date">${date}</span>
                         </div>
                     </div>
                     <div class="ui right floated three wide column">
+                        <button id="undoBtn${id}" class="ui red button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
                         <a href="${url}" class="ui blue button btnAccept">Voir</a>
-                        <!--<button class="ui red button btnDecline" onclick="showModalDecline(1)">Décliner</button>-->
-                        <button class="ui green button btnAccept" onclick="showModalAccept(1)">Accepter</button>
                     </div>
                 </div>`;
             }
+        }
+
+        // Demande à décandidater
+        function requestUncandidate(id) {
+            makeRequestByORSC('/particulier/uncandidate/'+id, displayUncandidate(id))
+        }
+
+        function displayUncandidate(id) {
+            let btnNo = '#undoBtn' + id
+            let btn = document.querySelector(btnNo)
+            console.log('btn num : '+btnNo)
+            console.log('id : '+id)
+            btn.innerHTML = 'Annulée'
         }
 
         function showModalAccept(contratID) {
