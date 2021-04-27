@@ -62,32 +62,36 @@
                 </div>
             </div>
             <!-- Formation -->
-            <h3 class="ui dividing header">
-                <i class="icon university"></i>
-                <div class="content">Formation</div>
-            </h3>
-            <div class="ui segments">
-                {% for diplome in cv.diplomes %}
-                    <div class="ui segment formation1">
-                        <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
-                        <div>{{ diplome.date|date('d/m/Y') }}</div>
-                        <div>{{ diplome.mention }}</div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% if cv.diplomes is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon university"></i>
+                    <div class="content">Formation</div>
+                </h3>
+                <div class="ui segments">
+                    {% for diplome in cv.diplomes %}
+                        <div class="ui segment formation1">
+                            <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
+                            <div>{{ diplome.date|date('d/m/Y') }}</div>
+                            <div>{{ diplome.mention }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <!-- Expérience -->
-            <h3 class="ui dividing header">
-                <i class="icon dolly"></i>
-                <div class="content">Expérience professionnelle</div>
-            </h3>
-            <div class="ui segments">
-                {% for metier in cv.metiers %}
-                    <div class="ui segment">
-                        <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
-                        <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% if cv.metiers is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon dolly"></i>
+                    <div class="content">Expérience professionnelle</div>
+                </h3>
+                <div class="ui segments">
+                    {% for metier in cv.metiers %}
+                        <div class="ui segment">
+                            <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
+                            <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <!-- Bio -->
             {% if cv.description %}
                 <h3 class="ui dividing header">
@@ -109,15 +113,17 @@
                 {% endfor %}
             </ul>
             <!-- Compétences -->
-            <h3 class="ui dividing header">
-                <i class="icon settings"></i>
-                <div class="content">Compétences</div>
-            </h3>
-            <ul>
-                {% for competence in cv.competences %}
-                    <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
-                {% endfor %}
-            </ul>
+            {% if cv.competences is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon settings"></i>
+                    <div class="content">Compétences</div>
+                </h3>
+                <ul>
+                    {% for competence in cv.competences %}
+                        <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <!-- Autres -->
             <h3 class="ui dividing header">
                 <i class="icon question circle outline"></i>
@@ -149,6 +155,7 @@
         if (results == undefined) {
             let results
         }
+
         function offreContrat() {
             httpRequest = new XMLHttpRequest();
 
