@@ -243,8 +243,6 @@
             }
         }
 
-        const MAX_DESCRIPTION_LENGTH = 300;
-
         // Tronque les descriptions
         function truncate(str, n, useWordBoundary
         ) {
@@ -269,7 +267,6 @@
         };
 
         const rangeLabel = document.getElementById('rangeLabel');
-
         function updateRangeLabel(value) {
             if (value == 0) {
                 rangeLabel.innerHTML = 'Désactivé';
