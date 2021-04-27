@@ -18,7 +18,11 @@
             </div>
         </a>
         <a href="{{ path('userSpace') }}" title="Profil utilisateur" class="ui dropdown item">
-            <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% if app.session.get('userImage') %}
+                <img class="ui mini circular image" src="{{ asset("uploads/logo/" ~ app.session.get('userImage')) }}">
+            {% else %}
+                <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% endif %}
             <div class="content person-summary">
                 <div class="ui sub header" style="max-width: 117px;">{{ app.session.get('userName') }}</div>
                 <div>Entreprise</div>

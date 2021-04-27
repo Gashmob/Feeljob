@@ -26,7 +26,7 @@ class ContratEvent {
             </div>
             <div class="content">
                 <div class="date">
-                    reçue le ${date}
+                   ${date}
                 </div>
                 <div class="summary">
                     ${nom}${ville}
