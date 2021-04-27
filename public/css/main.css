@@ -319,11 +319,11 @@
     bottom: 65px;
 }
 
-.annonceCard, .cvCard {
+.annonceCard, .cvCard, .carteVisiteCard {
     position: relative;
 }
 
-.annonceCard .meta {
+.annonceCard .meta, .carteVisiteCard .meta {
     list-style: none !important;
     text-decoration: none !important;
 }
@@ -334,11 +334,11 @@
     right: 10px;
 }
 
-.annonceCard .description {
+.annonceCard .description, .carteVisiteCard .description {
     margin-bottom: 1em;
 }
 
-.annonceCard .star, .cvCard .star {
+.annonceCard .star, .cvCard .star, .carteVisiteCard .star {
     cursor: pointer;
     position: absolute;
     top: 10px;
