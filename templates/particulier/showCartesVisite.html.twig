@@ -149,10 +149,8 @@
         const cartesVisiteList = document.getElementById('cartesVisiteList');
         //Classe carteVisiteCard
         class carteVisiteCard {
-            constructor(id, prenom, nom, nomEntreprise, logoEntreprise, createdAt, date, description) {
+            constructor(id, prenom, nom, nomEntreprise, logoEntreprise, createdAt, description) {
                 if (!nom.length > 0) nom = 'Carte n°' + id;
-                date = date.substr(0, 10).split('-');
-                date = date[2] + '-' + date[1] + '-' + date[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
                 let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
@@ -165,10 +163,6 @@
                         <div class="meta">
                             <li>
                                 ${nomEntreprise}
-                            </li>
-                            <li>
-                                <i class="icon calendar"></i>
-                                 Pour le ${date}
                             </li>
                         </div>
                         <div class="description">
@@ -208,7 +202,7 @@
                     // Il y a des résultats :
                     // Pour chaque cv du tableau annonces
                     results.cartes.forEach(carte => {
-                        let card = new carteVisiteCard(carte.identity, carte.prenom, carte.nom, carte.nomEntreprise, carte.logo, carte.createdAt, carte.date, carte.description);
+                        let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
                         cartesVisiteList.innerHTML += card.cardTemplate;
                     })
                 } else {
@@ -220,11 +214,11 @@
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchAnnonces();
+                searchCartes();
             }
         });
 
-        function searchAnnonces() {
+        function searchCartes() {
             // String nom
             let nom = searchInput.value;
             // String secteur
