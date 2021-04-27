@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -41,15 +40,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
  */
 class ParticulierController extends AbstractController
 {
-    /**
-     * @Route("/contrats", name="contrats")
-     * @return Response
-     */
-    public function homepage(): Response
-    {
-        return $this->render('utilisateurs/contrats.html.twig');
-    }
-
     /**
      * @var SessionInterface
      */
@@ -67,7 +57,6 @@ class ParticulierController extends AbstractController
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
-     * @throws TransportExceptionInterface
      */
     public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
@@ -420,6 +409,23 @@ class ParticulierController extends AbstractController
         return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
             'carte' => $carte
         ]);
+    }
+
+    /**
+     * @Route("/contrats", name="particulier_contrats")
+     * @return Response|RedirectResponse
+     */
+    public function contracts(): Response
+    {
+        if ($this->session->get('user')) {
+            if ($this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
+                return $this->render('utilisateurs/contrats.html.twig');
+            } elseif ($this->session->get('userType') == EntityManager::PARTICULIER) {
+                return $this->render('utilisateurs/contrats.html.twig');
+            }
+        }
+        
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
