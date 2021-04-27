@@ -13,7 +13,7 @@
                     <div class="header">Distance max</div>
                     <div class="menu">
                         <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="500"
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
                                                  value="0" step="10"
                                                  oninput="updateRangeLabel(this.value);"></div>
                     </div>
@@ -167,7 +167,7 @@
         function displayAnnonces() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                annoncesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+                annoncesList.innerHTML = `<i style="margin: 60px auto;" class="notched circle loading icon"></i>`;
             }
             //Chargé
             else if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -180,7 +180,7 @@
 
                     // Il n'y a pas de résultats :
                     if (results.annonces === undefined || results.annonces.length == 0) {
-                        annoncesList.innerHTML = `<div>Pas de résultat trouvé.</div>`;
+                        annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
                     }
 
                     // Il y a des résultats :
@@ -190,7 +190,7 @@
                         annoncesList.innerHTML += card.cardTemplate;
                     })
                 } else {
-                    annoncesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                    annoncesList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
                 }
             }
         }
@@ -218,20 +218,6 @@
                 makeRequestLoadAll();
             }
         }
-
-        const MAX_DESCRIPTION_LENGTH = 300;
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary
-        ) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');

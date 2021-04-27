@@ -1,6 +1,11 @@
 {% extends 'page.html.twig' %}
 {% block title %}Voir une annonce{% endblock %}
 {% block body %}
+    <style type="text/css">
+        body {
+            background-color: #fafbfc;
+        }
+    </style>
     <div style="position: relative;" class="ui text justified container">
         {% if not owner %}
             <a href="{{ path('particulier_annonces') }}" class="ui compact labeled icon button"
@@ -36,11 +41,14 @@
                 </p>
                 <p>{{ annonce.adresse.rue }}</p>
                 <p>{{ annonce.adresse.codePostal }}</p>
-                <p>{{ annonce.date|date('d/m/Y') }}</p>
+                <p>
+                    <i class="icon calendar alternate"></i>
+                    Pour le {{ annonce.date|date('d/m/Y') }}
+                </p>
                 {% if annonce.description|length %}
                     <p>
                         {# {% apply markdown_to_html %} #}
-                        {{ annonce.description }}
+                        {{ annonce.description|nl2br }}
                         {# {% endapply %} #}
                     </p>
                 {% else %}

@@ -30,36 +30,6 @@ class ContratEvent {
     }
 }
 
-/*
- * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
- */
-class Contrat {
-    constructor(id, nom, date) {
-        if (!nom.length > 0) nom = 'Annonce n°' + id;
-        date = date.substr(0, 10).split('-');
-        date = date[2] + '-' + date[1] + '-' + date[0];
-        let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
-
-        this.contratTemplate = `
-        <div id="proposition{{ i }}" class="proposition ui vertical segment grid">
-            <div class="ui left floated ten wide column">
-                <img class="ui left floated mini circular image"
-                     src="{{ asset('img/placeholders/matthew.png') }}">
-                <div class="header">{{ i }} - Matt Romney</div>
-                <div class="meta">
-                    <span class="date">15 Février 2021</span>
-                </div>
-            </div>
-            <div class="ui right floated three wide column">
-                <a href="#" class="ui blue button btnAccept">Voir</a>
-                <!--<button class="ui red button btnDecline" onclick="showModalDecline({{ i }})">Décliner</button>-->
-                <button class="ui green button btnAccept" onclick="showModalAccept({{ i }})">Accepter</button>
-            </div>
-        </div>`;
-    }
-}
-
-const contratsAmount = document.querySelector("#contratsAmount")
 // Le DOM est chargé
 window.addEventListener("DOMContentLoaded", function () {
     loadContratsAmount()
@@ -71,6 +41,7 @@ function loadContratsAmount() {
 }
 
 // Update le compteur du nombre de contrats
+const contratsAmount = document.querySelector("#contratsAmount")
 function changeContratsAmount() {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
@@ -87,19 +58,21 @@ function loadContratsFeed() {
     contratsAmount.innerHTML = '0';
 }
 
-// Charge les contrats dans la vue contrat et les affiche
-function loadContrats() {
-    makeRequestByORSC('/particulier/get/propositions', displayContrats);
-}
-
-// Charge les candidatures dans la vue contrat et les affiche
-function loadCandidatures() {
-    makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
-}
+// Tronque les descriptions
+const MAX_DESCRIPTION_LENGTH = 300;
+function truncate(str, n, useWordBoundary
+) {
+    if (str.length <= n) {
+        return str;
+    }
+    const subString = str.substr(0, n - 1); // the original check
+    return (useWordBoundary
+        ? subString.substr(0, subString.lastIndexOf(" "))
+        : subString) + " &hellip;";
+};
 
 // Créé une requête xmlhttp
 let httpRequest, results;
-
 function makeRequestByORSC(url, orscFunction) {
     httpRequest = new XMLHttpRequest();
     if (!httpRequest) {
@@ -129,7 +102,7 @@ function displayContratsFeed() {
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
-                notificationsFeed.innerHTML = `<div>Pas de proposition de contrat.</div>`;
+                notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
             }
 
             // Il y a des résultats :
@@ -140,71 +113,6 @@ function displayContratsFeed() {
             })
         } else {
             notificationsFeed.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-        }
-    }
-}
-
-// Affiche la liste des contrats dans la vue contrats
-const contratsList = document.getElementById('contratsList');
-
-function displayContrats() {
-    //En cours de chargement
-    if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-        contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
-    }
-    //Chargé
-    else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            // Réinitialise la liste
-            contratsList.innerHTML = '';
-
-            // Il n'y a pas de résultats :
-            if (results.propositions === undefined || results.propositions.length == 0) {
-                contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
-            }
-
-            // Il y a des résultats :
-            // Pour chaque cv du tableau propositions
-            results.propositions.forEach(a => {
-                let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
-                contratsList.innerHTML += card.contratTemplate;
-            })
-        } else {
-            contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-        }
-    }
-}
-
-// Affiche la liste des candidatures dans la vue contrats
-const candidaturesList = document.getElementById('candidaturesList');
-
-function displayCandidatures() {
-    //En cours de chargement
-    if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-        candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
-    }
-    //Chargé
-    else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            // Réinitialise la liste
-            candidaturesList.innerHTML = '';
-            // Il n'y a pas de résultats :
-            if (results.candidatures === undefined || results.candidatures.length == 0) {
-                candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
-            }
-
-            // Il y a des résultats :
-            // Pour chaque cv du tableau propositions
-            results.candidatures.forEach(a => {
-                let card = new Candidature(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
-                candidaturesList.innerHTML += card.candidatureTemplate;
-            })
-        } else {
-            candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
         }
     }
 }

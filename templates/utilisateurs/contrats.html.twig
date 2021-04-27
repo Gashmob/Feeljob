@@ -3,9 +3,10 @@
 {% block body %}
     <div class="contrats" style="margin-top: 20px;">
         <h2 class="ui center aligned header">
-            <div class="content">Vos propositions de contrat</div>
+            <i class="arrow alternate circle down outline"></i>
+            <div class="content">Propositions reçues</div>
         </h2>
-        <div id="contratsList" class="ui segment stacked">
+        <div id="contratsList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -16,65 +17,16 @@
                 <div class="image header">
                     <div class="short line"></div>
                     <div class="medium line"></div>
-                </div>
-            </div>
-        </div>
-        <div id="modalAccept" class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Êtes-vous sûr ?
-            </div>
-            <div class="content">
-                <div class="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
-                        nihil
-                        nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel
-                        vitae
-                        voluptas, voluptatum!</p>
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui cancel button">
-                    <i class="icon times"></i>
-                    Annuler
-                </div>
-                <div class="ui green button acceptBtn">
-                    <i class="checkmark icon"></i>
-                    Valider
-                </div>
-            </div>
-        </div>
-        <div id="modalDeny" class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Êtes-vous sûr ?
-            </div>
-            <div class="content">
-                <div class="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
-                        nihil
-                        nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel
-                        vitae
-                        voluptas, voluptatum!</p>
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui cancel button">
-                    <i class="icon times"></i>
-                    Annuler
-                </div>
-                <div class="ui red button declineBtn">
-                    <i class="times icon"></i>
-                    Refuser
                 </div>
             </div>
         </div>
     </div>
     <div class="candidatures" style="margin-top: 20px;">
         <h2 class="ui center aligned header">
-            <div class="content">Vos candidatures</div>
+            <i class="paper plane outline"></i>
+            <div class="content">Candidatures envoyées</div>
         </h2>
-        <div id="candidaturesList" class="ui segment stacked">
+        <div id="candidaturesList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -85,56 +37,6 @@
                 <div class="image header">
                     <div class="short line"></div>
                     <div class="medium line"></div>
-                </div>
-            </div>
-        </div>
-        <div id="modalAccept" class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Êtes-vous sûr ?
-            </div>
-            <div class="content">
-                <div class="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
-                        nihil
-                        nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel
-                        vitae
-                        voluptas, voluptatum!</p>
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui cancel button">
-                    <i class="icon times"></i>
-                    Annuler
-                </div>
-                <div class="ui green button acceptBtn">
-                    <i class="checkmark icon"></i>
-                    Valider
-                </div>
-            </div>
-        </div>
-        <div id="modalDeny" class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Êtes-vous sûr ?
-            </div>
-            <div class="content">
-                <div class="description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur deserunt harum id nemo
-                        nihil
-                        nobis nulla officia officiis porro possimus quaerat quis recusandae reprehenderit sunt, vel
-                        vitae
-                        voluptas, voluptatum!</p>
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui cancel button">
-                    <i class="icon times"></i>
-                    Annuler
-                </div>
-                <div class="ui red button declineBtn">
-                    <i class="times icon"></i>
-                    Refuser
                 </div>
             </div>
         </div>
@@ -147,6 +49,47 @@
             setTimeout(loadCandidatures, 2000);
         });
 
+        // Charge les contrats dans la vue contrat et les affiche
+        function loadContrats() {
+            makeRequestByORSC('/particulier/get/propositions', displayContrats);
+        }
+
+        // Charge les candidatures dans la vue contrat et les affiche
+        function loadCandidatures() {
+            makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
+        }
+
+        /*
+         * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
+         */
+        class Contrat {
+            constructor(id, nom, date) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+
+                this.contratTemplate = `
+                <div class="contrat ui item">
+                    <div class="content">
+                        <div class="ui left floated">
+                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="meta">
+                                <span class="date">Pour le ${date}</span>
+                            </div>
+                        <div class="description">${description}</div>
+                        </div>
+                        <div class="extra">
+                            <div class="ui right floated buttons">
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
         /*
          * classe correspondant à l'item candidature dans la vue contrats
          */
@@ -155,19 +98,25 @@
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
+                description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.candidatureTemplate = `
-                <div class="candidature ui vertical segment grid">
-                    <div class="ui left floated ten wide column">
-                        <div class="header">${id} - ${nom}</div>
-                        <div class="meta">
-                            <span class="date">${date}</span>
+                <div class="candidature ui item">
+                    <div class="content">
+                        <div class="ui left floated">
+                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="meta">
+                                <span class="date">Pour le ${date}</span>
+                            </div>
+                        <div class="description">${description}</div>
                         </div>
-                    </div>
-                    <div class="ui right floated three wide column">
-                        <button id="undoBtn${id}" class="ui red button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
-                        <a href="${url}" class="ui blue button btnAccept">Voir</a>
+                        <div class="extra">
+                            <div class="ui right floated buttons">
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                            </div>
+                        </div>
                     </div>
                 </div>`;
             }
@@ -175,15 +124,83 @@
 
         // Demande à décandidater
         function requestUncandidate(id) {
-            makeRequestByORSC('/particulier/uncandidate/'+id, displayUncandidate(id))
+            makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
         }
 
+        // Affiche la décandidature
         function displayUncandidate(id) {
             let btnNo = '#undoBtn' + id
             let btn = document.querySelector(btnNo)
             btn.innerHTML = 'Annulée'
         }
 
+        // Affiche la liste des contrats dans la vue contrats
+        const contratsList = document.getElementById('contratsList');
+
+        function displayContrats() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    // Réinitialise la liste
+                    contratsList.innerHTML = '';
+
+                    // Il n'y a pas de résultats :
+                    if (results.propositions === undefined || results.propositions.length == 0) {
+                        contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
+                    }
+
+                    // Il y a des résultats :
+                    // Pour chaque cv du tableau propositions
+                    results.propositions.forEach(a => {
+                        let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                        contratsList.innerHTML += card.contratTemplate;
+                    })
+                } else {
+                    contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                }
+            }
+        }
+
+        // Affiche la liste des candidatures dans la vue contrats
+        const candidaturesList = document.getElementById('candidaturesList');
+
+        function displayCandidatures() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    // Réinitialise la liste
+                    candidaturesList.innerHTML = '';
+                    // Il n'y a pas de résultats :
+                    if (results.candidatures === undefined || results.candidatures.length == 0) {
+                        candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
+                    }
+
+                    // Il y a des résultats :
+                    console.log(results.candidatures)
+                    results.candidatures.forEach(candidature => {
+                        let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
+                        candidaturesList.innerHTML += card.candidatureTemplate;
+                    })
+                } else {
+                    candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                }
+            }
+        }
+
+
+        // --------------- Pas encore utilisé -------------------
         function showModalAccept(contratID) {
             $('#modalAccept')
                 .modal('setting', 'transition', 'fade up')

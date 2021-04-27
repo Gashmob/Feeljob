@@ -437,3 +437,12 @@
 .flexWidth {
     width: auto;
 }
+
+.textblur {
+    color: transparent !important;
+    text-shadow: 0 0 7px #000 !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}

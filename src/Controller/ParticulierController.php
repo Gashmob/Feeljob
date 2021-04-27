@@ -415,7 +415,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('', [
+        return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
             'carte' => $carte
         ]);
     }

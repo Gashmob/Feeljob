@@ -88,14 +88,14 @@
                     </div>
                 {% endfor %}
             </div>
+            <!-- Bio -->
             {% if cv.description %}
-                <!-- Bio -->
                 <h3 class="ui dividing header">
                     <i class="icon info"></i>
                     <div class="content">Biographie</div>
                 </h3>
                 <div class="ui segment">
-                    <p>{{ cv.description }}</p>
+                    <p>{{ cv.description|nl2br }}</p>
                 </div>
             {% endif %}
             <!-- Langues parlées -->
