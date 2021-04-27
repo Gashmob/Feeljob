@@ -153,7 +153,7 @@
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                let url = "{{ path('particulier_show_carte', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
                 <div class="card carteVisiteCard">
@@ -171,7 +171,7 @@
                         <div class="extra">
                             <a href=${url}
                                class="ui right floated green button">
-                                Voir l'annonce
+                                Voir la carte
                                 <i class="right chevron icon"></i>
                             </a>
                         </div>
