@@ -133,6 +133,30 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/proposition/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectProposition($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new OffreEmploiManager())->removeProposition($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/add/favoris/{id}", methods={"POST"})
      * @param $id
      * @param Request $request

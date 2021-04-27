@@ -136,6 +136,30 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/proposition/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectProposition($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new AnnonceManager())->removeProposition($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
