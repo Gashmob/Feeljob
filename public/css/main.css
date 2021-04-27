@@ -446,3 +446,11 @@
     -ms-user-select: none !important;
     user-select: none !important;
 }
+
+#notifications .label {
+    width: 0px !important;
+}
+
+#notifications .content {
+    margin-left: 0px !important;
+}

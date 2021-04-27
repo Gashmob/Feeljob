@@ -7,7 +7,7 @@
  * classe correspondant à l'event affiché lorsqu'on survole la mallette dans la navigation
  */
 class ContratEvent {
-    constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
+    constructor(id, nom, ville, date) {
         if (!nom.length > 0) nom = 'Annonce n°' + id;
         date = date.substr(0, 10).split('-');
         date = date[2] + '-' + date[1] + '-' + date[0];
@@ -16,14 +16,13 @@ class ContratEvent {
         this.contratEventTemplate = `
         <div class="event">
             <div class="label">
-                <img src="{{ asset('img/placeholders/matt.jpg') }}">
             </div>
             <div class="content">
                 <div class="date">
-                    Il y a 3 jours
+                    ${date}
                 </div>
                 <div class="summary">
-                    Matt vous a envoyé un message.
+                    ${nom} à ${ville}.
                 </div>
             </div>
         </div>`;
@@ -31,35 +30,23 @@ class ContratEvent {
 }
 
 // Le DOM est chargé
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("load", function () {
     loadContratsAmount()
 });
 
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
-    makeRequestByORSC('/particulier/get/propositions', changeContratsAmount);
-}
-
-// Update le compteur du nombre de contrats
-const contratsAmount = document.querySelector("#contratsAmount")
-function changeContratsAmount() {
-    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            contratsAmount.innerHTML = results.propositions.length;
-        }
-    }
+    makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
 }
 
 // Charge les propositions de contrat au survol de l'icone de mallette dans la nav
 function loadContratsFeed() {
     makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
-    contratsAmount.innerHTML = '0';
 }
 
 // Tronque les descriptions
 const MAX_DESCRIPTION_LENGTH = 300;
+
 function truncate(str, n, useWordBoundary
 ) {
     if (str.length <= n) {
@@ -73,6 +60,7 @@ function truncate(str, n, useWordBoundary
 
 // Créé une requête xmlhttp
 let httpRequest, results;
+
 function makeRequestByORSC(url, orscFunction) {
     httpRequest = new XMLHttpRequest();
     if (!httpRequest) {
@@ -86,6 +74,8 @@ function makeRequestByORSC(url, orscFunction) {
 
 // Affiche les propositions de contrat dans la nav au survol de la mallette
 const notificationsFeed = document.getElementById('notifications');
+const contratsAmount = document.getElementById('contratsAmount');
+
 function displayContratsFeed() {
     //En cours de chargement
     if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -96,9 +86,12 @@ function displayContratsFeed() {
         if (httpRequest.status === 200) {
             // stocke les résultats parsé en JSON dans une variable
             results = JSON.parse(httpRequest.responseText)
+            // Change la quantité de propositions de contrat dans la case
+            contratsAmount.innerHTML = results.propositions.length;
             // results = httpRequest.responseText
             // Réinitialise la liste
             notificationsFeed.innerHTML = '';
+            console.log(results)
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
@@ -107,8 +100,8 @@ function displayContratsFeed() {
 
             // Il y a des résultats :
             // Pour chaque cv du tableau propositions
-            results.propositions.forEach(a => {
-                let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+            results.propositions.forEach(proposition => {
+                let card = new ContratEvent(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.createdAt);
                 notificationsFeed.innerHTML += card.contratEventTemplate;
             })
         } else {

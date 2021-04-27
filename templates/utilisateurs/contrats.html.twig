@@ -2,8 +2,7 @@
 {% block title %}Propositions de contrat{% endblock %}
 {% block body %}
     <div class="contrats" style="margin-top: 20px;">
-        <h2 class="ui center aligned header">
-            <i class="arrow alternate circle down outline"></i>
+        <h2 class="ui center aligned green header">
             <div class="content">Propositions reçues</div>
         </h2>
         <div id="contratsList" class="ui segment stacked divided items">
@@ -22,8 +21,7 @@
         </div>
     </div>
     <div class="candidatures" style="margin-top: 20px;">
-        <h2 class="ui center aligned header">
-            <i class="paper plane outline"></i>
+        <h2 class="ui center aligned green header">
             <div class="content">Candidatures envoyées</div>
         </h2>
         <div id="candidaturesList" class="ui segment stacked divided items">
@@ -63,10 +61,11 @@
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, date) {
+            constructor(id, nom, ville, updatedAt, date, description) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
+                description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.contratTemplate = `
@@ -81,7 +80,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
+                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
                                 <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
                             </div>
                         </div>
@@ -122,21 +122,44 @@
             }
         }
 
+        // ----- Décandidature ----- //
         // Demande à décandidater
         function requestUncandidate(id) {
             makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
         }
-
         // Affiche la décandidature
         function displayUncandidate(id) {
-            let btnNo = '#undoBtn' + id
-            let btn = document.querySelector(btnNo)
+            let btnNo = 'undoBtn' + id
+            let btn = document.getElementById(btnNo)
             btn.innerHTML = 'Annulée'
+        }
+
+        // ----- Refus proposition contrat ----- //
+        // Refus proposition contrat
+        function requestDenyContrat(id) {
+            makeRequestByORSC('/particulier/uncandidate/' + id, displayDeny(id))
+        }
+        // Affiche le refus proposition contrat
+        function displayDeny(id) {
+            let btnNo = 'denyBtn' + id
+            let btn = document.getElementById(btnNo)
+            btn.innerHTML = 'Refusée'
+        }
+
+        // ----- Acceptation proposition contrat ----- //
+        // Acceptation proposition contrat
+        function requestAcceptContrat(id) {
+            makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
+        }
+        // Affiche l'acceptation proposition contrat
+        function displayAccept(id) {
+            let btnNo = 'acceptBtn' + id
+            let btn = document.getElementById(btnNo)
+            btn.innerHTML = 'Acceptée'
         }
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
-
         function displayContrats() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -151,14 +174,13 @@
                     contratsList.innerHTML = '';
 
                     // Il n'y a pas de résultats :
-                    if (results.propositions === undefined || results.propositions.length == 0) {
+                    if (results.propositions == undefined || results.propositions.length == 0) {
                         contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
                     }
-
                     // Il y a des résultats :
-                    // Pour chaque cv du tableau propositions
-                    results.propositions.forEach(a => {
-                        let card = new ContratEvent(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                    // Pour chaque proposition
+                    results.propositions.forEach(proposition => {
+                        let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
                         contratsList.innerHTML += card.contratTemplate;
                     })
                 } else {
@@ -188,7 +210,6 @@
                     }
 
                     // Il y a des résultats :
-                    console.log(results.candidatures)
                     results.candidatures.forEach(candidature => {
                         let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
                         candidaturesList.innerHTML += card.candidatureTemplate;
@@ -197,38 +218,6 @@
                     candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
                 }
             }
-        }
-
-
-        // --------------- Pas encore utilisé -------------------
-        function showModalAccept(contratID) {
-            $('#modalAccept')
-                .modal('setting', 'transition', 'fade up')
-                .modal('show')
-            ;
-            $('.acceptBtn').click(function () {
-                console.log('accepted ' + contratID)
-                $('#modalAccept')
-                    .modal('setting', 'transition', 'fade down')
-                    .modal('hide')
-                $('#proposition' + contratID).remove()
-                ;
-            })
-        }
-
-        function showModalDecline(contratID) {
-            $('#modalDeny')
-                .modal('setting', 'transition', 'fade up')
-                .modal('show')
-            ;
-            $('.declineBtn').click(function () {
-                console.log('refused ' + contratID)
-                $('#modalDeny')
-                    .modal('setting', 'transition', 'fade down')
-                    .modal('hide')
-                $('#proposition' + contratID).remove()
-                ;
-            })
         }
     </script>
 {% endblock %}

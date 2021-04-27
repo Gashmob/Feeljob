@@ -109,7 +109,7 @@
                 return false;
             }
             httpRequest.onreadystatechange = offreContratResponse;
-            httpRequest.open('POST', '/particulier/propose/43/{{ carte.autoEntrepreneur.id }}');
+            httpRequest.open('POST', '/particulier/propose/45/{{ carte.autoEntrepreneur.identity }}');
             httpRequest.send();
         }
 
