@@ -318,7 +318,7 @@ class AjaxParticulierController extends AbstractController
 
             foreach ($results as $result) {
                 $result->getAutoEntrepreneur()->setCarteVisite(null);
-                foreach ($result->getRealisations as $realisation) {
+                foreach ($result->getRealisations() as $realisation) {
                     $realisation->setCarteVisite(null);
                 }
             }
