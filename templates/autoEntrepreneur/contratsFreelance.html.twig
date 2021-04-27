@@ -135,9 +135,9 @@
         }
 
         // ----- Refus proposition contrat ----- //
-        // Refus proposition contrat
+        // Refuse proposition contrat
         function requestDenyContrat(id) {
-            makeRequestByORSC('/particulier/uncandidate/' + id, displayDeny(id))
+            makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
         }
         // Affiche le refus proposition contrat
         function displayDeny(id) {

@@ -447,6 +447,11 @@
     user-select: none !important;
 }
 
+#notifications .loading.icon {
+    display: block !important;
+    margin: auto !important;
+}
+
 #notifications .label {
     width: 0px !important;
 }

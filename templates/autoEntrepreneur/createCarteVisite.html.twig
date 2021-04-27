@@ -19,13 +19,6 @@
             Nouvelle carte de visite
         </h3>
         <form class="ui form segment" method="post" enctype="multipart/form-data">
-            <!-- Carte visite -->
-            <h3 class="ui dividing green header">Bio</h3>
-            <div class="field">
-                <textarea rows="8" name="description" class="description"
-                          placeholder="Rajoutez des informations à propos de cette réalisation."
-                          maxlength="800"></textarea>
-            </div>
             <!-- Réalisation -->
             <h3 class="ui dividing green header">Réalisations</h3>
             <div style="margin-bottom: 10px;" id="realisationsList">
@@ -46,6 +39,13 @@
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_realisation();" id="realPlus"></i>
+            </div>
+            <!-- Bio -->
+            <h3 class="ui dividing green header">Bio</h3>
+            <div class="field">
+                <textarea rows="8" name="description" class="description"
+                          placeholder="Saisissez des informations à votre sujet."
+                          maxlength="800"></textarea>
             </div>
             <div style="display: none;" id="numberOfRows">
                 <input id="nbRealisationsInput" type="number" name="nbRealisations" value="1">
