@@ -121,6 +121,7 @@ class EntrepriseController extends AbstractController
                             ->setNomEntreprise($nomEntreprise)
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add email verif
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setAdresse($adresse)
@@ -130,7 +131,7 @@ class EntrepriseController extends AbstractController
 
                         (new EmployeurManager())->create($em, $employeur, $secteurActivite);
 
-                        Utils::sendMailAndWait($mailer, $employeur->getEmail(), $employeur->getPrenom(), $employeur->getNom(), $employeur->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $employeur->getEmail(), $employeur->getPrenom(), $employeur->getNom(), $employeur->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
                         return $this->redirectToRoute('waitVerifEmail', ['id' => $employeur->getIdentity()]);
@@ -153,13 +154,14 @@ class EntrepriseController extends AbstractController
                             ->setNom($data['nom'])
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add verif email
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setAdresse($adresse);
 
                         (new EmployeManager())->create($em, $employe);
 
-                        Utils::sendMailAndWait($mailer, $employe->getEmail(), $employe->getPrenom(), $employe->getNom(), $employe->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $employe->getEmail(), $employe->getPrenom(), $employe->getNom(), $employe->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
                         return $this->redirectToRoute('waitVerifEmail', ['id' => $employe->getIdentity()]);
