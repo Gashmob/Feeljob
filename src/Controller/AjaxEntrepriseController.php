@@ -306,7 +306,8 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom:"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @param $nom
      * @param $competences
      * @param $langues
      * @param $permis
