@@ -310,12 +310,18 @@ class AjaxParticulierController extends AbstractController
             $filterDistance = $distanceMax == 'none' || is_null($adresse) ? $filterSecteur :
                 $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterSecteur, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
 
+            $results = array_slice(
+                $em->getRepository(CarteVisite::class)->findByAutoEntrepreneur($filterDistance),
+                $offset,
+                $limit
+            );
+
+            foreach ($results as $result) {
+                $result->setAutoEntrepreneur(null);
+            }
+
             return $this->json([
-                'cartes' => array_slice(
-                    $em->getRepository(CarteVisite::class)->findByAutoEntrepreneur($filterDistance),
-                    $offset,
-                    $limit
-                )
+                'cartes' => $results
             ]);
         }
 
