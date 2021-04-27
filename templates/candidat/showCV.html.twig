@@ -157,7 +157,7 @@
                 return false;
             }
             httpRequest.onreadystatechange = offreContratResponse;
-            let idOffreEmploi = 33
+            let idOffreEmploi = 42
             httpRequest.open('POST', '/entreprise/propose/' + idOffreEmploi + '/{{ cv.employe.identity }}');
             httpRequest.send();
         }

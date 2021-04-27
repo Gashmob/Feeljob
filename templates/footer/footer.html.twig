@@ -48,7 +48,7 @@
     <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
     {% if not app.session.get('user') %}
-    {% else %}
-        <script type='text/javascript' src='{{ asset('js/user.js') }}'></script>
+    {% elseif app.session.get('userType') == 'Employeur' or app.session.get('userType') == 'Employe' %}
+        <script type='text/javascript' src='{{ asset('js/userEntreprise.js') }}'></script>
     {% endif %}
 </footer>

@@ -61,10 +61,19 @@
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, date, description) {
-                if (!nom.length > 0) nom = 'Offre n°' + id;
-                date = date.substr(0, 10).split('-');
-                date = date[2] + '-' + date[1] + '-' + date[0];
+            constructor(id, nom, ville, updatedAt, debut, fin, description) {
+                if (!nom.length > 0) {
+                    nom = 'Offre n°' + id;
+                }
+                if (!ville.length > 0) {
+                    ville = ''
+                } else {
+                    ville = ' à ' + ville;
+                }
+                debut = debut.substr(0, 10).split('-');
+                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
+                fin = fin.substr(0, 10).split('-');
+                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
@@ -72,9 +81,9 @@
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
-                                <span class="date">Pour le ${date}</span>
+                                <span class="date">Du ${debut} au ${fin}</span>
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -129,6 +138,7 @@
         function requestUncandidate(id) {
             makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
         }
+
         // Affiche la décandidature
         function displayUncandidate(id) {
             let btnNo = 'undoBtn' + id
@@ -141,6 +151,7 @@
         function requestDenyContrat(id) {
             makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
         }
+
         // Affiche le refus proposition contrat
         function displayDeny(id) {
             let btnNo = 'denyBtn' + id
@@ -153,6 +164,7 @@
         function requestAcceptContrat(id) {
             makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
         }
+
         // Affiche l'acceptation proposition contrat
         function displayAccept(id) {
             let btnNo = 'acceptBtn' + id
@@ -162,6 +174,7 @@
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
+
         function displayContrats() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -179,10 +192,11 @@
                     if (results.propositions == undefined || results.propositions.length == 0) {
                         contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
                     }
+                    console.log(results)
                     // Il y a des résultats :
                     // Pour chaque proposition
                     results.propositions.forEach(proposition => {
-                        let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
+                        let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
                         contratsList.innerHTML += card.contratTemplate;
                     })
                 } else {
@@ -193,6 +207,7 @@
 
         // Affiche la liste des candidatures dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
+
         function displayCandidatures() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
