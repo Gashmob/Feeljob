@@ -306,7 +306,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom:"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
      * @param $competences
      * @param $langues
      * @param $permis
@@ -316,7 +316,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCVs($competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCVs($nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -343,7 +343,7 @@ class AjaxEntrepriseController extends AbstractController
             $perm = $permis == 'on';
         }
 
-        $results = array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit);
+        $results = array_slice($em->getRepository(CV::class)->findByNomCompetencesLanguesPermis($nom, $comps, $langs, $perm), $offset, $limit);
         foreach ($results as $result) {
             if (!is_null($result->getEmploye())) {
                 $result->getEmploye()->setCV(null);
