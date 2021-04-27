@@ -103,10 +103,61 @@
                 </div>
             </div>
         </div>
+        {% if app.session.get('userType') == 'Employe' %}
+            <button id="applyBtn" class="ui green button" onclick="apply()">
+                Candidater
+            </button>
+        {% endif %}
     </div>
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
         $('.ui.embed').embed();
+
+        if (httpRequest == undefined) {
+            let httpRequest
+        }
+        if (results == undefined) {
+            let results
+        }
+        // Candidate
+        function apply() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = candidatureResponse;
+            httpRequest.open('POST', '/entreprise/candidate/{{ offre.identity }}');
+            httpRequest.send();
+        }
+
+        // Réponse candidature
+        const applyBtn = document.querySelector("#applyBtn")
+        function candidatureResponse() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    console.log(results)
+                    // Candidature posée
+                    if (results.result) {
+                        applyBtn.innerHTML = '<div>Validé</div>';
+                    }
+                    // Candidature retirée
+                    else {
+                        applyBtn.innerHTML = '<div>Déjà candidaté</div>';
+                    }
+                } else {
+                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                }
+            }
+        }
     </script>
 {% endblock %}

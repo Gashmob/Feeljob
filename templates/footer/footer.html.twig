@@ -40,17 +40,15 @@
             </div>
         </div>
     </div>
-
     <div class="ui inverted vertical segment center aligned footer-2 ">
-        Copyright &#169; <?php echo date("Y"); ?> FeelJob est une marque déposée, tous droits réservés.
+        Copyright &#169; {{ "now"|date("Y") }}, FeelJob est une marque déposée, tous droits réservés.
     </div>
-
     <!-- Scripts -->
     <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
     {% if not app.session.get('user') %}
-    {% else %}
-        <script type='text/javascript' src='{{ asset('js/user.js') }}'></script>
+    {% elseif app.session.get('userType') == 'Employeur' or app.session.get('userType') == 'Employe' %}
+        <script type='text/javascript' src='{{ asset('js/userEntreprise.js') }}'></script>
     {% endif %}
 </footer>
