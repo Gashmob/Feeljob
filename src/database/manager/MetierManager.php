@@ -73,6 +73,7 @@ class MetierManager extends Manager
     public function create(string $nom, string $secteur)
     {
         (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$secteur}) CREATE (s)-[:' . EntityManager::EST_DANS . ']->(:' . EntityManager::METIER . ' {nom:$nom})'))
+            ->setString('secteur', $secteur)
             ->setString('nom', $nom)
             ->run();
     }

@@ -18,7 +18,7 @@ class TypeContratManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (t:TypeContrat) WHERE id(t)=$id RETURN t'))
+        $result = (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE id(t)=$id RETURN t'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -31,7 +31,7 @@ class TypeContratManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (t:TypeContrat) WHERE ';
+        $query = 'MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN t';
@@ -48,7 +48,7 @@ class TypeContratManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (t:TypeContrat) RETURN t'))
+        return (new Query('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') RETURN t'))
             ->run()
             ->getResult();
     }
@@ -58,7 +58,7 @@ class TypeContratManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (t:TypeContrat) WHERE ';
+        $query = 'MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN t';

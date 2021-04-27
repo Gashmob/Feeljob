@@ -17,7 +17,7 @@ class AnnonceManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (a:Annonce) WHERE id(a)=$id RETURN id(a) as id'))
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ') WHERE id(a)=$id RETURN id(a) as id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -30,7 +30,7 @@ class AnnonceManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (a:Annonce) WHERE ';
+        $query = 'MATCH (a:' . EntityManager::ANNONCE . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(a) as id';
@@ -47,7 +47,7 @@ class AnnonceManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (a:Annonce) RETURN id(a) as id'))
+        return (new Query('MATCH (a:' . EntityManager::ANNONCE . ') RETURN id(a) as id'))
             ->run()
             ->getResult();
     }
@@ -57,7 +57,7 @@ class AnnonceManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (a:Annonce) WHERE ';
+        $query = 'MATCH (a:' . EntityManager::ANNONCE . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(a) as id';
