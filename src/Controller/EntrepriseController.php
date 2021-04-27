@@ -941,9 +941,9 @@ class EntrepriseController extends AbstractController
     {
         if ($this->session->get('user')) {
             if ($this->session->get('userType') == EntityManager::EMPLOYE) {
-                return $this->render('utilisateurs/contrats.html.twig');
+                return $this->render('candidat/contratsCandidat.html.twig');
             } elseif ($this->session->get('userType') == EntityManager::EMPLOYEUR) {
-                return $this->render('utilisateurs/contrats.html.twig');
+                return $this->render('entreprise/contratsEntreprise.html.twig');
             }
         }
 

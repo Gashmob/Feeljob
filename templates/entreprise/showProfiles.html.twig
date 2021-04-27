@@ -79,8 +79,12 @@
             makeRequest()
         });
 
-        var httpRequest;
-        var results;
+        if (httpRequest == undefined) {
+            var httpRequest
+        }
+        if (results == undefined) {
+            var results
+        }
 
         //Cherche tous les résultats
         function makeRequest() {
@@ -166,14 +170,15 @@
             }
         }
 
+        // Cherche les CV lorsqu'on appuie sur la touche entrée dans la barre de recherche
         var searchInput = document.getElementById('searchInput');
-
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 searchCVS();
             }
         });
 
+        // Cherche les CV
         function searchCVS() {
             var inputValue = searchInput.value;
             if (inputValue != '' && inputValue != null) {
@@ -182,8 +187,6 @@
                 makeRequest();
             }
         }
-
-        const MAX_DESCRIPTION_LENGTH = 300;
 
         // Tronque les descriptions
         function truncate(str, n, useWordBoundary) {

@@ -6,50 +6,25 @@
     <a href="{{ path('entreprise_cvs') }}" class="item">Candidats</a>
     <a href="{{ path('entreprise_create_offre_emploi') }}" class="item">Créer offre</a>
     <div class="right menu">
-        <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
-            <i class="icon bell"></i>
-            <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
+        <a href="{{ path('entreprise_contrats') }}" title="Propositions contrat" class="ui dropdown item">
+            <i class="icon briefcase"></i>
+            <span id="contratsAmount" style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
             <div class="menu">
                 <div id="notifications" class="ui item feed">
-                    <div class="event">
-                        <div class="label">
-                            <img src="{{ asset('img/placeholders/matt.jpg') }}">
-                        </div>
-                        <div class="content">
-                            <div class="date">
-                                Il y a 3 jours
-                            </div>
-                            <div class="summary">
-                                Matt vous a envoyé un message.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui item feed">
-                    <div class="event">
-                        <div class="label">
-                            <img src="{{ asset('img/placeholders/elyse.png') }}">
-                        </div>
-                        <div class="content">
-                            <div class="date">
-                                Il y a plus d'une semaine
-                            </div>
-                            <div class="summary">
-                                Clément a déposé une nouvelle annonce.
-                            </div>
-                        </div>
+                    <div style="justify-content: center;" class="ui event">
+                        <i style="margin: 0!important;" class="notched circle loading icon"></i>
                     </div>
                 </div>
             </div>
         </a>
-        <a href="{{ path('userSpace') }}" class="ui dropdown item">
+        <a href="{{ path('userSpace') }}" title="Profil utilisateur" class="ui dropdown item">
             <img class="ui mini circular image" src="{{ asset('img/placeholders/elyse.png') }}">
             <div class="content person-summary">
                 <div class="ui sub header" style="max-width: 117px;">{{ app.session.get('userName') }}</div>
                 <div>Entreprise</div>
             </div>
         </a>
-        <div class="ui dropdown item">
+        <div class="ui dropdown item" title="Paramètres">
             <i class="icon settings"></i>
             <i class="dropdown icon"></i>
             <div class="menu">

@@ -419,9 +419,9 @@ class ParticulierController extends AbstractController
     {
         if ($this->session->get('user')) {
             if ($this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
-                return $this->render('utilisateurs/contrats.html.twig');
+                return $this->render('autoEntrepreneur/contratsFreelance.html.twig');
             } elseif ($this->session->get('userType') == EntityManager::PARTICULIER) {
-                return $this->render('utilisateurs/contrats.html.twig');
+                return $this->render('particulier/contratsParticulier.html.twig');
             }
         }
         
