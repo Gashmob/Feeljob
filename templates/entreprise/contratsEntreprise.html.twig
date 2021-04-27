@@ -49,12 +49,12 @@
 
         // Charge les contrats dans la vue contrat et les affiche
         function loadContrats() {
-            makeRequestByORSC('/particulier/get/propositions', displayContrats);
+            makeRequestByORSC('/entreprise/get/propositions', displayContrats);
         }
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
-            makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
+            makeRequestByORSC('/entreprise/get/candidatures', displayCandidatures);
         }
 
         /*
@@ -66,7 +66,7 @@
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
@@ -99,7 +99,7 @@
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
@@ -125,7 +125,7 @@
         // ----- Décandidature ----- //
         // Demande à décandidater
         function requestUncandidate(id) {
-            makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
+            makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
         }
         // Affiche la décandidature
         function displayUncandidate(id) {
@@ -137,7 +137,7 @@
         // ----- Refus proposition contrat ----- //
         // Refuse proposition contrat
         function requestDenyContrat(id) {
-            makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
+            makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
         }
         // Affiche le refus proposition contrat
         function displayDeny(id) {
@@ -149,7 +149,7 @@
         // ----- Acceptation proposition contrat ----- //
         // Acceptation proposition contrat
         function requestAcceptContrat(id) {
-            makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
+            makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
         }
         // Affiche l'acceptation proposition contrat
         function displayAccept(id) {
