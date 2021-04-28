@@ -31,7 +31,7 @@ class ContratEvent {
 
 // Le DOM est chargé
 window.addEventListener("load", function () {
-    loadContratsAmount()
+    //loadContratsAmount()
 });
 
 // Charge le nombre de contrats en pending
