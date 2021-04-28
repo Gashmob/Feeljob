@@ -47,8 +47,9 @@
     <script type='text/javascript' src='{{ asset('js/jquery.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/semantic.min.js') }}'></script>
     <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
-    {% if not app.session.get('user') %}
-    {% elseif app.session.get('userType') == 'Employeur' or app.session.get('userType') == 'Employe' %}
+    {% if app.session.get('userType') == 'Employeur' or app.session.get('userType') == 'Employe' %}
         <script type='text/javascript' src='{{ asset('js/userEntreprise.js') }}'></script>
+    {% elseif app.session.get('userType') == 'AutoEntrepreneur' or app.session.get('userType') == 'Particulier' %}
+        <script type='text/javascript' src='{{ asset('js/user.js') }}'></script>
     {% endif %}
 </footer>
