@@ -3,7 +3,11 @@
 {% block body %}
     <div class="ui segment grid identity stackable">
         <div class="two wide column">
-            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% if app.session.get('userImage') %}
+                <img class="ui small centered circular image" src="{{ asset("uploads/logo/" ~ app.session.get('userImage')) }}">
+            {% else %}
+                <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% endif %}
         </div>
         <div class="ten wide column">
             <h2 class="ui header">
