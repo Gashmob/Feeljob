@@ -23,18 +23,18 @@ class AnnonceRepository extends ServiceEntityRepository
     /**
      * @param float $distanceMax
      * @param string $addressFrom
-     * @param int $offset
-     * @param int $limit
      * @return Annonce[]
      */
-    public function findByDistanceMax(float $distanceMax, string $addressFrom, int $offset = 0, int $limit = 25): array
+    public function findByDistanceMax(float $distanceMax, string $addressFrom): array
     {
-        $annonces = $this->findBy([], null, $limit, $offset);
+        $annonces = $this->findAll();
 
         $res = [];
         foreach ($annonces as $annonce) {
             $adresse = $annonce->getAdresse();
-            if (!is_null($adresse)) {
+            if ($distanceMax == -1) {
+                $res[] = $annonce;
+            } elseif (!is_null($adresse)) {
                 if (Utils::getDistance($addressFrom, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()) <= $distanceMax) {
                     $res[] = $annonce;
                 }

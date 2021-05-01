@@ -17,6 +17,7 @@ abstract class EntityManager
     public const AUTO_ENTREPRENEUR = 'AutoEntrepreneur';
     public const PARTICULIER = 'Particulier';
     public const ANNONCE = 'Annonce';
+    public const METIER = 'Metier';
 
     public const PUBLIE = 'PUBLIE';
     public const CANDIDATURE = 'CANDIDATURE';

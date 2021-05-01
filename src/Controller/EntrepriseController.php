@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -66,7 +65,6 @@ class EntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
-     * @throws TransportExceptionInterface
      */
     public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
@@ -121,6 +119,7 @@ class EntrepriseController extends AbstractController
                             ->setNomEntreprise($nomEntreprise)
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add email verif
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setAdresse($adresse)
@@ -155,6 +154,7 @@ class EntrepriseController extends AbstractController
                             ->setNom($data['nom'])
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add verif email
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setAdresse($adresse)
@@ -935,6 +935,23 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('candidat/showOffresEmploi.html.twig');
+    }
+
+    /**
+     * @Route("/contrats", name="entreprise_contrats")
+     * @return Response|RedirectResponse
+     */
+    public function contracts(): Response
+    {
+        if ($this->session->get('user')) {
+            if ($this->session->get('userType') == EntityManager::EMPLOYE) {
+                return $this->render('candidat/contratsCandidat.html.twig');
+            } elseif ($this->session->get('userType') == EntityManager::EMPLOYEUR) {
+                return $this->render('entreprise/contratsEntreprise.html.twig');
+            }
+        }
+
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

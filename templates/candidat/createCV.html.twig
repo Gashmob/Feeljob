@@ -295,8 +295,8 @@
 {% block javascripts %}
     <script>
         $('#photo-profil').change(function () {
-            var i = $(this).prev('label').clone();
-            var file = $('#photo-profil')[0].files[0].name;
+            let i = $(this).prev('label').clone();
+            let file = $('#photo-profil')[0].files[0].name;
             $('#pdpLabel').text(file);
         });
 
@@ -306,7 +306,7 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
+        let nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
         const maxForm = 8;
         const maxExp = 12;
         const maxLang = 8;

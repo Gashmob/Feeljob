@@ -26,13 +26,17 @@
         <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
             {% if publications %}
-                <a href="{{ path('particulier_create_carte') }}" class="ui card">
-                    <div class="ui image">
-                        <img src="{{ asset('uploads/cartes/' ~ publications) }}" alt="carte visite">
-                    </div>
-                    <div class="extra content">
-                        <i class="check icon"></i>
-                        Vue 62 fois
+                <a href="{{ path('particulier_show_carte', {'id': publications.id}) }}" class="ui card">
+                    <div class="content">
+                        <div class="meta">Créée le {{ publications.createdAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
+                        <div class="description">
+                            {% if publications.description|length %}
+                                <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                            {% else %}
+                                <p class="meta">** Pas de description **</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
             {% else %}
@@ -82,32 +86,6 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
                                 dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
                                 placeat praesentium rem velit. Harum nobis officia praesentium.</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="ui vertical segment">
-        <h3 class="ui header green">Avis reçus</h3>
-        <div class="ui three stackable cards">
-            {% for i in 0..4 %}
-                <div class="ui card">
-                    <div class="content">
-                        <div class="header">Superbe expérience !</div>
-                        <div class="meta">
-                            <span class="right floated time">2 days ago</span>
-                            <span class="category">Nom entreprise</span>
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut cum cumque deserunt
-                                dolor eveniet hic, ipsa ipsam minus mollitia pariatur quae quia quis quos recusandae
-                                rem sunt veniam veritatis? Ipsa.</p>
-                        </div>
-                    </div>
-                    <div class="extra content">
-                        <div class="right floated author">
-                            <img class="ui avatar image" src="{{ asset('img/placeholders/matt.jpg') }}"> Matt
                         </div>
                     </div>
                 </div>

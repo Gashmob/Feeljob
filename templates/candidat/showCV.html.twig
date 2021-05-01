@@ -62,40 +62,44 @@
                 </div>
             </div>
             <!-- Formation -->
-            <h3 class="ui dividing header">
-                <i class="icon university"></i>
-                <div class="content">Formation</div>
-            </h3>
-            <div class="ui segments">
-                {% for diplome in cv.diplomes %}
-                    <div class="ui segment formation1">
-                        <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
-                        <div>{{ diplome.date|date('d/m/Y') }}</div>
-                        <div>{{ diplome.mention }}</div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% if cv.diplomes is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon university"></i>
+                    <div class="content">Formation</div>
+                </h3>
+                <div class="ui segments">
+                    {% for diplome in cv.diplomes %}
+                        <div class="ui segment formation1">
+                            <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
+                            <div>{{ diplome.date|date('d/m/Y') }}</div>
+                            <div>{{ diplome.mention }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <!-- Expérience -->
-            <h3 class="ui dividing header">
-                <i class="icon dolly"></i>
-                <div class="content">Expérience professionnelle</div>
-            </h3>
-            <div class="ui segments">
-                {% for metier in cv.metiers %}
-                    <div class="ui segment">
-                        <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
-                        <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% if cv.metiers is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon dolly"></i>
+                    <div class="content">Expérience professionnelle</div>
+                </h3>
+                <div class="ui segments">
+                    {% for metier in cv.metiers %}
+                        <div class="ui segment">
+                            <h4 class="ui header">{{ metier.metier.nom }} chez {{ metier.metier.nomEntreprise }}</h4>
+                            <div>Du {{ metier.dateDebut|date('d/m/Y') }} au {{ metier.dateFin|date('d/m/Y') }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <!-- Bio -->
             {% if cv.description %}
-                <!-- Bio -->
                 <h3 class="ui dividing header">
                     <i class="icon info"></i>
                     <div class="content">Biographie</div>
                 </h3>
                 <div class="ui segment">
-                    <p>{{ cv.description }}</p>
+                    <p>{{ cv.description|nl2br }}</p>
                 </div>
             {% endif %}
             <!-- Langues parlées -->
@@ -109,15 +113,17 @@
                 {% endfor %}
             </ul>
             <!-- Compétences -->
-            <h3 class="ui dividing header">
-                <i class="icon settings"></i>
-                <div class="content">Compétences</div>
-            </h3>
-            <ul>
-                {% for competence in cv.competences %}
-                    <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
-                {% endfor %}
-            </ul>
+            {% if cv.competences is not empty %}
+                <h3 class="ui dividing header">
+                    <i class="icon settings"></i>
+                    <div class="content">Compétences</div>
+                </h3>
+                <ul>
+                    {% for competence in cv.competences %}
+                        <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <!-- Autres -->
             <h3 class="ui dividing header">
                 <i class="icon question circle outline"></i>
@@ -134,5 +140,60 @@
                 </div>
             </div>
         </form>
+        {% if app.session.get('userType') == 'Employeur' %}
+            <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                Recruter
+            </button>
+        {% endif %}
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        if (httpRequest == undefined) {
+            let httpRequest
+        }
+        if (results == undefined) {
+            let results
+        }
+
+        function offreContrat() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                return false;
+            }
+            httpRequest.onreadystatechange = offreContratResponse;
+            let idOffreEmploi = 42
+            httpRequest.open('POST', '/entreprise/propose/' + idOffreEmploi + '/{{ cv.employe.identity }}');
+            httpRequest.send();
+        }
+
+        const applyBtn = document.querySelector("#applyBtn")
+
+        function offreContratResponse() {
+            //En cours de chargement
+            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
+                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+            }
+            //Chargé
+            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    // stocke les résultats parsé en JSON dans une variable
+                    results = JSON.parse(httpRequest.responseText)
+                    console.log(results)
+                    // Candidature posée
+                    if (results.result) {
+                        applyBtn.innerHTML = '<div>Validé</div>';
+                    }
+                    // Candidature retirée
+                    else {
+                        applyBtn.innerHTML = '<div>Déjà demandé</div>';
+                    }
+                } else {
+                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
+                }
+            }
+        }
+    </script>
 {% endblock %}

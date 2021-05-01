@@ -35,6 +35,16 @@ class CarteVisiteRepository extends ServiceEntityRepository
         return $res;
     }
 
+    /**
+     * @param CarteVisite $carteVisite
+     * @param int $id
+     * @return bool
+     */
+    public function isOwner(CarteVisite $carteVisite, int $id): bool
+    {
+        return $carteVisite->getAutoEntrepreneur()->getIdentity() == $id;
+    }
+
     // /**
     //  * @return CarteVisite[] Returns an array of CarteVisite objects
     //  */
