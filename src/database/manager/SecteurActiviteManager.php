@@ -16,7 +16,7 @@ class SecteurActiviteManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (s:SecteurActivite) WHERE id(s)=$id RETURN s'))
+        $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ') WHERE id(s)=$id RETURN s'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -29,7 +29,7 @@ class SecteurActiviteManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (s:SecteurActivite) WHERE ';
+        $query = 'MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN s';
@@ -46,7 +46,7 @@ class SecteurActiviteManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (s:SecteurActivite) RETURN s'))
+        return (new Query('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ') RETURN s'))
             ->run()
             ->getResult();
     }
@@ -56,7 +56,7 @@ class SecteurActiviteManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (s:SecteurActivite) WHERE ';
+        $query = 'MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN s';

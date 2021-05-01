@@ -33,7 +33,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/candidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/candidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -58,7 +58,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/uncandidate/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/uncandidate/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -82,7 +82,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/propose/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/propose/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
@@ -108,7 +108,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/remove/proposition/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/remove/proposition/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
@@ -120,7 +120,7 @@ class AjaxEntrepriseController extends AbstractController
             return $this->json(['result' => false]);
         }
 
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
             return $this->json(['result' => false]);
         }
 
@@ -133,7 +133,78 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/accept/proposition/{id}", requirements={"id": true}, methods={"POST"})
+     * @Route("/refuse/proposition/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectProposition($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new OffreEmploiManager())->removeProposition($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/add/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json(['result' => (new OffreEmploiManager())->addToFavoris($id, $this->session->get('user'))]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/remove/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new OffreEmploiManager())->removeFavoris($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
      * @return JsonResponse
@@ -158,7 +229,7 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/accept/candidature/{idO}/{idE}", requirements={"idO": true, "idE": true}, methods={"POST"})
+     * @Route("/accept/candidature/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
      * @param Request $request
@@ -234,7 +305,33 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/favoris", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getFavoris(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'favoris' => (new OffreEmploiManager())->getFavoris($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @param $nom
      * @param $competences
      * @param $langues
      * @param $permis
@@ -244,7 +341,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCVs($competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCVs($nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -271,7 +368,7 @@ class AjaxEntrepriseController extends AbstractController
             $perm = $permis == 'on';
         }
 
-        $results = array_slice($em->getRepository(CV::class)->findByCompetencesLanguesPermis($comps, $langs, $perm), $offset, $limit);
+        $results = array_slice($em->getRepository(CV::class)->findByNomCompetencesLanguesPermis($nom, $comps, $langs, $perm), $offset, $limit);
         foreach ($results as $result) {
             if (!is_null($result->getEmploye())) {
                 $result->getEmploye()->setCV(null);

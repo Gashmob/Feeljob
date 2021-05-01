@@ -5,7 +5,9 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\MetierManager;
 use App\database\PreparedQuery;
+use App\database\Query;
 use App\Entity\AbonnementEntreprise;
 use App\Entity\Langue;
 use App\Entity\SituationFamille;
@@ -26,17 +28,103 @@ final class UtilsController extends AbstractController
      */
     private const TYPES_CONTRAT = ['CDD', 'CDI', 'Saisonnier', 'Job d\'appoint'];
     /**
-     * All SecteurActivite
+     * All Metier
      */
-    private const SECTEURS_ACTIVITE = ['Agriculture', 'Agro-alimentaire/Alimentation', 'Animaux',
-        'Architecture/Aménagement intérieur', 'Artisanat/Métier d\'art', 'Audiovisuel/Numérique/Multimédia',
-        'Banque/Finance/Assurance', 'Bâtiment/Travaux public', 'Biologie/Chimie/Recherche',
-        'Commerce (Vendeur/Commercial)', 'Communication/Information', 'Culture/Spectacle', 'Défense/Sécurité/Secours',
-        'Droit', 'Edition/Littérature/Imprimerie', 'Enseignement/Formation', 'Esthétique/Coiffure/Soins',
-        'Environnement/Nature/Nettoyage', 'Gestion/RH', 'Histoire/Histoire de l\'art',
-        'Hôtellerie/Restauration/Tourisme', 'Humanitaire', 'Informatique/Electronique', 'Industrie/Usine',
-        'Mécanique/Maintenance', 'Maths/Sciences/Physique', 'Santé', 'Secrétariat/Accueil',
-        'Service à la personne/Social', 'Sport/Animation', 'Transport/Logistique'];
+    private const METIERS = [
+        'Agriculture' => [
+
+        ],
+        'Agro-alimentaire/Alimentation' => [
+
+        ],
+        'Animaux' => [
+
+        ],
+        'Architecture/Aménagement intérieur' => [
+
+        ],
+        'Artisanat/Métier d\'art' => [
+
+        ],
+        'Audiovisuel/Numérique/Multimédia' => [
+
+        ],
+        'Banque/Finance/Assurance' => [
+
+        ],
+        'Bâtiment/Travaux public' => [
+
+        ],
+        'Biologie/Chimie/Recherche' => [
+
+        ],
+        'Commerce (Vendeur/Commercial)' => [
+
+        ],
+        'Communication/Information' => [
+
+        ],
+        'Culture/Spectacle' => [
+
+        ],
+        'Défense/Sécurité/Secours' => [
+
+        ],
+        'Droit' => [
+
+        ],
+        'Edition/Littérature/Imprimerie' => [
+
+        ],
+        'Enseignement/Formation' => [
+
+        ],
+        'Esthétique/Coiffure/Soins' => [
+
+        ],
+        'Environnement/Nature/Nettoyage' => [
+
+        ],
+        'Gestion/RH' => [
+
+        ],
+        'Histoire/Histoire de l\'art' => [
+
+        ],
+        'Hôtellerie/Restauration/Tourisme' => [
+
+        ],
+        'Humanitaire' => [
+
+        ],
+        'Informatique/Electronique' => [
+
+        ],
+        'Industrie/Usine' => [
+
+        ],
+        'Mécanique/Maintenance' => [
+
+        ],
+        'Maths/Sciences/Physique' => [
+
+        ],
+        'Santé' => [
+
+        ],
+        'Secrétariat/Accueil' => [
+
+        ],
+        'Service à la personne/Social' => [
+
+        ],
+        'Sport/Animation' => [
+
+        ],
+        'Transport/Logistique' => [
+
+        ]
+    ];
     /**
      * All Langue
      */
@@ -84,8 +172,8 @@ final class UtilsController extends AbstractController
             }
         }
 
-        // Fill SecteurActivite
-        foreach (self::SECTEURS_ACTIVITE as $secteurActivite) {
+        // Fill Metier
+        foreach (self::METIERS as $secteurActivite => $metiers) {
             if ((new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) RETURN s'))
                     ->setString('nom', $secteurActivite)
                     ->run()
@@ -94,6 +182,16 @@ final class UtilsController extends AbstractController
                 (new PreparedQuery('CREATE (:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom})'))
                     ->setString('nom', $secteurActivite)
                     ->run(); // Create
+            }
+
+            foreach ($metiers as $metier) {
+                if ((new PreparedQuery('MATCH (m:' . EntityManager::METIER . ' {nom:$nom}) RETURN m'))
+                        ->setString('nom', $secteurActivite)
+                        ->run()
+                        ->getOneOrNullResult() == null) { // If not exist
+                    $alreadyFilled = false;
+                    (new MetierManager())->create($metier, $secteurActivite);
+                }
             }
         }
 

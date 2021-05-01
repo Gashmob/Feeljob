@@ -14,8 +14,8 @@ use App\Entity\Adresse;
 use App\Entity\Annonce;
 use App\Entity\AutoEntrepreneur;
 use App\Entity\CarteVisite;
-use App\Entity\Employeur;
 use App\Entity\Particulier;
+use App\Entity\Realisation;
 use App\Utils;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -58,7 +57,6 @@ class ParticulierController extends AbstractController
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
-     * @throws TransportExceptionInterface
      */
     public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em)
     {
@@ -114,6 +112,7 @@ class ParticulierController extends AbstractController
                             ->setAdresse($adresse)
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add verif email
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setLogo($logo)
@@ -122,7 +121,7 @@ class ParticulierController extends AbstractController
 
                         (new AutoEntrepreneurManager())->create($em, $auto_entrepreneur, $secteurActivite);
 
-                        Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
                         return $this->redirectToRoute('waitVerifEmail', ['id' => $auto_entrepreneur->getIdentity()]);
@@ -145,13 +144,14 @@ class ParticulierController extends AbstractController
                             ->setNom($data['nom'])
                             ->setTelephone($data['telephone'])
                             ->setEmail($data['email'])
+                            ->setVerifie(true) // TODO : add verif email
                             ->setMotdepasse($data['motdepasse'])
                             ->setSel($data['sel'])
                             ->setAdresse($adresse);
 
                         (new ParticulierManager())->create($em, $particulier);
 
-                        Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
+                        //Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
                         $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
                         return $this->redirectToRoute('waitVerifEmail', ['id' => $particulier->getIdentity()]);
@@ -211,6 +211,7 @@ class ParticulierController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response|RedirectResponse
+     * @throws Exception
      */
     public function createCarteVisite(Request $request, EntityManagerInterface $em)
     {
@@ -238,10 +239,24 @@ class ParticulierController extends AbstractController
                 $em->persist($carte);
                 $em->flush();
 
-                // TODO : get all realisations
+                for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
+                    $image = Utils::uploadImage('realisations', 'image' . $i);
+                    $descriptionR = $request->get('description' . $i);
+
+                    if ($image != '' && $descriptionR != '') {
+                        $r = (new Realisation())
+                            ->setImage($image)
+                            ->setDescription($descriptionR)
+                            ->setCarteVisite($carte);
+                        $em->persist($r);
+                        $em->flush();
+                    }
+                }
 
                 $auto_entrepreneur->setCarteVisite($carte);
                 $em->flush();
+
+                return $this->redirectToRoute('userSpace');
             }
         }
 
@@ -380,19 +395,37 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         $carte = $em->getRepository(CarteVisite::class)->findOneBy(['id' => $id]);
 
         if (is_null($carte)) {
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('', [
+        $owner = $em->getRepository(CarteVisite::class)->isOwner($carte, $this->session->get('user'));
+        if ($this->session->get('userType') != EntityManager::PARTICULIER && !$owner) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
             'carte' => $carte
         ]);
+    }
+
+    /**
+     * @Route("/contrats", name="particulier_contrats")
+     * @return Response|RedirectResponse
+     */
+    public function contracts(): Response
+    {
+        if ($this->session->get('user')) {
+            if ($this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
+                return $this->render('autoEntrepreneur/contratsFreelance.html.twig');
+            } elseif ($this->session->get('userType') == EntityManager::PARTICULIER) {
+                return $this->render('particulier/contratsParticulier.html.twig');
+            }
+        }
+        
+        return $this->redirectToRoute('homepage');
     }
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

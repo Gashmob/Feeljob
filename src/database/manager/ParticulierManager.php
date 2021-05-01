@@ -19,7 +19,7 @@ class ParticulierManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (p:Particulier) WHERE id(p)=$id RETURN id(p) as id'))
+        $result = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ') WHERE id(p)=$id RETURN id(p) as id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -32,7 +32,7 @@ class ParticulierManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (p:Particulier) WHERE ';
+        $query = 'MATCH (p:' . EntityManager::PARTICULIER . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(p) as id';
@@ -49,7 +49,7 @@ class ParticulierManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (p:Particulier) RETURN id(p) as id'))
+        return (new Query('MATCH (p:' . EntityManager::PARTICULIER . ') RETURN id(p) as id'))
             ->run()
             ->getResult();
     }
@@ -59,7 +59,7 @@ class ParticulierManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (p:Particulier) WHERE ';
+        $query = 'MATCH (p:' . EntityManager::PARTICULIER . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(p) as id';

@@ -18,7 +18,7 @@ class EmployeurManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (e:Employeur) WHERE id(e)=$id RETURN id(e) as id'))
+        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ') WHERE id(e)=$id RETURN id(e) as id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -31,7 +31,7 @@ class EmployeurManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (e:Employeur) WHERE ';
+        $query = 'MATCH (e:' . EntityManager::EMPLOYEUR . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(e) as id';
@@ -48,7 +48,7 @@ class EmployeurManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (e:Employeur) RETURN id(e) as id'))
+        return (new Query('MATCH (e:' . EntityManager::EMPLOYEUR . ') RETURN id(e) as id'))
             ->run()
             ->getResult();
     }
@@ -58,7 +58,7 @@ class EmployeurManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (e:Employeur) WHERE ';
+        $query = 'MATCH (e:' . EntityManager::EMPLOYEUR . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(e) as id';

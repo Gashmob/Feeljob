@@ -31,15 +31,19 @@ abstract class Utils
 
     /**
      * @param string $directory
+     * @param string|null $name
      * @return string
      * @throws Exception
      */
-    public static function uploadImage(string $directory): string
+    public static function uploadImage(string $directory, string $name = null): string
     {
-        if (isset($_FILES[$directory]) && $_FILES[$directory]['error'] === UPLOAD_ERR_OK) {
+        if ($name == null)
+            $name = $directory;
+
+        if (isset($_FILES[$name]) && $_FILES[$name]['error'] === UPLOAD_ERR_OK) {
             // Infos sur le fichier téléchargé
-            $fileTmpPath = $_FILES[$directory]['tmp_name'];
-            $fileName = $_FILES[$directory]['name'];
+            $fileTmpPath = $_FILES[$name]['tmp_name'];
+            $fileName = $_FILES[$name]['name'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 

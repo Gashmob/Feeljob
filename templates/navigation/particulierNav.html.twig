@@ -1,42 +1,17 @@
 <div id="nav" class="ui menu primaryNav">
-    <a href="{{ path('homepage') }}" class="header item">
+    <a title="Accueil" href="{{ path('homepage') }}" class="header item">
         <img src="{{ asset('img/FJ200.png') }}"/>
         Accueil
     </a>
     <a href="{{ path('particulier_cartes') }}" class="item">Cartes de visite</a>
     <div class="right menu">
-        <a href="#" class="ui dropdown item" onmouseover="loadNotifications()">
-            <i class="icon bell"></i>
-            <span style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
+        <a href="{{ path('particulier_contrats') }}" title="Propositions contrat" class="ui dropdown item">
+            <i class="icon briefcase"></i>
+            <span id="contratsAmount" style="margin-left: 0em;" class="bottom ui basic blue label">0</span>
             <div class="menu">
                 <div id="notifications" class="ui item feed">
-                    <div class="event">
-                        <div class="label">
-                            <img src="{{ asset('img/placeholders/matt.jpg') }}">
-                        </div>
-                        <div class="content">
-                            <div class="date">
-                                Il y a 3 jours
-                            </div>
-                            <div class="summary">
-                                Matt vous a envoyé un message.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui item feed">
-                    <div class="event">
-                        <div class="label">
-                            <img src="{{ asset('img/placeholders/elyse.png') }}">
-                        </div>
-                        <div class="content">
-                            <div class="date">
-                                Il y a plus d'une semaine
-                            </div>
-                            <div class="summary">
-                                Clément a déposé une nouvelle annonce.
-                            </div>
-                        </div>
+                    <div style="justify-content: center;" class="ui event">
+                        <i style="margin: 0!important;" class="notched circle loading icon"></i>
                     </div>
                 </div>
             </div>

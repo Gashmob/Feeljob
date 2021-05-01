@@ -3,7 +3,11 @@
 {% block body %}
     <div class="ui segment grid identity stackable">
         <div class="two wide column">
-            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% if app.session.get('userImage') %}
+                <img class="ui small centered circular image" src="{{ asset("uploads/logo/" ~ app.session.get('userImage')) }}">
+            {% else %}
+                <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% endif %}
         </div>
         <div class="ten wide column">
             <h2 class="ui header">
@@ -70,7 +74,7 @@
     </div>
     <div class="ui vertical segment">
         <h3 class="ui header green">Avis des employés</h3>
-        <div class="meta">&emsp; ** Pas encore d'avis reçus **</div>
+        <!--<div class="meta">&emsp; ** Pas encore d'avis reçus **</div>-->
         <br>
         <div class="ui three stackable cards">
             {% for i in 0..4 %}

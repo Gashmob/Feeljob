@@ -224,6 +224,8 @@
 
 #homepageSegment {
     min-height:640px;
+    max-height: 880px;
+    height: 100vh;
     padding:1em 0em;
     position: relative;
     background: unset;
@@ -317,8 +319,13 @@
     bottom: 65px;
 }
 
-.annonceCard, .cvCard {
+.annonceCard, .cvCard, .carteVisiteCard {
     position: relative;
+}
+
+.annonceCard .meta, .carteVisiteCard .meta {
+    list-style: none !important;
+    text-decoration: none !important;
 }
 
 .annonceCard .actions {
@@ -327,11 +334,11 @@
     right: 10px;
 }
 
-.annonceCard .description {
+.annonceCard .description, .carteVisiteCard .description {
     margin-bottom: 1em;
 }
 
-.annonceCard .star, .cvCard .star {
+.annonceCard .star, .cvCard .star, .carteVisiteCard .star {
     cursor: pointer;
     position: absolute;
     top: 10px;
@@ -349,7 +356,7 @@
 }
 
 .inscriptionChoiceCard {
-    height: 200px !important;
+    height: 150px !important;
     width: 280px !important;
 }
 
@@ -419,4 +426,36 @@
     position: absolute;
     right: 6px;
     top: 6px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flexWidth {
+    width: auto;
+}
+
+.textblur {
+    color: transparent !important;
+    text-shadow: 0 0 7px #000 !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+#notifications .loading.icon {
+    display: block !important;
+    margin: auto !important;
+}
+
+#notifications .label {
+    width: 0px !important;
+}
+
+#notifications .content {
+    margin-left: 0px !important;
 }
