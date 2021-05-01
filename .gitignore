@@ -23,3 +23,5 @@ composer.lock
 ###< phpunit/phpunit ###
 .DS_Store
 /public/uploads/
+
+*.lock
