@@ -20,14 +20,21 @@ class CVRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $nom
      * @param string[] $competences
      * @param string[] $langues
      * @param string|bool $permis
      * @return CV[]
      */
-    public function findByCompetencesLanguesPermis(array $competences, array $langues, string $permis): array
+    public function findByNomCompetencesLanguesPermis(string $nom, array $competences, array $langues, string $permis): array
     {
         $query = $this->createQueryBuilder('cv');
+
+        if ($nom != 'none') {
+            $query->leftJoin('cv.employe', 'employe')
+                ->andWhere('employe.prenom + employe.nom = :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
 
         if (count($competences) > 0) {
             $query->leftJoin('cv.competences', 'cv_competences')

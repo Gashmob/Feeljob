@@ -39,41 +39,19 @@
             <div class="ui segment">
                 <h2 class="header">Je suis :</h2>
                 <div style="padding-bottom: 15px;" class="ui grid center aligned stackable">
-                    <div class="ui row stackable">
-                        <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('particulier_inscription') }}"
-                               class="ui green choiceCardBtn particulierCard button">
-                                <i class="icon bullhorn topIcon large"></i>
-                                Un Particulier en recherche d'un Auto-Entrepreneur/Freelance
-                                <i class="icon right arrow bottomIcon"></i>
-                            </a>
-                        </div>
-                        <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('particulier_inscription') }}"
-                               class="ui green choiceCardBtn particulierCard button">
-                                <i class="icon bullhorn topIcon large"></i>
-                                Un Auto-Entrepreneur/Freelance qui propose ses services
-                                <i class="icon right arrow bottomIcon"></i>
-                            </a>
-                        </div>
+                    <div class="column inscriptionChoiceCard">
+                        <a href="{{ path('particulier_inscription') }}" class="ui green choiceCardBtn particulierCard button">
+                            <i class="icon bullhorn topIcon large"></i>
+                            Une personne en recherche d'emploi dans une entreprise
+                            <i class="icon right arrow bottomIcon"></i>
+                        </a>
                     </div>
-                    <div class="ui row stackable">
-                        <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('entreprise_inscription') }}"
-                               class="ui green choiceCardBtn entrepriseCard button">
-                                <i class="icon briefcase topIcon large"></i>
-                                Une personne en recherche d'emploi dans une entreprise
-                                <i class="icon right arrow bottomIcon"></i>
-                            </a>
-                        </div>
-                        <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('entreprise_inscription') }}"
-                               class="ui green choiceCardBtn entrepriseCard button">
-                                <i class="icon briefcase topIcon large"></i>
-                                Une entreprise
-                                <i class="icon right arrow bottomIcon"></i>
-                            </a>
-                        </div>
+                    <div class="column inscriptionChoiceCard">
+                        <a href="{{ path('entreprise_inscription') }}" class="ui green choiceCardBtn entrepriseCard button">
+                            <i class="icon briefcase topIcon large"></i>
+                            Une entreprise
+                            <i class="icon right arrow bottomIcon"></i>
+                        </a>
                     </div>
                 </div>
             </div>

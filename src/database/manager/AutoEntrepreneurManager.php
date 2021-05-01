@@ -17,7 +17,7 @@ class AutoEntrepreneurManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (a:AutoEntrepreneur) WHERE id(a)=$id RETURN id(a) as id'))
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$id RETURN id(a) as id'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -30,7 +30,7 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (a:AutoEntrepreneur) WHERE ';
+        $query = 'MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(a) as id';
@@ -47,7 +47,7 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (a:AutoEntrepreneur) RETURN id(a) as id'))
+        return (new Query('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ') RETURN id(a) as id'))
             ->run()
             ->getResult();
     }
@@ -57,7 +57,7 @@ class AutoEntrepreneurManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (a:AutoEntrepreneur) WHERE ';
+        $query = 'MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
         $query .= ' RETURN id(a) as id';
@@ -118,11 +118,11 @@ class AutoEntrepreneurManager extends Manager
         $res = [];
 
         foreach ($preResult as $result) {
-            if ((new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')--(s:' . EntityManager::SECTEUR_ACTIVITE .' {nom:$nom}) WHERE id(a)=$id RETURN a'))
-                ->setString('nom', $secteur)
-                ->setInteger('id', $result->getIdentity())
-                ->run()
-                ->getOneOrNullResult() != null) {
+            if ((new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')--(s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) WHERE id(a)=$id RETURN a'))
+                    ->setString('nom', $secteur)
+                    ->setInteger('id', $result->getIdentity())
+                    ->run()
+                    ->getOneOrNullResult() != null) {
                 $res[] = $result;
             }
         }

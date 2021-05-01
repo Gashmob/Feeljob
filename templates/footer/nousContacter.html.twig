@@ -1,24 +1,36 @@
 {% extends 'page.html.twig' %}
 {% block title %}Nous contacter{% endblock %}
 {% block body %}
-    <div class="ui segment vertical">
-        <h2>Nous contacter</h2>
-        <form class="ui form" style="max-width: 600px;" action="POST">
-            <div class="two fields">
-                <div class="required field">
-                    <label>Nom</label>
-                    <input type="text" name="nom" placeholder="Nom" required>
+    <h2>Nous contacter</h2>
+    <div class="ui grid stackable">
+        <div class="ui column ten wide">
+            <form class="ui form" style="max-width: 600px;" action="POST">
+                <div class="two fields">
+                    <div class="required field">
+                        <label>Nom</label>
+                        <input type="text" name="nom" placeholder="Nom" required>
+                    </div>
+                    <div class="required field">
+                        <label>Adresse e-mail</label>
+                        <input type="text" name="mail" placeholder="e-mail" required>
+                    </div>
                 </div>
                 <div class="required field">
-                    <label>Adresse e-mail</label>
-                    <input type="text" name="mail" placeholder="e-mail" required>
+                    <label>Votre message</label>
+                    <textarea rows="4" name="description"></textarea>
                 </div>
+                <button class="ui large submit button" type="submit" value="contact">Envoyer</button>
+            </form>
+        </div>
+        <div class="ui column six wide">
+            <div class="ui embed"
+                 data-url="https://www.google.com/maps/embed/v1/place?q=taxi+bozzetto">
             </div>
-            <div class="required field">
-                <label>Votre message</label>
-                <textarea rows="4" name="description"></textarea>
-            </div>
-            <button class="ui large submit button" type="submit" value="contact">Envoyer</button>
-        </form>
+        </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+        $('.ui.embed').embed();
+    </script>
 {% endblock %}

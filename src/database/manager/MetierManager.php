@@ -7,10 +7,8 @@ namespace App\database\manager;
 use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
-use App\Entity\OffreEmploi;
-use Doctrine\ORM\EntityManagerInterface;
 
-class TypeContratManager extends Manager
+class MetierManager extends Manager
 {
 
     /**
@@ -18,7 +16,7 @@ class TypeContratManager extends Manager
      */
     public function find(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE id(t)=$id RETURN t'))
+        $result = (new PreparedQuery('MATCH (m:' . EntityManager::METIER . ') WHERE id(m)=$id RETURN m'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
@@ -31,10 +29,10 @@ class TypeContratManager extends Manager
      */
     public function findOneBy(array $filters): ?string
     {
-        $query = 'MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE ';
+        $query = 'MATCH (m:' . EntityManager::METIER . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
-        $query .= ' RETURN t';
+        $query .= ' RETURN m';
 
         $result = (new Query($query))
             ->run()
@@ -48,7 +46,7 @@ class TypeContratManager extends Manager
      */
     public function findAll(): array
     {
-        return (new Query('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') RETURN t'))
+        return (new Query('MATCH (m:' . EntityManager::METIER . ') RETURN m'))
             ->run()
             ->getResult();
     }
@@ -58,10 +56,10 @@ class TypeContratManager extends Manager
      */
     public function findBy(array $filters): array
     {
-        $query = 'MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE ';
+        $query = 'MATCH (m:' . EntityManager::METIER . ') WHERE ';
         foreach ($filters as $filter)
             $query .= $filter . '=' . $filters[$filter];
-        $query .= ' RETURN t';
+        $query .= ' RETURN m';
 
         return (new Query($query))
             ->run()
@@ -69,31 +67,13 @@ class TypeContratManager extends Manager
     }
 
     /**
-     * @param EntityManagerInterface $em
-     * @param string $typeContrat
-     * @return OffreEmploi[]
-     */
-    public function findAllOffreEmploiFromTypeContrat(EntityManagerInterface $em, string $typeContrat): array
-    {
-        $results = (new PreparedQuery('MATCH (:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom})--(o:' . EntityManager::OFFRE_EMPLOI . ') RETURN id(o) as id'))
-            ->setString('nom', $typeContrat)
-            ->run()
-            ->getResult();
-
-        $res = [];
-        foreach ($results as $result) {
-            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
-        }
-
-        return $res;
-    }
-
-    /**
      * @param string $nom
+     * @param string $secteur
      */
-    public function create(string $nom)
+    public function create(string $nom, string $secteur)
     {
-        (new PreparedQuery('CREATE (:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom})'))
+        (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$secteur}) CREATE (s)-[:' . EntityManager::EST_DANS . ']->(:' . EntityManager::METIER . ' {nom:$nom})'))
+            ->setString('secteur', $secteur)
             ->setString('nom', $nom)
             ->run();
     }
@@ -104,7 +84,7 @@ class TypeContratManager extends Manager
      */
     public function update(int $id, string $nom)
     {
-        (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ') WHERE id(t)=$id SET t.nom=$nom'))
+        (new PreparedQuery('MATCH (m:' . EntityManager::METIER . ') WHERE id(m)=$id SET m.nom=$nom'))
             ->setInteger('id', $id)
             ->setString('nom', $nom)
             ->run();
@@ -115,7 +95,7 @@ class TypeContratManager extends Manager
      */
     public function remove(int $id)
     {
-        (new PreparedQuery('MATCH (t:' . EntityManager::TYPE_CONTRAT . ')-[r]-() WHERE id(t)=$id DELETE r,t'))
+        (new PreparedQuery('MATCH (m:' . EntityManager::METIER . ')-[r]-() WHERE id(m)=$id DELETE r,m'))
             ->setInteger('id', $id)
             ->run();
     }
@@ -129,7 +109,26 @@ class TypeContratManager extends Manager
         $results = $this->findAll();
 
         foreach ($results as $result) {
-            $res[] = $result['t']['nom'];
+            $res[] = $result['m']['nom'];
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param string $secteur
+     * @return string[]
+     */
+    public function findAllNamesBySecteurActivite(string $secteur): array
+    {
+        $res = [];
+        $results = (new PreparedQuery('MATCH (:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom})--(m:' . EntityManager::METIER . ') RETURN m'))
+            ->setString('nom', $secteur)
+            ->run()
+            ->getResult();
+
+        foreach ($results as $result) {
+            $res[] = $result['m']['nom'];
         }
 
         return $res;

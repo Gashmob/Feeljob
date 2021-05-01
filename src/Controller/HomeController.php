@@ -70,6 +70,9 @@ class HomeController extends AbstractController
                         $this->session->set('user', $user->getIdentity());
                         $this->session->set('userType', (new UtilsManager())->getUserTypeFromId($user->getIdentity()));
                         $this->session->set('userName', $user->getPrenom());
+                        if ($this->session->get('userType') == EntityManager::EMPLOYEUR) {
+                            $this->session->set('userImage', $user->getLogo());
+                        }
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
@@ -293,5 +296,22 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/mdpReinitialiser.html.twig');
+    }
+
+    /**
+     * @Route("/ajout/credits", name="ajoutCredits")
+     * @return Response|RedirectResponse
+     */
+    public function ajoutCredit()
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR && $this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        return $this->render('utilisateurs/ajoutCredits.html.twig');
     }
 }

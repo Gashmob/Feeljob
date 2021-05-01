@@ -5,54 +5,49 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher">
-            <div class="ui basic floating dropdown button">
-                <div class="text">Tous les résultats</div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <div class="active item">Tous les résultats</div>
-                    <div class="item">Offres d'emploi</div>
-                    <div class="item">Candidats</div>
-                    <div class="item">Auto-entrepreneurs</div>
-                </div>
-            </div>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
-        <div class="ui grid stackable">
-            <div class="four wide column">
-                <div class="ui vertical menu">
-                    <div class="item">
-                        <div class="header">Products</div>
-                        <div class="menu">
-                            <a class="item">Enterprise</a>
-                            <a class="item">Consumer</a>
-                        </div>
+        <div class="ui vertical segment stackable">
+            <div class="ui vertical menu left floated">
+                <div class="item">
+                    <div class="header">Distance max</div>
+                    <div class="menu">
+                        <div class="item" id="rangeLabel">Désactivé</div>
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
+                                                 value="0" step="10"
+                                                 oninput="updateRangeLabel(this.value);"></div>
                     </div>
-                    <div class="item">
-                        <div class="header">CMS Solutions</div>
-                        <div class="menu">
-                            <a class="item">Rails</a>
-                            <a class="item">Python</a>
-                            <a class="item">PHP</a>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="header">Hosting</div>
-                        <div class="menu">
-                            <a class="item">Shared</a>
-                            <a class="item">Dedicated</a>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="header">Support</div>
-                        <div class="menu">
-                            <a class="item">E-mail Support</a>
-                            <a class="item">FAQs</a>
+                </div>
+                <div class="item">
+                    <div class="header">Secteur d'activité</div>
+                    <div class="menu">
+                        <div class="item">
+                            <select class="ui dropdown" id="secteurSelect">
+                                <option value="">Choisir</option>
+                                {# {% for secteur in secteurs %}
+                                        <option value="{{ secteur }}">{{ secteur }}</option>
+                                    {% endfor %} #}
+                            </select>
                         </div>
                     </div>
                 </div>
+                <div class="item">
+                    <div class="header">Favoris</div>
+                    <div class="menu">
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" name="favoris" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item"></div>
             </div>
-            <div class="eleven wide column">
+            <div class="ui center aligned">
                 <div id="annoncesList" class="ui two stackable cards">
+                    <noscript>
+                        <p>Veuillez activer JavaScript pour afficher les résultats en AJAX.</p>
+                    </noscript>
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
@@ -88,14 +83,12 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            makeRequest()
+            makeRequestLoadAll()
+            searchInput.focus();
         });
 
-        var httpRequest;
-        var results;
-
         //Cherche tous les résultats
-        function makeRequest() {
+        function makeRequestLoadAll() {
             httpRequest = new XMLHttpRequest();
 
             if (!httpRequest) {
@@ -108,7 +101,7 @@
         }
 
         //Cherche les résultats par le nom entré barre recherche
-        function makeRequestBySecteur(secteur) {
+        function makeRequestFiltered(secteur, distanceMax, limit, offset) {
             httpRequest = new XMLHttpRequest();
 
             if (!httpRequest) {
@@ -116,17 +109,58 @@
                 return false;
             }
             httpRequest.onreadystatechange = displayAnnonces;
-            httpRequest.open('POST', '/particulier/get/annonces/' + secteur);
+            //let url = '/particulier/get/annonces';
+            httpRequest.open('POST', '/particulier/get/annonces/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset);
             httpRequest.send();
         }
 
         //Affiche les résultats dans 'annoncesList'
-        var annoncesList = document.getElementById('annoncesList');
+        const annoncesList = document.getElementById('annoncesList');
+
+        //Classe AnnonceCard
+        class AnnonceCard {
+            constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                date = date.substr(0, 10).split('-');
+                date = date[2] + '-' + date[1] + '-' + date[0];
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+
+                this.cardTemplate = `
+                <div class="card annonceCard">
+                    <i onclick="addFav(this);" class="icon star outline"></i>
+                    <div class="content">
+                        <div class="header">${nom}</div>
+                        <div class="meta">
+                            <li>
+                                <i class="icon map pin"></i>
+                                ${ville}
+                            </li>
+                            <li>
+                                <i class="icon calendar"></i>
+                                 Pour le ${date}
+                            </li>
+                        </div>
+                        <div class="description">
+                            <p>${description}</p>
+                        </div>
+                        <div class="extra">
+                            <a href=${url}
+                               class="ui right floated green button">
+                                Voir l'annonce
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
 
         function displayAnnonces() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                annoncesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+                annoncesList.innerHTML = `<i style="margin: 60px auto;" class="notched circle loading icon"></i>`;
             }
             //Chargé
             else if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -136,45 +170,25 @@
                     console.log(results);
                     // Réinitialise la liste
                     annoncesList.innerHTML = '';
-                    // Pour chaque cv du tableau annonces
-                    for (var i = 0; i < results.annonces.length; i++) {
-                        var card = `
-                <div class="card annonceCard">
-                    <div class="content">
-                        <a class="header">` + results.annonces[i].nom + `</a>
-                        <div class="meta">
-                            <span>
-                                <i class="icon map pin"></i>
-                                ` + results.annonces[i].adresse.ville + `
-                            </span>
-                            <span>Pour le 15/05</span>
-                        </div>
-                        <div class="description">
-                            <p>` + truncate(results.annonces[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
-                        </div>
-                        <div class="extra">
-                            <div class="ui label">CDD</div>
-                            <div class="ui label">CDI</div>
-                            <div class="ui label"><i class="globe icon"></i>Anglais</div>
-                            <a href="{{ path('particulier_show_annonce', {'id': 1}) }}`.slice(0, -1) + results.annonces[i].identity + `"
-                               class="ui right floated green button">
-                                Voir l'offre
-                                <i class="right chevron icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-                        annoncesList.innerHTML += card;
+
+                    // Il n'y a pas de résultats :
+                    if (results.annonces === undefined || results.annonces.length == 0) {
+                        annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
                     }
+
+                    // Il y a des résultats :
+                    // Pour chaque cv du tableau annonces
+                    results.annonces.forEach(a => {
+                        let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                        annoncesList.innerHTML += card.cardTemplate;
+                    })
                 } else {
-                    alert('Il y a eu un problème avec la requête.');
+                    annoncesList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
                 }
             }
         }
 
-        var searchInput = document.getElementById('searchInput');
-
+        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 searchAnnonces();
@@ -182,26 +196,21 @@
         });
 
         function searchAnnonces() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestBySecteur(inputValue);
+            // String secteur
+            let inputValue = searchInput.value;
+            // Float distance max
+            let distanceMax = -1;
+            // Int limit
+            let limit = 25;
+            // Int offset
+            let offset = 0;
+            inputValue = inputValue.trim();
+            if (inputValue != undefined && inputValue.length > 0) {
+                makeRequestFiltered(inputValue, distanceMax, limit, offset);
             } else {
-                makeRequest();
+                makeRequestLoadAll();
             }
         }
-
-        const MAX_DESCRIPTION_LENGTH = 300;
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');
@@ -213,5 +222,16 @@
                 e.classList.remove('outline');
             }
         };
+
+        const rangeLabel = document.getElementById('rangeLabel');
+
+        function updateRangeLabel(value) {
+            if (value == 0) {
+                rangeLabel.innerHTML = 'Désactivé';
+            } else {
+                rangeLabel.innerHTML = value + ' km.'
+            }
+            ;
+        }
     </script>
 {% endblock %}
