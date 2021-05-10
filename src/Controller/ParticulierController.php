@@ -394,6 +394,32 @@ class ParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/supprimer/annonce/{id}", name="particulier_delete_annonce")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function deleteAnnonce($id, EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!(new AnnonceManager())->isOwner($id, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        (new AnnonceManager())->remove($em, $em->getRepository(Annonce::class)->findOneBy(['identity' => $id]));
+
+        $this->addFlash('success', 'Votre annonce a été supprimée !');
+        return $this->redirectToRoute('userSpace');
+    }
+
+    /**
      * @Route("/annonces", name="particulier_annonces")
      * @return Response|RedirectResponse
      */
