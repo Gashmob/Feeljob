@@ -169,7 +169,6 @@
                     }
 
                     // Il y a des résultats :
-                    // Pour chaque cv du tableau annonces
                     results.cartes.forEach(carte => {
                         let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
                         cartesVisiteList.innerHTML += card.cardTemplate;

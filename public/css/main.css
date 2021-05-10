@@ -469,6 +469,11 @@
     border-radius: 50%;
 }
 
+.profileLogo.profileLogo--35 {
+    height: 35px;
+    width: 35px;
+}
+
 .profileLogo.profileLogo--80 {
     height: 80px;
     width: 80px;
