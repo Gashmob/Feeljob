@@ -488,3 +488,10 @@
     display: inline-flex;
     align-items: center;
 }
+.textBlue {
+    color: #0E6EB8;
+}
+
+.textGreen {
+    color: #016936;
+}

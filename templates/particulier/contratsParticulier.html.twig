@@ -42,9 +42,9 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        window.addEventListener("DOMContentLoaded", (event) => {
-            loadContrats();
-            setTimeout(loadCandidatures, 2000);
+        window.addEventListener("load", (event) => {
+            loadCandidatures();
+            setTimeout(loadContrats, 2000);
         });
 
         // Le Particulier récupère toutes ses propositions => {'propositions': Annonce[]}
@@ -66,16 +66,17 @@
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                //url vers le profil du freelance à qui est destinée la proposition
+                let url = "#"
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom} <span class="textGreen">pour</span> <a href="${url}">Charles</a></div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
-                        <div class="description">${description}</div>
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
