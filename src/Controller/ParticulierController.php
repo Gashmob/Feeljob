@@ -328,6 +328,72 @@ class ParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/modifier/annonce/{id}", name="particulier_modifier_annonce")
+     * @param $id
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    public function modifyAnnonce($id, Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if (!(new AnnonceManager())->isOwner($id, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $annonce = $em->getRepository(Annonce::class)->findOneBy(['identity' => $id]);
+
+        if ($request->isMethod('POST')) {
+            $nom = $request->get('nom');
+            $nomB = true;
+            if ($nom == '') {
+                $nomB = false;
+                $this->addFlash('nom', 'Merci de renseigner un nom');
+            }
+
+            $description = $request->get('description');
+            $descriptionB = true;
+            if ($description == '') {
+                $descriptionB = false;
+                $this->addFlash('description', 'Merci de renseigner une description');
+            }
+
+            $ville = $request->get('ville');
+
+            $date = $request->get('date');
+
+            if ($nomB && $descriptionB) {
+                $adresse = (new Adresse())
+                    ->setRue('')
+                    ->setCodePostal('')
+                    ->setVille($ville);
+                $em->persist($adresse);
+                $em->flush();
+
+                $annonce->setNom($nom)
+                    ->setDescription($description)
+                    ->setAdresse($adresse)
+                    ->setDate(new DateTime($date));
+
+                (new AnnonceManager())->update($em);
+                $this->addFlash('success', 'Votre annonce a été modifiée !');
+
+                return $this->redirectToRoute('userSpace');
+            }
+        }
+
+        return $this->render('');
+    }
+
+    /**
      * @Route("/annonces", name="particulier_annonces")
      * @return Response|RedirectResponse
      */
@@ -431,7 +497,7 @@ class ParticulierController extends AbstractController
                 return $this->render('particulier/contratsParticulier.html.twig');
             }
         }
-        
+
         return $this->redirectToRoute('homepage');
     }
 
