@@ -120,15 +120,17 @@
 
         function offreContrat() {
             var annonceID = annonceTarget.value;
-            httpRequest = new XMLHttpRequest();
+            if (annonceID.length > 0) {
+                httpRequest = new XMLHttpRequest();
 
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
+                if (!httpRequest) {
+                    alert('Abandon :( Impossible de créer une instance de XMLHTTP');
+                    return false;
+                }
+                httpRequest.onreadystatechange = offreContratResponse;
+                httpRequest.open('POST', '/particulier/propose/' + annonceID + '/{{ carte.autoEntrepreneur.identity }}');
+                httpRequest.send();
             }
-            httpRequest.onreadystatechange = offreContratResponse;
-            httpRequest.open('POST', '/particulier/propose/' + annonceID + '/{{ carte.autoEntrepreneur.identity }}');
-            httpRequest.send();
         }
 
         const applyBtn = document.querySelector("#applyBtn")
