@@ -406,8 +406,14 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
+        $annonces = [];
+        if (!$owner) { // Is Particulier
+            $annonces = (new AnnonceManager())->findAnnoncesByParticulier($em, $this->session->get('user'));
+        }
+
         return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
-            'carte' => $carte
+            'carte' => $carte,
+            'annonces' => $annonces
         ]);
     }
 
