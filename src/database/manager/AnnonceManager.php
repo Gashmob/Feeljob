@@ -233,6 +233,26 @@ class AnnonceManager extends Manager
     }
 
     /**
+     * @param EntityManagerInterface $em
+     * @param int $idParticulier
+     * @return Annonce[]
+     */
+    public function getMyPropositions(EntityManagerInterface $em, int $idParticulier): array
+    {
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->() WHERE id(p)=$idP RETURN a'))
+            ->setInteger('idP', $idParticulier)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
      * @param int $idAnnonce
      * @param int $idAutoEntrepreneur
      */
