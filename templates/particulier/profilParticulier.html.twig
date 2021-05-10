@@ -22,6 +22,9 @@
             </div>
         </div>
     </div>
+    <a href="{{ path('particulier_contrats') }}" class="ui blue button">
+        Vos contrats
+    </a>
     <h3 class="ui header green">Vos annonces</h3>
     <div class="ui four stackable cards">
         {% for publication in publications %}
@@ -50,43 +53,6 @@
                         </button>
                     </a>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui vertical segment">
-        <div class="ui vertical segment">
-            <h3 class="ui header green">Vos contrats</h3>
-            <div class="ui segment">
-                {% for i in 1..2 %}
-                    <div class="ui vertical segment">
-                        <div class="content">
-                            <div class="header">
-                                <i class="icon green check"></i>
-                                Accepté
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
-                                    exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
-                                    unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                {% for i in 1..2 %}
-                    <div class="ui vertical segment">
-                        <div class="content">
-                            <div class="header">
-                                <i class="icon red times"></i>
-                                Refusé
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
-                                    dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
-                                    placeat praesentium rem velit. Harum nobis officia praesentium.</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
             </div>
         </div>
     </div>

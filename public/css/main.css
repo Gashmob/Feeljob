@@ -459,3 +459,22 @@
 #notifications .content {
     margin-left: 0px !important;
 }
+
+.profileLogo {
+    overflow: hidden;
+    margin-right: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 50%;
+}
+
+.profileLogo.profileLogo--80 {
+    height: 80px;
+    width: 80px;
+}
+
+.flex {
+    display: inline-flex;
+    align-items: center;
+}
