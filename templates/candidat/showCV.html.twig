@@ -40,9 +40,8 @@
             <div class="ui two column grid">
                 <div class="column four wide">
                     {% if cv.employe.photo is not empty %}
-                        <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
-                             alt="photo de profil"
-                             class="ui small circular image">
+                        <div class="profileLogo profileLogo--120"
+                             style="background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -moz-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -o-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -webkit-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}');"></div>
                     {% else %}
                         <img src="{{ asset('img/placeholders/matthew.png') }}"
                              alt="photo de profil"
@@ -120,7 +119,7 @@
                 </h3>
                 <ul>
                     {% for competence in cv.competences %}
-                        <li>{{ competence.competence.nom }} - {{ competence.niveau }}</li>
+                        <li>{{ competence.competence.nom }} - {{ competence.niveau }} / 5</li>
                     {% endfor %}
                 </ul>
             {% endif %}

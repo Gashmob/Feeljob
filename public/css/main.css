@@ -474,6 +474,11 @@
     width: 80px;
 }
 
+.profileLogo.profileLogo--120 {
+    height: 120px;
+    width: 120px;
+}
+
 .flex {
     display: inline-flex;
     align-items: center;

@@ -23,12 +23,12 @@
             Modifier le CV
         </h3>
         <form class="ui form segment" method="post" enctype="multipart/form-data">
-            {{ dump(employe) }}
             <!-- Identité -->
             <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid stackable">
                 <div class="ui four wide column middle aligned">
-                    <img {% if cv.employe.photo %}src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"{% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
+                    <img {% if cv.employe.photo %}src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
+                         {% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
                          alt="photo de profil"
                          id="pdp"
                          class="ui small circular centered image">
@@ -47,7 +47,8 @@
                     <div class="two fields">
                         <div class="required field">
                             <label>Né le</label>
-                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" value="{{ cv.naissance|date('Y-m-d') }}" required>
+                            <input type="date" name="naissance" placeholder="jj/mm/aaaa"
+                                   value="{{ cv.naissance|date('Y-m-d') }}" required>
                         </div>
                         <div class="field">
                             <label>Photo de profil</label>
@@ -92,13 +93,13 @@
                     </div>
                 </div>
                 <div class="two fields">
-                    <div class="field">
+                    {# <div class="field">
                         <label>Adresse</label>
                         <div class="ui left icon input">
                             <i class="icon home"></i>
-                            <input type="text" name="adresse" placeholder="16 rue des Coquillages" value="{{ employe.adresse.rue }}">
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
                         </div>
-                    </div>
+                    </div> #}
                     <div class="field">
                         <label>Situation familiale</label>
                         <select class="ui dropdown" name="situationFamille">
@@ -112,17 +113,17 @@
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
             <div style="margin-bottom: 10px;" id="formationsList">
-                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
-                <div class="ui segment formation__item" id="formationsItem">
+                <div style="display: none;" class="ui segment formation__item" id="formationsItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du diplôme</label>
-                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme">
+                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme"
+                                   maxlength="48">
                         </div>
                         <div class="field">
                             <label>Nom de l'établissement</label>
                             <input type="text" class="etablissement" name="etablissement0"
-                                   placeholder="Nom de l'établissement">
+                                   placeholder="Nom de l'établissement" maxlength="48">
                         </div>
 
                     </div>
@@ -130,7 +131,7 @@
                         <div class="field">
                             <label>Mention</label>
                             <input type="text" class="mention" name="mention0"
-                                   placeholder="Laissez vide si inapplicable">
+                                   placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
@@ -138,6 +139,37 @@
                         </div>
                     </div>
                 </div>
+                {% for diplome in cv.diplomes %}
+                    <div class="ui segment formation__item">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Intitulé du diplôme</label>
+                                <input type="text" class="nomDiplome" name="nomDiplome{{ loop.index }}"
+                                       placeholder="Intitulé du diplôme" value="{{ diplome.diplome.nom }}">
+                            </div>
+                            <div class="field">
+                                <label>Nom de l'établissement</label>
+                                <input type="text" class="etablissement"
+                                       name="etablissement{{ loop.index }}" value="{{ diplome.diplome.etablissement }}"
+                                       placeholder="Nom de l'établissement">
+                            </div>
+
+                        </div>
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Mention</label>
+                                <input type="text" class="mention" name="mention{{ loop.index }}"
+                                       placeholder="Laissez vide si inapplicable"
+                                       value="{{ diplome.mention }}">
+                            </div>
+                            <div class="field">
+                                <label>Date d'obtention</label>
+                                <input type="date" class="date" name="date{{ loop.index }}" placeholder="jj/mm/aaaa"
+                                       value="{{ diplome.date|date('Y-m-d') }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_formation();" id="feedPlus"></i>
@@ -145,18 +177,18 @@
             <!-- Expériences -->
             <h3 class="ui dividing green header">Expérience professionnelle</h3>
             <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
-                <div class="ui segment" id="experiencesItem">
+                <div style="display: none;" class="ui segment" id="experiencesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du poste</label>
                             <div class="field">
-                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste">
+                                <input type="text" class="nomMetier" name="nomMetier0" placeholder="Intitulé du poste">
                             </div>
                         </div>
                         <div class="field">
                             <label>Nom de l'entreprise</label>
                             <div class="field">
-                                <input type="text" class="nomEntreprise" name="nomEntreprise"
+                                <input type="text" class="nomEntreprise" name="nomEntreprise0"
                                        placeholder="Nom de l'entreprise">
                             </div>
                         </div>
@@ -164,15 +196,47 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Date début</label>
-                            <input type="date" class="dateDebut" name="dateDebut" placeholder="Date début">
+                            <input type="date" class="dateDebut" name="dateDebut0" placeholder="Date début">
                         </div>
                         <div class="field">
                             <label>Date fin</label>
-                            <input type="date" class="dateFin" name="dateFin" placeholder="Date fin">
+                            <input type="date" class="dateFin" name="dateFin0" placeholder="Date fin">
                         </div>
-
                     </div>
                 </div>
+                {% for metier in cv.metiers %}
+                    <div class="ui segment" id="experiencesItem">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Intitulé du poste</label>
+                                <div class="field">
+                                    <input type="text" class="nomMetier" name="nomMetier{{ loop.index }}"
+                                           placeholder="Intitulé du poste" value="{{ metier.metier.nom }}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Nom de l'entreprise</label>
+                                <div class="field">
+                                    <input type="text" class="nomEntreprise" name="nomEntreprise{{ loop.index }}"
+                                           placeholder="Nom de l'entreprise" value="{{ metier.metier.nomEntreprise }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Date début</label>
+                                <input type="date" class="dateDebut" name="dateDebut{{ loop.index }}"
+                                       placeholder="Date début" value="{{ metier.dateDebut|date('Y-m-d') }}">
+                            </div>
+                            <div class="field">
+                                <label>Date fin</label>
+                                <input type="date" class="dateFin" name="dateFin{{ loop.index }}" placeholder="Date fin"
+                                       value="{{ metier.dateFin|date('Y-m-d') }}">
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
@@ -181,17 +245,20 @@
             <h3 class="ui dividing green header">Description</h3>
             <div class="field">
                 <textarea rows="8" name="description"
-                          placeholder="Rajoutez des informations à votre sujet."></textarea>
+                          placeholder="Rajoutez des informations à votre sujet.">
+                    {{ cv.description|nl2br }}
+                </textarea>
             </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
             <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
-                <div class="ui segment" id="languesItem">
+                <div style="display: none;" class="ui segment" id="languesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
                                 <select class="ui search selection dropdown nomLangue" name="nomLangue0">
+                                    <option value="">Choisir</option>
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                     {% endfor %}
@@ -210,6 +277,34 @@
                         </div>
                     </div>
                 </div>
+                {% for cvlangue in cv.langues %}
+                    <div class="ui segment">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Langue</label>
+                                <div class="field">
+                                    <select class="ui search selection dropdown nomLangue"
+                                            name="nomLangue{{ loop.index }}">
+                                        <option value="{{ cvlangue.langue.nom }}">{{ cvlangue.langue.nom }}</option>
+                                        {% for langue in langues %}
+                                            <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Niveau</label>
+                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ loop.index }}">
+                                    <option value="5" selected>Langue Maternelle</option>
+                                    <option value="4">Bilingue</option>
+                                    <option value="3">Avancé</option>
+                                    <option value="2">Intermédiaire</option>
+                                    <option value="1">Basique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
                 {% for i in 1..6 %}
                     <div style="display: none;" class="ui segment hidden transition langueNb{{ i }}">
                         <div class="two fields">
@@ -217,6 +312,7 @@
                                 <label>Langue</label>
                                 <div class="field">
                                     <select class="ui dropdown nomLangue" name="nomLangue{{ i }}">
+                                        <option value="">Choisir</option>
                                         {% for langue in langues %}
                                             <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                         {% endfor %}
@@ -243,7 +339,7 @@
             <!-- Compétences -->
             <h3 class="ui dividing green header">Compétences</h3>
             <div style="margin-bottom: 10px;" class="competences-list" id="competencesList">
-                <div class="ui segment" id="competencesItem">
+                <div style="display: none;" class="ui segment" id="competencesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Compétence</label>
@@ -251,11 +347,27 @@
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
-                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5" value="5">
+                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5"
+                                   value="5">
                         </div>
                     </div>
                 </div>
             </div>
+            {% for competence in cv.competences %}
+                <div class="ui segment">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Compétence</label>
+                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index }}" placeholder="Nom compétence" value="{{ competence.competence.nom }}">
+                        </div>
+                        <div class="field">
+                            <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
+                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index }}" min="1" max="5"
+                                   value="{{ competence.niveau }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_competence();" id="compPlus"></i>
             </div>
@@ -324,7 +436,7 @@
             if (nbForm < maxForm) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
-                nbFormInput.setAttribute("value", nbForm+1);
+                nbFormInput.setAttribute("value", nbForm + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -350,7 +462,7 @@
             if (nbExp < maxExp) {
                 $('#expPlus').transition('jiggle');
                 nbExp += 1;
-                nbExpInput.setAttribute("value", nbExp+1);
+                nbExpInput.setAttribute("value", nbExp + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -376,9 +488,9 @@
             if (nbLang < maxLang) {
                 $('#langPlus').transition('jiggle');
                 nbLang += 1;
-                nbLangInput.setAttribute("value", nbLang+1);
+                nbLangInput.setAttribute("value", nbLang + 1);
 
-                let item = document.querySelector('.langueNb'+nbLang);
+                let item = document.querySelector('.langueNb' + nbLang);
                 $(item).transition('scale')
 
             } else {
@@ -390,7 +502,7 @@
             if (nbComp < maxComp) {
                 $('#compPlus').transition('jiggle');
                 nbComp += 1;
-                nbCompInput.setAttribute("value", nbComp+1);
+                nbCompInput.setAttribute("value", nbComp + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
