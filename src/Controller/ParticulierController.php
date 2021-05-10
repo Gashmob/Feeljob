@@ -454,7 +454,9 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('');
+        return $this->render('particulier/editAnnonce.html.twig', [
+            'annonce' => $annonce
+        ]);
     }
 
     /**

@@ -16,37 +16,51 @@
     <div class="ui text justified container">
         <h3 class="ui center aligned icon header">
             <i class="icon bullhorn"></i>
-            Nouvelle annonce
+            Modifier annonce
         </h3>
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé de l'annonce</label>
-                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
+                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48" value="{{ annonce.nom }}">
             </div>
             <div class="field">
                 <label>Secteur d'activité</label>
                 <select class="ui dropdown" name="secteurActivite">
                     <option value="">Choisir</option>
+                    {#
                     {% for secteur in secteurs %}
                         <option value="{{ secteur }}">{{ secteur }}</option>
                     {% endfor %}
+                    #}
                 </select>
             </div>
             <div class="two fields">
                 <div class="required field">
-                    <label>Localisation</label>
-                    <input required type="text" name="ville" placeholder="Localisation" maxlength="48">
+                    <label>Ville</label>
+                    <input required type="text" name="ville" placeholder="Localisation" maxlength="48" value="{{ annonce.adresse.ville }}">
+                </div>
+                <div class="field">
+                    <label>Code Postal</label>
+                    <input type="text" name="codePostal" placeholder="Code Postal" maxlength="48" value="{{ annonce.adresse.codePostal }}">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Rue</label>
+                    <input type="text" name="rue" placeholder="Rue" maxlength="48" value="{{ annonce.adresse.rue }}">
                 </div>
                 <div class="field required">
                     <label>Date début</label>
-                    <input required name="date" placeholder="jj/mm/aaaa" type="date">
+                    <input required name="date" placeholder="jj/mm/aaaa" type="date" value="{{ annonce.date|date('Y-m-d') }}">
                 </div>
             </div>
             <div class="required field">
                 <label>Description</label>
-                <textarea name="description" cols="30" rows="12" required maxlength="3000"></textarea>
+                <textarea name="description" cols="30" rows="12" required maxlength="3000">
+                    {{ annonce.description|nl2br }}
+                </textarea>
             </div>
-            <button class="ui fluid large green submit button" type="submit">Créer</button>
+            <button class="ui fluid large green submit button" type="submit">Enregistrer</button>
         </form>
     </div>
 {% endblock %}

@@ -15,11 +15,11 @@
             </a>
         {% else %}
             <div class="ui buttons">
-                <a href="#"
+                <a href="{{ path('particulier_modifier_annonce', {'id': annonce.identity}) }}"
                    class="ui blue basic button">
                     Éditer
                 </a>
-                <a href="#"
+                <a href="{{ path('particulier_delete_annonce', {'id': annonce.identity}) }}"
                    class="ui red basic button">
                     Supprimer
                 </a>

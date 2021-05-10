@@ -43,18 +43,18 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            loadContrats();
-            setTimeout(loadCandidatures, 2000);
+            loadCandidatures();
+            setTimeout(loadContrats, 2000);
         });
 
         // Charge les contrats dans la vue contrat et les affiche
         function loadContrats() {
-            makeRequestByORSC('/entreprise/get/propositions', displayContrats);
+            makeRequestByORSC('/entreprise/get/my/propositions', displayContrats);
         }
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
-            makeRequestByORSC('/entreprise/get/candidatures', displayCandidatures);
+            makeRequestByORSC('/entreprise/get/my/candidatures', displayCandidatures);
         }
 
         /*
@@ -177,8 +177,10 @@
                     if (results.propositions == undefined || results.propositions.length == 0) {
                         contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
                     }
+
+                    console.log(results)
+
                     // Il y a des résultats :
-                    // Pour chaque proposition
                     results.propositions.forEach(proposition => {
                         let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
                         contratsList.innerHTML += card.contratTemplate;
@@ -208,6 +210,8 @@
                     if (results.candidatures === undefined || results.candidatures.length == 0) {
                         candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
                     }
+
+                    console.log(results)
 
                     // Il y a des résultats :
                     results.candidatures.forEach(candidature => {
