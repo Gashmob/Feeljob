@@ -2,24 +2,25 @@
 {% block title %}Voir carte de visite{% endblock %}
 {% block body %}
     <div style="position: relative" class="ui justified container">
-        {# {% if not owner %}
+        {% if not owner %}
             <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button"
                style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
                 <i class="left arrow icon"></i>
                 Retour aux cartes
             </a>
-        {% endif %} #}
+        {% endif %}
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
             Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
         </h2>
         <div>
             <div class="ui buttons">
-                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/carte.png') }}"
+                <a download="CV de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}"
+                   href="{{ asset('img/placeholders/carte.png') }}"
                    class="ui grey basic button">
                     Télécharger
                 </a>
-                {# {% if owner %}
+                {% if owner %}
                     <a href="{{ path('entreprise_modifier_cv', {id: carte.id}) }}"
                        class="ui blue basic button">
                         Éditer
@@ -28,7 +29,7 @@
                        class="ui red basic button">
                         Supprimer
                     </a>
-                {% endif %} #}
+                {% endif %}
             </div>
         </div>
         <form class="ui form segment">
@@ -96,7 +97,7 @@
                     {% if annonces %}
                         <option value="">Choisir</option>
                         {% for annonce in annonces %}
-                            <option value="{{ annonce.id }}">{{ annonce.nom }}</option>
+                            <option value="{{ annonce.identity }}">{{ annonce.nom }}</option>
                         {% endfor %}
                     {% else %}
                         <option value="">Pas d'annonce postée !</option>
@@ -111,14 +112,11 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        if (httpRequest == undefined) {
-            var httpRequest
-        }
-        if (results == undefined) {
-            var results
-        }
 
         var annonceTarget = document.getElementById('annonceTarget')
+        $(annonceTarget).on('change', function() {
+            $('#applyBtn').text('Recruter');
+        })
 
         function offreContrat() {
             var annonceID = annonceTarget.value;

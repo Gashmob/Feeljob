@@ -1,0 +1,52 @@
+{% extends 'page.html.twig' %}
+{% block title %}Modifier une annonce{% endblock %}
+{% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(114deg 50% 43%)" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(134deg 50% 43%)" fill-opacity="0.7"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
+            <i class="icon bullhorn"></i>
+            Nouvelle annonce
+        </h3>
+        <form class="ui form segment" method="post">
+            <div class="required field">
+                <label>Intitulé de l'annonce</label>
+                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
+            </div>
+            <div class="field">
+                <label>Secteur d'activité</label>
+                <select class="ui dropdown" name="secteurActivite">
+                    <option value="">Choisir</option>
+                    {% for secteur in secteurs %}
+                        <option value="{{ secteur }}">{{ secteur }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="two fields">
+                <div class="required field">
+                    <label>Localisation</label>
+                    <input required type="text" name="ville" placeholder="Localisation" maxlength="48">
+                </div>
+                <div class="field required">
+                    <label>Date début</label>
+                    <input required name="date" placeholder="jj/mm/aaaa" type="date">
+                </div>
+            </div>
+            <div class="required field">
+                <label>Description</label>
+                <textarea name="description" cols="30" rows="12" required maxlength="3000"></textarea>
+            </div>
+            <button class="ui fluid large green submit button" type="submit">Créer</button>
+        </form>
+    </div>
+{% endblock %}

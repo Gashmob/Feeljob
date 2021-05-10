@@ -23,6 +23,7 @@
             Modifier le CV
         </h3>
         <form class="ui form segment" method="post" enctype="multipart/form-data">
+            {{ dump(employe) }}
             <!-- Identité -->
             <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid stackable">
@@ -95,7 +96,7 @@
                         <label>Adresse</label>
                         <div class="ui left icon input">
                             <i class="icon home"></i>
-                            <input type="text" name="adresse" placeholder="16 rue des Coquillages">
+                            <input type="text" name="adresse" placeholder="16 rue des Coquillages" value="{{ employe.adresse.rue }}">
                         </div>
                     </div>
                     <div class="field">
@@ -190,7 +191,7 @@
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
-                                <select class="ui dropdown nomLangue" name="nomLangue0">
+                                <select class="ui search selection dropdown nomLangue" name="nomLangue0">
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                     {% endfor %}
@@ -245,7 +246,7 @@
                 <div class="ui segment" id="competencesItem">
                     <div class="two fields">
                         <div class="field">
-                            <label>Nom compétence</label>
+                            <label>Compétence</label>
                             <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
                         </div>
                         <div class="field">

@@ -2,29 +2,29 @@
 {% block title %}Propositions de contrat{% endblock %}
 {% block body %}
     <div class="contrats" style="margin-top: 20px;">
-        <h2 class="ui center aligned green header">
-            <div class="content">Propositions reçues</div>
-        </h2>
-        <div id="contratsList" class="ui segment stacked divided items">
-            <div class="ui placeholder">
-                <div class="image header">
-                    <div class="short line"></div>
-                    <div class="medium line"></div>
+        <div class="candidatures" style="margin-top: 20px;">
+            <h2 class="ui center aligned green header">
+                <div class="content">Candidatures reçues</div>
+            </h2>
+            <div id="candidaturesList" class="ui segment stacked divided items">
+                <div class="ui placeholder">
+                    <div class="image header">
+                        <div class="short line"></div>
+                        <div class="medium line"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="ui placeholder">
-                <div class="image header">
-                    <div class="short line"></div>
-                    <div class="medium line"></div>
+                <div class="ui placeholder">
+                    <div class="image header">
+                        <div class="short line"></div>
+                        <div class="medium line"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="candidatures" style="margin-top: 20px;">
         <h2 class="ui center aligned green header">
-            <div class="content">Candidatures envoyées</div>
+            <div class="content">Propositions envoyées</div>
         </h2>
-        <div id="candidaturesList" class="ui segment stacked divided items">
+        <div id="contratsList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -47,14 +47,14 @@
             setTimeout(loadCandidatures, 2000);
         });
 
-        // Charge les contrats dans la vue contrat et les affiche
+        // Le Particulier récupère toutes ses propositions => {'propositions': Annonce[]}
         function loadContrats() {
-            makeRequestByORSC('/particulier/get/propositions', displayContrats);
+            makeRequestByORSC('/particulier/get/my/propositions', displayContrats);
         }
 
-        // Charge les candidatures dans la vue contrat et les affiche
+        // Le Particulier récupère toutes ses candidatures => {'candidatures': Annonce[]}
         function loadCandidatures() {
-            makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
+            makeRequestByORSC('/particulier/get/my/candidatures', displayCandidatures);
         }
 
         /*
@@ -66,7 +66,6 @@
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
@@ -80,9 +79,7 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
                             </div>
                         </div>
                     </div>
@@ -99,7 +96,6 @@
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
@@ -113,8 +109,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
                             </div>
                         </div>
                     </div>
@@ -127,6 +123,7 @@
         function requestUncandidate(id) {
             makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
         }
+
         // Affiche la décandidature
         function displayUncandidate(id) {
             let btnNo = 'undoBtn' + id
@@ -139,6 +136,7 @@
         function requestDenyContrat(id) {
             makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
         }
+
         // Affiche le refus proposition contrat
         function displayDeny(id) {
             let btnNo = 'denyBtn' + id
@@ -151,6 +149,7 @@
         function requestAcceptContrat(id) {
             makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
         }
+
         // Affiche l'acceptation proposition contrat
         function displayAccept(id) {
             let btnNo = 'acceptBtn' + id
@@ -160,6 +159,7 @@
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
+
         function displayContrats() {
             //En cours de chargement
             if (httpRequest.readyState === XMLHttpRequest.LOADING) {
@@ -173,12 +173,16 @@
                     // Réinitialise la liste
                     contratsList.innerHTML = '';
 
+                    console.log(results)
                     // Il n'y a pas de résultats :
                     if (results.propositions == undefined || results.propositions.length == 0) {
-                        contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
+                        contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
                     }
                     // Il y a des résultats :
                     // Pour chaque proposition
+                    if (results.length == 0) {
+                        console.log('pas de propositions')
+                    }
                     results.propositions.forEach(proposition => {
                         let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
                         contratsList.innerHTML += card.contratTemplate;
@@ -204,9 +208,10 @@
                     results = JSON.parse(httpRequest.responseText)
                     // Réinitialise la liste
                     candidaturesList.innerHTML = '';
+                    console.log(results);
                     // Il n'y a pas de résultats :
                     if (results.candidatures === undefined || results.candidatures.length == 0) {
-                        candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
+                        candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
                     }
 
                     // Il y a des résultats :
