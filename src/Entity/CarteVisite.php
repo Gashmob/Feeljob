@@ -99,6 +99,15 @@ class CarteVisite
         return $this;
     }
 
+    public function clearRealisation(): self
+    {
+        foreach ($this->realisations as $realisation) {
+            $this->removeRealisation($realisation);
+        }
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;

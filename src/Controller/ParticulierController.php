@@ -264,6 +264,70 @@ class ParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/modifier/carte/{id}", name="particulier_modifier_carte_visite")
+     * @param $id
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    public function modifyCarteVisite($id, Request $request, EntityManagerInterface $em)
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $carte = $em->getRepository(CarteVisite::class)->find($id);
+        if (!$em->getRepository(CarteVisite::class)->isOwner($carte, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $description = $request->get('description');
+            $descriptionB = true;
+            if ($description == '') {
+                $descriptionB = false;
+                $this->addFlash('description', 'Merci de donner une description à votre carte de visite');
+            }
+
+            if ($descriptionB) {
+                $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
+
+                $carte->setDescription($description)
+                    ->clearRealisation();
+                $em->flush();
+
+                for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
+                    $image = Utils::uploadImage('realisations', 'image' . $i);
+                    $descriptionR = $request->get('description' . $i);
+
+                    if ($image != '' && $descriptionR != '') {
+                        $r = (new Realisation())
+                            ->setImage($image)
+                            ->setDescription($descriptionR)
+                            ->setCarteVisite($carte);
+                        $em->persist($r);
+                        $em->flush();
+                    }
+                }
+
+                $auto_entrepreneur->setCarteVisite($carte);
+                $em->flush();
+
+                return $this->redirectToRoute('userSpace');
+            }
+        }
+
+        return $this->render('', [
+            'carte' => $carte
+        ]);
+    }
+
+    /**
      * @Route("/creer/annonce", name="particulier_create_annonce")
      * @param Request $request
      * @param EntityManagerInterface $em
