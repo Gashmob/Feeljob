@@ -236,6 +236,31 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/get/my/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new AnnonceManager())->getMyCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/propositions", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $em
