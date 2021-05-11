@@ -313,6 +313,26 @@ class AnnonceManager extends Manager
     }
 
     /**
+     * @param EntityManagerInterface $em
+     * @param int $idAutoEntrepreneur
+     * @return Annonce[]
+     */
+    public function getAcceptedPropositions(EntityManagerInterface $em, int $idAutoEntrepreneur): array
+    {
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA RETURN id(o) as id'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
      * @param int $idAnnonce
      * @param int $idAutoEntrepreneur
      */

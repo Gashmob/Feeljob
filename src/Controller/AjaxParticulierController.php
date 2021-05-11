@@ -361,6 +361,31 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/get/accepted/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new AnnonceManager())->getAcceptedPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/annonces/{secteur}/{distanceMax}/{limit}/{offset}", defaults={"secteur":"none", "distanceMax":"-1", "limit":25, "offset":0})
      * @param $secteur
      * @param $distanceMax
