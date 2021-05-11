@@ -254,6 +254,26 @@ class OffreEmploiManager extends Manager
     }
 
     /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmploye
+     * @return OffreEmploi[]
+     */
+    public function getAcceptedCandidature(EntityManagerInterface $em, int $idEmploye): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[:' . EntityManager::CANDIDATURE . ' {accept:true}]->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE RETURN id(o) as id'))
+            ->setInteger('idE', $idEmploye)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
      * @param int $idOffre
      * @param int $idEmploye
      */

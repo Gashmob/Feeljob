@@ -305,6 +305,31 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/get/accepted/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new OffreEmploiManager())->getAcceptedCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/propositions", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $em
