@@ -89,15 +89,14 @@
 
         //Cherche tous les résultats
         function makeRequestLoadAll() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayAnnonces;
-            httpRequest.open('POST', '/particulier/get/annonces');
-            httpRequest.send();
+            $.ajax({
+                url: '/particulier/get/annonces',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayAnnonces(results)
+                }
+            });
         }
 
         //Cherche les résultats par le nom entré barre recherche
@@ -157,35 +156,22 @@
             }
         }
 
-        function displayAnnonces() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                annoncesList.innerHTML = `<i style="margin: 60px auto;" class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results);
-                    // Réinitialise la liste
-                    annoncesList.innerHTML = '';
+        function displayAnnonces(results) {
+            console.log(results);
+            // Réinitialise la liste
+            annoncesList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.annonces === undefined || results.annonces.length == 0) {
-                        annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
-                    }
-
-                    // Il y a des résultats :
-                    // Pour chaque cv du tableau annonces
-                    results.annonces.forEach(a => {
-                        let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
-                        annoncesList.innerHTML += card.cardTemplate;
-                    })
-                } else {
-                    annoncesList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
-                }
+            // Il n'y a pas de résultats :
+            if (results.annonces === undefined || results.annonces.length == 0) {
+                annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
+
+            // Il y a des résultats :
+            // Pour chaque cv du tableau annonces
+            results.annonces.forEach(a => {
+                let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                annoncesList.innerHTML += card.cardTemplate;
+            })
         }
 
         const searchInput = document.getElementById('searchInput');

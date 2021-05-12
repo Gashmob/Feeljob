@@ -499,7 +499,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('autoEntrepreneur/showOffresChantier.html.twig');
+        return $this->render('autoEntrepreneur/showAnnonces.html.twig');
     }
 
     /**
