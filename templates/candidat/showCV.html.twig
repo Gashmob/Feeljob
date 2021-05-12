@@ -15,10 +15,6 @@
         </h2>
         <div>
             <div class="ui buttons">
-                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/cv.png') }}"
-                   class="ui grey basic button">
-                    Télécharger
-                </a>
                 {% if owner %}
                     <a href="{{ path('entreprise_modifier_cv', {id: cv.id}) }}"
                        class="ui blue basic button">
@@ -37,15 +33,16 @@
                 <i class="icon user"></i>
                 <div class="content">Identité</div>
             </h3>
-            <div class="ui two column grid">
+            <div class="ui two column stackable grid">
                 <div class="column four wide">
                     {% if cv.employe.photo is not empty %}
-                        <div class="profileLogo profileLogo--120"
-                             style="background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -moz-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -o-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}'); -webkit-background-image: url('{{ asset('uploads/photo/' ~ cv.employe.photo) }}');"></div>
+                    <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
+                         alt="photo de profil"
+                         class="ui small circular image profileLogo">
                     {% else %}
                         <img src="{{ asset('img/placeholders/matthew.png') }}"
                              alt="photo de profil"
-                             class="ui small circular image">
+                             class="ui small circular image profileLogo">
                     {% endif %}
                 </div>
                 <div class="column ten wide">

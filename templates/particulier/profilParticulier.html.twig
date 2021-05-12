@@ -31,9 +31,10 @@
             <a href="{{ path('particulier_show_annonce', {'id': publication.identity}) }}" class="ui card">
                 <div class="content">
                     <div class="header">{{ publication.nom }}</div>
-                    <div class="meta">Créé le 12 novembre 2020</div>
+                    <div class="meta">Créé le {{ publications.createdAt|date('d/m/Y') }}</div>
+                    <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
                     <div class="description">
-                        <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                        <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                     </div>
                 </div>
                 <div class="extra content">

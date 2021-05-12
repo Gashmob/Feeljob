@@ -46,7 +46,7 @@
                         <br>
                         <div class="description">
                             {% if publication.description|length %}
-                                <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                                <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                             {% else %}
                                 <p class="meta">** Pas de description **</p>
                             {% endif %}

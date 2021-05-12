@@ -32,7 +32,7 @@
                         <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
                         <div class="description">
                             {% if publications.description|length %}
-                                <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                                <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
                             {% else %}
                                 <p class="meta">** Pas de description **</p>
                             {% endif %}

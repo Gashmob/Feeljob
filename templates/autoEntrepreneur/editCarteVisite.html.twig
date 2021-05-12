@@ -23,19 +23,37 @@
             <h3 class="ui dividing green header">Réalisations</h3>
             <div style="margin-bottom: 10px;" id="realisationsList">
                 <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
-                <div class="ui segment realisations__item" id="realisationsItem">
+                <div style="display: none;" class="ui segment realisations__item" id="realisationsItem">
                     <div class="field">
-                        <textarea rows="8" name="description0" class="description"
+                        <textarea rows="8" name="description" class="description"
                                   placeholder="Rajoutez des informations à propos de cette réalisation."
                                   maxlength="800"></textarea>
                     </div>
-                    <label class="ui blue labeled icon button imageLabel" for="image0">
+                    <label class="ui blue labeled icon button imageLabel" for="image">
                         <i class="plus icon"></i>
-                        <span id="image-label0">Ajouter image</span>
+                        <span id="image-label">Ajouter image</span>
                         <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file"
-                               style="display: none;" class="image" id="image0" name="image0">
+                               style="display: none;" class="image" id="image" name="image">
                     </label>
                 </div>
+                {% for realisation in carte.realisations %}
+                    <div class="ui segment realisations__item">
+                        <div class="field">
+                        <textarea rows="8" name="description{{ loop.index-1 }}" class="description"
+                                  placeholder="Rajoutez des informations à propos de cette réalisation."
+                                  maxlength="800">
+                            {{ realisation.description|trim }}
+                        </textarea>
+                        </div>
+                        <img class="ui image large centered" src="{{ asset('uploads/realisations/' ~ realisation.image) }}" alt="realisation numéro {{ loop.index }}">
+                        <label class="ui blue labeled icon button imageLabel" for="image{{ loop.index-1 }}">
+                            <i class="plus icon"></i>
+                            <span id="image-label{{ loop.index-1 }}">Modifier image</span>
+                            <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file"
+                                   style="display: none;" class="image" id="image0" name="image{{ loop.index-1 }}">
+                        </label>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_realisation();" id="realPlus"></i>
@@ -45,10 +63,12 @@
             <div class="field">
                 <textarea rows="8" name="description" class="description"
                           placeholder="Saisissez des informations à votre sujet."
-                          maxlength="800"></textarea>
+                          maxlength="800">
+                    {{ carte.description|trim }}
+                </textarea>
             </div>
             <div style="display: none;" id="numberOfRows">
-                <input id="nbRealisationsInput" type="number" name="nbRealisations" value="1">
+                <input id="nbRealisationsInput" type="number" name="nbRealisations" value="{{ carte.realisations|length }}">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -73,7 +93,7 @@
             $('#image-label0').text(file);
         });
 
-        let nbRealisations = 0;
+        let nbRealisations = {{ carte.realisations|length-1 }};
         const maxRealisations = 8;
         const nbRealisationsInput = document.getElementById('nbRealisationsInput');
 

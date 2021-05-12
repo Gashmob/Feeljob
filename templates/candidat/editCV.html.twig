@@ -31,7 +31,7 @@
                          {% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
                          alt="photo de profil"
                          id="pdp"
-                         class="ui small circular centered image">
+                         class="ui circular centered image profileLogo profileLogo--120">
                 </div>
                 <div class="ui twelve wide column">
                     <div class="two fields">
@@ -117,12 +117,12 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du diplôme</label>
-                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme"
+                            <input type="text" class="nomDiplome" name="nomDiplome" placeholder="Intitulé du diplôme"
                                    maxlength="48">
                         </div>
                         <div class="field">
                             <label>Nom de l'établissement</label>
-                            <input type="text" class="etablissement" name="etablissement0"
+                            <input type="text" class="etablissement" name="etablissement"
                                    placeholder="Nom de l'établissement" maxlength="48">
                         </div>
 
@@ -130,12 +130,12 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Mention</label>
-                            <input type="text" class="mention" name="mention0"
+                            <input type="text" class="mention" name="mention"
                                    placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
-                            <input type="date" class="date" name="date0" placeholder="jj/mm/aaaa">
+                            <input type="date" class="date" name="date" placeholder="jj/mm/aaaa">
                         </div>
                     </div>
                 </div>
@@ -144,13 +144,13 @@
                         <div class="two fields">
                             <div class="field">
                                 <label>Intitulé du diplôme</label>
-                                <input type="text" class="nomDiplome" name="nomDiplome{{ loop.index }}"
+                                <input type="text" class="nomDiplome" name="nomDiplome{{ loop.index-1 }}"
                                        placeholder="Intitulé du diplôme" value="{{ diplome.diplome.nom }}">
                             </div>
                             <div class="field">
                                 <label>Nom de l'établissement</label>
                                 <input type="text" class="etablissement"
-                                       name="etablissement{{ loop.index }}" value="{{ diplome.diplome.etablissement }}"
+                                       name="etablissement{{ loop.index-1 }}" value="{{ diplome.diplome.etablissement }}"
                                        placeholder="Nom de l'établissement">
                             </div>
 
@@ -158,13 +158,13 @@
                         <div class="two fields">
                             <div class="field">
                                 <label>Mention</label>
-                                <input type="text" class="mention" name="mention{{ loop.index }}"
+                                <input type="text" class="mention" name="mention{{ loop.index-1 }}"
                                        placeholder="Laissez vide si inapplicable"
                                        value="{{ diplome.mention }}">
                             </div>
                             <div class="field">
                                 <label>Date d'obtention</label>
-                                <input type="date" class="date" name="date{{ loop.index }}" placeholder="jj/mm/aaaa"
+                                <input type="date" class="date" name="date{{ loop.index-1 }}" placeholder="jj/mm/aaaa"
                                        value="{{ diplome.date|date('Y-m-d') }}">
                             </div>
                         </div>
@@ -182,13 +182,13 @@
                         <div class="field">
                             <label>Intitulé du poste</label>
                             <div class="field">
-                                <input type="text" class="nomMetier" name="nomMetier0" placeholder="Intitulé du poste">
+                                <input type="text" class="nomMetier" name="nomMetier" placeholder="Intitulé du poste">
                             </div>
                         </div>
                         <div class="field">
                             <label>Nom de l'entreprise</label>
                             <div class="field">
-                                <input type="text" class="nomEntreprise" name="nomEntreprise0"
+                                <input type="text" class="nomEntreprise" name="nomEntreprise"
                                        placeholder="Nom de l'entreprise">
                             </div>
                         </div>
@@ -196,11 +196,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Date début</label>
-                            <input type="date" class="dateDebut" name="dateDebut0" placeholder="Date début">
+                            <input type="date" class="dateDebut" name="dateDebut" placeholder="Date début">
                         </div>
                         <div class="field">
                             <label>Date fin</label>
-                            <input type="date" class="dateFin" name="dateFin0" placeholder="Date fin">
+                            <input type="date" class="dateFin" name="dateFin" placeholder="Date fin">
                         </div>
                     </div>
                 </div>
@@ -210,14 +210,14 @@
                             <div class="field">
                                 <label>Intitulé du poste</label>
                                 <div class="field">
-                                    <input type="text" class="nomMetier" name="nomMetier{{ loop.index }}"
+                                    <input type="text" class="nomMetier" name="nomMetier{{ loop.index-1 }}"
                                            placeholder="Intitulé du poste" value="{{ metier.metier.nom }}">
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Nom de l'entreprise</label>
                                 <div class="field">
-                                    <input type="text" class="nomEntreprise" name="nomEntreprise{{ loop.index }}"
+                                    <input type="text" class="nomEntreprise" name="nomEntreprise{{ loop.index-1 }}"
                                            placeholder="Nom de l'entreprise" value="{{ metier.metier.nomEntreprise }}">
                                 </div>
                             </div>
@@ -225,12 +225,12 @@
                         <div class="two fields">
                             <div class="field">
                                 <label>Date début</label>
-                                <input type="date" class="dateDebut" name="dateDebut{{ loop.index }}"
+                                <input type="date" class="dateDebut" name="dateDebut{{ loop.index-1 }}"
                                        placeholder="Date début" value="{{ metier.dateDebut|date('Y-m-d') }}">
                             </div>
                             <div class="field">
                                 <label>Date fin</label>
-                                <input type="date" class="dateFin" name="dateFin{{ loop.index }}" placeholder="Date fin"
+                                <input type="date" class="dateFin" name="dateFin{{ loop.index-1 }}" placeholder="Date fin"
                                        value="{{ metier.dateFin|date('Y-m-d') }}">
                             </div>
 
@@ -246,7 +246,7 @@
             <div class="field">
                 <textarea rows="8" name="description"
                           placeholder="Rajoutez des informations à votre sujet.">
-                    {{ cv.description|nl2br }}
+                    {{ cv.description }}
                 </textarea>
             </div>
             <!-- Langues -->
@@ -257,7 +257,7 @@
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
-                                <select class="ui search selection dropdown nomLangue" name="nomLangue0">
+                                <select class="ui search selection dropdown nomLangue" name="nomLangue">
                                     <option value="">Choisir</option>
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
@@ -267,7 +267,7 @@
                         </div>
                         <div class="field">
                             <label>Niveau</label>
-                            <select class="ui dropdown niveauLangue" name="niveauLangue0">
+                            <select class="ui dropdown niveauLangue" name="niveauLangue">
                                 <option value="5" selected>Langue Maternelle</option>
                                 <option value="4">Bilingue</option>
                                 <option value="3">Avancé</option>
@@ -284,7 +284,7 @@
                                 <label>Langue</label>
                                 <div class="field">
                                     <select class="ui search selection dropdown nomLangue"
-                                            name="nomLangue{{ loop.index }}">
+                                            name="nomLangue{{ loop.index-1 }}">
                                         <option value="{{ cvlangue.langue.nom }}">{{ cvlangue.langue.nom }}</option>
                                         {% for langue in langues %}
                                             <option value="{{ langue.nom }}">{{ langue.nom }}</option>
@@ -294,7 +294,7 @@
                             </div>
                             <div class="field">
                                 <label>Niveau</label>
-                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ loop.index }}">
+                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ loop.index-1 }}">
                                     <option value="5" selected>Langue Maternelle</option>
                                     <option value="4">Bilingue</option>
                                     <option value="3">Avancé</option>
@@ -305,7 +305,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                {% for i in 1..6 %}
+                {% for i in cv.langues|length..6 %}
                     <div style="display: none;" class="ui segment hidden transition langueNb{{ i }}">
                         <div class="two fields">
                             <div class="field">
@@ -343,11 +343,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Compétence</label>
-                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
+                            <input type="text" class="nomCompetence" name="nomCompetence" placeholder="Nom compétence">
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
-                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5"
+                            <input type="number" class="niveauCompetence" name="niveauCompetence" min="1" max="5"
                                    value="5">
                         </div>
                     </div>
@@ -358,11 +358,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Compétence</label>
-                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index }}" placeholder="Nom compétence" value="{{ competence.competence.nom }}">
+                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index-1 }}" placeholder="Nom compétence" value="{{ competence.competence.nom }}">
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
-                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index }}" min="1" max="5"
+                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index-1 }}" min="1" max="5"
                                    value="{{ competence.niveau }}">
                         </div>
                     </div>
@@ -376,22 +376,22 @@
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" name="permis" class="hidden">
+                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="permis" class="hidden">
                         <label>Je dispose du permis B</label>
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" name="transport" class="hidden">
+                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="transport" class="hidden">
                         <label>J'ai un moyen de transport</label>
                     </div>
                 </div>
             </div>
             <div style="display: none;" id="numberOfRows">
-                <input id="nbFormInput" type="number" name="nbMetiers" value="1">
-                <input id="nbExpInput" type="number" name="nbDiplomes" value="1">
-                <input id="nbLangInput" type="number" name="nbLangues" value="1">
-                <input id="nbCompInput" type="number" name="nbCompetences" value="1">
+                <input id="nbFormInput" type="number" name="nbDiplomes" value="{{ cv.diplomes|length }}">
+                <input id="nbExpInput" type="number" name="nbMetiers" value="{{ cv.metiers|length }}">
+                <input id="nbLangInput" type="number" name="nbLangues" value="{{ cv.langues|length }}">
+                <input id="nbCompInput" type="number" name="nbCompetences" value="{{ cv.competences|length }}">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -422,10 +422,10 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
+        var nbForm = {{ cv.diplomes|length-1 }}, nbExp = {{ cv.metiers|length-1 }}, nbLang = {{ cv.langues|length-1 }}, nbComp = {{ cv.competences|length-1 }};
         const maxForm = 8;
         const maxExp = 12;
-        const maxLang = 8;
+        const maxLang = 6;
         const maxComp = 15;
         const nbFormInput = document.getElementById('nbFormInput');
         const nbExpInput = document.getElementById('nbExpInput');
