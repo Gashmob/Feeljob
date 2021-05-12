@@ -57,8 +57,7 @@ function loadContratsAmount() {
 // Tronque les descriptions
 const MAX_DESCRIPTION_LENGTH = 300;
 
-function truncate(str, n, useWordBoundary
-) {
+function truncate(str, n, useWordBoundary) {
     if (str.length <= n) {
         return str;
     }
