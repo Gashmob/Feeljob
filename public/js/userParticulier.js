@@ -58,23 +58,9 @@ function truncate(str, n, useWordBoundary
         : subString) + " &hellip;";
 };
 
-// Créé une requête xmlhttp
-var httpRequest, results;
-
-function makeRequestByORSC(url, orscFunction) {
-    httpRequest = new XMLHttpRequest();
-    if (!httpRequest) {
-        alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-        return false;
-    }
-    httpRequest.onreadystatechange = orscFunction;
-    httpRequest.open('POST', url, true);
-    httpRequest.send();
-}
-
 // Affiche les propositions de contrat dans la nav au survol de la mallette
-const notificationsFeed = document.getElementById('notifications');
-const contratsAmount = document.getElementById('contratsAmount');
+var notificationsFeed = document.getElementById('notifications');
+var contratsAmount = document.getElementById('contratsAmount');
 
 function displayContratsFeed(results) {
     console.log(results)
