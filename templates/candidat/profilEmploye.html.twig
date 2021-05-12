@@ -28,8 +28,8 @@
             {% if publications %}
                 <a href="{{ path('entreprise_show_cv', {'id': publications.id}) }}" class="ui card">
                     <div class="content">
-                        <div class="meta">Créé le {{ publications.createdAt|date('d/m/Y') }}</div>
-                        <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
+                        <div class="meta">Créé le {{ publications.updatedAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publications.updatedAt|date('H:i') }}</div>
                         <div class="description">
                             {% if publications.description|length %}
                                 <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>

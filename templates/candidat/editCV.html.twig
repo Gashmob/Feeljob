@@ -245,9 +245,7 @@
             <h3 class="ui dividing green header">Description</h3>
             <div class="field">
                 <textarea rows="8" name="description"
-                          placeholder="Rajoutez des informations à votre sujet.">
-                    {{ cv.description }}
-                </textarea>
+                          placeholder="Rajoutez des informations à votre sujet.">{{ cv.description|trim }}</textarea>
             </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>

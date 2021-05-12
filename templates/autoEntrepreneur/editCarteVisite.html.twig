@@ -41,9 +41,7 @@
                         <div class="field">
                         <textarea rows="8" name="description{{ loop.index-1 }}" class="description"
                                   placeholder="Rajoutez des informations à propos de cette réalisation."
-                                  maxlength="800">
-                            {{ realisation.description|trim }}
-                        </textarea>
+                                  maxlength="800">{{ realisation.description|trim }}</textarea>
                         </div>
                         <img class="ui image large centered" src="{{ asset('uploads/realisations/' ~ realisation.image) }}" alt="realisation numéro {{ loop.index }}">
                         <label class="ui blue labeled icon button imageLabel" for="image{{ loop.index-1 }}">
