@@ -31,17 +31,19 @@ class ContratEvent {
 
 // Le DOM est chargé
 window.addEventListener("load", function () {
-    //loadContratsAmount()
+    loadContratsAmount()
 });
 
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
-    makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
-}
-
-// Charge les propositions de contrat au survol de l'icone de mallette dans la nav
-function loadContratsFeed() {
-    makeRequestByORSC('/particulier/get/propositions', displayContratsFeed);
+    $.ajax({
+        url: '/particulier/get/propositions',
+        type: 'POST',
+        dataType: 'json',
+        success: function (results) {
+            displayContratsFeed(results);
+        }
+    });
 }
 
 // Tronque les descriptions
@@ -76,36 +78,23 @@ function makeRequestByORSC(url, orscFunction) {
 const notificationsFeed = document.getElementById('notifications');
 const contratsAmount = document.getElementById('contratsAmount');
 
-function displayContratsFeed() {
-    //En cours de chargement
-    if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-        notificationsFeed.innerHTML = `<i class="notched circle loading icon"></i>`;
-    }
-    //Chargé
-    else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            // Change la quantité de propositions de contrat dans la case
-            contratsAmount.innerHTML = results.propositions.length;
-            // results = httpRequest.responseText
-            // Réinitialise la liste
-            notificationsFeed.innerHTML = '';
-            console.log(results)
+function displayContratsFeed(results) {
+    console.log(results)
 
-            // Il n'y a pas de résultats :
-            if (results.propositions === undefined || results.propositions.length == 0) {
-                notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
-            }
+    // Change la quantité de propositions de contrat dans la case
+    contratsAmount.innerHTML = results.propositions.length;
 
-            // Il y a des résultats :
-            // Pour chaque cv du tableau propositions
-            results.propositions.forEach(proposition => {
-                let card = new ContratEvent(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.createdAt);
-                notificationsFeed.innerHTML += card.contratEventTemplate;
-            })
-        } else {
-            notificationsFeed.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-        }
+    // Réinitialise la liste
+    notificationsFeed.innerHTML = '';
+
+    // Il n'y a pas de résultats :
+    if (results.propositions === undefined || results.propositions.length == 0) {
+        notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
     }
+
+    // Il y a des résultats :
+    results.propositions.forEach(candidature => {
+        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.adresse.ville, candidature.createdAt);
+        notificationsFeed.innerHTML += card.contratEventTemplate;
+    })
 }
