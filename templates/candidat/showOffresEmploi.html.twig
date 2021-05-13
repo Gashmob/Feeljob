@@ -126,7 +126,7 @@
             }
 
             results.offres.forEach(o => {
-                let card = new offreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
@@ -144,17 +144,41 @@
 
             // Pour chaque favori du tableau favoris
             results.favoris.forEach(o => {
-                let card = new offreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
 
-        class offreCard {
+        class OffreCard {
             constructor(id, nom, rue, codeP, ville, salaire, heures, createdAt, description, debut, fin, teletravail, loge) {
-                if (!nom.length > 0) nom = 'Annonce n°' + id;
-                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                else description = "** Pas de description renseignée **";
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var date = ''
+                debut = debut.substr(0, 10).split('-');
+                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
+                fin = fin.substr(0, 10).split('-');
+                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+
+                if (!nom.length > 0) {
+                    nom = 'Annonce n°' + id;
+                }
+                if (description.length > 0) {
+                    description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                } else {
+                    description = "** Pas de description renseignée **";
+                }
+                if (ville.length > 0) {
+                    ville =
+                        `<span>
+                        <i class="icon map pin"></i>
+                            ${ville}
+                        </span>
+                    <br>`
+                }
+                if (fin.length > 0) {
+                    date = `<span>Du ${debut} au ${fin}</span>`
+                } else if (debut.length > 0) {
+                    date = `<span>À partir du ${debut}</span>`
+                }
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
@@ -162,12 +186,8 @@
                     <div class="content">
                         <div class="header">${nom}</div>
                         <div class="meta">
-                            <span>
-                                <i class="icon map pin"></i>
-                                ${ville}
-                            </span>
-                            <br>
-                            <span>du 12/06 au 12/07</span>
+                            ${ville}
+                            ${date}
                         </div>
                         <div class="description">
                             <p>${description}</p>
