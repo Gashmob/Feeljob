@@ -113,6 +113,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/supprimer/compte", name="delete_account")
+     * @param EntityManagerInterface $em
      * @return RedirectResponse
      */
     public function deleteAccount(EntityManagerInterface $em): RedirectResponse
