@@ -58,118 +58,130 @@ class EntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="entreprise_inscription")
+     * @Route("/inscription/employeur", name="entreprise_inscription_employeur")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
      */
-    public function inscription(Request $request, EntityManagerInterface $em)
+    public function inscriptionEmployeur(Request $request, EntityManagerInterface $em)
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
-            switch ($request->get('tab')) {
-                case EntityManager::EMPLOYEUR:
-                    $data = $this->getInscriptionData($request, $em);
+            $data = $this->getInscriptionData($request, $em);
 
-                    $nomEntreprise = $request->get('nomEntreprise');
-                    $nomEntrepriseB = true;
-                    if ($nomEntreprise == '') {
-                        $nomEntrepriseB = false;
-                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom pour votre entreprise');
-                    }
+            $nomEntreprise = $request->get('nomEntreprise');
+            $nomEntrepriseB = true;
+            if ($nomEntreprise == '') {
+                $nomEntrepriseB = false;
+                $this->addFlash('nomEntreprise', 'Merci de renseigner un nom pour votre entreprise');
+            }
 
-                    $logo = Utils::uploadImage('logo');
+            $logo = Utils::uploadImage('logo');
 
-                    $siret = $request->get('siret');
-                    $siretB = true;
-                    if ($siret == '') {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Merci de renseigner un numéro siret');
-                    } elseif (strlen($siret) != 14) {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Votre numéro siret est invalide');
-                    }
+            $siret = $request->get('siret');
+            $siretB = true;
+            if ($siret == '') {
+                $siretB = false;
+                $this->addFlash('siret', 'Merci de renseigner un numéro siret');
+            } elseif (strlen($siret) != 14) {
+                $siretB = false;
+                $this->addFlash('siret', 'Votre numéro siret est invalide');
+            }
 
-                    $description = $request->get('description');
+            $description = $request->get('description');
 
-                    $secteurActivite = $request->get('secteurActivite');
-                    $secteurActiviteB = true;
-                    if ($secteurActivite == '') {
-                        $secteurActiviteB = false;
-                        $this->addFlash('secteurActivite', 'Merci de renseigner votre secteur d\'activité');
-                    }
+            $secteurActivite = $request->get('secteurActivite');
+            $secteurActiviteB = true;
+            if ($secteurActivite == '') {
+                $secteurActiviteB = false;
+                $this->addFlash('secteurActivite', 'Merci de renseigner votre secteur d\'activité');
+            }
 
-                    if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
-                        $adresse = (new Adresse())
-                            ->setRue($data['rue'])
-                            ->setCodePostal($data['code_postal'])
-                            ->setVille($data['ville']);
-                        $em->persist($adresse);
-                        $em->flush();
+            if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
+                $adresse = (new Adresse())
+                    ->setRue($data['rue'])
+                    ->setCodePostal($data['code_postal'])
+                    ->setVille($data['ville']);
+                $em->persist($adresse);
+                $em->flush();
 
-                        $employeur = (new Employeur())
-                            ->setPrenom($data['prenom'])
-                            ->setNom($data['nom'])
-                            ->setNomEntreprise($nomEntreprise)
-                            ->setTelephone($data['telephone'])
-                            ->setEmail($data['email'])
-                            ->setVerifie(true) // TODO : add email verif
-                            ->setMotdepasse($data['motdepasse'])
-                            ->setSel($data['sel'])
-                            ->setAdresse($adresse)
-                            ->setLogo($logo)
-                            ->setSiret($siret)
-                            ->setDescription($description);
+                $employeur = (new Employeur())
+                    ->setPrenom($data['prenom'])
+                    ->setNom($data['nom'])
+                    ->setNomEntreprise($nomEntreprise)
+                    ->setTelephone($data['telephone'])
+                    ->setEmail($data['email'])
+                    ->setVerifie(true) // TODO : add email verif
+                    ->setMotdepasse($data['motdepasse'])
+                    ->setSel($data['sel'])
+                    ->setAdresse($adresse)
+                    ->setLogo($logo)
+                    ->setSiret($siret)
+                    ->setDescription($description);
 
-                        (new EmployeurManager())->create($em, $employeur, $secteurActivite);
+                (new EmployeurManager())->create($em, $employeur, $secteurActivite);
 
-                        //Utils::sendMailAndWait($mailer, $employeur->getEmail(), $employeur->getPrenom(), $employeur->getNom(), $employeur->getIdentity());
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+                //Utils::sendMailAndWait($mailer, $employeur->getEmail(), $employeur->getPrenom(), $employeur->getNom(), $employeur->getIdentity());
+                $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $employeur->getIdentity()]);
-                    }
-                    break;
-
-                case EntityManager::EMPLOYE:
-                    $data = $this->getInscriptionData($request, $em);
-
-                    if ($data['ok']) {
-                        $adresse = (new Adresse())
-                            ->setRue($data['rue'])
-                            ->setCodePostal($data['code_postal'])
-                            ->setVille($data['ville']);
-                        $em->persist($adresse);
-                        $em->flush();
-
-                        $employe = (new Employe())
-                            ->setPrenom($data['prenom'])
-                            ->setNom($data['nom'])
-                            ->setTelephone($data['telephone'])
-                            ->setEmail($data['email'])
-                            ->setVerifie(true) // TODO : add verif email
-                            ->setMotdepasse($data['motdepasse'])
-                            ->setSel($data['sel'])
-                            ->setAdresse($adresse);
-
-                        (new EmployeManager())->create($em, $employe);
-
-                        //Utils::sendMailAndWait($mailer, $employe->getEmail(), $employe->getPrenom(), $employe->getNom(), $employe->getIdentity());
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $employe->getIdentity()]);
-                    }
-                    break;
+                return $this->redirectToRoute('waitVerifEmail', ['id' => $employeur->getIdentity()]);
             }
         }
 
         return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
-            'employeur' => EntityManager::EMPLOYEUR,
-            'employe' => EntityManager::EMPLOYE
+        ]);
+    }
+
+    /**
+     * @Route("/inscription/employe", name="entreprise_inscription_employe")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    public function inscriptionEmploye(Request $request, EntityManagerInterface $em)
+    {
+        if ($this->session->get('user')) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $data = $this->getInscriptionData($request, $em);
+
+            if ($data['ok']) {
+                $adresse = (new Adresse())
+                    ->setRue($data['rue'])
+                    ->setCodePostal($data['code_postal'])
+                    ->setVille($data['ville']);
+                $em->persist($adresse);
+                $em->flush();
+
+                $employe = (new Employe())
+                    ->setPrenom($data['prenom'])
+                    ->setNom($data['nom'])
+                    ->setTelephone($data['telephone'])
+                    ->setEmail($data['email'])
+                    ->setVerifie(true) // TODO : add verif email
+                    ->setMotdepasse($data['motdepasse'])
+                    ->setSel($data['sel'])
+                    ->setAdresse($adresse);
+
+                (new EmployeManager())->create($em, $employe);
+
+                //Utils::sendMailAndWait($mailer, $employe->getEmail(), $employe->getPrenom(), $employe->getNom(), $employe->getIdentity());
+                $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+
+                return $this->redirectToRoute('waitVerifEmail', ['id' => $employe->getIdentity()]);
+            }
+        }
+
+        return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
+            'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }
 
