@@ -5,6 +5,16 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher">
+            <div class="ui basic floating dropdown button">
+                <div class="text">This Page</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">Secteur</div>
+                    {# {% for secteur in secteurs %}
+                        <div class="item">{{ secteur }}</div>
+                    {% endfor %} #}
+                </div>
+            </div>
             <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
@@ -154,9 +164,9 @@
                 var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
                 var date = ''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
                 fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                fin = fin[2] + '/' + fin[1] + '/' + fin[0];
 
                 if (!nom.length > 0) {
                     nom = 'Annonce n°' + id;

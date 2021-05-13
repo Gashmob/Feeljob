@@ -132,7 +132,7 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
+        return $this->render('home/inscriptionEntreprise.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }
@@ -180,7 +180,7 @@ class EntrepriseController extends AbstractController
             }
         }
 
-        return $this->render('home/inscriptionEntrepriseCandidat.html.twig', [
+        return $this->render('home/inscriptionCandidat.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }

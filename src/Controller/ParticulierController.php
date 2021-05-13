@@ -92,7 +92,7 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('home/inscriptionParticulierFreelance.html.twig', [
+        return $this->render('home/inscriptionParticulier.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }
@@ -172,7 +172,7 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('home/inscriptionParticulierFreelance.html.twig', [
+        return $this->render('home/inscriptionFreelance.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }

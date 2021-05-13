@@ -72,4 +72,116 @@
             {% endif %}
         </div>
     </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Vos contrats</h3>
+        <div class="ui segment" id="contratsList">
+            {% for i in 1..2 %}
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="ui placeholder">
+                            <div class="header">
+                                <div class="short line"></div>
+                            </div>
+                            <div class="paragraph">
+                                <div class="ui placeholder">
+                                    <div class="line"></div>
+                                    <div class="line"></div>
+                                    <div class="line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            getAcceptedCandidatures();
+            getAcceptedPropositions();
+            // Réinitialise la liste
+            contratsList.innerHTML = '';
+        })
+
+        function getAcceptedCandidatures() {
+            // L'Employe récupère toutes ses candidatures acceptées => {'candidatures': OffreEmploi[]}
+            $.ajax({
+                url: '/entreprise/get/accepted/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidaturesAcceptees(results)
+                }
+            });
+        }
+
+        function getAcceptedPropositions() {
+            // L'Employe récupère toutes ses propositions acceptées => {'propositions': OffreEmploi[]}
+            $.ajax({
+                url: '/entreprise/get/accepted/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayPropositionsAcceptees(results)
+                }
+            });
+        }
+
+        class CandidaturesAcceptees {
+            constructor(id, nom, description, updatedAt) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                updatedAt = updatedAt.substr(0, 10).split('-');
+                updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                this.cardTemplate = `
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Acceptée - ${nom}
+                        </div>
+                        <div class="description">
+                            <p>${updatedAt}</p>
+                            <p>${description}</p>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        var contratsList = document.getElementById('contratsList');
+
+        function displayCandidaturesAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                contratsList.innerHTML = `<div style="margin: 10px auto;">Pas de candidatures acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                results.candidatures.forEach(a => {
+                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
+                    contratsList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+
+        function displayPropositionsAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.propositions === undefined || results.propositions.length == 0) {
+                contratsList.innerHTML = `<div style="margin: 10px auto;">Pas de propositions acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                results.propositions.forEach(a => {
+                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
+                    contratsList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+    </script>
 {% endblock %}

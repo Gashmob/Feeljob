@@ -99,20 +99,6 @@
             });
         }
 
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestFiltered(secteur, distanceMax, limit, offset) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayAnnonces;
-            //let url = '/particulier/get/annonces';
-            httpRequest.open('POST', '/particulier/get/annonces/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset);
-            httpRequest.send();
-        }
-
         //Affiche les résultats dans 'annoncesList'
         const annoncesList = document.getElementById('annoncesList');
 
