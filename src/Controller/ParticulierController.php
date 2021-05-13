@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
@@ -51,119 +50,130 @@ class ParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="particulier_inscription")
+     * @Route("/inscription/particulier", name="particulier_inscription_particulier")
      * @param Request $request
-     * @param MailerInterface $mailer
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
      */
-    public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em)
+    public function inscriptionParticulier(Request $request, EntityManagerInterface $em)
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
         }
 
         if ($request->isMethod('POST')) {
-            switch ($request->get('tab')) {
-                case EntityManager::AUTO_ENTREPRENEUR:
-                    $data = $this->getInscriptionData($request, $em);
+            $data = $this->getInscriptionData($request, $em);
 
-                    $nomEntreprise = $request->get('nomEntreprise');
-                    $nomEntrepriseB = true;
-                    if ($nomEntreprise == '') {
-                        $nomEntrepriseB = false;
-                        $this->addFlash('nomEntreprise', 'Merci de renseigner un nom pour votre entreprise');
-                    }
+            if ($data['ok']) {
+                $adresse = (new Adresse())
+                    ->setRue($data['rue'])
+                    ->setCodePostal($data['code_postal'])
+                    ->setVille($data['ville']);
+                $em->persist($adresse);
+                $em->flush();
 
-                    $logo = Utils::uploadImage('logo');
+                $particulier = (new Particulier())
+                    ->setPrenom($data['prenom'])
+                    ->setNom($data['nom'])
+                    ->setTelephone($data['telephone'])
+                    ->setEmail($data['email'])
+                    ->setVerifie(true) // TODO : add verif email
+                    ->setMotdepasse($data['motdepasse'])
+                    ->setSel($data['sel'])
+                    ->setAdresse($adresse);
 
-                    $siret = $request->get('siret');
-                    $siretB = true;
-                    if ($siret == '') {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Merci de renseigner un numéro siret');
-                    } elseif (strlen($siret) != 14) {
-                        $siretB = false;
-                        $this->addFlash('siret', 'Votre numéro siret est invalide');
-                    }
+                (new ParticulierManager())->create($em, $particulier);
 
-                    $description = $request->get('description');
+                //Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
+                $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
 
-                    $secteurActivite = $request->get('secteurActivite');
-                    $secteurActiviteB = true;
-                    if ($secteurActivite == '') {
-                        $secteurActiviteB = false;
-                        $this->addFlash('secteurActivite', 'Merci de renseigner votre secteur d\'activité');
-                    }
-
-                    if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
-                        $adresse = (new Adresse())
-                            ->setRue($data['rue'])
-                            ->setCodePostal($data['code_postal'])
-                            ->setVille($data['ville']);
-                        $em->persist($adresse);
-                        $em->flush();
-
-                        $auto_entrepreneur = (new AutoEntrepreneur())
-                            ->setNom($data['nom'])
-                            ->setPrenom($data['prenom'])
-                            ->setNomEntreprise($nomEntreprise)
-                            ->setAdresse($adresse)
-                            ->setTelephone($data['telephone'])
-                            ->setEmail($data['email'])
-                            ->setVerifie(true) // TODO : add verif email
-                            ->setMotdepasse($data['motdepasse'])
-                            ->setSel($data['sel'])
-                            ->setLogo($logo)
-                            ->setSiret($siret)
-                            ->setDescription($description);
-
-                        (new AutoEntrepreneurManager())->create($em, $auto_entrepreneur, $secteurActivite);
-
-                        //Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $auto_entrepreneur->getIdentity()]);
-                    }
-                    break;
-
-                case EntityManager::PARTICULIER:
-                    $data = $this->getInscriptionData($request, $em);
-
-                    if ($data['ok']) {
-                        $adresse = (new Adresse())
-                            ->setRue($data['rue'])
-                            ->setCodePostal($data['code_postal'])
-                            ->setVille($data['ville']);
-                        $em->persist($adresse);
-                        $em->flush();
-
-                        $particulier = (new Particulier())
-                            ->setPrenom($data['prenom'])
-                            ->setNom($data['nom'])
-                            ->setTelephone($data['telephone'])
-                            ->setEmail($data['email'])
-                            ->setVerifie(true) // TODO : add verif email
-                            ->setMotdepasse($data['motdepasse'])
-                            ->setSel($data['sel'])
-                            ->setAdresse($adresse);
-
-                        (new ParticulierManager())->create($em, $particulier);
-
-                        //Utils::sendMailAndWait($mailer, $particulier->getEmail(), $particulier->getPrenom(), $particulier->getNom(), $particulier->getIdentity());
-                        $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-
-                        return $this->redirectToRoute('waitVerifEmail', ['id' => $particulier->getIdentity()]);
-                    }
-                    break;
+                return $this->redirectToRoute('waitVerifEmail', ['id' => $particulier->getIdentity()]);
             }
         }
 
         return $this->render('home/inscriptionParticulierFreelance.html.twig', [
             'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
-            'particulier' => EntityManager::PARTICULIER,
-            'auto_entrepreneur' => EntityManager::AUTO_ENTREPRENEUR
+        ]);
+    }
+
+    /**
+     * @Route("/inscription/auto", name="particulier_inscription_auto")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    public function inscriptionAutoEntrepreneur(Request $request, EntityManagerInterface $em)
+    {
+        if ($this->session->get('user')) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        if ($request->isMethod('POST')) {
+            $data = $this->getInscriptionData($request, $em);
+
+            $nomEntreprise = $request->get('nomEntreprise');
+            $nomEntrepriseB = true;
+            if ($nomEntreprise == '') {
+                $nomEntrepriseB = false;
+                $this->addFlash('nomEntreprise', 'Merci de renseigner un nom pour votre entreprise');
+            }
+
+            $logo = Utils::uploadImage('logo');
+
+            $siret = $request->get('siret');
+            $siretB = true;
+            if ($siret == '') {
+                $siretB = false;
+                $this->addFlash('siret', 'Merci de renseigner un numéro siret');
+            } elseif (strlen($siret) != 14) {
+                $siretB = false;
+                $this->addFlash('siret', 'Votre numéro siret est invalide');
+            }
+
+            $description = $request->get('description');
+
+            $secteurActivite = $request->get('secteurActivite');
+            $secteurActiviteB = true;
+            if ($secteurActivite == '') {
+                $secteurActiviteB = false;
+                $this->addFlash('secteurActivite', 'Merci de renseigner votre secteur d\'activité');
+            }
+
+            if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
+                $adresse = (new Adresse())
+                    ->setRue($data['rue'])
+                    ->setCodePostal($data['code_postal'])
+                    ->setVille($data['ville']);
+                $em->persist($adresse);
+                $em->flush();
+
+                $auto_entrepreneur = (new AutoEntrepreneur())
+                    ->setNom($data['nom'])
+                    ->setPrenom($data['prenom'])
+                    ->setNomEntreprise($nomEntreprise)
+                    ->setAdresse($adresse)
+                    ->setTelephone($data['telephone'])
+                    ->setEmail($data['email'])
+                    ->setVerifie(true) // TODO : add verif email
+                    ->setMotdepasse($data['motdepasse'])
+                    ->setSel($data['sel'])
+                    ->setLogo($logo)
+                    ->setSiret($siret)
+                    ->setDescription($description);
+
+                (new AutoEntrepreneurManager())->create($em, $auto_entrepreneur, $secteurActivite);
+
+                //Utils::sendMailAndWait($mailer, $auto_entrepreneur->getEmail(), $auto_entrepreneur->getPrenom(), $auto_entrepreneur->getNom(), $auto_entrepreneur->getIdentity());
+                $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
+
+                return $this->redirectToRoute('waitVerifEmail', ['id' => $auto_entrepreneur->getIdentity()]);
+            }
+        }
+
+        return $this->render('home/inscriptionParticulierFreelance.html.twig', [
+            'secteurActivites' => (new SecteurActiviteManager())->findAllNames(),
         ]);
     }
 
@@ -185,7 +195,6 @@ class ParticulierController extends AbstractController
 
         $user = (new UtilsManager())->getUserFromId($em, $this->session->get('user'));
 
-        $publications = [];
         switch ($type) {
             case EntityManager::AUTO_ENTREPRENEUR:
                 return $this->render('autoEntrepreneur/profilFreelance.html.twig', [
@@ -325,6 +334,33 @@ class ParticulierController extends AbstractController
         return $this->render('autoEntrepreneur/editCarteVisite.html.twig', [
             'carte' => $carte
         ]);
+    }
+
+    /**
+     * @Route("/supprimer/carte/{id}", name="particulier_delete_carte")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function deleteCarteVisite($id, EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $carte = $em->getRepository(CarteVisite::class)->find($id);
+        if (!$em->getRepository(CarteVisite::class)->isOwner($carte, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $em->remove($carte);
+        $em->flush();
+
+        return $this->redirectToRoute('userSpace');
     }
 
     /**
