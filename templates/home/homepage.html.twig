@@ -48,10 +48,20 @@
                         repellendus repudiandae sed suscipit temporibus voluptate.
                     </div>
                 </div>
-                <a href="{{ path('particulier_inscription') }}" class="ui bottom attached green icon button">
-                    S'inscire
-                    <i class="right arrow icon"></i>
-                </a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="{{ path('particulier_inscription_particulier') }}"
+                           class="ui green icon button">
+                            Particulier
+                            <i class="right arrow icon"></i>
+                        </a>
+                        <a href="{{ path('particulier_inscription_auto') }}"
+                           class="ui green basic icon button">
+                            Freelance
+                            <i class="right arrow icon"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="ui card homeCard">
                 <div class="content headerContent">
@@ -70,10 +80,19 @@
                         repellendus repudiandae sed suscipit temporibus voluptate.
                     </div>
                 </div>
-                <a href="{{ path('entreprise_inscription') }}" class="ui bottom attached green button">
-                    S'inscire
-                    <i class="right arrow icon"></i>
-                </a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="{{ path('entreprise_inscription_employe') }}" class="ui green button">
+                            Candidat
+                            <i class="right arrow icon"></i>
+                        </a>
+                        <a href="{{ path('entreprise_inscription_employeur') }}"
+                           class="ui green basic button">
+                            Entreprise
+                            <i class="right arrow icon"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
 
         </div>
