@@ -5,7 +5,15 @@ namespace App\Controller;
 
 
 use App\database\EntityManager;
+use App\database\manager\AutoEntrepreneurManager;
+use App\database\manager\EmployeManager;
+use App\database\manager\EmployeurManager;
+use App\database\manager\ParticulierManager;
 use App\database\manager\UtilsManager;
+use App\Entity\AutoEntrepreneur;
+use App\Entity\Employe;
+use App\Entity\Employeur;
+use App\Entity\Particulier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -99,6 +107,59 @@ class HomeController extends AbstractController
     {
         $this->session->clear();
         $this->addFlash('success', 'Vous êtes déconnecté !');
+
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/supprimer/compte", name="delete_account")
+     * @return RedirectResponse
+     */
+    public function deleteAccount(EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        switch ($this->session->get('userType')) {
+            case EntityManager::AUTO_ENTREPRENEUR:
+                (new AutoEntrepreneurManager())->remove(
+                    $em,
+                    $em->getRepository(AutoEntrepreneur::class)->findOneBy([
+                        'identity' => $this->session->get('user')
+                    ])
+                );
+                break;
+
+            case EntityManager::PARTICULIER:
+                (new ParticulierManager())->remove(
+                    $em,
+                    $em->getRepository(Particulier::class)->findOneBy([
+                        'identity' => $this->session->get('user')
+                    ])
+                );
+                break;
+
+            case EntityManager::EMPLOYEUR:
+                (new EmployeurManager())->remove(
+                    $em,
+                    $em->getRepository(Employeur::class)->findOneBy([
+                        'identity' => $this->session->get('user')
+                    ])
+                );
+                break;
+
+            case EntityManager::EMPLOYE:
+                (new EmployeManager())->remove(
+                    $em,
+                    $em->getRepository(Employe::class)->findOneBy([
+                        'identity' => $this->session->get('user')
+                    ])
+                );
+                break;
+        }
+
+        $this->addFlash('success', 'Votre compte a été supprimé !');
 
         return $this->redirectToRoute('homepage');
     }
