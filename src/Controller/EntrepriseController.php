@@ -38,7 +38,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -61,12 +60,11 @@ class EntrepriseController extends AbstractController
     /**
      * @Route("/inscription", name="entreprise_inscription")
      * @param Request $request
-     * @param MailerInterface $mailer
      * @param EntityManagerInterface $em
      * @return RedirectResponse|Response
      * @throws Exception
      */
-    public function inscription(Request $request, MailerInterface $mailer, EntityManagerInterface $em)
+    public function inscription(Request $request, EntityManagerInterface $em)
     {
         if ($this->session->get('user')) {
             return $this->redirectToRoute('userSpace');
@@ -193,7 +191,6 @@ class EntrepriseController extends AbstractController
 
         $user = (new UtilsManager())->getUserFromId($em, $this->session->get('user'));
 
-        $publications = [];
         switch ($type) {
             case EntityManager::EMPLOYE:
                 if (!is_null($user->getCV()))
@@ -273,7 +270,7 @@ class EntrepriseController extends AbstractController
                     }
 
                     $n = (new CVDiplome())
-                        ->setDate(new DateTime($date))
+                        ->setDate(DateTime::createFromFormat('Y', $date))
                         ->setMention($mention)
                         ->setDiplome($d);
                     $diplomes[] = $n;
@@ -457,7 +454,7 @@ class EntrepriseController extends AbstractController
                     }
 
                     $n = (new CVDiplome())
-                        ->setDate(new DateTime($date))
+                        ->setDate(DateTime::createFromFormat('Y', $date))
                         ->setMention($mention)
                         ->setDiplome($d);
                     $diplomes[] = $n;
