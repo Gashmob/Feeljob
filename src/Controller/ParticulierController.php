@@ -328,6 +328,33 @@ class ParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/supprimer/carte/{id}", name="particulier_delete_carte")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function deleteCarteVisite($id, EntityManagerInterface $em): RedirectResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $carte = $em->getRepository(CarteVisite::class)->find($id);
+        if (!$em->getRepository(CarteVisite::class)->isOwner($carte, $this->session->get('user'))) {
+            return $this->redirectToRoute('userSpace');
+        }
+
+        $em->remove($carte);
+        $em->flush();
+
+        return $this->redirectToRoute('userSpace');
+    }
+
+    /**
      * @Route("/creer/annonce", name="particulier_create_annonce")
      * @param Request $request
      * @param EntityManagerInterface $em
