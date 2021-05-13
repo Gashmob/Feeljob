@@ -1803,7 +1803,7 @@ final class UtilsController extends AbstractController
 			'Responsable',
 			'Steward',
 			'gv',
-        ]
+        ],
         'Transport/Logistique' => [
 			'Animateur logistique',
 			'Agent de transit',
