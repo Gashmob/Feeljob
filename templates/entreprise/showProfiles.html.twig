@@ -83,12 +83,17 @@
 {% block javascripts %}
     <script type='text/javascript'>
         class CVCard {
-            constructor(id, prenom, nom, photo, diplomes, langues, createdAt, description) {
+            constructor(id, prenom, nom, photo, diplomes, langues, createdAt, description, permis) {
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
                 let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
                 if (photo.length > 0) photo = '{{ asset('uploads/photo/') }}' + photo;
+                if (permis) permis = `
+                <p>
+                    <i class="icon circle outline check"></i>
+                    Dispose du permis
+                </p>`
 
                 this.cardTemplate = `
                 <div class="ui card cvCard">
@@ -108,10 +113,7 @@
                             ${diplomes.map(diplome =>
                     `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
                 ).join('')}
-                            <p>
-                                <i class="icon circle outline check"></i>
-                                Dispose du permis
-                            </p>
+                            ${permis}
                         </div>
                     </div>
                     <a href="${url}"
@@ -127,24 +129,16 @@
             makeRequest()
         });
 
-        if (httpRequest == undefined) {
-            let httpRequest;
-        }
-        if (results == undefined) {
-            let results;
-        }
-
         //Cherche tous les résultats
         function makeRequest() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCVS;
-            httpRequest.open('POST', '/entreprise/get/cvs');
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
 
         //Cherche les résultats par le nom entré barre recherche
@@ -163,35 +157,21 @@
         //Affiche les résultats dans 'cvsList'
         var cvsList = document.getElementById('cvsList');
 
-        function displayCVS() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                cvsList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayCVS(results) {
+            console.log(results);
+            // Réinitialise la liste
+            cvsList.innerHTML = '';
+
+            // Il n'y a pas de résultats :
+            if (results.cvs === undefined || results.cvs.length == 0) {
+                cvsList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results);
-                    // Réinitialise la liste
-                    cvsList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.cvs === undefined || results.cvs.length == 0) {
-                        cvsList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
-                    }
-
-                    // Il y a des résultats :
-                    results.cvs.forEach(cv => {
-                        let card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description);
-                        cvsList.innerHTML += card.cardTemplate;
-                    })
-
-                } else {
-                    cvsList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
-                }
-            }
+            // Il y a des résultats :
+            results.cvs.forEach(cv => {
+                let card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
+                cvsList.innerHTML += card.cardTemplate;
+            })
         }
 
         // Cherche les CV lorsqu'on appuie sur la touche entrée dans la barre de recherche
@@ -211,17 +191,6 @@
                 makeRequest();
             }
         }
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');

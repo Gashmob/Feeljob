@@ -34,19 +34,20 @@ window.addEventListener("load", function () {
 
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
-    makeRequestByORSC('/particulier/get/my/candidatures', displayContratsFeed);
-}
-
-// Charge les propositions de contrat au survol de l'icone de mallette dans la nav
-function loadContratsFeed() {
-    makeRequestByORSC('/particulier/get/my/candidatures', displayContratsFeed);
+    $.ajax({
+        url: '/particulier/get/my/candidatures',
+        type: 'POST',
+        dataType: 'json',
+        success: function (results) {
+            displayContratsFeed(results);
+        }
+    });
 }
 
 // Tronque les descriptions
 const MAX_DESCRIPTION_LENGTH = 300;
 
-function truncate(str, n, useWordBoundary
-) {
+function truncate(str, n, useWordBoundary) {
     if (str.length <= n) {
         return str;
     }
@@ -56,54 +57,27 @@ function truncate(str, n, useWordBoundary
         : subString) + " &hellip;";
 };
 
-// Créé une requête xmlhttp
-let httpRequest, results;
-
-function makeRequestByORSC(url, orscFunction) {
-    httpRequest = new XMLHttpRequest();
-    if (!httpRequest) {
-        alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-        return false;
-    }
-    httpRequest.onreadystatechange = orscFunction;
-    httpRequest.open('POST', url);
-    httpRequest.send();
-}
-
 // Affiche les propositions de contrat dans la nav au survol de la mallette
-const notificationsFeed = document.getElementById('notifications');
-const contratsAmount = document.getElementById('contratsAmount');
+var notificationsFeed = document.getElementById('notifications');
+var contratsAmount = document.getElementById('contratsAmount');
 
-function displayContratsFeed() {
-    //En cours de chargement
-    if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-        notificationsFeed.innerHTML = `<i class="notched circle loading icon"></i>`;
+function displayContratsFeed(results) {
+    console.log(results)
+
+    // Change la quantité de candidatures de contrat dans la case
+    contratsAmount.innerHTML = results.candidatures.length;
+
+    // Réinitialise la liste
+    notificationsFeed.innerHTML = '';
+
+    // Il n'y a pas de résultats :
+    if (results.candidatures === undefined || results.candidatures.length == 0) {
+        notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
     }
-    //Chargé
-    else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            // Change la quantité de candidatures de contrat dans la case
-            console.log(results)
-            contratsAmount.innerHTML = results.candidatures.length;
-            // results = httpRequest.responseText
-            // Réinitialise la liste
-            notificationsFeed.innerHTML = '';
 
-            // Il n'y a pas de résultats :
-            if (results.candidatures === undefined || results.candidatures.length == 0) {
-                notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
-            }
-
-            // Il y a des résultats :
-            // Pour chaque cv du tableau candidatures
-            results.candidatures.forEach(candidature => {
-                let card = new ContratEvent(candidature.identity, candidature.nom, candidature.adresse.ville, candidature.createdAt);
-                notificationsFeed.innerHTML += card.contratEventTemplate;
-            })
-        } else {
-            notificationsFeed.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-        }
-    }
+    // Il y a des résultats :
+    results.candidatures.forEach(candidature => {
+        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.adresse.ville, candidature.createdAt);
+        notificationsFeed.innerHTML += card.contratEventTemplate;
+    })
 }

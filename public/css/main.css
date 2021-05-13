@@ -461,12 +461,9 @@
 }
 
 .profileLogo {
-    overflow: hidden;
-    margin-right: 10px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    border-radius: 50%;
+    height:140px !important;
+    width:140px !important;
+    object-fit:cover !important;
 }
 
 .profileLogo.profileLogo--35 {
@@ -475,13 +472,13 @@
 }
 
 .profileLogo.profileLogo--80 {
-    height: 80px;
-    width: 80px;
+    height: 80px !important;
+    width: 80px !important;
 }
 
 .profileLogo.profileLogo--120 {
-    height: 120px;
-    width: 120px;
+    height: 120px !important;
+    width: 120px !important;
 }
 
 .flex {

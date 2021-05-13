@@ -22,6 +22,9 @@
             </div>
         </div>
     </div>
+    <a href="{{ path('particulier_contrats') }}" class="ui blue button">
+        Vos contrats
+    </a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
@@ -32,7 +35,7 @@
                         <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
                         <div class="description">
                             {% if publications.description|length %}
-                                <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                                <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
                             {% else %}
                                 <p class="meta">** Pas de description **</p>
                             {% endif %}

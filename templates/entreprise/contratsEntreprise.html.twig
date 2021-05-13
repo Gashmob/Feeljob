@@ -44,27 +44,44 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadCandidatures();
-            setTimeout(loadContrats, 2000);
+            // TODO: erreur car il s'agit des candidatures reçues ci dessous
+            loadContrats();
         });
-
-        // Charge les contrats dans la vue contrat et les affiche
-        function loadContrats() {
-            makeRequestByORSC('/entreprise/get/my/propositions', displayContrats);
-        }
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
-            makeRequestByORSC('/entreprise/get/my/candidatures', displayCandidatures);
+            $.ajax({
+                url: '/entreprise/get/my/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidatures(results)
+                }
+            });
+        }
+
+        // Charge les contrats dans la vue contrat et les affiche
+        function loadContrats() {
+            $.ajax({
+                url: '/entreprise/get/my/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayContrats(results)
+                }
+            });
         }
 
         /*
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, date, description) {
-                if (!nom.length > 0) nom = 'Annonce n°' + id;
-                date = date.substr(0, 10).split('-');
-                date = date[2] + '-' + date[1] + '-' + date[0];
+            constructor(id, nom, ville, updatedAt, debut, fin, description) {
+                if (!nom.length > 0) nom = 'Offre n°' + id;
+                debut = debut.substr(0, 10).split('-');
+                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
+                fin = fin.substr(0, 10).split('-');
+                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
@@ -74,7 +91,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom} à ${ville}</div>
                             <div class="meta">
-                                <span class="date">Pour le ${date}</span>
+                                <span class="date">Du ${debut} au ${fin}</span>
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -94,10 +111,12 @@
          * classe correspondant à l'item candidature dans la vue contrats
          */
         class Candidature {
-            constructor(id, nom, rue, codePostal, ville, createdAt, date, description) {
-                if (!nom.length > 0) nom = 'Annonce n°' + id;
-                date = date.substr(0, 10).split('-');
-                date = date[2] + '-' + date[1] + '-' + date[0];
+            constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
+                if (!nom.length > 0) nom = 'Ofre n°' + id;
+                debut = debut.substr(0, 10).split('-');
+                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
+                fin = fin.substr(0, 10).split('-');
+                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
@@ -107,7 +126,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom} à ${ville}</div>
                             <div class="meta">
-                                <span class="date">Pour le ${date}</span>
+                                <span class="date">Dut ${debut} au ${fin}</span>
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -127,6 +146,7 @@
         function requestUncandidate(id) {
             makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
         }
+
         // Affiche la décandidature
         function displayUncandidate(id) {
             let btnNo = 'undoBtn' + id
@@ -139,6 +159,7 @@
         function requestDenyContrat(id) {
             makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
         }
+
         // Affiche le refus proposition contrat
         function displayDeny(id) {
             let btnNo = 'denyBtn' + id
@@ -151,6 +172,7 @@
         function requestAcceptContrat(id) {
             makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
         }
+
         // Affiche l'acceptation proposition contrat
         function displayAccept(id) {
             let btnNo = 'acceptBtn' + id
@@ -160,68 +182,43 @@
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
-        function displayContrats() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
+
+        function displayContrats(results) {
+            // Réinitialise la liste
+            contratsList.innerHTML = '';
+
+            // Il n'y a pas de résultats :
+            if (results.propositions == undefined || results.propositions.length == 0) {
+                contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    contratsList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.propositions == undefined || results.propositions.length == 0) {
-                        contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
-                    }
+            console.log(results)
 
-                    console.log(results)
-
-                    // Il y a des résultats :
-                    results.propositions.forEach(proposition => {
-                        let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
-                        contratsList.innerHTML += card.contratTemplate;
-                    })
-                } else {
-                    contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
-            }
+            // Il y a des résultats :
+            results.propositions.forEach(proposition => {
+                let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
+                contratsList.innerHTML += card.contratTemplate;
+            })
         }
 
         // Affiche la liste des candidatures dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
 
-        function displayCandidatures() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayCandidatures(results) {
+            // Réinitialise la liste
+            candidaturesList.innerHTML = '';
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    candidaturesList.innerHTML = '';
-                    // Il n'y a pas de résultats :
-                    if (results.candidatures === undefined || results.candidatures.length == 0) {
-                        candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
-                    }
 
-                    console.log(results)
+            console.log(results)
 
-                    // Il y a des résultats :
-                    results.candidatures.forEach(candidature => {
-                        let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
-                        candidaturesList.innerHTML += card.candidatureTemplate;
-                    })
-                } else {
-                    candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
-            }
+            // Il y a des résultats :
+            results.candidatures.forEach(candidature => {
+                let card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
+                candidaturesList.innerHTML += card.candidatureTemplate;
+            })
         }
     </script>
 {% endblock %}

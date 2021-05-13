@@ -22,27 +22,33 @@
             </div>
         </div>
     </div>
+    <a href="{{ path('entreprise_contrats') }}" class="ui blue button">
+        Vos contrats
+    </a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Votre CV</h3>
         <div class="ui two stackable cards">
             {% if publications %}
-                    <a href="{{ path('entreprise_show_cv', {'id': publications.id}) }}" class="ui card">
-                        <div class="content">
-                            <div class="meta">Créé le {{ publications.createdAt|date('d/m/Y') }}</div>
-                            <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
-                            <div class="description">
-                                {% if publications.description|length %}
-                                    <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
-                                {% else %}
-                                    <p class="meta">** Pas de description **</p>
-                                {% endif %}
-                            </div>
+                <a href="{{ path('entreprise_show_cv', {'id': publications.id}) }}" class="ui card">
+                    <div class="content">
+                        <div class="meta">Créé le {{ publications.updatedAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publications.updatedAt|date('H:i') }}</div>
+                        <div class="description">
+                            {% if publications.description|length %}
+                                <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                            {% else %}
+                                <p class="meta">** Pas de description **</p>
+                            {% endif %}
+                            {% for diplome in publications.diplomes %}
+                                <p><i class="icon bookmark"></i>{{ diplome.diplome.nom }}</p>
+                            {% endfor %}
                         </div>
-                        <div class="extra content">
-                            <i class="check icon"></i>
-                            Vu {{ publications.id }} fois
-                        </div>
-                    </a>
+                    </div>
+                    <div class="extra content">
+                        <i class="check icon"></i>
+                        Vu {{ publications.id }} fois
+                    </div>
+                </a>
             {% else %}
                 <div style="border: none; width: auto; box-shadow: none;"
                      class="ui card grid middle aligned center aligned">
@@ -53,8 +59,8 @@
                                 Télécharger
                                 <input type="file" style="display: none;" id="profile-cv" name="cv">
                             </label>
-                        </div>  #}
-                        <div style="margin: .5em 0;" class="row">Ou</div>
+                        </div>
+                        <div style="margin: .5em 0;" class="row">Ou</div> #}
                         <a href="{{ path('entreprise_create_cv') }}" class="ui row labeled icon">
                             <button class="ui blue labeled icon button">
                                 <i class="plus icon"></i>

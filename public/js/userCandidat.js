@@ -43,19 +43,20 @@ window.addEventListener("load", function () {
 
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
-    makeRequestByORSC('/entreprise/get/propositions', displayContratsFeed);
-}
-
-// Charge les propositions de contrat au survol de l'icone de mallette dans la nav
-function loadContratsFeed() {
-    makeRequestByORSC('/entreprise/get/propositions', displayContratsFeed);
+    $.ajax({
+        url: '/entreprise/get/propositions',
+        type: 'POST',
+        dataType: 'json',
+        success: function (results) {
+            displayContratsFeed(results)
+        }
+    });
 }
 
 // Tronque les descriptions
 const MAX_DESCRIPTION_LENGTH = 300;
 
-function truncate(str, n, useWordBoundary
-) {
+function truncate(str, n, useWordBoundary) {
     if (str.length <= n) {
         return str;
     }
@@ -66,7 +67,7 @@ function truncate(str, n, useWordBoundary
 };
 
 // Créé une requête xmlhttp
-let httpRequest, results;
+var httpRequest, results;
 
 function makeRequestByORSC(url, orscFunction) {
     httpRequest = new XMLHttpRequest();
@@ -83,35 +84,22 @@ function makeRequestByORSC(url, orscFunction) {
 const notificationsFeed = document.getElementById('notifications');
 const contratsAmount = document.getElementById('contratsAmount');
 
-function displayContratsFeed() {
-    //En cours de chargement
-    if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-        notificationsFeed.innerHTML = `<i class="notched circle loading icon"></i>`;
-    }
-    //Chargé
-    else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            // stocke les résultats parsé en JSON dans une variable
-            results = JSON.parse(httpRequest.responseText)
-            // Change la quantité de propositions de contrat dans la case
-            contratsAmount.innerHTML = results.propositions.length;
-            // results = httpRequest.responseText
-            // Réinitialise la liste
-            notificationsFeed.innerHTML = '';
+function displayContratsFeed(results) {
+    // Change la quantité de propositions de contrat dans la case
+    contratsAmount.innerHTML = results.propositions.length;
+    // results = httpRequest.responseText
+    // Réinitialise la liste
+    notificationsFeed.innerHTML = '';
 
-            // Il n'y a pas de résultats :
-            if (results.propositions === undefined || results.propositions.length == 0) {
-                notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
-            }
-
-            // Il y a des résultats :
-            // Pour chaque proposition
-            results.propositions.forEach(proposition => {
-                let card = new ContratEvent(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.createdAt);
-                notificationsFeed.innerHTML += card.contratEventTemplate;
-            })
-        } else {
-            notificationsFeed.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-        }
+    // Il n'y a pas de résultats :
+    if (results.propositions === undefined || results.propositions.length == 0) {
+        notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
     }
+
+    // Il y a des résultats :
+    // Pour chaque proposition
+    results.propositions.forEach(proposition => {
+        let card = new ContratEvent(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.createdAt);
+        notificationsFeed.innerHTML += card.contratEventTemplate;
+    })
 }

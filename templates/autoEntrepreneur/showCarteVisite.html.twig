@@ -15,17 +15,12 @@
         </h2>
         <div>
             <div class="ui buttons">
-                <a download="CV de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}"
-                   href="{{ asset('img/placeholders/carte.png') }}"
-                   class="ui grey basic button">
-                    Télécharger
-                </a>
                 {% if owner %}
-                    <a href="{{ path('entreprise_modifier_cv', {id: carte.id}) }}"
+                    <a href="{{ path('particulier_modifier_carte_visite', {id: carte.id}) }}"
                        class="ui blue basic button">
                         Éditer
                     </a>
-                    <a href="{{ path('entreprise_delete_cv', {id: carte.id}) }}"
+                    <a href="{{ path('particulier_modifier_carte_visite', {id: carte.id}) }}"
                        class="ui red basic button">
                         Supprimer
                     </a>
@@ -42,25 +37,15 @@
                 <div class="column ten wide">
                     <div class="flex">
                         {% if carte.autoEntrepreneur.logo %}
-                            <div class="profileLogo profileLogo--80"
-                                 style="background-image: url('{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}'); -moz-background-image: url('{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}'); -o-background-image: url('{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}'); -webkit-background-image: url('{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}');"></div>
+                        <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                             alt="logo du freelance"
+                             class="ui small circular image profileLogo">
                         {% endif %}
                         <div>
                             <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
                             <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
                         </div>
                     </div>
-                    <div class="ui divider"></div>
-                    {% if app.session.get('user') %}
-                        <div title="Vous devez envoyer une proposition de contrat">
-                            Mail :
-                            <span class="textblur">mailplaceholder@mail.fr</span>
-                        </div>
-                        <div title="Vous devez envoyer une proposition de contrat">
-                            Téléphone :
-                            <span class="textblur">0612345678</span>
-                        </div>
-                    {% endif %}
                 </div>
             </div>
             <!-- Bio -->

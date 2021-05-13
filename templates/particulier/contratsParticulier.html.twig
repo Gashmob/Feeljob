@@ -42,45 +42,59 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        window.addEventListener("load", (event) => {
+        window.addEventListener("DOMContentLoaded", (event) => {
             loadCandidatures();
-            setTimeout(loadContrats, 2000);
+            loadContrats()
         });
-
-        // Le Particulier récupère toutes ses propositions => {'propositions': Annonce[]}
-        function loadContrats() {
-            makeRequestByORSC('/particulier/get/my/propositions', displayContrats);
-        }
 
         // Le Particulier récupère toutes ses candidatures => {'candidatures': Annonce[]}
         function loadCandidatures() {
-            makeRequestByORSC('/particulier/get/my/candidatures', displayCandidatures);
+            $.ajax({
+                url: '/particulier/get/my/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidatures(results);
+                }
+            });
+        }
+
+        // Le Particulier récupère toutes ses propositions => {'propositions': Annonce[]}
+        function loadContrats() {
+            $.ajax({
+                url: '/particulier/get/my/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayContrats(results)
+                }
+            });
         }
 
         /*
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, date, description) {
+            constructor(id, nom, ville, updatedAt, date, description, idAuto) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 //url vers le profil du freelance à qui est destinée la proposition
-                let url = "#"
+                let urlAuto = "#"
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} <span class="textGreen">pour</span> <a href="${url}">Charles</a></div>
+                            <div class="ui header small">${nom} <span class="textGreen">pour</span> <a href="${urlAuto}">Charles</a></div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestCancelProposition(${id}, ${idAuto})">Annuler</button>
                             </div>
                         </div>
                     </div>
@@ -92,7 +106,7 @@
          * classe correspondant à l'item candidature dans la vue contrats
          */
         class Candidature {
-            constructor(id, nom, rue, codePostal, ville, createdAt, date, description) {
+            constructor(id, nom, rue, codePostal, ville, createdAt, date, description, idAuto) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
@@ -110,8 +124,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
+                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id}, ${idAuto})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id}, ${idAuto})">Accepter</button>
                             </div>
                         </div>
                     </div>
@@ -119,23 +133,38 @@
             }
         }
 
-        // ----- Décandidature ----- //
-        // Demande à décandidater
-        function requestUncandidate(id) {
-            makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
+        // ----- Annuler proposition contrat ----- //
+        // Le Particulier supprime la proposition d'Annonce idAnn faite à l'AutoEntrepreneur idAuto => {'result': boolean}
+        function requestCancelProposition(idAnn, idAuto) {
+            $.ajax({
+                url: '/particulier/remove/proposition/' + idAnn + '/' + idAuto,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    displayCancelProposition(idAnn)
+                }
+            });
         }
 
-        // Affiche la décandidature
-        function displayUncandidate(id) {
+        // Affiche l'annulation
+        function displayCancelProposition(id) {
             let btnNo = 'undoBtn' + id
             let btn = document.getElementById(btnNo)
             btn.innerHTML = 'Annulée'
         }
 
-        // ----- Refus proposition contrat ----- //
-        // Refuse proposition contrat
+        // ----- Refus candidature contrat ----- //
+        // Refuse candidature contrat
+        // TODO : pas encore faite
         function requestDenyContrat(id) {
-            makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
+            $.ajax({
+                url: '/particulier/refuse/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    displayDeny(id)
+                }
+            });
         }
 
         // Affiche le refus proposition contrat
@@ -145,10 +174,17 @@
             btn.innerHTML = 'Refusée'
         }
 
-        // ----- Acceptation proposition contrat ----- //
-        // Acceptation proposition contrat
-        function requestAcceptContrat(id) {
-            makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
+        // ----- Acceptation candidature contrat ----- //
+        // Le Particulier accepte la candidature de l'AutoEntrepreneur idAuto à l'Annonce idAnn => {'result': boolean}
+        function requestAcceptContrat(idAnn, idAuto) {
+            $.ajax({
+                url: '/particulier/accept/candidature/'+ idAnn+ '/'+ idAuto,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    displayAccept(idAnn)
+                }
+            });
         }
 
         // Affiche l'acceptation proposition contrat
@@ -161,69 +197,46 @@
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
 
-        function displayContrats() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    contratsList.innerHTML = '';
+        function displayContrats(results) {
+            // Réinitialise la liste
+            contratsList.innerHTML = '';
 
-                    console.log(results)
-                    // Il n'y a pas de résultats :
-                    if (results.propositions == undefined || results.propositions.length == 0) {
-                        contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
-                    }
-                    // Il y a des résultats :
-                    // Pour chaque proposition
-                    if (results.length == 0) {
-                        console.log('pas de propositions')
-                    }
-                    results.propositions.forEach(proposition => {
-                        let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
-                        contratsList.innerHTML += card.contratTemplate;
-                    })
-                } else {
-                    contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            console.log('display contrats')
+            console.log(results)
+            // Il n'y a pas de résultats :
+            if (results.propositions == undefined || results.propositions.length == 0) {
+                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
+            // Il y a des résultats :
+            // Pour chaque proposition
+            if (results.length == 0) {
+                console.log('pas de propositions')
+            }
+            results.propositions.forEach(proposition => {
+                let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
+                contratsList.innerHTML += card.contratTemplate;
+            })
         }
 
         // Affiche la liste des candidatures dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
 
-        function displayCandidatures() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    candidaturesList.innerHTML = '';
-                    console.log(results);
-                    // Il n'y a pas de résultats :
-                    if (results.candidatures === undefined || results.candidatures.length == 0) {
-                        candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
-                    }
+        function displayCandidatures(results) {
+            // Réinitialise la liste
+            candidaturesList.innerHTML = '';
 
-                    // Il y a des résultats :
-                    results.candidatures.forEach(candidature => {
-                        let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
-                        candidaturesList.innerHTML += card.candidatureTemplate;
-                    })
-                } else {
-                    candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            console.log('displaycandidatures:')
+            console.log(results);
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
             }
+
+            // Il y a des résultats :
+            results.candidatures.forEach(candidature => {
+                let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
+                candidaturesList.innerHTML += card.candidatureTemplate;
+            })
         }
     </script>
 {% endblock %}

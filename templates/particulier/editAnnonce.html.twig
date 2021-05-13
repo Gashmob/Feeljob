@@ -56,9 +56,7 @@
             </div>
             <div class="required field">
                 <label>Description</label>
-                <textarea name="description" cols="30" rows="12" required maxlength="3000">
-                    {{ annonce.description|nl2br }}
-                </textarea>
+                <textarea name="description" cols="30" rows="12" required maxlength="4000">{{ annonce.description }}</textarea>
             </div>
             <button class="ui fluid large green submit button" type="submit">Enregistrer</button>
         </form>

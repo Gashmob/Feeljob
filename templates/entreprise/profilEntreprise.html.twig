@@ -34,6 +34,9 @@
             <a href="#">Ajouter des crédits</a>
         </div>
     </div>
+    <a href="{{ path('entreprise_contrats') }}" class="ui blue button">
+        Vos contrats
+    </a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Vos offres d'emploi</h3>
         <div class="ui four stackable cards">
@@ -46,7 +49,7 @@
                         <br>
                         <div class="description">
                             {% if publication.description|length %}
-                                <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                                <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                             {% else %}
                                 <p class="meta">** Pas de description **</p>
                             {% endif %}

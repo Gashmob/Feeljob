@@ -31,9 +31,10 @@
             <a href="{{ path('particulier_show_annonce', {'id': publication.identity}) }}" class="ui card">
                 <div class="content">
                     <div class="header">{{ publication.nom }}</div>
-                    <div class="meta">Créé le 12 novembre 2020</div>
+                    <div class="meta">Créé le {{ publication.updatedAt|date('d/m/Y') }}</div>
+                    <div class="meta">À {{ publication.updatedAt|date('H:i') }}</div>
                     <div class="description">
-                        <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                        <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                     </div>
                 </div>
                 <div class="extra content">
@@ -56,4 +57,58 @@
             </div>
         </div>
     </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Candidatures acceptées</h3>
+        <!--/particulier/get/accepted/candidatures-->
+        <div class="ui segment">
+            {% for i in 1..2 %}
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Accepté
+                        </div>
+                        <div class="description">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
+                                exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
+                                unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <h3 class="ui header green">Propositions acceptées</h3>
+        <!--/particulier/get/accepted/propositions-->
+        <div class="ui segment">
+            {% for i in 1..2 %}
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Accepté
+                        </div>
+                        <div class="description">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
+                                exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
+                                unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+window.addEventListener('load', function() {
+    $.ajax({
+        url : '/particulier/get/accepted/propositions',
+        type : 'POST',
+        dataType : 'html',
+        success : function(code_html, statut){
+            console.log(code_html)
+        }
+    });
+})
+    </script>
 {% endblock %}

@@ -26,7 +26,7 @@
                     <img src="{{ asset('img/placeholders/elyse.png') }}"
                          alt="photo de profil"
                          id="pdp"
-                         class="ui small circular centered image">
+                         class="ui circular centered image profileLogo profileLogo--120">
                 </div>
                 <div class="ui twelve wide column">
                     <div class="two fields">
@@ -176,7 +176,7 @@
             <h3 class="ui dividing green header">Description</h3>
             <div class="field">
                 <textarea rows="8" name="description"
-                          placeholder="Rajoutez des informations à votre sujet." maxlength="800"></textarea>
+                          placeholder="Rajoutez des informations à votre sujet." maxlength="2000"></textarea>
             </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
@@ -272,8 +272,8 @@
                 </div>
             </div>
             <div style="display: none;" id="numberOfRows">
-                <input id="nbFormInput" type="number" name="nbMetiers" value="1">
-                <input id="nbExpInput" type="number" name="nbDiplomes" value="1">
+                <input id="nbFormInput" type="number" name="nbDiplomes" value="1">
+                <input id="nbExpInput" type="number" name="nbMetiers" value="1">
                 <input id="nbLangInput" type="number" name="nbLangues" value="1">
                 <input id="nbCompInput" type="number" name="nbCompetences" value="1">
             </div>
