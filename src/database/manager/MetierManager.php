@@ -133,4 +133,19 @@ class MetierManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @return array
+     */
+    public function findAllNamesWithSecteurActivite(): array
+    {
+        $secteurs = (new SecteurActiviteManager())->findAllNames();
+
+        $res = [];
+        foreach ($secteurs as $secteur) {
+            $res[] = [$secteur => $this->findAllNamesBySecteurActivite($secteur)];
+        }
+
+        return $res;
+    }
 }
