@@ -7,6 +7,7 @@ namespace App\database\manager;
 use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
+use App\Entity\Employe;
 use App\Entity\Employeur;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
@@ -240,14 +241,16 @@ class OffreEmploiManager extends Manager
      */
     public function getMyCandidature(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR .')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ']-() WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -280,14 +283,16 @@ class OffreEmploiManager extends Manager
      */
     public function getMyAcceptedCandidature(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR .')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-() WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -363,14 +368,16 @@ class OffreEmploiManager extends Manager
      */
     public function getMyPropositions(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR .')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->() WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -403,14 +410,16 @@ class OffreEmploiManager extends Manager
      */
     public function getMyAcceptedPropositions(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR .')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->() WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;

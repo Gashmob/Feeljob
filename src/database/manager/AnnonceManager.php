@@ -7,6 +7,7 @@ use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
 use App\Entity\Annonce;
+use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AnnonceManager extends Manager
@@ -176,14 +177,16 @@ class AnnonceManager extends Manager
      */
     public function getMyCandidature(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ']-() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -216,14 +219,16 @@ class AnnonceManager extends Manager
      */
     public function getMyAcceptedCandidature(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -299,14 +304,16 @@ class AnnonceManager extends Manager
      */
     public function getMyPropositions(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -339,14 +346,16 @@ class AnnonceManager extends Manager
      */
     public function getMyAcceptedPropositions(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
