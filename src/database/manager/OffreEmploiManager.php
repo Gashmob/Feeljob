@@ -75,12 +75,14 @@ class OffreEmploiManager extends Manager
      * @param OffreEmploi $offre
      * @param int $idEmployeur
      * @param string $typeContrat
+     * @param string $metier
      * @return int|null
      */
-    public function create(EntityManagerInterface $em, OffreEmploi $offre, int $idEmployeur, string $typeContrat): ?int
+    public function create(EntityManagerInterface $em, OffreEmploi $offre, int $idEmployeur, string $typeContrat, string $metier): ?int
     {
-        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}) WHERE id(e)=$idE CREATE (e)-[:' . EntityManager::PUBLIE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::TYPE . ']->(t) RETURN id(o) AS id'))
+        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}), (m:' . EntityManager::METIER . ' {nom:$metier}) WHERE id(e)=$idE CREATE (e)-[:' . EntityManager::PUBLIE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::TYPE . ']->(t), (o)-[:' . EntityManager::EST_DANS . ']->(m) RETURN id(o) AS id'))
             ->setString('type', $typeContrat)
+            ->setString('metier', $metier)
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getOneOrNullResult();
@@ -115,11 +117,13 @@ class OffreEmploiManager extends Manager
      * @param EntityManagerInterface $em
      * @param OffreEmploi $offre
      * @param string $typeContrat
+     * @param string $metier
      */
-    public function update(EntityManagerInterface $em, OffreEmploi $offre, string $typeContrat)
+    public function update(EntityManagerInterface $em, OffreEmploi $offre, string $typeContrat, string $metier)
     {
-        (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[r]-(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id DELETE r CREATE (o)-[:' . EntityManager::TYPE . ']->(t)'))
-            ->setString('nom', $typeContrat)
+        (new PreparedQuery('MATCH (:' . EntityManager::METIER . ')-[r1]-(o:' . EntityManager::OFFRE_EMPLOI . ')-[r2]-(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}), (m:' . EntityManager::METIER . ' {nom:$metier}) WHERE id(o)=$id DELETE r1,r2 CREATE (m)<-[:' . EntityManager::EST_DANS . ']-(o)-[:' . EntityManager::TYPE . ']->(t)'))
+            ->setString('type', $typeContrat)
+            ->setString('metier', $metier)
             ->setInteger('id', $offre->getIdentity())
             ->run();
 
@@ -516,20 +520,29 @@ class OffreEmploiManager extends Manager
     /**
      * @param OffreEmploi[] $preResult
      * @param string $typeContrat
+     * @param string $metier
      * @return OffreEmploi[]
      */
-    public function findOffreEmploiByTypeContratFromPreResult(array $preResult, string $typeContrat): array
+    public function findOffreEmploiByTypeContratMetierFromPreResult(array $preResult, string $typeContrat, string $metier): array
     {
         $res = [];
 
         foreach ($preResult as $result) {
-            if ($typeContrat == 'none') {
-                $res[] = $result;
-            } elseif ((new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
+            $contrat = $typeContrat == 'none' ||
+                (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
                     ->setString('nom', $typeContrat)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
-                    ->getOneOrNullResult() != null) {
+                    ->getOneOrNullResult() != null;
+
+            $metier = $metier == 'none' ||
+                (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) as id'))
+                    ->setString('nom', $metier)
+                    ->setInteger('id', $result->getIdentity())
+                    ->run()
+                    ->getOneOrNullResult() != null;
+
+            if ($contrat && $metier) {
                 $res[] = $result;
             }
         }
@@ -600,5 +613,19 @@ class OffreEmploiManager extends Manager
             ->getOneOrNullResult();
 
         return $em->getRepository(Employeur::class)->findOneBy(['identity' => $result['id']]);
+    }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function getMetier(int $id): ?string
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result ? $result['m']['nom'] : null;
     }
 }

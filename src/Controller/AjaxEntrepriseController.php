@@ -544,8 +544,9 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/offres_emploi/{nom}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
      * @param $nom
+     * @param $metier
      * @param $typeContrat
      * @param $salaire
      * @param $heures
@@ -558,7 +559,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getOffresEmploi($nom, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $metier, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -569,9 +570,10 @@ class AjaxEntrepriseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
+            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierFromPreResult(
                 $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
-                $typeContrat);
+                $typeContrat,
+                $metier);
 
             return $this->json([
                 'offres' => array_slice(
