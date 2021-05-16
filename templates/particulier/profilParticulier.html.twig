@@ -135,21 +135,23 @@
         }
 
         class CandidaturesAcceptees {
-            constructor(id, nom, description, updatedAt) {
+            constructor(id, nom, updatedAt, prenomAuto, nomAuto, nomEntrepriseAuto, emailAuto, telAuto) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 updatedAt = updatedAt.substr(0, 10).split('-');
                 updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
-                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                else description = "** Pas de description renseignée **";
+                if (!emailAuto.length > 0) emailAuto = ''
+                if (!telAuto.length > 0) emailAuto = ''
                 this.cardTemplate = `
                 <div class="ui vertical segment">
                     <div class="content">
                         <div class="header">
                             <i class="icon green check"></i>
-                            Acceptée - ${nom}
+                            Acceptée - ${nom} pour ${prenomAuto} "${nomEntrepriseAuto}" ${nomAuto}
                         </div>
                         <div class="description">
                             <p>${updatedAt}</p>
+                            <div>${emailAuto}</div>
+                            <div>${telAuto}</div>
                         </div>
                     </div>
                 </div>`;
@@ -170,8 +172,18 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.annonce.identity, a.annonce.nom, a.annonce.description, a.annonce.updatedAt);
-                    candidatures.innerHTML += card.cardTemplate;
+                    let card = new CandidaturesAcceptees(
+                        a.annonce.identity,
+                        a.annonce.nom,
+                        a.annonce.updatedAt,
+                        a.auto.prenom,
+                        a.auto.nom,
+                        a.auto.nomEntreprise,
+                        a.auto.email,
+                        a.auto.telephone
+                        )
+                    ;
+                    candidaturesList.innerHTML += card.cardTemplate;
                 })
             }
         }
@@ -186,7 +198,17 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.annonce.identity, a.annonce.nom, a.annonce.description, a.annonce.updatedAt);
+                    let card = new CandidaturesAcceptees(
+                        a.annonce.identity,
+                        a.annonce.nom,
+                        a.annonce.updatedAt,
+                        a.auto.prenom,
+                        a.auto.nom,
+                        a.auto.nomEntreprise,
+                        a.auto.email,
+                        a.auto.telephone
+                        )
+                    ;
                     propositionsList.innerHTML += card.cardTemplate;
                 })
             }
