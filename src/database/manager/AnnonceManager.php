@@ -164,7 +164,7 @@ class AnnonceManager extends Manager
      */
     public function getCandidature(EntityManagerInterface $em, int $idAutoEntrepreneur): array
     {
-        $results = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND NOT exists(c.accept) RETURN id(o) as id'))
             ->setInteger('idA', $idAutoEntrepreneur)
             ->run()
             ->getResult();
@@ -184,7 +184,7 @@ class AnnonceManager extends Manager
      */
     public function getMyCandidature(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[ca:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP AND NOT exists(ca.accept) RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
@@ -293,7 +293,7 @@ class AnnonceManager extends Manager
      */
     public function getPropositions(EntityManagerInterface $em, int $idAutoEntrepreneur): array
     {
-        $results = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(a:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(a)=$idA AND NOT exists(p.accept) RETURN id(o) as id'))
             ->setInteger('idA', $idAutoEntrepreneur)
             ->run()
             ->getResult();
@@ -313,7 +313,7 @@ class AnnonceManager extends Manager
      */
     public function getMyPropositions(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[p:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP AND NOT exists(p.accept) RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
