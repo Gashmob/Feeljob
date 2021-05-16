@@ -97,8 +97,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
+                                <button id="denyBtn${id}" class="ui red basic button denyBtn" onclick="requestDenyContrat(${id})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button acceptBtn" onclick="requestAcceptCandidature(${id})">Accepter</button>
                                 <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
                             </div>
                         </div>
@@ -132,8 +132,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestUncandidate(${id})">Annuler</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="removeProposition(${id})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -143,21 +143,29 @@
 
         // ----- Décandidature ----- //
         // Demande à décandidater
-        function requestUncandidate(id) {
-            makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
+        function removeProposition(idO, idE) {
+            // /entreprise/remove/proposition/{idO}/{idE}
+            // L'Employeur supprime sa proposition d'OffreEmploi idO à l'Employe idE => {'result': boolean}
+            $.ajax({
+                url: '/entreprise/remove/proposition/' + idO +'/' + idE,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    displayRemoveProposition(id0)
+                }
+            });
         }
 
         // Affiche la décandidature
-        function displayUncandidate(id) {
-            let btnNo = 'undoBtn' + id
+        function displayRemoveProposition(id0) {
+            let btnNo = 'undoBtn' + id0
             let btn = document.getElementById(btnNo)
             btn.innerHTML = 'Annulée'
         }
 
         // ----- Refus proposition contrat ----- //
-        // Refuse proposition contrat
         function requestDenyContrat(id) {
-            makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
+            // TODO
         }
 
         // Affiche le refus proposition contrat
@@ -168,9 +176,17 @@
         }
 
         // ----- Acceptation proposition contrat ----- //
-        // Acceptation proposition contrat
-        function requestAcceptContrat(id) {
-            makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
+        // /entreprise/accept/candidature/{idO}/{idE}
+        // L'Employeur accepte la candidature de l'Employe idE sur l'OffreEmploi idO => {'result': boolean}
+        function requestAcceptCandidature(idO) {
+            $.ajax({
+                url: '/entreprise/accept/candidature/' + idO +'/' + idE,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    displayAccept(id0)
+                }
+            });
         }
 
         // Affiche l'acceptation proposition contrat
