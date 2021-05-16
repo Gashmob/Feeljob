@@ -96,13 +96,8 @@ class EntrepriseController extends AbstractController
             $description = $request->get('description');
 
             $secteurActivite = $request->get('secteurActivite');
-            $secteurActiviteB = true;
-            if ($secteurActivite == '') {
-                $secteurActiviteB = false;
-                $this->addFlash('secteurActivite', 'Merci de renseigner votre secteur d\'activité');
-            }
 
-            if ($data['ok'] && $nomEntrepriseB && $siretB && $secteurActiviteB) {
+            if ($data['ok'] && $nomEntrepriseB && $siretB) {
                 $adresse = (new Adresse())
                     ->setRue($data['rue'])
                     ->setCodePostal($data['code_postal'])
@@ -1024,11 +1019,6 @@ class EntrepriseController extends AbstractController
         $res['email'] = $mail;
 
         $telephone = $request->get('telephone');
-        $telephoneB = true;
-        if ($telephone != '' && !preg_match('/^((((\+|(00))[0-9]{2})|0)[1-9])([ ]?)([0-9]{2}\4){3}([0-9]{2})$/', $telephone)) {
-            $telephoneB = false;
-            $this->addFlash('telephone', 'Merci de renseigner un numéro de téléphone valide');
-        }
         $res['telephone'] = $telephone;
 
         $motdepasse = $request->get('motdepasse');
@@ -1055,8 +1045,7 @@ class EntrepriseController extends AbstractController
         $res['code_postal'] = $request->get('code_postal') == null ? '' : $request->get('code_postal');
         $res['ville'] = $request->get('ville') == null ? '' : $request->get('ville');
 
-
-        $res['ok'] = $prenomB && $nomB && $telephoneB & $mailB && $motdepasseB && $conditionsB;
+        $res['ok'] = $prenomB && $nomB && $mailB && $motdepasseB && $conditionsB;
 
         return $res;
     }

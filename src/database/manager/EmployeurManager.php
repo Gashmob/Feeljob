@@ -76,10 +76,16 @@ class EmployeurManager extends Manager
      */
     public function create(EntityManagerInterface $em, Employeur $employeur, string $secteurActivite)
     {
-        $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (e:' . EntityManager::EMPLOYEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(e) as id'))
-            ->setString('nom', $secteurActivite)
-            ->run()
-            ->getOneOrNullResult();
+        if ($secteurActivite == '') {
+            $result = (new PreparedQuery('CREATE (e:' . EntityManager::EMPLOYEUR . ') RETURN id(e) as id'))
+                ->run()
+                ->getOneOrNullResult();
+        } else {
+            $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (e:' . EntityManager::EMPLOYEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(e) as id'))
+                ->setString('nom', $secteurActivite)
+                ->run()
+                ->getOneOrNullResult();
+        }
 
         $employeur->setIdentity($result['id']);
 
