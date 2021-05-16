@@ -81,6 +81,7 @@
         class Contrat {
             constructor(id, nom, ville, updatedAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '-' + debut[1] + '-' + debut[0];
                 fin = fin.substr(0, 10).split('-');
@@ -92,7 +93,7 @@
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${prenomEmploye} ${nomEmploye} pour ${nom}</div>
+                            <div class="ui header small">${nom}${ville} pour ${prenomEmploye} ${nomEmploye}</div>
                             <div class="meta">
                                 <span class="date">Du ${debut} au ${fin}</span>
                             </div>
@@ -128,7 +129,7 @@
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom}${ville} pour ${prenomEmploye} ${nomEmploye}</div>
+                            <div class="ui header small">${prenomEmploye} ${nomEmploye} pour ${nom}</div>
                             <div class="meta">
                                 <span class="date">Du ${debut} au ${fin}</span>
                             </div>

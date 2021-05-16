@@ -36,7 +36,8 @@
                 <div class="six wide column">
                     <a href="{{ path('userSpace') }}" class="ui header small">
                         {% if employeur.logo is not empty %}
-                            <img src="{{ asset('uploads/logo/' ~ employeur.logo) }}" class="ui circular image profileLogo">
+                            <img src="{{ asset('uploads/logo/' ~ employeur.logo) }}"
+                                 class="ui circular image profileLogo">
                         {% else %}
                             <img src="{{ asset('img/placeholders/steve.jpg') }}" class="ui circular image">
                         {% endif %}
@@ -65,8 +66,8 @@
                 <p>{{ offre.heures }} heures par semaine</p>
                 {% if offre.description|length %}
                     <p>
-                        {# {% apply markdown_to_html %}  #}
-                            {{ offre.description|nl2br }}
+                        {# {% apply markdown_to_html %} #}
+                        {{ offre.description|nl2br }}
                         {# {% endapply %} #}
                     </p>
                 {% else %}
@@ -114,50 +115,30 @@
 {% block javascripts %}
     <script type='text/javascript'>
         $('.ui.embed').embed();
-
-        if (httpRequest == undefined) {
-            let httpRequest
-        }
-        if (results == undefined) {
-            let results
-        }
         // Candidate
         function apply() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = candidatureResponse;
-            httpRequest.open('POST', '/entreprise/candidate/{{ offre.identity }}');
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/candidate/{{ offre.identity }}',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    candidatureResponse(results);
+                }
+            });
         }
 
         // Réponse candidature
-        const applyBtn = document.querySelector("#applyBtn")
-        function candidatureResponse() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+        var applyBtn = document.getElementById("applyBtn")
+
+        function candidatureResponse(results) {
+            console.log(results)
+            // Candidature posée
+            if (results.result) {
+                applyBtn.innerHTML = '<div>Validé</div>';
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results)
-                    // Candidature posée
-                    if (results.result) {
-                        applyBtn.innerHTML = '<div>Validé</div>';
-                    }
-                    // Candidature retirée
-                    else {
-                        applyBtn.innerHTML = '<div>Déjà candidaté</div>';
-                    }
-                } else {
-                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Candidature retirée
+            else {
+                applyBtn.innerHTML = '<div>Déjà candidaté</div>';
             }
         }
     </script>

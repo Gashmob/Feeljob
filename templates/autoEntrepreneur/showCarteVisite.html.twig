@@ -37,9 +37,9 @@
                 <div class="column ten wide">
                     <div class="flex">
                         {% if carte.autoEntrepreneur.logo %}
-                        <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
-                             alt="logo du freelance"
-                             class="ui small circular image profileLogo">
+                            <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                                 alt="logo du freelance"
+                                 class="ui small circular image profileLogo">
                         {% endif %}
                         <div>
                             <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
@@ -99,49 +99,35 @@
     <script type='text/javascript'>
 
         var annonceTarget = document.getElementById('annonceTarget')
-        $(annonceTarget).on('change', function() {
+        $(annonceTarget).on('change', function () {
             $('#applyBtn').text('Recruter');
         })
 
         function offreContrat() {
             var annonceID = annonceTarget.value;
             if (annonceID.length > 0) {
-                httpRequest = new XMLHttpRequest();
-
-                if (!httpRequest) {
-                    alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                    return false;
-                }
-                httpRequest.onreadystatechange = offreContratResponse;
-                httpRequest.open('POST', '/particulier/propose/' + annonceID + '/{{ carte.autoEntrepreneur.identity }}');
-                httpRequest.send();
+                $.ajax({
+                    url: '/particulier/propose/' + annonceID + '/{{ carte.autoEntrepreneur.identity }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        offreContratResponse(results);
+                    }
+                });
             }
         }
 
         const applyBtn = document.querySelector("#applyBtn")
 
         function offreContratResponse() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+            console.log(results)
+            // Candidature posée
+            if (results.result) {
+                applyBtn.innerHTML = '<div>Validé</div>';
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results)
-                    // Candidature posée
-                    if (results.result) {
-                        applyBtn.innerHTML = '<div>Validé</div>';
-                    }
-                    // Candidature retirée
-                    else {
-                        applyBtn.innerHTML = '<div>Déjà demandé</div>';
-                    }
-                } else {
-                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Candidature retirée
+            else {
+                applyBtn.innerHTML = '<div>Déjà demandé</div>';
             }
         }
     </script>

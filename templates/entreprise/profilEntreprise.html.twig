@@ -154,7 +154,7 @@
         }
 
         class CandidaturesAcceptees {
-            constructor(id, nom, description, updatedAt, prenomEmploye, nomEmploye) {
+            constructor(id, nom, description, updatedAt, prenomEmploye, nomEmploye, emailEmploye, telEmploye) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 let prenomNomEmploye = '';
                 if (prenomEmploye.length > 0 && nomEmploye.length > 0) prenomNomEmploye = ' pour ' + prenomEmploye + ' ' + nomEmploye;
@@ -171,6 +171,8 @@
                         </div>
                         <div class="description">
                             <p>${updatedAt}</p>
+                            <div>${emailEmploye}</div>
+                            <div>${telEmploye}</div>
                         </div>
                     </div>
                 </div>`;
@@ -191,7 +193,15 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.offre.identity, a.offre.nom, a.offre.description, a.offre.updatedAt, a.employe.prenom, a.employe.nom);
+                    let card = new CandidaturesAcceptees(
+                        a.offre.identity,
+                        a.offre.nom,
+                        a.offre.description,
+                        a.offre.updatedAt,
+                        a.employe.prenom,
+                        a.employe.nom,
+                        a.employe.email,
+                        a.employe.telephone);
                     candidaturesList.innerHTML += card.cardTemplate;
                 })
             }
@@ -207,7 +217,15 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.offre.identity, a.offre.nom, a.offre.description, a.offre.updatedAt, a.employe.prenom, a.employe.nom);
+                    let card = new CandidaturesAcceptees(
+                        a.offre.identity,
+                        a.offre.nom,
+                        a.offre.description,
+                        a.offre.updatedAt,
+                        a.employe.prenom,
+                        a.employe.nom,
+                        a.employe.email,
+                        a.employe.telephone);
                     propositionsList.innerHTML += card.cardTemplate;
                 })
             }
