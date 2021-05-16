@@ -411,7 +411,7 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/annonces/{metier}/{distanceMax}/{limit}/{offset}", defaults={"secteur":"none", "distanceMax":"-1", "limit":25, "offset":0})
+     * @Route("/get/annonces/{metier}/{distanceMax}/{limit}/{offset}", defaults={"metier":"none", "distanceMax":"-1", "limit":25, "offset":0})
      * @param $metier
      * @param $distanceMax
      * @param $limit
