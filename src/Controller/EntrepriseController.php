@@ -647,9 +647,15 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
+        $offres = [];
+        if (!$owner) {
+            $offres = (new OffreEmploiManager())->findOffresEmploiByEmployeur($em, $this->session->get('user'));
+        }
+
         return $this->render('candidat/showCV.html.twig', [
             'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id]),
-            'owner' => $owner
+            'owner' => $owner,
+            'offres' => $offres
         ]);
     }
 
