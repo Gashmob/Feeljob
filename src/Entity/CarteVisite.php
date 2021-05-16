@@ -41,7 +41,7 @@ class CarteVisite
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=AutoEntrepreneur::class, mappedBy="carteVisite", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=AutoEntrepreneur::class, mappedBy="carteVisite")
      */
     private $autoEntrepreneur;
 
