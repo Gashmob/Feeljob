@@ -254,20 +254,22 @@ class OffreEmploiManager extends Manager
         foreach ($results as $result) {
             $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
             $cv = $employe->getCV();
-            if (!is_null($cv->getEmploye())) {
-                $cv->setEmploye(null);
-            }
-            foreach ($cv->getCompetences() as $competence) {
-                $competence->setCV(null);
-            }
-            foreach ($cv->getMetiers() as $metier) {
-                $metier->setCV(null);
-            }
-            foreach ($cv->getDiplomes() as $diplome) {
-                $diplome->setCV(null);
-            }
-            foreach ($cv->getLangues() as $langue) {
-                $langue->setCV(null);
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
             }
 
             $res[] = [
@@ -401,20 +403,22 @@ class OffreEmploiManager extends Manager
         foreach ($results as $result) {
             $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
             $cv = $employe->getCV();
-            if (!is_null($cv->getEmploye())) {
-                $cv->setEmploye(null);
-            }
-            foreach ($cv->getCompetences() as $competence) {
-                $competence->setCV(null);
-            }
-            foreach ($cv->getMetiers() as $metier) {
-                $metier->setCV(null);
-            }
-            foreach ($cv->getDiplomes() as $diplome) {
-                $diplome->setCV(null);
-            }
-            foreach ($cv->getLangues() as $langue) {
-                $langue->setCV(null);
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
             }
 
             $res[] = [
