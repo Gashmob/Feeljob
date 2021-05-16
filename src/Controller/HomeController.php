@@ -165,7 +165,7 @@ class HomeController extends AbstractController
 
         $this->addFlash('success', 'Votre compte a été supprimé !');
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('deconnexion');
     }
 
     /**
