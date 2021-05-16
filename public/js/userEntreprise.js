@@ -7,7 +7,7 @@
  * classe correspondant à l'event affiché lorsqu'on survole la mallette dans la navigation
  */
 class ContratEvent {
-    constructor(id, nom, ville, date) {
+    constructor(id, nom, ville, prenomEmploye, nomEmploye) {
         if (!nom.length > 0) {
             nom = 'Offre n°' + id;
         }
@@ -16,8 +16,6 @@ class ContratEvent {
         } else {
             ville = ' à ' + ville;
         }
-        date = date.substr(0, 10).split('-');
-        date = date[2] + '-' + date[1] + '-' + date[0];
         let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
         this.contratEventTemplate = `
@@ -25,8 +23,8 @@ class ContratEvent {
             <div class="label">
             </div>
             <div class="content">
-                <div class="date">
-                   ${date}
+                <div class="">
+                   ${prenomEmploye} ${nomEmploye}
                 </div>
                 <div class="summary">
                     ${nom}${ville}
@@ -72,6 +70,7 @@ const notificationsFeed = document.getElementById('notifications');
 const contratsAmount = document.getElementById('contratsAmount');
 
 function displayContratsFeed(results) {
+    console.log(results)
     // Change la quantité de candidatures de contrat dans la case
     contratsAmount.innerHTML = results.candidatures.length;
     // results = httpRequest.responseText
@@ -86,7 +85,7 @@ function displayContratsFeed(results) {
     // Il y a des résultats :
     // Pour chaque candidature
     results.candidatures.forEach(candidature => {
-        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.lieu.ville, candidature.createdAt);
+        let card = new ContratEvent(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.ville, candidature.employe.prenom, candidature.employe.nom);
         notificationsFeed.innerHTML += card.contratEventTemplate;
     })
 }

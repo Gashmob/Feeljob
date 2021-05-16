@@ -119,6 +119,7 @@
         class Candidature {
             constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '-' + debut[1] + '-' + debut[0];
                 fin = fin.substr(0, 10).split('-');
@@ -130,7 +131,7 @@
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Du ${debut} au ${fin}</span>
                             </div>
@@ -156,16 +157,12 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayUncandidate(id);
+                    let btnNo = 'undoBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée';
+                    btn.classList.add('disabled')
                 }
             });
-        }
-
-        // Affiche la décandidature
-        function displayUncandidate(id) {
-            let btnNo = 'undoBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
         }
 
         // ----- Refus proposition contrat ----- //
@@ -176,16 +173,15 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayDeny(id);
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
-        }
-
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
         }
 
         // ----- Acceptation proposition contrat ----- //
@@ -196,17 +192,15 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayAccept(id);
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
-        }
-
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            console.log(btnNo)
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
         }
 
         // Affiche la liste des contrats dans la vue contrats

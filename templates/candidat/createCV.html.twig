@@ -56,16 +56,14 @@
                                 <div class="ui button" id="pdpClear"><i class="times icon"></i></div>
                             </div>
                         </div>
-                        {#
-                        <div class="field">
+                        {# <div class="field">
                             <label>Profil</label>
                             <select class="ui dropdown" name="metier">
                                 {% for metier in metiers %}
-                                    <option>{{ metier }}</option>
+                                    <option value="{{ metier }}">{{ metier }}</option>
                                 {% endfor %}
                             </select>
-                        </div>
-                        #}
+                        </div>   #}
                     </div>
                 </div>
             </div>
@@ -128,8 +126,8 @@
                                    placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
-                            <label>Date d'obtention</label>
-                            <input type="date" class="date" name="date0" placeholder="jj/mm/aaaa">
+                            <label>Année d'obtention</label>
+                            <input type="number" class="date" name="date0" placeholder="aaaa">
                         </div>
                     </div>
                 </div>

@@ -76,7 +76,7 @@
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, debut, fin, description) {
+            constructor(id, nom, ville, updatedAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '-' + debut[1] + '-' + debut[0];
@@ -89,7 +89,7 @@
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${prenomEmploye} ${nomEmploye} pour ${nom}</div>
                             <div class="meta">
                                 <span class="date">Du ${debut} au ${fin}</span>
                             </div>
@@ -111,22 +111,24 @@
          * classe correspondant à l'item candidature dans la vue contrats
          */
         class Candidature {
-            constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
-                if (!nom.length > 0) nom = 'Ofre n°' + id;
+            constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye) {
+                if (!nom.length > 0) nom = 'Offre n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '-' + debut[1] + '-' + debut[0];
                 fin = fin.substr(0, 10).split('-');
                 fin = fin[2] + '-' + fin[1] + '-' + fin[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                // TODO : lien disabled vers cv employe si employe n'a pas de CV
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville} pour ${prenomEmploye} ${nomEmploye}</div>
                             <div class="meta">
-                                <span class="date">Dut ${debut} au ${fin}</span>
+                                <span class="date">Du ${debut} au ${fin}</span>
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -147,25 +149,31 @@
             // /entreprise/remove/proposition/{idO}/{idE}
             // L'Employeur supprime sa proposition d'OffreEmploi idO à l'Employe idE => {'result': boolean}
             $.ajax({
-                url: '/entreprise/remove/proposition/' + idO +'/' + idE,
+                url: '/entreprise/remove/proposition/' + idO + '/' + idE,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayRemoveProposition(id0)
+                    let btnNo = 'undoBtn' + id0
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée'
                 }
             });
         }
 
-        // Affiche la décandidature
-        function displayRemoveProposition(id0) {
-            let btnNo = 'undoBtn' + id0
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
-        }
-
         // ----- Refus proposition contrat ----- //
-        function requestDenyContrat(id) {
-            // TODO
+        function requestDenyContrat(idO, idE) {
+            // /refuse/candidature/{idO}/{idE}
+            // L'Employeur refuse la candidature de l'Employe idE sur l'OffreEmploi idO => {'result': boolean}
+            $.ajax({
+                url: '/entreprise/refuse/candidature/' + idO + '/' + idE,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'denyBtn' + id0
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Refusée'
+                }
+            });
         }
 
         // Affiche le refus proposition contrat
@@ -180,23 +188,18 @@
         // L'Employeur accepte la candidature de l'Employe idE sur l'OffreEmploi idO => {'result': boolean}
         function requestAcceptCandidature(idO) {
             $.ajax({
-                url: '/entreprise/accept/candidature/' + idO +'/' + idE,
+                url: '/entreprise/accept/candidature/' + idO + '/' + idE,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayAccept(id0)
+                    let btnNo = 'acceptBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Acceptée'
                 }
             });
         }
 
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
-        }
-
-        // Affiche la liste des contrats dans la vue contrats
+        // Affiche la liste des propositions de contrat envoyées dans la vue contrats
         const contratsList = document.getElementById('contratsList');
 
         function displayContrats(results) {
@@ -212,12 +215,12 @@
 
             // Il y a des résultats :
             results.propositions.forEach(proposition => {
-                let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
+                let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity);
                 contratsList.innerHTML += card.contratTemplate;
             })
         }
 
-        // Affiche la liste des candidatures dans la vue contrats
+        // Affiche la liste des candidatures reçues dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
 
         function displayCandidatures(results) {
@@ -232,7 +235,7 @@
 
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
-                let card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
+                let card = new Candidature(candidature.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
         }
