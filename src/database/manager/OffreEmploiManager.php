@@ -315,9 +315,29 @@ class OffreEmploiManager extends Manager
 
         $res = [];
         foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'employe' => $employe
             ];
         }
 
@@ -464,9 +484,29 @@ class OffreEmploiManager extends Manager
 
         $res = [];
         foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'employe' => $employe
             ];
         }
 
