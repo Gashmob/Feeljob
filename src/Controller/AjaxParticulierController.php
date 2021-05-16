@@ -85,6 +85,31 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/candidature/{idAnn}/{idAuto}", methods={"POST"})
+     * @param $idAnn
+     * @param $idAuto
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectCandidature($idAnn, $idAuto, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new AnnonceManager())->uncandidate($idAnn, $idAuto);
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/propose/{idAnn}/{idAuto}", methods={"POST"})
      * @param $idAnn
      * @param $idAuto
