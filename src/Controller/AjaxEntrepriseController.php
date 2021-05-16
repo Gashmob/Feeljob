@@ -82,6 +82,33 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/candidature/{idO}/{idE}", methods={"POST"})
+     * @param $idO
+     * @param $idE
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectCandidature($idO, $idE, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new OffreEmploiManager())->uncandidate($idO, $idE);
+            return $this->json([
+                'result' => true
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/propose/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
