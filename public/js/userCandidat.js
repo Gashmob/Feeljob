@@ -73,7 +73,6 @@ const contratsAmount = document.getElementById('contratsAmount');
 function displayContratsFeed(results) {
     // Change la quantité de propositions de contrat dans la case
     contratsAmount.innerHTML = results.propositions.length;
-    // results = httpRequest.responseText
     // Réinitialise la liste
     notificationsFeed.innerHTML = '';
 

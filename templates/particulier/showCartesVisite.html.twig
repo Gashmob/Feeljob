@@ -102,16 +102,14 @@
         /*
         //Cherche les résultats par le nom entré barre recherche
         function makeRequestFiltered(nom, secteur, distanceMax, limit, offset) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCartesVisite;
-            //let url = '/particulier/get/cartes';
-            httpRequest.open('POST', '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset);
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs/' + nom + secteur + distanceMax + limit + offset,
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
         */
 

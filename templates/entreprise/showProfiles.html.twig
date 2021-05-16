@@ -143,15 +143,14 @@
 
         //Cherche les résultats par le nom entré barre recherche
         function makeRequestByCompetence(competence) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCVS;
-            httpRequest.open('POST', '/entreprise/get/cvs/' + competence);
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
 
         //Affiche les résultats dans 'cvsList'

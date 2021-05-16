@@ -73,7 +73,6 @@ function displayContratsFeed(results) {
     console.log(results)
     // Change la quantité de candidatures de contrat dans la case
     contratsAmount.innerHTML = results.candidatures.length;
-    // results = httpRequest.responseText
     // Réinitialise la liste
     notificationsFeed.innerHTML = '';
 
