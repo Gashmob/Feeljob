@@ -239,9 +239,14 @@ class AnnonceManager extends Manager
 
         $res = [];
         foreach ($results as $result) {
+            $auto = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']]);
+            if ($auto->getCarteVisite()) {
+                $auto->getCarteVisite()->setAutoEntrepreneur(null);
+            }
+
             $res[] = [
                 'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]),
-                'auto' => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+                'auto' => $auto
             ];
         }
 
