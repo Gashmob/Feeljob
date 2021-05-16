@@ -59,6 +59,8 @@ class OffreEmploiRepository extends ServiceEntityRepository
 
         $query = $query->andWhere('o.nbPostes > 0');
 
+        $query = $query->orderBy('o.updatedAt', 'DESC');
+
         return $query->getQuery()->getResult();
     }
 

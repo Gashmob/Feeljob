@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\database\EntityManager;
 use App\database\manager\EmployeManager;
 use App\database\manager\EmployeurManager;
+use App\database\manager\MetierManager;
 use App\database\manager\OffreEmploiManager;
 use App\database\manager\SecteurActiviteManager;
 use App\database\manager\TypeContratManager;
@@ -360,6 +361,8 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
+            $metier = $request->get('metier');
+
             if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance(new DateTime($naissance))
@@ -397,6 +400,8 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
+                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
+
                 return $this->redirectToRoute('userSpace');
             }
         }
@@ -404,7 +409,8 @@ class EntrepriseController extends AbstractController
         return $this->render('candidat/createCV.html.twig', [
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
             'langues' => $em->getRepository(Langue::class)->findAll(),
-            'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')])
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $this->session->get('user')]),
         ]);
     }
 
@@ -544,6 +550,8 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
+            $metier = $request->get('metier');
+
             if ($naissanceB) {
                 $cv = $cv
                     ->setNaissance(new DateTime($naissance))
@@ -581,6 +589,8 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
+                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
+
                 return $this->redirectToRoute('userSpace');
             }
         }
@@ -588,8 +598,10 @@ class EntrepriseController extends AbstractController
         return $this->render('candidat/editCV.html.twig', [
             'situations' => $em->getRepository(SituationFamille::class)->findAll(),
             'langues' => $em->getRepository(Langue::class)->findAll(),
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
             'cv' => $cv,
-            'employe' => $employe
+            'employe' => $employe,
+            'metier' => (new EmployeManager())->getMetier($this->session->get('user')),
         ]);
     }
 
@@ -737,6 +749,8 @@ class EntrepriseController extends AbstractController
 
             $description = $request->get('description');
 
+            $metier = $request->get('metier');
+
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $adresse = (new Adresse())
                     ->setRue('')
@@ -758,7 +772,7 @@ class EntrepriseController extends AbstractController
                     ->setDescription($description)
                     ->setNbPostes($nbPostes);
 
-                (new OffreEmploiManager())->create($em, $offre, $this->session->get('user'), $typeContrat);
+                (new OffreEmploiManager())->create($em, $offre, $this->session->get('user'), $typeContrat, $metier);
                 $this->addFlash('success', 'Votre offre d\'emploi a été publiée');
 
                 return $this->redirectToRoute('userSpace');
@@ -766,7 +780,8 @@ class EntrepriseController extends AbstractController
         }
 
         return $this->render('entreprise/createEmploi.html.twig', [
-            'typeContrat' => (new TypeContratManager())->findAllNames()
+            'typeContrat' => (new TypeContratManager())->findAllNames(),
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite()
         ]);
     }
 
@@ -848,6 +863,8 @@ class EntrepriseController extends AbstractController
 
             $description = $request->get('description');
 
+            $metier = $request->get('metier');
+
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $offre->getLieu()->setVille($ville);
                 $offre->setNom($nom)
@@ -861,7 +878,7 @@ class EntrepriseController extends AbstractController
                     ->setDescription($description)
                     ->setNbPostes($nbPostes);
 
-                (new OffreEmploiManager())->update($em, $offre, $typeContrat);
+                (new OffreEmploiManager())->update($em, $offre, $typeContrat, $metier);
                 return $this->redirectToRoute('userSpace');
             }
         }
@@ -870,7 +887,9 @@ class EntrepriseController extends AbstractController
             'offre' => $offre,
             'typeContrat' => (new OffreEmploiManager())->getType($id),
             'employeur' => $em->getRepository(Employeur::class)->findOneBy(['identity' => $this->session->get('user')]),
-            'typesContrat' => (new TypeContratManager())->findAllNames()
+            'typesContrat' => (new TypeContratManager())->findAllNames(),
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'metier' => (new OffreEmploiManager())->getMetier($offre->getIdentity())
         ]);
     }
 
@@ -922,7 +941,8 @@ class EntrepriseController extends AbstractController
             'offre' => $offre,
             'typeContrat' => (new OffreEmploiManager())->getType($id),
             'owner' => $owner,
-            'employeur' => (new OffreEmploiManager())->getOwner($em, $offre->getIdentity())
+            'employeur' => (new OffreEmploiManager())->getOwner($em, $offre->getIdentity()),
+            'metier' => (new OffreEmploiManager())->getMetier($offre->getIdentity())
         ]);
     }
 

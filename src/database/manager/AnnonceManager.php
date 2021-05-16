@@ -7,6 +7,7 @@ use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
 use App\Entity\Annonce;
+use App\Entity\AutoEntrepreneur;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AnnonceManager extends Manager
@@ -72,13 +73,13 @@ class AnnonceManager extends Manager
      * @param EntityManagerInterface $em
      * @param Annonce $annonce
      * @param int $idParticulier
-     * @param string $secteurActivite
+     * @param string $metier
      * @return int|null
      */
-    public function create(EntityManagerInterface $em, Annonce $annonce, int $idParticulier, string $secteurActivite): ?int
+    public function create(EntityManagerInterface $em, Annonce $annonce, int $idParticulier, string $metier): ?int
     {
-        $result = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . '), (s:' . EntityManager::SECTEUR_ACTIVITE . '{nom:$secteur}) WHERE id(p)=$idParticulier CREATE (p)-[:' . EntityManager::PUBLIE . ']->(a: ' . EntityManager::ANNONCE . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) AS id'))
-            ->setString('secteur', $secteurActivite)
+        $result = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . '), (m:' . EntityManager::METIER . '{nom:$metier}) WHERE id(p)=$idParticulier CREATE (p)-[:' . EntityManager::PUBLIE . ']->(a: ' . EntityManager::ANNONCE . ')-[:' . EntityManager::EST_DANS . ']->(m) RETURN id(a) AS id'))
+            ->setString('metier', $metier)
             ->setInteger('idParticulier', $idParticulier)
             ->run()
             ->getOneOrNullResult();
@@ -112,9 +113,16 @@ class AnnonceManager extends Manager
 
     /**
      * @param EntityManagerInterface $em
+     * @param int $id
+     * @param string $metier
      */
-    public function update(EntityManagerInterface $em)
+    public function update(EntityManagerInterface $em, int $id, string $metier)
     {
+        (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')-[r]-(:' . EntityManager::METIER . '), (m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(a)=$id DELETE r CREATE (a)-[:' . EntityManager::EST_DANS . ']->(m)'))
+            ->setString('nom', $metier)
+            ->setInteger('id', $id)
+            ->run();
+
         $em->flush();
     }
 
@@ -176,14 +184,16 @@ class AnnonceManager extends Manager
      */
     public function getMyCandidature(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ']-() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -216,14 +226,16 @@ class AnnonceManager extends Manager
      */
     public function getMyAcceptedCandidature(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -299,14 +311,16 @@ class AnnonceManager extends Manager
      */
     public function getMyPropositions(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -339,14 +353,16 @@ class AnnonceManager extends Manager
      */
     public function getMyAcceptedPropositions(EntityManagerInterface $em, int $idParticulier): array
     {
-        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->() WHERE id(p)=$idP RETURN id(a) as id'))
+        $results = (new PreparedQuery('MATCH (p:' . EntityManager::PARTICULIER . ')--(a:' . EntityManager::ANNONCE . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(c:' . EntityManager::AUTO_ENTREPRENEUR . ') WHERE id(p)=$idP RETURN id(a) as idA, id(c) as idC'))
             ->setInteger('idP', $idParticulier)
             ->run()
             ->getResult();
 
         $res = [];
         foreach ($results as $result) {
-            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+            $res[] = [
+                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+            ];
         }
 
         return $res;
@@ -428,18 +444,18 @@ class AnnonceManager extends Manager
 
     /**
      * @param Annonce[] $preResult
-     * @param string $secteurActivite
+     * @param string $metier
      * @return int[]
      */
-    public function getAnnoncesBySecteurActiviteFromPreResult(array $preResult, string $secteurActivite): array
+    public function getAnnoncesByMetierFromPreResult(array $preResult, string $metier): array
     {
         $res = [];
 
         foreach ($preResult as $result) {
-            if ($secteurActivite == 'none') {
+            if ($metier == 'none') {
                 $res[] = $result;
-            } elseif ((new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) WHERE id(a)=$id RETURN id(a) AS id'))
-                    ->setString('nom', $secteurActivite)
+            } elseif ((new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(a)=$id RETURN id(a) AS id'))
+                    ->setString('nom', $metier)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
                     ->getOneOrNullResult() != null) {
@@ -483,5 +499,19 @@ class AnnonceManager extends Manager
                 ->setInteger('idA', $idAnnonce)
                 ->run()
                 ->getOneOrNullResult() != null;
+    }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function getMetier(int $id): ?string
+    {
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::ANNONCE . ')--(m:' . EntityManager::METIER . ') WHERE id(a)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result ? $result['m']['nom'] : null;
     }
 }

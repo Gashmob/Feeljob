@@ -102,4 +102,37 @@ class EmployeManager extends Manager
         $em->remove($employe);
         $em->flush();
     }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function getMetier(int $id): ?string
+    {
+        $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $res == null ? $res : $res['nom'];
+    }
+
+    public function setMetier(int $id, string $metier)
+    {
+        $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        if ($res != null) { // If there is already a metier
+            (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[r]-(:' . EntityManager::METIER . ') WHERE id(e)=$id DELETE r'))
+                ->setInteger('id', $id)
+                ->run(); // Delete it
+        }
+
+        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . '), (m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(e)=$id CREATE (e)-[:' . EntityManager::EST_DANS . ']->(m)'))
+            ->setInteger('id', $id)
+            ->setString('nom', $metier)
+            ->run();
+    }
 }

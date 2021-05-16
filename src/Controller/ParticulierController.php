@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\database\EntityManager;
 use App\database\manager\AnnonceManager;
 use App\database\manager\AutoEntrepreneurManager;
+use App\database\manager\MetierManager;
 use App\database\manager\ParticulierManager;
 use App\database\manager\SecteurActiviteManager;
 use App\database\manager\UtilsManager;
@@ -399,7 +400,7 @@ class ParticulierController extends AbstractController
 
             $date = $request->get('date');
 
-            $secteurActivite = $request->get('secteurActivite');
+            $metier = $request->get('metier');
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
@@ -415,7 +416,7 @@ class ParticulierController extends AbstractController
                     ->setAdresse($adresse)
                     ->setDate(new DateTime($date));
 
-                (new AnnonceManager())->create($em, $annonce, $this->session->get('user'), $secteurActivite);
+                (new AnnonceManager())->create($em, $annonce, $this->session->get('user'), $metier);
                 $this->addFlash('success', 'Votre annonce a été publiée !');
 
                 return $this->redirectToRoute('userSpace');
@@ -423,7 +424,7 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('autoEntrepreneur/creerAnnonceChantier.html.twig', [
-            'secteurs' => (new SecteurActiviteManager())->findAllNames()
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite()
         ]);
     }
 
@@ -470,6 +471,8 @@ class ParticulierController extends AbstractController
 
             $date = $request->get('date');
 
+            $metier = $request->get('metier');
+
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
                     ->setRue('')
@@ -483,7 +486,7 @@ class ParticulierController extends AbstractController
                     ->setAdresse($adresse)
                     ->setDate(new DateTime($date));
 
-                (new AnnonceManager())->update($em);
+                (new AnnonceManager())->update($em, $annonce->getIdentity(), $metier);
                 $this->addFlash('success', 'Votre annonce a été modifiée !');
 
                 return $this->redirectToRoute('userSpace');
@@ -491,7 +494,9 @@ class ParticulierController extends AbstractController
         }
 
         return $this->render('particulier/editAnnonce.html.twig', [
-            'annonce' => $annonce
+            'annonce' => $annonce,
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'metier' => (new AnnonceManager())->getMetier($annonce->getIdentity())
         ]);
     }
 
@@ -557,7 +562,8 @@ class ParticulierController extends AbstractController
 
         return $this->render('autoEntrepreneur/showAnnonce.html.twig', [
             'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $id]),
-            'owner' => $owner
+            'owner' => $owner,
+            'metier' => (new AnnonceManager())->getMetier($id)
         ]);
     }
 

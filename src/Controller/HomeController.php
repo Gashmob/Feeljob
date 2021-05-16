@@ -78,8 +78,11 @@ class HomeController extends AbstractController
                         $this->session->set('user', $user->getIdentity());
                         $this->session->set('userType', (new UtilsManager())->getUserTypeFromId($user->getIdentity()));
                         $this->session->set('userName', $user->getPrenom());
-                        if ($this->session->get('userType') == EntityManager::EMPLOYEUR) {
+                        if ($this->session->get('userType') == EntityManager::EMPLOYEUR ||
+                            $this->session->get('userType') == EntityManager::AUTO_ENTREPRENEUR) {
                             $this->session->set('userImage', $user->getLogo());
+                        } elseif ($this->session->get('userType') == EntityManager::EMPLOYE) {
+                            $this->session->set('userImage', $user->getPhoto());
                         }
 
                         $this->addFlash('success', 'Vous êtes connecté !');
