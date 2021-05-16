@@ -1,11 +1,11 @@
 {% extends 'page.html.twig' %}
 {% block title %}Propositions de contrat{% endblock %}
 {% block body %}
-    <div class="contrats" style="margin-top: 20px;">
+    <div class="candidatures" style="margin-top: 20px;">
         <h2 class="ui center aligned green header">
             <div class="content">Candidatures reçues</div>
         </h2>
-        <div id="contratsList" class="ui segment stacked divided items">
+        <div id="candidaturesList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -20,11 +20,11 @@
             </div>
         </div>
     </div>
-    <div class="candidatures" style="margin-top: 20px;">
+    <div class="contrats" style="margin-top: 20px;">
         <h2 class="ui center aligned green header">
             <div class="content">Propositions envoyées</div>
         </h2>
-        <div id="candidaturesList" class="ui segment stacked divided items">
+        <div id="contratsList" class="ui segment stacked divided items">
             <div class="ui placeholder">
                 <div class="image header">
                     <div class="short line"></div>
@@ -44,12 +44,13 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadCandidatures();
-            // TODO: erreur car il s'agit des candidatures reçues ci dessous
             loadContrats();
         });
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
+            // /entreprise/get/my/candidatures
+            // L'Employeur récupère toutes ses candidatures => {'candidatures': ['offre': OffreEmploi, 'employe': Employe]}
             $.ajax({
                 url: '/entreprise/get/my/candidatures',
                 type: 'POST',
@@ -62,6 +63,8 @@
 
         // Charge les contrats dans la vue contrat et les affiche
         function loadContrats() {
+            // /entreprise/get/my/propositions
+            // L'Employeur récupère toutes ses propositions => {'propositions': ['offre': OffreEmploi, 'employe': Employe]}
             $.ajax({
                 url: '/entreprise/get/my/propositions',
                 type: 'POST',
@@ -97,9 +100,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button denyBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button acceptBtn" onclick="requestAcceptCandidature(${id})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <button id="undoBtn${id}to${idEmploye}" class="ui red basic button undoBtn" onclick="removeProposition(${id}, ${idEmploye})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -134,8 +136,9 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="removeProposition(${id})">Annuler</button>
-                                <a href="${url}" class="ui blue basic button">Voir</a>
+                                <button id="denyBtn${id}to${idEmploye}" class="ui red basic button denyBtn" onclick="refuseCandidature(${id}, ${idEmploye})">Refuser</button>
+                                <button id="acceptBtn${id}to${idEmploye}" class="ui green basic button acceptBtn" onclick="acceptCandidature(${id}, ${idEmploye})">Accepter</button>
+                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -153,7 +156,7 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'undoBtn' + id0
+                    let btnNo = 'undoBtn' + idO +'to' + idE
                     let btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
                 }
@@ -161,7 +164,7 @@
         }
 
         // ----- Refus proposition contrat ----- //
-        function requestDenyContrat(idO, idE) {
+        function refuseCandidature(idO, idE) {
             // /refuse/candidature/{idO}/{idE}
             // L'Employeur refuse la candidature de l'Employe idE sur l'OffreEmploi idO => {'result': boolean}
             $.ajax({
@@ -169,32 +172,33 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'denyBtn' + id0
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Refusée'
+                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
-        }
-
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
         }
 
         // ----- Acceptation proposition contrat ----- //
         // /entreprise/accept/candidature/{idO}/{idE}
         // L'Employeur accepte la candidature de l'Employe idE sur l'OffreEmploi idO => {'result': boolean}
-        function requestAcceptCandidature(idO) {
+        function acceptCandidature(idO, idE) {
             $.ajax({
                 url: '/entreprise/accept/candidature/' + idO + '/' + idE,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'acceptBtn' + id
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Acceptée'
+                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
         }
@@ -235,7 +239,7 @@
 
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
-                let card = new Candidature(candidature.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity);
+                let card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
         }

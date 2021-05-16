@@ -157,7 +157,7 @@
             constructor(id, nom, description, updatedAt, prenomEmploye, nomEmploye) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 let prenomNomEmploye = '';
-                if (prenomEmploye.length > 0 && nomEmploye.length > 0) prenomNomEmploye = ' par ' + prenomEmploye + ' ' + nomEmploye;
+                if (prenomEmploye.length > 0 && nomEmploye.length > 0) prenomNomEmploye = ' pour ' + prenomEmploye + ' ' + nomEmploye;
                 updatedAt = updatedAt.substr(0, 10).split('-');
                 updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
@@ -167,7 +167,7 @@
                     <div class="content">
                         <div class="header">
                             <i class="icon green check"></i>
-                            Acceptée${prenomNomEmploye} - ${nom}
+                            Acceptée - ${nom}${prenomNomEmploye}
                         </div>
                         <div class="description">
                             <p>${updatedAt}</p>

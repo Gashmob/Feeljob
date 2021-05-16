@@ -170,7 +170,7 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
+                    let card = new CandidaturesAcceptees(a.annonce.identity, a.annonce.nom, a.annonce.description, a.annonce.updatedAt);
                     candidatures.innerHTML += card.cardTemplate;
                 })
             }
@@ -186,7 +186,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
+                    let card = new CandidaturesAcceptees(a.annonce.identity, a.annonce.nom, a.annonce.description, a.annonce.updatedAt);
                     propositionsList.innerHTML += card.cardTemplate;
                 })
             }
