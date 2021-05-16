@@ -36,9 +36,9 @@
             <div class="ui two column stackable grid">
                 <div class="column four wide">
                     {% if cv.employe.photo is not empty %}
-                    <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
-                         alt="photo de profil"
-                         class="ui small circular image profileLogo">
+                        <img src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
+                             alt="photo de profil"
+                             class="ui small circular image profileLogo">
                     {% else %}
                         <img src="{{ asset('img/placeholders/matthew.png') }}"
                              alt="photo de profil"
@@ -140,7 +140,7 @@
             <div class="ui vertical segment left aligned">
                 <h3 class="ui header">Proposer à {{ cv.employe.prenom }} une de vos offres d'emploi</h3>
                 <select class="ui dropdown" name="offreEmploiTarget" id="offreEmploiTarget">
-                {# {% if offres %}
+                    {# {% if offres %}
                         <option value="">Choisir</option>
                         {% for offre in offres %}
                             <option value="{{ offre.identity }}">{{ offre.nom }}</option>
@@ -148,10 +148,11 @@
                     {% else %}
                         <option value="">Pas d'annonce postée !</option>
                     {% endif %}
+                    #}
                 </select>
                 <button id="applyBtn" class="ui green button" onclick="offreContrat()">
                     Recruter
-                </button> #}
+                </button>
             </div>
         {% endif %}
     </div>
@@ -159,49 +160,38 @@
 {% block javascripts %}
     <script type="text/javascript">
         var offreEmploiTarget = document.getElementById('offreEmploiTarget')
-        $(offreEmploiTarget).on('change', function() {
+        $(offreEmploiTarget).on('change', function () {
             $('#applyBtn').text('Recruter');
         })
 
         function offreContrat() {
-            var idOffreEmploi = offreEmploiTarget.value;
+            //var idOffreEmploi = offreEmploiTarget.value;
+            var idOffreEmploi = '93';
             if (idOffreEmploi.length > 0) {
-                httpRequest = new XMLHttpRequest();
-
-                if (!httpRequest) {
-                    alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                    return false;
-                }
-                httpRequest.onreadystatechange = offreContratResponse;
-                httpRequest.open('POST', '/entreprise/propose/' + idOffreEmploi + '/{{ cv.employe.identity }}');
-                httpRequest.send();
+                //httpRequest.open('POST', '/entreprise/propose/' + idOffreEmploi + '/{{ cv.employe.identity }}');
+                // L'Employeur propose l'OffreEmploi idO à l'Employe idE => {'result': boolean}
+                $.ajax({
+                    url: '/entreprise/propose/' + idOffreEmploi + '/{{ cv.employe.identity }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        offreContratResponse(results);
+                    }
+                });
             }
         }
 
         const applyBtn = document.querySelector("#applyBtn")
 
-        function offreContratResponse() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function offreContratResponse(results) {
+            console.log(results)
+            // Candidature posée
+            if (results.result) {
+                applyBtn.innerHTML = '<div>Validé</div>';
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results)
-                    // Candidature posée
-                    if (results.result) {
-                        applyBtn.innerHTML = '<div>Validé</div>';
-                    }
-                    // Candidature retirée
-                    else {
-                        applyBtn.innerHTML = '<div>Déjà demandé</div>';
-                    }
-                } else {
-                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Candidature retirée
+            else {
+                applyBtn.innerHTML = '<div>Déjà demandé</div>';
             }
         }
     </script>
