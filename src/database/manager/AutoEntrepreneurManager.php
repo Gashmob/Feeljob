@@ -75,10 +75,16 @@ class AutoEntrepreneurManager extends Manager
      */
     public function create(EntityManagerInterface $em, AutoEntrepreneur $autoEntrepreneur, string $secteurActivite)
     {
-        $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) as id'))
-            ->setString('nom', $secteurActivite)
-            ->run()
-            ->getOneOrNullResult();
+        if ($secteurActivite == '') {
+            $result = (new PreparedQuery('CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ') RETURN id(a) as id'))
+                ->run()
+                ->getOneOrNullResult();
+        } else {
+            $result = (new PreparedQuery('MATCH (s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) CREATE (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::EST_DANS . ']->(s) RETURN id(a) as id'))
+                ->setString('nom', $secteurActivite)
+                ->run()
+                ->getOneOrNullResult();
+        }
 
         $autoEntrepreneur->setIdentity($result['id']);
 
