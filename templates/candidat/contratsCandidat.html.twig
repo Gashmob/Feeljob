@@ -103,9 +103,9 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button denyBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button acceptBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button">Voir</a>
+                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
+                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -150,15 +150,7 @@
         // ----- Décandidature ----- //
         // Demande à décandidater
         function requestUncandidate(id) {
-            // L'Employe supprime sa candidature à l'OffreEmploi id => {'result': boolean}
-            $.ajax({
-                url: '/entreprise/uncandidate/' + id,
-                type: 'POST',
-                dataType: 'json',
-                success: function () {
-                    displayUncandidate(id);
-                }
-            });
+            makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
         }
 
         // Affiche la décandidature
@@ -169,16 +161,9 @@
         }
 
         // ----- Refus proposition contrat ----- //
-        // L'Employe refuse la proposition d'OffreEmploi id => {'result': boolean}
+        // Refuse proposition contrat
         function requestDenyContrat(id) {
-            $.ajax({
-                url: '/entreprise/refuse/proposition/' + id,
-                type: 'POST',
-                dataType: 'json',
-                success: function () {
-                    displayDeny(id);
-                }
-            });
+            makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
         }
 
         // Affiche le refus proposition contrat
@@ -189,22 +174,14 @@
         }
 
         // ----- Acceptation proposition contrat ----- //
-        //  L'Employe accepte la proposition d'OffreEmploi id => {'result': boolean}
+        // Acceptation proposition contrat
         function requestAcceptContrat(id) {
-            $.ajax({
-                url: '/entreprise/accept/proposition/' + id,
-                type: 'POST',
-                dataType: 'json',
-                success: function () {
-                    displayAccept(id);
-                }
-            });
+            makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
         }
 
         // Affiche l'acceptation proposition contrat
         function displayAccept(id) {
             let btnNo = 'acceptBtn' + id
-            console.log(btnNo)
             let btn = document.getElementById(btnNo)
             btn.innerHTML = 'Acceptée'
         }
