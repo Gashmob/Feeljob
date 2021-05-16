@@ -358,6 +358,7 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
+        $carte->getAutoEntrepreneur()->setCarteVisite(null);
         $em->remove($carte);
         $em->flush();
 
