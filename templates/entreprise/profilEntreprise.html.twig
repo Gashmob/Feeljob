@@ -39,7 +39,7 @@
     </a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Vos offres d'emploi</h3>
-        <div class="ui four stackable cards">
+        <div class="ui three stackable cards">
             {% for publication in publications %}
                 <a href="{{ path('entreprise_show_offre_emploi', {'id': publication.identity}) }}" class="ui card">
                     <div class="content">

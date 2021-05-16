@@ -44,7 +44,7 @@ window.addEventListener("load", function () {
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
     $.ajax({
-        url: '/entreprise/get/my/propositions',
+        url: '/entreprise/get/my/candidatures',
         type: 'POST',
         dataType: 'json',
         success: function (results) {
@@ -67,40 +67,26 @@ function truncate(str, n, useWordBoundary) {
         : subString) + " &hellip;";
 };
 
-// Créé une requête xmlhttp
-let httpRequest, results;
-
-function makeRequestByORSC(url, orscFunction) {
-    httpRequest = new XMLHttpRequest();
-    if (!httpRequest) {
-        alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-        return false;
-    }
-    httpRequest.onreadystatechange = orscFunction;
-    httpRequest.open('POST', url);
-    httpRequest.send();
-}
-
-// Affiche les propositions de contrat dans la nav au survol de la mallette
+// Affiche les candidatures de contrat dans la nav au survol de la mallette
 const notificationsFeed = document.getElementById('notifications');
 const contratsAmount = document.getElementById('contratsAmount');
 
 function displayContratsFeed(results) {
-    // Change la quantité de propositions de contrat dans la case
-    contratsAmount.innerHTML = results.propositions.length;
+    // Change la quantité de candidatures de contrat dans la case
+    contratsAmount.innerHTML = results.candidatures.length;
     // results = httpRequest.responseText
     // Réinitialise la liste
     notificationsFeed.innerHTML = '';
 
     // Il n'y a pas de résultats :
-    if (results.propositions === undefined || results.propositions.length == 0) {
-        notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
+    if (results.candidatures === undefined || results.candidatures.length == 0) {
+        notificationsFeed.innerHTML = `<div>Pas de nouvelle candidature.</div>`;
     }
 
     // Il y a des résultats :
-    // Pour chaque proposition
-    results.propositions.forEach(proposition => {
-        let card = new ContratEvent(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.createdAt);
+    // Pour chaque candidature
+    results.candidatures.forEach(candidature => {
+        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.lieu.ville, candidature.createdAt);
         notificationsFeed.innerHTML += card.contratEventTemplate;
     })
 }
