@@ -11,20 +11,12 @@
             </h2>
             <div class="ui label">Freelance</div>
         </div>
-        <div class="four wide column">
-            <div>
-                <i class="icon green check circle outline"></i>
-                E-mail vérifié
-            </div>
-            <div>
-                <i class="icon green check circle outline"></i>
-                Téléphone vérifié
-            </div>
-        </div>
+        {# <div class="four wide column">
+            <div><i class="icon green check circle outline"></i>E-mail vérifié</div>
+            <div><i class="icon green check circle outline"></i>Téléphone vérifié</div>
+        </div> #}
     </div>
-    <a href="{{ path('particulier_contrats') }}" class="ui blue button">
-        Vos contrats
-    </a>
+    <a href="{{ path('particulier_contrats') }}" class="ui blue button">Contrats</a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
@@ -61,26 +53,54 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3 class="ui header green">Vos contrats</h3>
+        <h3 class="ui header green">Vos contrats passés</h3>
         <div class="ui segment" id="contratsList">
-            {% for i in 1..2 %}
-                <div class="ui vertical segment">
-                    <div class="content">
-                        <div class="ui placeholder">
-                            <div class="header">
-                                <div class="short line"></div>
-                            </div>
-                            <div class="paragraph">
+            <div class="ui vertical segment">
+                <h3 class="ui header">Candidatures envoyées acceptées</h3>
+                <div id="contratsList__cand">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
                                 <div class="ui placeholder">
-                                    <div class="line"></div>
-                                    <div class="line"></div>
-                                    <div class="line"></div>
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+            <div class="ui vertical segment">
+                <h3 class="ui header">Propositions reçues acceptées</h3>
+                <div id="contratsList__prop">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -97,9 +117,9 @@
             $.ajax({
                 url: '/particulier/get/accepted/candidatures',
                 type: 'POST',
-                dataType: 'html',
-                success: function (code_html) {
-                    console.log(code_html)
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidaturesAcceptees(results)
                 }
             });
         }
@@ -110,14 +130,14 @@
             $.ajax({
                 url: '/particulier/get/accepted/propositions',
                 type: 'POST',
-                dataType: 'html',
-                success: function (code_html) {
-                    console.log(code_html)
+                dataType: 'json',
+                success: function (results) {
+                    displayPropositionsAcceptees(results)
                 }
             });
         }
 
-        class CandidaturesAcceptees {
+        class CandidatureAcceptee {
             constructor(id, nom, description, updatedAt) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 updatedAt = updatedAt.substr(0, 10).split('-');
@@ -133,7 +153,6 @@
                         </div>
                         <div class="description">
                             <p>${updatedAt}</p>
-                            <p>${description}</p>
                         </div>
                     </div>
                 </div>`;
@@ -141,18 +160,21 @@
         }
 
         var contratsList = document.getElementById('contratsList');
+        var candidaturesList = contratsList.querySelector('#contratsList__cand')
+        var propositionsList = contratsList.querySelector('#contratsList__prop')
 
         function displayCandidaturesAcceptees(results) {
             console.log(results);
 
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
-                contratsList.innerHTML = `<div style="margin: 10px auto;">Pas de candidatures acceptées.</div>`;
+                candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
             } else {
                 // Il y a des résultats :
+                candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
-                    contratsList.innerHTML += card.cardTemplate;
+                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    candidaturesList.innerHTML += card.cardTemplate;
                 })
             }
         }
@@ -162,12 +184,13 @@
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
-                contratsList.innerHTML = `<div style="margin: 10px auto;">Pas de propositions acceptées.</div>`;
+                propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
             } else {
                 // Il y a des résultats :
+                propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt);
-                    contratsList.innerHTML += card.cardTemplate;
+                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    propositionsList.innerHTML += card.cardTemplate;
                 })
             }
         }

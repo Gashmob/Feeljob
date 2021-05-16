@@ -77,6 +77,7 @@
         class Contrat {
             constructor(id, nom, ville, updatedAt, date, description) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
@@ -86,7 +87,7 @@
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
@@ -110,6 +111,7 @@
         class Candidature {
             constructor(id, nom, rue, codePostal, ville, createdAt, date, description) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
@@ -119,7 +121,7 @@
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
@@ -148,6 +150,7 @@
                     let btnNo = 'undoBtn' + id
                     let btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
+                    btn.classList.add('disabled')
                 }
             });
         }
@@ -162,9 +165,13 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'denyBtn' + id
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Refusée'
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
         }
@@ -178,9 +185,13 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'acceptBtn' + id
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Acceptée'
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
         }
@@ -194,7 +205,7 @@
 
             // Il n'y a pas de résultats :
             if (results.propositions == undefined || results.propositions.length == 0) {
-                contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
+                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
             // Il y a des résultats :
             // Pour chaque proposition
@@ -212,7 +223,7 @@
             candidaturesList.innerHTML = '';
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
-                candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
+                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
             }
 
             // Il y a des résultats :

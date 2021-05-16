@@ -145,6 +145,7 @@
                     let btnNo = 'undoBtn' + id
                     let btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
+                    btn.classList.add('disabled')
                 }
             });
         }
@@ -157,9 +158,13 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'denyBtn' + id
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Refusée'
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
         }
@@ -173,9 +178,13 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'acceptBtn' + id
-                    let btn = document.getElementById(btnNo)
-                    btn.innerHTML = 'Acceptée'
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
                 }
             });
         }
@@ -187,7 +196,6 @@
             // Réinitialise la liste
             contratsList.innerHTML = '';
 
-            console.log('display contrats')
             console.log(results)
             // Il n'y a pas de résultats :
             if (results.propositions == undefined || results.propositions.length == 0) {
