@@ -253,7 +253,8 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -295,7 +296,8 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -380,7 +382,8 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -422,7 +425,8 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]) => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 

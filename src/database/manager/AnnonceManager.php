@@ -192,7 +192,8 @@ class AnnonceManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+                'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]),
+                'auto' => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -234,7 +235,8 @@ class AnnonceManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+                'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]),
+                'auto' => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -319,7 +321,8 @@ class AnnonceManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+                'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]),
+                'auto' => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
@@ -361,7 +364,8 @@ class AnnonceManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = [
-                $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]) => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
+                'annonce' => $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['idA']]),
+                'auto' => $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $result['idC']])
             ];
         }
 
