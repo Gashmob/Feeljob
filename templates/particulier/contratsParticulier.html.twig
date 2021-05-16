@@ -94,7 +94,7 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="undoBtn${id}" class="ui red basic button undoBtn" onclick="requestCancelProposition(${id}, ${idAuto})">Annuler</button>
+                                <button id="undoBtn${id}to${idAuto}" class="ui red basic button undoBtn" onclick="requestCancelProposition(${id}, ${idAuto})">Annuler</button>
                             </div>
                         </div>
                     </div>
@@ -124,8 +124,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyCandidature(${id}, ${idAuto})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptCandidature(${id}, ${idAuto})">Accepter</button>
+                                <button id="denyBtn${id}to${idAuto}" class="ui red basic button undoBtn" onclick="requestDenyCandidature(${id}, ${idAuto})">Refuser</button>
+                                <button id="acceptBtn${id}to${idAuto}" class="ui green basic button undoBtn" onclick="requestAcceptCandidature(${id}, ${idAuto})">Accepter</button>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'undoBtn' + id
+                    let btnNo = 'undoBtn' + idAnn + 'to' + idAuto
                     let btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
                     btn.classList.add('disabled')
@@ -152,14 +152,16 @@
 
         // ----- Refus candidature contrat ----- //
         // TODO
-        function requestDenyCandidature(id) {
+        function requestDenyCandidature(idAnn, idAuto) {
+            // /particulier/refuse/candidature/{idAnn}/{idAuto}
+            // Le Particulier refuse la candidature de l'AutoEntrepreneur idAuto à l'Annonce idAnn => {'result': boolean}
             $.ajax({
-                url: '/particulier/refuse/candidature/' + id,
+                url: '/particulier/refuse/candidature/' + idAnn + '/' + idAuto,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnDenyNo = 'denyBtn' + id
-                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnDenyNo = 'denyBtn' + idAnn + 'to' + idAuto
+                    let btnAcceptNo = 'acceptBtn' + idAnn + 'to' + idAuto
                     let btnAccept = document.getElementById(btnAcceptNo)
                     let btnDeny = document.getElementById(btnDenyNo)
                     btnDeny.innerHTML = 'Refusée'
@@ -174,12 +176,12 @@
         // Le Particulier accepte la candidature de l'AutoEntrepreneur idAuto à l'Annonce idAnn => {'result': boolean}
         function requestAcceptCandidature(idAnn, idAuto) {
             $.ajax({
-                url: '/particulier/accept/candidature/'+ idAnn+ '/'+ idAuto,
+                url: '/particulier/accept/candidature/' + idAnn + '/' + idAuto,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnDenyNo = 'denyBtn' + id
-                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnDenyNo = 'denyBtn' + idAnn + 'to' + idAuto
+                    let btnAcceptNo = 'acceptBtn' + idAnn + 'to' + idAuto
                     let btnAccept = document.getElementById(btnAcceptNo)
                     let btnDeny = document.getElementById(btnDenyNo)
                     btnAccept.innerHTML = 'Acceptée'
@@ -207,7 +209,7 @@
                 console.log('pas de propositions')
             }
             results.propositions.forEach(proposition => {
-                let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
+                let card = new Contrat(proposition.annonceidentity, proposition.annonce.nom, proposition.annonce.adresse.ville, proposition.annonce.updatedAt, proposition.date.annonce, proposition.annonce.description, candidature.auto.identity, candidature.auto.prenom, candidature.auto.nom, candidature.auto.nomEntreprise);
                 contratsList.innerHTML += card.contratTemplate;
             })
         }
@@ -228,7 +230,7 @@
 
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
-                let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
+                let card = new Candidature(candidature.annonce.identity, candidature.annonce.nom, candidature.annonce.adresse.rue, candidature.annonce.adresse.codePostal, candidature.annonce.adresse.ville, candidature.annonce.createdAt, candidature.annonce.date, candidature.annonce.description, candidature.auto.identity, candidature.auto.prenom, candidature.auto.nom, candidature.auto.nomEntreprise);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
         }

@@ -77,7 +77,7 @@ function displayContratsFeed(results) {
 
     // Il y a des résultats :
     results.candidatures.forEach(candidature => {
-        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.adresse.ville, candidature.createdAt);
+        let card = new ContratEvent(candidature.annonce.identity, candidature.annonce.nom, candidature.annonce.adresse.ville, candidature.annonce.createdAt);
         notificationsFeed.innerHTML += card.contratEventTemplate;
     })
 }

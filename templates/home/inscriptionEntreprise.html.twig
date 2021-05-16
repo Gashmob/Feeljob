@@ -55,72 +55,135 @@
             </div>
             <div class="row">
                 <div class="ui container vertical segment left aligned">
-                    <div class="ui vertical segment form--segment">
-                        <div class="ui container stackable middle aligned grid">
-                            <h3 class="ui header center aligned" style="width: 100%;">Création compte Candidat</h3>
-                            <form class="ui form" method="post" style="width: 100%;">
-                                <div class="two fields">
-                                    <div class="required field">
-                                        <label>Prénom</label>
-                                        <input type="text" name="prenom" placeholder="Prénom" maxlength="48" required>
-                                    </div>
-                                    <div class="required field">
-                                        <label>Nom</label>
-                                        <input type="text" name="nom" placeholder="Nom" maxlength="48" required>
-                                    </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Adresse e-mail</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon envelope"></i>
-                                        <input class="mailInput" onkeyup="checkField(this, regexMail)" type="text"
-                                               name="email" placeholder="@mail.fr" maxlength="250" required>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label>Téléphone</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon phone"></i>
-                                        <input type="text" onkeyup="checkField(this, regexPhone)" name="telephone"
-                                               placeholder="Téléphone" maxlength="16">
-                                    </div>
-                                </div>
-                                <div class="required field mdpPop">
-                                    <label>Mot de passe</label>
-                                    <div class="ui right labeled left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" id="mdpC" onkeyup="checkField(this, regexMdp)"
-                                               name="motdepasse" placeholder="Mot de passe"
-                                               required maxlength="48">
-                                        <div style="cursor: pointer" class="ui basic label"
-                                             onclick="showPsswd(this, 'mdpC')">
-                                            <i style="margin: 0;" class="icon eye slash link"></i>
+                    <div class="ui bottom attached tab segment active">
+                        <div class="ui vertical segment form--segment">
+                            <div class="ui container stackable middle aligned grid">
+                                <h3 class="ui header center aligned" style="width: 100%;">Création compte
+                                    Entreprise</h3>
+                                <form class="ui form" method="post" style="width: 100%;" enctype="multipart/form-data">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Prénom</label>
+                                            <input type="text" name="prenom" placeholder="Prénom" maxlength="48"
+                                                   required>
+                                        </div>
+                                        <div class="required field">
+                                            <label>Nom</label>
+                                            <input type="text" name="nom" placeholder="Nom" maxlength="48" required>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="required field">
-                                    <label>Répéter le mot de passe</label>
-                                    <div class="ui left icon input">
-                                        <i class="icon lock"></i>
-                                        <input type="password" onkeyup="comparePass(this, 'mdpC')"
-                                               name="motdepasse2" placeholder="Mot de passe"
-                                               required maxlength="48">
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Nom de l'entreprise</label>
+                                            <input type="text" name="nomEntreprise" placeholder="Nom entreprise"
+                                                   maxlength="48" required>
+                                        </div>
+                                        <div class="field">
+                                            <label>Logo de l'entreprise</label>
+                                            <label class="ui teal basic button" for="employeur-logo">
+                                                <i class="paperclip icon"></i>
+                                                <span id="employeur-label">Logo de l'entreprise</span>
+                                                <input type="file" style="display: none;" id="employeur-logo"
+                                                       name="logo">
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="ui divider"></div>
-                                <div class="required inline field">
-                                    <div class="ui checkbox">
-                                        <input type="checkbox" name="conditions" class="hidden" required>
-                                        <label>J'accepte les conditions d'utilisation</label>
+                                    <div class="field">
+                                        <label>Adresse de l'entreprise</label>
+                                        <input type="text" name="adresse" maxlength="48"
+                                               placeholder="Adresse entreprise">
                                     </div>
-                                    <a href="{{ path('conditions') }}" target="_blank">Voir ici &nbsp<i
-                                                class="icon external"></i></a>
-                                </div>
-                                <button class="ui large green fluid submit button" type="submit" name="tab"
-                                        value="{{ employe }}">
-                                    Valider
-                                </button>
-                            </form>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Ville</label>
+                                            <input type="text" name="adresse" maxlength="48" placeholder="Ville">
+                                        </div>
+                                        <div class="field">
+                                            <label>Code postal</label>
+                                            <input type="text" name="adresse" maxlength="8" placeholder="Code postal">
+                                        </div>
+                                    </div>
+                                    <div class="required field">
+                                        <label>N° de Siret</label>
+                                        <div>
+                                            <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
+                                                   placeholder="N° Siret" required min="8" max="14">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Secteur d'activité</label>
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="secteurActivite">
+                                            <div class="default text">Secteur</div>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                {% for secteur in secteurActivites %}
+                                                    <div class="item" data-value="{{ secteur }}">
+                                                        {{ secteur }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Descriptif de l'entreprise</label>
+                                        <textarea rows="4" name="description"
+                                                  placeholder="Une description de votre entreprise."
+                                                  maxlength="400"></textarea>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="required field">
+                                            <label>Adresse e-mail</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon envelope"></i>
+                                                <input class="mailInput" onkeyup="checkField(this, regexMail)"
+                                                       type="text" name="email" placeholder="@mail.fr" maxlength="250"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <label>Téléphone</label>
+                                            <div class="ui left icon input">
+                                                <i class="icon phone"></i>
+                                                <input type="text" onkeyup="checkField(this, regexPhone)"
+                                                       name="telephone" placeholder="Téléphone" maxlength="250">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="required field mdpPop">
+                                        <label>Mot de passe</label>
+                                        <div class="ui right labeled left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" id="mdpE" onkeyup="checkField(this, regexMdp)"
+                                                   name="motdepasse" placeholder="Mot de passe" maxlength="48"
+                                                   required>
+                                            <div style="cursor: pointer" class="ui basic label"
+                                                 onclick="showPsswd(this, 'mdpE')">
+                                                <i style="margin: 0;" class="icon eye slash link"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="required field">
+                                        <label>Répéter le mot de passe</label>
+                                        <div class="ui left icon input">
+                                            <i class="icon lock"></i>
+                                            <input type="password" onkeyup="comparePass(this, 'mdpE')"
+                                                   name="motdepasse2" placeholder="Mot de passe" maxlength="48"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="ui divider"></div>
+                                    <div class="required inline field">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" name="conditions" class="hidden" required>
+                                            <label>J'accepte les conditions d'utilisation</label>
+                                        </div>
+                                        <a href="{{ path('conditions') }}" target="_blank">Voir ici &nbsp<i
+                                                    class="icon external"></i></a>
+                                    </div>
+                                    <button class="ui large green fluid submit button" type="submit">Valider</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
