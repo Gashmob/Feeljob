@@ -96,3 +96,37 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            getAcceptedCandidatures();
+            getAcceptedPropositions();
+        })
+
+        function getAcceptedCandidatures() {
+            // /particulier/get/accepted/candidatures
+            // L'AutoEntrepreneur récupère toutes ses candidatures acceptées => {'candidatures': Annonce[]}
+            $.ajax({
+                url: '/particulier/get/accepted/candidatures',
+                type: 'POST',
+                dataType: 'html',
+                success: function (code_html) {
+                    console.log(code_html)
+                }
+            });
+        }
+
+        function getAcceptedPropositions() {
+            // /particulier/get/accepted/propositions
+            // L'AutoEntrepreneur récupère toute ses propositions acceptées => {'propositions': Annonce[]}
+            $.ajax({
+                url: '/particulier/get/accepted/propositions',
+                type: 'POST',
+                dataType: 'html',
+                success: function (code_html) {
+                    console.log(code_html)
+                }
+            });
+        }
+    </script>
+{% endblock %}

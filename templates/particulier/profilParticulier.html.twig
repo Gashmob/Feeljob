@@ -59,7 +59,6 @@
     </div>
     <div class="ui vertical segment">
         <h3 class="ui header green">Candidatures acceptées</h3>
-        <!--/particulier/get/accepted/candidatures-->
         <div class="ui segment">
             {% for i in 1..2 %}
                 <div class="ui vertical segment">
@@ -78,7 +77,6 @@
             {% endfor %}
         </div>
         <h3 class="ui header green">Propositions acceptées</h3>
-        <!--/particulier/get/accepted/propositions-->
         <div class="ui segment">
             {% for i in 1..2 %}
                 <div class="ui vertical segment">
@@ -100,15 +98,35 @@
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">
-window.addEventListener('load', function() {
-    $.ajax({
-        url : '/particulier/get/accepted/propositions',
-        type : 'POST',
-        dataType : 'html',
-        success : function(code_html, statut){
-            console.log(code_html)
+        window.addEventListener('load', function () {
+            getAcceptedMyCandidatures();
+            getMyAcceptedPropositions();
+        })
+
+        function getAcceptedMyCandidatures() {
+            // /particulier/get/accepted/my/candidatures
+            // Le Particulier récupère toutes ses candidatures acceptées => {'candidatures': [Annonce => AutoEntrepreneur]}
+            $.ajax({
+                url: '/particulier/get/accepted/my/candidatures',
+                type: 'POST',
+                dataType: 'html',
+                success: function (code_html) {
+                    console.log(code_html)
+                }
+            });
         }
-    });
-})
+
+        function getMyAcceptedPropositions() {
+            // /particulier/get/my/accepted/propositions
+            // Le Particulier récupère toutes ses propositions acceptées => {'propositions': [Annonce => AutoEntrepreneur]}
+            $.ajax({
+                url: '/particulier/get/my/accepted/propositions',
+                type: 'POST',
+                dataType: 'html',
+                success: function (code_html) {
+                    console.log(code_html)
+                }
+            });
+        }
     </script>
 {% endblock %}

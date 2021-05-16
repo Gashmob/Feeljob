@@ -137,42 +137,52 @@
         }
 
         // ----- Décandidature ----- //
-        // Demande à décandidater
+        // /particulier/uncandidate/{id}
+        // L'AutoEntrepreneur supprime sa candidature à l'Annonce id => {'result': boolean}
         function requestUncandidate(id) {
-            makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
-        }
-
-        // Affiche la décandidature
-        function displayUncandidate(id) {
-            let btnNo = 'undoBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
+            $.ajax({
+                url: '/particulier/uncandidate/'+ id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'undoBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée'
+                }
+            });
         }
 
         // ----- Refus proposition contrat ----- //
         // Refuse proposition contrat
+        // /particulier/refuse/proposition/{id}
+        // L'AutoEntrepreneur refuse la proposition de l'Annonce id => {'result': boolean}
         function requestDenyContrat(id) {
-            makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
-        }
-
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
+            $.ajax({
+                url: '/particulier/refuse/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'denyBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Refusée'
+                }
+            });
         }
 
         // ----- Acceptation proposition contrat ----- //
-        // Acceptation proposition contrat
+        // /particulier/accept/proposition/{id}
+        // L'AutoEntrepreneur accept la proposition de l'Annonce id => {'result': boolean}
         function requestAcceptContrat(id) {
-            makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
-        }
-
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
+            $.ajax({
+                url: '/particulier/accept/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'acceptBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Acceptée'
+                }
+            });
         }
 
         // Affiche la liste des contrats dans la vue contrats

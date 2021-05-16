@@ -124,8 +124,8 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id}, ${idAuto})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id}, ${idAuto})">Accepter</button>
+                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyCandidature(${id}, ${idAuto})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptCandidature(${id}, ${idAuto})">Accepter</button>
                             </div>
                         </div>
                     </div>
@@ -134,6 +134,7 @@
         }
 
         // ----- Annuler proposition contrat ----- //
+        // /particulier/remove/proposition/{idAnn}/{idAuto}
         // Le Particulier supprime la proposition d'Annonce idAnn faite à l'AutoEntrepreneur idAuto => {'result': boolean}
         function requestCancelProposition(idAnn, idAuto) {
             $.ajax({
@@ -141,57 +142,42 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayCancelProposition(idAnn)
+                    let btnNo = 'undoBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée'
                 }
             });
-        }
-
-        // Affiche l'annulation
-        function displayCancelProposition(id) {
-            let btnNo = 'undoBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
         }
 
         // ----- Refus candidature contrat ----- //
-        // Refuse candidature contrat
-        // TODO : pas encore faite
-        function requestDenyContrat(id) {
+        // TODO
+        function requestDenyCandidature(id) {
             $.ajax({
-                url: '/particulier/refuse/proposition/' + id,
+                url: '/particulier/refuse/candidature/' + id,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayDeny(id)
+                    let btnNo = 'denyBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Refusée'
                 }
             });
         }
 
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
-        }
-
         // ----- Acceptation candidature contrat ----- //
+        // /particulier/accept/candidature/{idAnn}/{idAuto}
         // Le Particulier accepte la candidature de l'AutoEntrepreneur idAuto à l'Annonce idAnn => {'result': boolean}
-        function requestAcceptContrat(idAnn, idAuto) {
+        function requestAcceptCandidature(idAnn, idAuto) {
             $.ajax({
                 url: '/particulier/accept/candidature/'+ idAnn+ '/'+ idAuto,
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    displayAccept(idAnn)
+                    let btnNo = 'acceptBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Acceptée'
                 }
             });
-        }
-
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
         }
 
         // Affiche la liste des contrats dans la vue contrats
