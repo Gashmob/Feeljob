@@ -467,8 +467,8 @@
 }
 
 .profileLogo.profileLogo--35 {
-    height: 35px;
-    width: 35px;
+    height: 35px !important;
+    width: 35px !important;
 }
 
 .profileLogo.profileLogo--80 {
@@ -479,6 +479,11 @@
 .profileLogo.profileLogo--120 {
     height: 120px !important;
     width: 120px !important;
+}
+
+.profileLogo.profileLogo--100 {
+    height: 100px !important;
+    width: 100px !important;
 }
 
 .flex {

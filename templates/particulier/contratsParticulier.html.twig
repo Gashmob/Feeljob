@@ -75,11 +75,12 @@
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, date, description, idAuto) {
+            constructor(id, nom, ville, updatedAt, date, description, idAuto, prenomAuto, nomAuto, nomEntrepriseAuto) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
                 //url vers le profil du freelance à qui est destinée la proposition
                 let urlAuto = "#"
 
@@ -95,6 +96,7 @@
                         <div class="extra">
                             <div class="ui right floated buttons">
                                 <button id="undoBtn${id}to${idAuto}" class="ui red basic button undoBtn" onclick="requestCancelProposition(${id}, ${idAuto})">Annuler</button>
+                                <a href="${url}" class="ui blue basic button">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -106,17 +108,23 @@
          * classe correspondant à l'item candidature dans la vue contrats
          */
         class Candidature {
-            constructor(id, nom, rue, codePostal, ville, createdAt, date, description, idAuto) {
+            constructor(id, nom, rue, codePostal, ville, createdAt, date, description, idAuto, prenomAuto, nomAuto, nomEntrepriseAuto) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
+                if (!ville.length > 0) {
+                    ville = ''
+                } else {
+                    ville = ' à ' + ville;
+                }
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}</div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
@@ -126,6 +134,7 @@
                             <div class="ui right floated buttons">
                                 <button id="denyBtn${id}to${idAuto}" class="ui red basic button undoBtn" onclick="requestDenyCandidature(${id}, ${idAuto})">Refuser</button>
                                 <button id="acceptBtn${id}to${idAuto}" class="ui green basic button undoBtn" onclick="requestAcceptCandidature(${id}, ${idAuto})">Accepter</button>
+                                <a href="${url}" class="ui blue basic button">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -209,7 +218,7 @@
                 console.log('pas de propositions')
             }
             results.propositions.forEach(proposition => {
-                let card = new Contrat(proposition.annonceidentity, proposition.annonce.nom, proposition.annonce.adresse.ville, proposition.annonce.updatedAt, proposition.date.annonce, proposition.annonce.description, candidature.auto.identity, candidature.auto.prenom, candidature.auto.nom, candidature.auto.nomEntreprise);
+                let card = new Contrat(proposition.annonce.identity, proposition.annonce.nom, proposition.annonce.adresse.ville, proposition.annonce.updatedAt, proposition.annonce.date, proposition.annonce.description, proposition.auto.identity, proposition.auto.prenom, proposition.auto.nom, proposition.auto.nomEntreprise);
                 contratsList.innerHTML += card.contratTemplate;
             })
         }

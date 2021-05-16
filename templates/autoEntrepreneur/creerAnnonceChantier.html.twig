@@ -23,7 +23,7 @@
                 <label>Intitulé de l'annonce</label>
                 <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
             </div>
-            <div class="field">
+            {# <div class="field">
                 <label>Secteur d'activité</label>
                 <select class="ui dropdown" name="secteurActivite">
                     <option value="">Choisir</option>
@@ -31,6 +31,10 @@
                         <option value="{{ secteur }}">{{ secteur }}</option>
                     {% endfor %}
                 </select>
+            </div>  #}
+            <div class="field">
+                <label>Métier</label>
+                <input type="text" class="ui dropdown" name="metier" value="Technicien">
             </div>
             <div class="two fields">
                 <div class="required field">
