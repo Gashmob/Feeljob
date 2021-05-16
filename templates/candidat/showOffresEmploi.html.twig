@@ -104,7 +104,7 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
-                    displayOffres(results)
+                    displayOffres(results, false)
                 }
             });
         }
@@ -141,7 +141,7 @@
             })
         }
 
-        function displayFavoris(results) {
+        function displayFavoris(results, favori) {
             // Réinitialise la liste
             offresList.innerHTML = '';
 
@@ -154,13 +154,13 @@
 
             // Pour chaque favori du tableau favoris
             results.favoris.forEach(o => {
-                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
 
         class OffreCard {
-            constructor(id, nom, rue, codeP, ville, salaire, heures, createdAt, description, debut, fin, teletravail, loge) {
+            constructor(id, nom, rue, codeP, ville, salaire, heures, createdAt, description, debut, fin, teletravail, loge, favori) {
                 var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
                 var date = ''
                 debut = debut.substr(0, 10).split('-');
@@ -189,10 +189,12 @@
                 } else if (debut.length > 0) {
                     date = `<span>À partir du ${debut}</span>`
                 }
+                var favoriStar = ''
+                if (favori) favoriStar = 'yellow'
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
-                    <i class="icon star outline addFavBtn" onclick='addFav(this, ${id})'></i>
+                    <i class="icon star outline addFavBtn ${favoriStar}" onclick='addFav(this, ${id})'></i>
                     <div class="content">
                         <div class="header">${nom}</div>
                         <div class="meta">
@@ -271,7 +273,7 @@
                     type: 'POST',
                     dataType: 'json',
                     success: function (results) {
-                        displayFavoris(results)
+                        displayFavoris(results, true)
                     }
                 });
             } else {
@@ -280,7 +282,7 @@
                     type: 'POST',
                     dataType: 'json',
                     success: function (results) {
-                        displayOffres(results)
+                        displayOffres(results, false)
                     }
                 });
             }
