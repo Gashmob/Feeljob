@@ -225,7 +225,7 @@ class OffreEmploiManager extends Manager
      */
     public function getCandidature(EntityManagerInterface $em, int $idEmploye): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE AND NOT exists(c.accept) RETURN id(o) as id'))
             ->setInteger('idE', $idEmploye)
             ->run()
             ->getResult();
@@ -245,7 +245,7 @@ class OffreEmploiManager extends Manager
      */
     public function getMyCandidature(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[ca:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(ca.accept) RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
@@ -374,7 +374,7 @@ class OffreEmploiManager extends Manager
      */
     public function getPropositions(EntityManagerInterface $em, int $idEmploye): array
     {
-        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(p.accept) RETURN id(o) as id'))
             ->setInteger('idE', $idEmploye)
             ->run()
             ->getResult();
@@ -394,7 +394,7 @@ class OffreEmploiManager extends Manager
      */
     public function getMyPropositions(EntityManagerInterface $em, int $idEmployeur): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(p.accept) RETURN id(o) as idO, id(c) as idC'))
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getResult();
