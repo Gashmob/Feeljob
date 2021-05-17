@@ -166,12 +166,12 @@ class EntrepriseController extends AbstractController
                     ->setMotdepasse($data['motdepasse'])
                     ->setSel($data['sel'])
                     ->setAdresse($adresse);
-
+              
                 (new EmployeManager())->create($em, $employe);
 
                 //Utils::sendMailAndWait($mailer, $employe->getEmail(), $employe->getPrenom(), $employe->getNom(), $employe->getIdentity());
                 $this->addFlash('success', 'Bravo ! Vous avez un nouveau compte !');
-
+              
                 return $this->redirectToRoute('waitVerifEmail', ['id' => $employe->getIdentity()]);
             }
         }
