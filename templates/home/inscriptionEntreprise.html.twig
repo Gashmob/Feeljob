@@ -88,29 +88,29 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="required field">
                                         <label>Adresse de l'entreprise</label>
                                         <input type="text" name="adresse" maxlength="48"
-                                               placeholder="Adresse entreprise">
+                                               placeholder="Adresse entreprise" required>
                                     </div>
                                     <div class="two fields">
-                                        <div class="field">
+                                        <div class="required field">
                                             <label>Ville</label>
-                                            <input type="text" name="adresse" maxlength="48" placeholder="Ville">
+                                            <input type="text" name="adresse" maxlength="48" placeholder="Ville" required>
                                         </div>
-                                        <div class="field">
+                                        <div class="required field">
                                             <label>Code postal</label>
-                                            <input type="text" name="adresse" maxlength="8" placeholder="Code postal">
+                                            <input type="text" name="adresse" maxlength="8" placeholder="Code postal" required>
                                         </div>
                                     </div>
                                     <div class="required field">
                                         <label>N° de Siret</label>
                                         <div>
                                             <input onkeyup="checkField(this, regexSIRET)" type="text" name="siret"
-                                                   placeholder="N° Siret" required min="8" max="14">
+                                                   placeholder="N° Siret" min="8" max="14" required>
                                         </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="required field">
                                         <label>Secteur d'activité</label>
                                         <div class="ui selection dropdown">
                                             <input type="hidden" name="secteurActivite">
@@ -141,12 +141,12 @@
                                                        required>
                                             </div>
                                         </div>
-                                        <div class="field">
+                                        <div class="required field">
                                             <label>Téléphone</label>
                                             <div class="ui left icon input">
                                                 <i class="icon phone"></i>
                                                 <input type="text" onkeyup="checkField(this, regexPhone)"
-                                                       name="telephone" placeholder="Téléphone" maxlength="250">
+                                                       name="telephone" placeholder="Téléphone" maxlength="250" required>
                                             </div>
                                         </div>
                                     </div>
@@ -200,7 +200,8 @@
         const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
         const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
         const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
-        const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+        //const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+        const regexSIRET = /^[0-9]{14}$/
 
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
