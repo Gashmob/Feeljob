@@ -44,17 +44,31 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadContrats();
-            setTimeout(loadCandidatures, 2000);
+            loadCandidatures();
         });
 
         // Charge les contrats dans la vue contrat et les affiche
         function loadContrats() {
-            makeRequestByORSC('/particulier/get/propositions', displayContrats);
+            $.ajax({
+                url: '/particulier/get/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayContrats(results)
+                }
+            });
         }
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
-            makeRequestByORSC('/particulier/get/candidatures', displayCandidatures);
+            $.ajax({
+                url: '/particulier/get/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidatures(results)
+                }
+            });
         }
 
         /*
@@ -63,6 +77,7 @@
         class Contrat {
             constructor(id, nom, ville, updatedAt, date, description) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
@@ -72,7 +87,7 @@
                 <div class="contrat ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
@@ -96,6 +111,7 @@
         class Candidature {
             constructor(id, nom, rue, codePostal, ville, createdAt, date, description) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
@@ -105,7 +121,7 @@
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Pour le ${date}</span>
                             </div>
@@ -123,101 +139,98 @@
         }
 
         // ----- Décandidature ----- //
-        // Demande à décandidater
+        // /particulier/uncandidate/{id}
+        // L'AutoEntrepreneur supprime sa candidature à l'Annonce id => {'result': boolean}
         function requestUncandidate(id) {
-            makeRequestByORSC('/particulier/uncandidate/' + id, displayUncandidate(id))
-        }
-        // Affiche la décandidature
-        function displayUncandidate(id) {
-            let btnNo = 'undoBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
+            $.ajax({
+                url: '/particulier/uncandidate/'+ id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'undoBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée'
+                    btn.classList.add('disabled')
+                }
+            });
         }
 
         // ----- Refus proposition contrat ----- //
         // Refuse proposition contrat
+        // /particulier/refuse/proposition/{id}
+        // L'AutoEntrepreneur refuse la proposition de l'Annonce id => {'result': boolean}
         function requestDenyContrat(id) {
-            makeRequestByORSC('/particulier/refuse/proposition/' + id, displayDeny(id))
-        }
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
+            $.ajax({
+                url: '/particulier/refuse/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
+                }
+            });
         }
 
         // ----- Acceptation proposition contrat ----- //
-        // Acceptation proposition contrat
+        // /particulier/accept/proposition/{id}
+        // L'AutoEntrepreneur accept la proposition de l'Annonce id => {'result': boolean}
         function requestAcceptContrat(id) {
-            makeRequestByORSC('/particulier/accept/proposition/' + id, displayAccept(id))
-        }
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
+            $.ajax({
+                url: '/particulier/accept/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
+                }
+            });
         }
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
-        function displayContrats() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    contratsList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.propositions == undefined || results.propositions.length == 0) {
-                        contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
-                    }
-                    // Il y a des résultats :
-                    // Pour chaque proposition
-                    results.propositions.forEach(proposition => {
-                        let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
-                        contratsList.innerHTML += card.contratTemplate;
-                    })
-                } else {
-                    contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+        function displayContrats(results) {
+            // Réinitialise la liste
+            contratsList.innerHTML = '';
+
+            // Il n'y a pas de résultats :
+            if (results.propositions == undefined || results.propositions.length == 0) {
+                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
+            // Il y a des résultats :
+            // Pour chaque proposition
+            results.propositions.forEach(proposition => {
+                let card = new Contrat(proposition.identity, proposition.nom, proposition.adresse.ville, proposition.updatedAt, proposition.date, proposition.description);
+                contratsList.innerHTML += card.contratTemplate;
+            })
         }
 
         // Affiche la liste des candidatures dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
 
-        function displayCandidatures() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayCandidatures(results) {
+            // Réinitialise la liste
+            candidaturesList.innerHTML = '';
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    candidaturesList.innerHTML = '';
-                    // Il n'y a pas de résultats :
-                    if (results.candidatures === undefined || results.candidatures.length == 0) {
-                        candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
-                    }
 
-                    // Il y a des résultats :
-                    results.candidatures.forEach(candidature => {
-                        let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
-                        candidaturesList.innerHTML += card.candidatureTemplate;
-                    })
-                } else {
-                    candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
-            }
+            // Il y a des résultats :
+            results.candidatures.forEach(candidature => {
+                let card = new Candidature(candidature.identity, candidature.nom, candidature.adresse.rue, candidature.adresse.codePostal, candidature.adresse.ville, candidature.createdAt, candidature.date, candidature.description);
+                candidaturesList.innerHTML += card.candidatureTemplate;
+            })
         }
     </script>
 {% endblock %}

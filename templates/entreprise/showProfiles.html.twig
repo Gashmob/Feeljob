@@ -4,43 +4,50 @@
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input type="text" placeholder="Rechercher">
+            <input id="searchInput" type="text" placeholder="Rechercher">
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Products</div>
+                    <div class="header">Distance max</div>
                     <div class="menu">
-                        <a class="item">Enterprise</a>
-                        <a class="item">Consumer</a>
+                        <div class="item" id="rangeLabel">Désactivé</div>
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
+                                                 value="0" step="10"
+                                                 oninput="updateRangeLabel(this.value);"></div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">CMS Solutions</div>
+                    <div class="header">Secteur d'activité</div>
                     <div class="menu">
-                        <a class="item">Rails</a>
-                        <a class="item">Python</a>
-                        <a class="item">PHP</a>
+                        <div class="item">
+                            <select class="ui dropdown" id="secteurSelect">
+                                <option value="">Choisir</option>
+                                {# {% for secteur in secteurs %}
+                                        <option value="{{ secteur }}">{{ secteur }}</option>
+                                    {% endfor %} #}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">Hosting</div>
+                    <div class="header">Favoris</div>
                     <div class="menu">
-                        <a class="item">Shared</a>
-                        <a class="item">Dedicated</a>
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" name="favoris" class="hidden">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="header">Support</div>
-                    <div class="menu">
-                        <a class="item">E-mail Support</a>
-                        <a class="item">FAQs</a>
-                    </div>
-                </div>
+                <div class="item"></div>
             </div>
             <div class="ui center aligned">
                 <div id="cvsList" class="ui two stackable cards">
+                    <noscript>
+                        <p>Veuillez activer JavaScript pour afficher les résultats en AJAX.</p>
+                    </noscript>
                     {% for i in 0..6 %}
                         <div class="item">
                             <div class="image">
@@ -75,99 +82,95 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
+        class CVCard {
+            constructor(id, prenom, nom, photo, diplomes, langues, createdAt, description, permis) {
+                if (!nom.length > 0) nom = 'Carte n°' + id;
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
+                if (photo.length > 0) photo = '{{ asset('uploads/photo/') }}' + photo;
+                if (permis) permis = `
+                <p>
+                    <i class="icon circle outline check"></i>
+                    Dispose du permis
+                </p>`
+
+                this.cardTemplate = `
+                <div class="ui card cvCard">
+                    <i onclick="addFav(this);" class="icon star outline"></i>
+                    <div class="content">
+                        <div class="ui left floated profileLogo profileLogo--35"
+                                 style="background-image: url('${photo}'); -moz-background-image: url('${photo}'); -o-background-image: url('${photo}'); -webkit-background-image: url('${photo}');"></div>
+                        <div class="header">${prenom} ${nom}</div>
+                        <div class="meta">
+                            <span class="category">Métier</span>
+                        </div>
+                        <div style="margin-top: 10px;" class="contract">
+                            ${langues.map(langue => `<div class="ui label">${langue.langue.nom}</div>`).join('')}
+                        </div>
+                        <div style="margin-top: 10px;" class="description">
+                            <p>${description}</p>
+                            ${diplomes.map(diplome =>
+                    `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
+                ).join('')}
+                            ${permis}
+                        </div>
+                    </div>
+                    <a href="${url}"
+                       class="ui right floated green button">
+                        Voir le CV
+                        <i class="right chevron icon"></i>
+                    </a>
+                </div>`;
+            }
+        }
+
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequest()
         });
 
-        if (httpRequest == undefined) {
-            let httpRequest;
-        }
-        if (results == undefined) {
-            let results;
-        }
-
         //Cherche tous les résultats
         function makeRequest() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCVS;
-            httpRequest.open('POST', '/entreprise/get/cvs');
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
 
         //Cherche les résultats par le nom entré barre recherche
         function makeRequestByCompetence(competence) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCVS;
-            httpRequest.open('POST', '/entreprise/get/cvs/' + competence);
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
 
         //Affiche les résultats dans 'cvsList'
         var cvsList = document.getElementById('cvsList');
 
-        function displayCVS() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                cvsList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayCVS(results) {
+            console.log(results);
+            // Réinitialise la liste
+            cvsList.innerHTML = '';
+
+            // Il n'y a pas de résultats :
+            if (results.cvs === undefined || results.cvs.length == 0) {
+                cvsList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results);
-                    // Réinitialise la liste
-                    cvsList.innerHTML = '';
-                    // Pour chaque cv du tableau cvs
-                    for (var i = 0; i < results.cvs.length; i++) {
-                        var card = `
-                        <div class="ui card cvCard" href="#">
-                            <i onclick="addFav(this);" class="icon star outline"></i>
-                            <div class="content">
-                                <img class="ui left floated mini circular image"
-                                     src="{{ asset('uploads/photo/') }}` + results.cvs[i].employe.photo + `">
-                                <div class="header">` + results.cvs[i].employe.prenom + ` ` + results.cvs[i].employe.nom + `</div>
-                                <div class="meta">
-                                    <span class="category">Métier</span>
-                                </div>
-                                <div style="margin-top: 10px;" class="contract">
-                                    <div class="ui label">` + results.cvs[i].langues[0].langue.nom + `</div>
-                                </div>
-                                <div class="description">
-                                    <p>` + truncate(results.cvs[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
-                                        <p>
-                                            <i class="icon bookmark"></i>
-                                            ` + results.cvs[i].diplomes[0].diplome.nom + ` de ` + results.cvs[i].diplomes[0].diplome.etablissement + `
-                                        </p>
-                                        <p>
-                                            <i class="icon circle outline check"></i>
-                                            Dispose du permis
-                                        </p>
-                                </div>
-                            </div>
-                            <a href="{{ path('entreprise_show_cv', {'id': 1}) }}`.slice(0, -1) + results.cvs[i].id + `"
-                               class="ui right floated green button">
-                                Voir le CV
-                                <i class="right chevron icon"></i>
-                            </a>
-                        </div>
-                        `;
-                        cvsList.innerHTML += card;
-                    }
-                } else {
-                    alert('Il y a eu un problème avec la requête.');
-                }
-            }
+
+            // Il y a des résultats :
+            results.cvs.forEach(cv => {
+                let card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
+                cvsList.innerHTML += card.cardTemplate;
+            })
         }
 
         // Cherche les CV lorsqu'on appuie sur la touche entrée dans la barre de recherche
@@ -187,17 +190,6 @@
                 makeRequest();
             }
         }
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');

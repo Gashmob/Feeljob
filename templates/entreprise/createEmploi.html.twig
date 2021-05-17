@@ -61,6 +61,10 @@
                     <input name="fin" placeholder="jj/mm/aaaa" type="date">
                 </div>
             </div>
+            <div class="disabled field">
+                <label>Métier</label>
+                <input type="text" class="ui dropdown" name="metier" value="Technicien">
+            </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
@@ -71,10 +75,10 @@
                     <input type="number" min="0" max="60" name="heures" placeholder="Nombre">
                 </div>
             </div>
-            <div class="field">
+            <div class="required field">
                 <label>Description de l'offre</label>
                 <textarea rows="8" name="description"
-                          placeholder="La description de votre offre d'emploi." maxlength="5000"></textarea>
+                          placeholder="La description de votre offre d'emploi." maxlength="5000" required></textarea>
             </div>
             <div class="two fields">
                 <div class="field">

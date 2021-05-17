@@ -2,33 +2,29 @@
 {% block title %}Voir carte de visite{% endblock %}
 {% block body %}
     <div style="position: relative" class="ui justified container">
-        {# {% if not owner %}
+        {% if not owner %}
             <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+               style="position: absolute; top: 20px; left: -20px;">
                 <i class="left arrow icon"></i>
                 Retour aux cartes
             </a>
-        {% endif %} #}
+        {% endif %}
         <h2 class="ui center aligned icon header">
             <i class="address card outline icon"></i>
             Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
         </h2>
         <div>
             <div class="ui buttons">
-                <a download="CV de Jean Valjean" href="{{ asset('img/placeholders/carte.png') }}"
-                   class="ui grey basic button">
-                    Télécharger
-                </a>
-                {# {% if owner %}
-                    <a href="{{ path('entreprise_modifier_cv', {id: carte.id}) }}"
+                {% if owner %}
+                    <a href="{{ path('particulier_modifier_carte_visite', {id: carte.id}) }}"
                        class="ui blue basic button">
                         Éditer
                     </a>
-                    <a href="{{ path('entreprise_delete_cv', {id: carte.id}) }}"
+                    <a href="{{ path('particulier_delete_carte', {id: carte.id}) }}"
                        class="ui red basic button">
                         Supprimer
                     </a>
-                {% endif %} #}
+                {% endif %}
             </div>
         </div>
         <form class="ui form segment">
@@ -39,25 +35,17 @@
             </h3>
             <div class="ui two column grid">
                 <div class="column ten wide">
-                    <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
-                    <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
-                    {% if carte.autoEntrepreneur.logo %}
-                    <img class="ui small circular image" src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
-                         alt="logo de {{ carte.autoEntrepreneur.nomEntreprise }}">
-                    {% endif %}
-                    {# <div>Né le {{ carte.naissance|date('d/m/Y') }}</div>
-                    <div>{{ carte.situationFamille.nom }}</div> #}
-                    <div class="ui divider"></div>
-                    {% if app.session.get('user') %}
-                        <div title="Vous devez envoyer une proposition de contrat">
-                            Mail :
-                            <span class="textblur">mailplaceholder@mail.fr</span>
+                    <div class="flex">
+                        {% if carte.autoEntrepreneur.logo %}
+                            <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                                 alt="logo du freelance"
+                                 class="ui small circular image profileLogo">
+                        {% endif %}
+                        <div>
+                            <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
+                            <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
                         </div>
-                        <div title="Vous devez envoyer une proposition de contrat">
-                            Téléphone :
-                            <span class="textblur">0612345678</span>
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
             <!-- Bio -->
@@ -71,72 +59,75 @@
                 </div>
             {% endif %}
             {% if carte.realisations %}
-            <!-- Réalisations -->
-            <h3 class="ui dividing header">
-                <i class="icon pencil alternate"></i>
-                <div class="content">Réalisations</div>
-            </h3>
-            <div class="ui divided items">
-                {% for realisation in carte.realisations %}
-                    <div class="ui item">
-                        <h4 class="ui middle aligned content">{{ realisation.description|nl2br }}</h4>
-                        <img class="ui image medium right floated" src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
-                    </div>
-                {% endfor %}
-            </div>
+                <!-- Réalisations -->
+                <h3 class="ui dividing header">
+                    <i class="icon pencil alternate"></i>
+                    <div class="content">Réalisations</div>
+                </h3>
+                <div class="ui divided items">
+                    {% for realisation in carte.realisations %}
+                        <div class="ui item">
+                            <div class="ui justified content">{{ realisation.description|nl2br }}</div>
+                            <img class="ui image medium right floated"
+                                 src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         </form>
         {% if app.session.get('userType') == 'Particulier' %}
-            <button id="applyBtn" class="ui green button" onclick="offreContrat()">
-                Recruter
-            </button>
+            <div class="ui vertical segment left aligned">
+                <h3 class="ui header">Proposer à {{ carte.autoEntrepreneur.prenom }} une de vos annonces</h3>
+                <select class="ui dropdown" name="annonceTarget" id="annonceTarget">
+                    {% if annonces %}
+                        <option value="">Choisir</option>
+                        {% for annonce in annonces %}
+                            <option value="{{ annonce.identity }}">{{ annonce.nom }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="">Pas d'annonce postée !</option>
+                    {% endif %}
+                </select>
+                <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                    Recruter
+                </button>
+            </div>
         {% endif %}
     </div>
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        if (httpRequest == undefined) {
-            let httpRequest
-        }
-        if (results == undefined) {
-            let results
-        }
-        function offreContrat() {
-            httpRequest = new XMLHttpRequest();
 
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
+        var annonceTarget = document.getElementById('annonceTarget')
+        $(annonceTarget).on('change', function () {
+            $('#applyBtn').text('Recruter');
+        })
+
+        function offreContrat() {
+            var annonceID = annonceTarget.value;
+            if (annonceID.length > 0) {
+                $.ajax({
+                    url: '/particulier/propose/' + annonceID + '/{{ carte.autoEntrepreneur.identity }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        offreContratResponse(results);
+                    }
+                });
             }
-            httpRequest.onreadystatechange = offreContratResponse;
-            httpRequest.open('POST', '/particulier/propose/45/{{ carte.autoEntrepreneur.identity }}');
-            httpRequest.send();
         }
 
         const applyBtn = document.querySelector("#applyBtn")
 
         function offreContratResponse() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+            console.log(results)
+            // Candidature posée
+            if (results.result) {
+                applyBtn.innerHTML = '<div>Validé</div>';
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results)
-                    // Candidature posée
-                    if (results.result) {
-                        applyBtn.innerHTML = '<div>Validé</div>';
-                    }
-                    // Candidature retirée
-                    else {
-                        applyBtn.innerHTML = '<div>Déjà demandé</div>';
-                    }
-                } else {
-                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Candidature retirée
+            else {
+                applyBtn.innerHTML = '<div>Déjà demandé</div>';
             }
         }
     </script>

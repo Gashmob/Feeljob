@@ -44,6 +44,7 @@ abstract class Utils
             // Infos sur le fichier téléchargé
             $fileTmpPath = $_FILES[$name]['tmp_name'];
             $fileName = $_FILES[$name]['name'];
+            $fileSize = $_FILES[$name]['size'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
@@ -59,18 +60,22 @@ abstract class Utils
                 mkdir($uploadFileDir);
             }
 
-            if (in_array($fileExtension, $allowedfileExtensions)) {
-                if (substr($uploadFileDir, -1) != '/')
-                    $uploadFileDir .= '/';
-                $dest_path = $uploadFileDir . $newFileName;
+            if ($fileSize < 10_000_000) {
+                if (in_array($fileExtension, $allowedfileExtensions)) {
+                    if (substr($uploadFileDir, -1) != '/')
+                        $uploadFileDir .= '/';
+                    $dest_path = $uploadFileDir . $newFileName;
 
-                if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                    return $newFileName;
+                    if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                        return $newFileName;
+                    } else {
+                        throw new Exception('L\'image n\'a pas pu être téléchargée, les droits d\'écriture ne sont pas accordés');
+                    }
                 } else {
-                    throw new Exception('L\'image n\'a pas pu être téléchargée, les droits d\'écriture ne sont pas accordés');
+                    throw new Exception('L\'image n\'a pas pu être téléchargée, l\'extension doit être : ' . implode(',', $allowedfileExtensions));
                 }
             } else {
-                throw new Exception('L\'image n\'a pas pu être téléchargée, l\'extension doit être : ' . implode(',', $allowedfileExtensions));
+                throw new Exception('La taille de l\'image est trop grande (>10MB)');
             }
         } else {
             if (isset($_FILES['uploadedFile']['error'])) {

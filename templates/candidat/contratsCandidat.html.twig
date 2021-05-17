@@ -44,17 +44,31 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadContrats();
-            setTimeout(loadCandidatures, 2000);
+            loadCandidatures();
         });
 
         // Charge les contrats dans la vue contrat et les affiche
         function loadContrats() {
-            makeRequestByORSC('/entreprise/get/propositions', displayContrats);
+            $.ajax({
+                url: '/entreprise/get/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayContrats(results)
+                }
+            });
         }
 
         // Charge les candidatures dans la vue contrat et les affiche
         function loadCandidatures() {
-            makeRequestByORSC('/entreprise/get/candidatures', displayCandidatures);
+            $.ajax({
+                url: '/entreprise/get/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidatures(results)
+                }
+            });
         }
 
         /*
@@ -89,9 +103,9 @@
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
-                                <button id="denyBtn${id}" class="ui red basic button undoBtn" onclick="requestDenyContrat(${id})">Refuser</button>
-                                <button id="acceptBtn${id}" class="ui green basic button undoBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <button id="denyBtn${id}" class="ui red basic button denyBtn" onclick="requestDenyContrat(${id})">Refuser</button>
+                                <button id="acceptBtn${id}" class="ui green basic button acceptBtn" onclick="requestAcceptContrat(${id})">Accepter</button>
+                                <a href="${url}" class="ui blue basic button">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -105,6 +119,7 @@
         class Candidature {
             constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
+                if (ville.length > 0) ville = ' à ' + ville;
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '-' + debut[1] + '-' + debut[0];
                 fin = fin.substr(0, 10).split('-');
@@ -116,7 +131,7 @@
                 <div class="candidature ui item">
                     <div class="content">
                         <div class="ui left floated">
-                            <div class="ui header small">${nom} à ${ville}</div>
+                            <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
                                 <span class="date">Du ${debut} au ${fin}</span>
                             </div>
@@ -136,105 +151,95 @@
         // ----- Décandidature ----- //
         // Demande à décandidater
         function requestUncandidate(id) {
-            makeRequestByORSC('/entreprise/uncandidate/' + id, displayUncandidate(id))
-        }
-
-        // Affiche la décandidature
-        function displayUncandidate(id) {
-            let btnNo = 'undoBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Annulée'
+            // L'Employe supprime sa candidature à l'OffreEmploi id => {'result': boolean}
+            $.ajax({
+                url: '/entreprise/uncandidate/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnNo = 'undoBtn' + id
+                    let btn = document.getElementById(btnNo)
+                    btn.innerHTML = 'Annulée';
+                    btn.classList.add('disabled')
+                }
+            });
         }
 
         // ----- Refus proposition contrat ----- //
-        // Refuse proposition contrat
+        // L'Employe refuse la proposition d'OffreEmploi id => {'result': boolean}
         function requestDenyContrat(id) {
-            makeRequestByORSC('/entreprise/refuse/proposition/' + id, displayDeny(id))
-        }
-
-        // Affiche le refus proposition contrat
-        function displayDeny(id) {
-            let btnNo = 'denyBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Refusée'
+            $.ajax({
+                url: '/entreprise/refuse/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnDeny.innerHTML = 'Refusée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
+                }
+            });
         }
 
         // ----- Acceptation proposition contrat ----- //
-        // Acceptation proposition contrat
+        //  L'Employe accepte la proposition d'OffreEmploi id => {'result': boolean}
         function requestAcceptContrat(id) {
-            makeRequestByORSC('/entreprise/accept/proposition/' + id, displayAccept(id))
-        }
-
-        // Affiche l'acceptation proposition contrat
-        function displayAccept(id) {
-            let btnNo = 'acceptBtn' + id
-            let btn = document.getElementById(btnNo)
-            btn.innerHTML = 'Acceptée'
+            $.ajax({
+                url: '/entreprise/accept/proposition/' + id,
+                type: 'POST',
+                dataType: 'json',
+                success: function () {
+                    let btnAcceptNo = 'acceptBtn' + id
+                    let btnDenyNo = 'denyBtn' + id
+                    let btnAccept = document.getElementById(btnAcceptNo)
+                    let btnDeny = document.getElementById(btnDenyNo)
+                    btnAccept.innerHTML = 'Acceptée'
+                    btnAccept.classList.add('disabled')
+                    btnDeny.classList.add('disabled')
+                }
+            });
         }
 
         // Affiche la liste des contrats dans la vue contrats
         const contratsList = document.getElementById('contratsList');
 
-        function displayContrats() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                contratsList.innerHTML = `<i class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    contratsList.innerHTML = '';
+        function displayContrats(results) {
+            // Réinitialise la liste
+            contratsList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.propositions == undefined || results.propositions.length == 0) {
-                        contratsList.innerHTML = `<h4 class="ui header">Pas de proposition de contrat.</h4>`;
-                    }
-                    console.log(results)
-                    // Il y a des résultats :
-                    // Pour chaque proposition
-                    results.propositions.forEach(proposition => {
-                        let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
-                        contratsList.innerHTML += card.contratTemplate;
-                    })
-                } else {
-                    contratsList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Il n'y a pas de résultats :
+            if (results.propositions == undefined || results.propositions.length == 0) {
+                contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
+            console.log(results)
+            // Il y a des résultats :
+            // Pour chaque proposition
+            results.propositions.forEach(proposition => {
+                let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
+                contratsList.innerHTML += card.contratTemplate;
+            })
         }
 
         // Affiche la liste des candidatures dans la vue contrats
         const candidaturesList = document.getElementById('candidaturesList');
 
-        function displayCandidatures() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                candidaturesList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayCandidatures(results) {
+            // Réinitialise la liste
+            console.log(results)
+            candidaturesList.innerHTML = '';
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    console.log(results)
-                    candidaturesList.innerHTML = '';
-                    // Il n'y a pas de résultats :
-                    if (results.candidatures === undefined || results.candidatures.length == 0) {
-                        candidaturesList.innerHTML = `<h4 class="ui header">Pas de candidatures.</h4>`;
-                    }
 
-                    // Il y a des résultats :
-                    results.candidatures.forEach(candidature => {
-                        let card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
-                        candidaturesList.innerHTML += card.candidatureTemplate;
-                    })
-                } else {
-                    candidaturesList.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
-            }
+            // Il y a des résultats :
+            results.candidatures.forEach(candidature => {
+                let card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
+                candidaturesList.innerHTML += card.candidatureTemplate;
+            })
         }
     </script>
 {% endblock %}

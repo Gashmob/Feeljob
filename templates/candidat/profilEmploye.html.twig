@@ -3,7 +3,12 @@
 {% block body %}
     <div class="ui segment grid identity stackable">
         <div class="two wide column">
-            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% if app.session.get('userImage') %}
+                <img class="ui small centered circular image profileLogo profileLogo--100"
+                     src="{{ asset("uploads/photo/" ~ app.session.get('userImage')) }}">
+            {% else %}
+                <img class="ui small centered circular image profileLogo profileLogo--100" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% endif %}
         </div>
         <div class="ten wide column">
             <h2 class="ui header">
@@ -11,50 +16,48 @@
             </h2>
             <div class="ui label">Candidat</div>
         </div>
-        <div class="four wide column">
-            <div>
-                <i class="icon green check circle outline"></i>
-                E-mail vérifié
-            </div>
-            <div>
-                <i class="icon grey question mark circle outline"></i>
-                Téléphone non vérifié
-            </div>
-        </div>
+        {# <div class="four wide column">
+            <div><i class="icon green check circle outline"></i>E-mail vérifié</div>
+            <div><i class="icon grey question mark circle outline"></i>Téléphone non vérifié</div>
+        </div> #}
     </div>
+    <a href="{{ path('entreprise_contrats') }}" class="ui blue button">Contrats</a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Votre CV</h3>
         <div class="ui two stackable cards">
             {% if publications %}
-                    <a href="{{ path('entreprise_show_cv', {'id': publications.id}) }}" class="ui card">
-                        <div class="content">
-                            <div class="meta">Créé le {{ publications.createdAt|date('d/m/Y') }}</div>
-                            <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
-                            <div class="description">
-                                {% if publications.description|length %}
-                                    <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
-                                {% else %}
-                                    <p class="meta">** Pas de description **</p>
-                                {% endif %}
-                            </div>
+                <a href="{{ path('entreprise_show_cv', {'id': publications.id}) }}" class="ui card">
+                    <div class="content">
+                        <div class="meta">Créé le {{ publications.updatedAt|date('d/m/Y') }}</div>
+                        <div class="meta">À {{ publications.updatedAt|date('H:i') }}</div>
+                        <div class="description">
+                            {% if publications.description|length %}
+                                <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                            {% else %}
+                                <p class="meta">** Pas de description **</p>
+                            {% endif %}
+                            {% for diplome in publications.diplomes %}
+                                <p><i class="icon bookmark"></i>{{ diplome.diplome.nom }}</p>
+                            {% endfor %}
                         </div>
-                        <div class="extra content">
-                            <i class="check icon"></i>
-                            Vu {{ publications.id }} fois
-                        </div>
-                    </a>
+                    </div>
+                    <div class="extra content">
+                        <i class="check icon"></i>
+                        Vu {{ publications.id }} fois
+                    </div>
+                </a>
             {% else %}
                 <div style="border: none; width: auto; box-shadow: none;"
                      class="ui card grid middle aligned center aligned">
                     <div class="column">
-                        <div class="ui row labeled icon">
+                        {# <div class="ui row labeled icon">
                             <label class="ui labeled icon button" for="profile-cv">
                                 <i class="download icon"></i>
                                 Télécharger
                                 <input type="file" style="display: none;" id="profile-cv" name="cv">
                             </label>
                         </div>
-                        <div style="margin: .5em 0;" class="row">Ou</div>
+                        <div style="margin: .5em 0;" class="row">Ou</div> #}
                         <a href="{{ path('entreprise_create_cv') }}" class="ui row labeled icon">
                             <button class="ui blue labeled icon button">
                                 <i class="plus icon"></i>
@@ -66,4 +69,148 @@
             {% endif %}
         </div>
     </div>
+    <div class="ui vertical segment">
+        <h3 class="ui header green">Vos contrats passés</h3>
+        <div class="ui segment" id="contratsList">
+            <div class="ui vertical segment">
+                <h3 class="ui header">Candidatures envoyées acceptées</h3>
+                <div id="contratsList__cand">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui vertical segment">
+                <h3 class="ui header">Propositions reçues acceptées</h3>
+                <div id="contratsList__prop">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            getAcceptedCandidatures();
+            getAcceptedPropositions();
+        })
+
+        function getAcceptedCandidatures() {
+            // L'Employe récupère toutes ses candidatures acceptées => {'candidatures': OffreEmploi[]}
+            $.ajax({
+                url: '/entreprise/get/accepted/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidaturesAcceptees(results)
+                }
+            });
+        }
+
+        function getAcceptedPropositions() {
+            // L'Employe récupère toutes ses propositions acceptées => {'propositions': OffreEmploi[]}
+            $.ajax({
+                url: '/entreprise/get/accepted/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayPropositionsAcceptees(results)
+                }
+            });
+        }
+
+        class CandidaturesAcceptees {
+            constructor(id, nom, description, updatedAt, rue, cp, ville) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                updatedAt = updatedAt.substr(0, 10).split('-');
+                updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                if (rue.length > 0) rue = rue + ', '
+                else description = "** Pas de description renseignée **";
+                var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                this.cardTemplate = `
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Acceptée - <a href="${url}">${nom}</a>
+                        </div>
+                        <div class="description">
+                            <p class="meta">${updatedAt}</p>
+                            <div>${rue}${ville} ${cp}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        var contratsList = document.getElementById('contratsList');
+        var candidaturesList = contratsList.querySelector('#contratsList__cand')
+        var propositionsList = contratsList.querySelector('#contratsList__prop')
+
+        function displayCandidaturesAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                candidaturesList.innerHTML = ''
+                results.candidatures.forEach(a => {
+                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
+                    candidaturesList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+
+        function displayPropositionsAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.propositions === undefined || results.propositions.length == 0) {
+                propositionsList.innerHTML = `<div style="margin: 10px auto;">Pas de propositions acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                propositionsList.innerHTML = ''
+                results.propositions.forEach(a => {
+                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
+                    propositionsList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+    </script>
 {% endblock %}

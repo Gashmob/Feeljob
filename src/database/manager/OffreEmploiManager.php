@@ -7,6 +7,7 @@ namespace App\database\manager;
 use App\database\EntityManager;
 use App\database\PreparedQuery;
 use App\database\Query;
+use App\Entity\Employe;
 use App\Entity\Employeur;
 use App\Entity\OffreEmploi;
 use Doctrine\ORM\EntityManagerInterface;
@@ -74,12 +75,14 @@ class OffreEmploiManager extends Manager
      * @param OffreEmploi $offre
      * @param int $idEmployeur
      * @param string $typeContrat
+     * @param string $metier
      * @return int|null
      */
-    public function create(EntityManagerInterface $em, OffreEmploi $offre, int $idEmployeur, string $typeContrat): ?int
+    public function create(EntityManagerInterface $em, OffreEmploi $offre, int $idEmployeur, string $typeContrat, string $metier): ?int
     {
-        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}) WHERE id(e)=$idE CREATE (e)-[:' . EntityManager::PUBLIE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::TYPE . ']->(t) RETURN id(o) AS id'))
+        $result = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}), (m:' . EntityManager::METIER . ' {nom:$metier}) WHERE id(e)=$idE CREATE (e)-[:' . EntityManager::PUBLIE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::TYPE . ']->(t), (o)-[:' . EntityManager::EST_DANS . ']->(m) RETURN id(o) AS id'))
             ->setString('type', $typeContrat)
+            ->setString('metier', $metier)
             ->setInteger('idE', $idEmployeur)
             ->run()
             ->getOneOrNullResult();
@@ -114,11 +117,13 @@ class OffreEmploiManager extends Manager
      * @param EntityManagerInterface $em
      * @param OffreEmploi $offre
      * @param string $typeContrat
+     * @param string $metier
      */
-    public function update(EntityManagerInterface $em, OffreEmploi $offre, string $typeContrat)
+    public function update(EntityManagerInterface $em, OffreEmploi $offre, string $typeContrat, string $metier)
     {
-        (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[r]-(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id DELETE r CREATE (o)-[:' . EntityManager::TYPE . ']->(t)'))
-            ->setString('nom', $typeContrat)
+        (new PreparedQuery('MATCH (:' . EntityManager::METIER . ')-[r1]-(o:' . EntityManager::OFFRE_EMPLOI . ')-[r2]-(:' . EntityManager::TYPE_CONTRAT . '), (t:' . EntityManager::TYPE_CONTRAT . ' {nom:$type}), (m:' . EntityManager::METIER . ' {nom:$metier}) WHERE id(o)=$id DELETE r1,r2 CREATE (m)<-[:' . EntityManager::EST_DANS . ']-(o)-[:' . EntityManager::TYPE . ']->(t)'))
+            ->setString('type', $typeContrat)
+            ->setString('metier', $metier)
             ->setInteger('id', $offre->getIdentity())
             ->run();
 
@@ -220,7 +225,7 @@ class OffreEmploiManager extends Manager
      */
     public function getCandidature(EntityManagerInterface $em, int $idEmploye): array
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE AND NOT exists(c.accept) RETURN id(o) as id'))
             ->setInteger('idE', $idEmploye)
             ->run()
             ->getResult();
@@ -228,6 +233,112 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmployeur
+     * @return OffreEmploi[]
+     */
+    public function getMyCandidature(EntityManagerInterface $em, int $idEmployeur): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[ca:' . EntityManager::CANDIDATURE . ']-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(ca.accept) RETURN id(o) as idO, id(c) as idC'))
+            ->setInteger('idE', $idEmployeur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
+            $res[] = [
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $employe
+            ];
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmploye
+     * @return OffreEmploi[]
+     */
+    public function getAcceptedCandidature(EntityManagerInterface $em, int $idEmploye): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[:' . EntityManager::CANDIDATURE . ' {accept:true}]->(o:' . EntityManager::OFFRE_EMPLOI . ') WHERE id(e)=$idE RETURN id(o) as id'))
+            ->setInteger('idE', $idEmploye)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmployeur
+     * @return OffreEmploi[]
+     */
+    public function getMyAcceptedCandidature(EntityManagerInterface $em, int $idEmployeur): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')<-[:' . EntityManager::CANDIDATURE . ' {accept:true}]-(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
+            ->setInteger('idE', $idEmployeur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
+            $res[] = [
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $employe
+            ];
         }
 
         return $res;
@@ -283,7 +394,7 @@ class OffreEmploiManager extends Manager
      */
     public function getPropositions(EntityManagerInterface $em, int $idEmploye): array
     {
-        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as id'))
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(p.accept) RETURN id(o) as id'))
             ->setInteger('idE', $idEmploye)
             ->run()
             ->getResult();
@@ -291,6 +402,112 @@ class OffreEmploiManager extends Manager
         $res = [];
         foreach ($results as $result) {
             $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmployeur
+     * @return OffreEmploi[]
+     */
+    public function getMyPropositions(EntityManagerInterface $em, int $idEmployeur): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[p:' . EntityManager::PROPOSITION . ']->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE AND NOT exists(p.accept) RETURN id(o) as idO, id(c) as idC'))
+            ->setInteger('idE', $idEmployeur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
+            $res[] = [
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $employe
+            ];
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmploye
+     * @return OffreEmploi[]
+     */
+    public function getAcceptedPropositions(EntityManagerInterface $em, int $idEmploye): array
+    {
+        $results = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(e:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as id'))
+            ->setInteger('idE', $idEmploye)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idEmployeur
+     * @return OffreEmploi[]
+     */
+    public function getMyAcceptedPropositions(EntityManagerInterface $em, int $idEmployeur): array
+    {
+        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYEUR . ')--(o:' . EntityManager::OFFRE_EMPLOI . ')-[:' . EntityManager::PROPOSITION . ' {accept:true}]->(c:' . EntityManager::EMPLOYE . ') WHERE id(e)=$idE RETURN id(o) as idO, id(c) as idC'))
+            ->setInteger('idE', $idEmployeur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $employe = $em->getRepository(Employe::class)->findOneBy(['identity' => $result['idC']]);
+            $cv = $employe->getCV();
+            if (!is_null($cv)) {
+                if (!is_null($cv->getEmploye())) {
+                    $cv->setEmploye(null);
+                }
+                foreach ($cv->getCompetences() as $competence) {
+                    $competence->setCV(null);
+                }
+                foreach ($cv->getMetiers() as $metier) {
+                    $metier->setCV(null);
+                }
+                foreach ($cv->getDiplomes() as $diplome) {
+                    $diplome->setCV(null);
+                }
+                foreach ($cv->getLangues() as $langue) {
+                    $langue->setCV(null);
+                }
+            }
+
+            $res[] = [
+                'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
+                'employe' => $employe
+            ];
         }
 
         return $res;
@@ -387,20 +604,29 @@ class OffreEmploiManager extends Manager
     /**
      * @param OffreEmploi[] $preResult
      * @param string $typeContrat
+     * @param string $metier
      * @return OffreEmploi[]
      */
-    public function findOffreEmploiByTypeContratFromPreResult(array $preResult, string $typeContrat): array
+    public function findOffreEmploiByTypeContratMetierFromPreResult(array $preResult, string $typeContrat, string $metier): array
     {
         $res = [];
 
         foreach ($preResult as $result) {
-            if ($typeContrat == 'none') {
-                $res[] = $result;
-            } elseif ((new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
+            $contrat = $typeContrat == 'none' ||
+                (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
                     ->setString('nom', $typeContrat)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
-                    ->getOneOrNullResult() != null) {
+                    ->getOneOrNullResult() != null;
+
+            $metier = $metier == 'none' ||
+                (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) as id'))
+                    ->setString('nom', $metier)
+                    ->setInteger('id', $result->getIdentity())
+                    ->run()
+                    ->getOneOrNullResult() != null;
+
+            if ($contrat && $metier) {
                 $res[] = $result;
             }
         }
@@ -471,5 +697,19 @@ class OffreEmploiManager extends Manager
             ->getOneOrNullResult();
 
         return $em->getRepository(Employeur::class)->findOneBy(['identity' => $result['id']]);
+    }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function getMetier(int $id): ?string
+    {
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result ? $result['m']['nom'] : null;
     }
 }

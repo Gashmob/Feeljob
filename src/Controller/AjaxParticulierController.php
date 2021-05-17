@@ -85,6 +85,31 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/candidature/{idAnn}/{idAuto}", methods={"POST"})
+     * @param $idAnn
+     * @param $idAuto
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectCandidature($idAnn, $idAuto, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new AnnonceManager())->uncandidate($idAnn, $idAuto);
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/propose/{idAnn}/{idAuto}", methods={"POST"})
      * @param $idAnn
      * @param $idAuto
@@ -236,6 +261,81 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/get/my/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new AnnonceManager())->getMyCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/accepted/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new AnnonceManager())->getAcceptedCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/accepted/my/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyAcceptedCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new AnnonceManager())->getMyAcceptedCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/propositions", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -261,8 +361,83 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/annonces/{secteur}/{distanceMax}/{limit}/{offset}", defaults={"secteur":"none", "distanceMax":"-1", "limit":25, "offset":0})
-     * @param $secteur
+     * @Route("/get/my/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new AnnonceManager())->getMyPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/accepted/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new AnnonceManager())->getAcceptedPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/my/accepted/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyAcceptedPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new AnnonceManager())->getMyAcceptedPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/annonces/{metier}/{distanceMax}/{limit}/{offset}", defaults={"metier":"none", "distanceMax":"-1", "limit":25, "offset":0})
+     * @param $metier
      * @param $distanceMax
      * @param $limit
      * @param $offset
@@ -270,7 +445,7 @@ class AjaxParticulierController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getAnnonces($secteur, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getAnnonces($metier, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -283,9 +458,9 @@ class AjaxParticulierController extends AbstractController
         if ($request->isMethod('POST')) {
             $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $auto_entrepreneur->getAdresse();
-            $results = (new AnnonceManager())->getAnnoncesBySecteurActiviteFromPreResult(
+            $results = (new AnnonceManager())->getAnnoncesByMetierFromPreResult(
                 $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()),
-                $secteur
+                $metier
             );
 
             return $this->json([

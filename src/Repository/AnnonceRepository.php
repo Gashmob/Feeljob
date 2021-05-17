@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Annonce;
 use App\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,7 +28,10 @@ class AnnonceRepository extends ServiceEntityRepository
      */
     public function findByDistanceMax(float $distanceMax, string $addressFrom): array
     {
-        $annonces = $this->findAll();
+        $annonces = $this->createQueryBuilder('a')
+            ->orderBy('a.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
 
         $res = [];
         foreach ($annonces as $annonce) {
