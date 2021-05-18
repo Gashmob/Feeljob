@@ -83,39 +83,36 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            makeRequestLoadAll()
+            loadCartesVisiteAll();
             searchInput.focus();
         });
 
         //Cherche tous les résultats
-        function makeRequestLoadAll() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCartesVisite;
-            httpRequest.open('POST', '/particulier/get/cartes');
-            httpRequest.send();
+        function loadCartesVisiteAll() {
+            $.ajax({
+                url: '/particulier/get/cartes',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCartesVisite(results)
+                }
+            });
         }
 
+        /*
         //Cherche les résultats par le nom entré barre recherche
         function makeRequestFiltered(nom, secteur, distanceMax, limit, offset) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayCartesVisite;
-            //let url = '/particulier/get/cartes';
-            httpRequest.open('POST', '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset);
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/cvs/' + nom + secteur + distanceMax + limit + offset,
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCVS(results)
+                }
+            });
         }
+        */
 
-        //Affiche les résultats dans 'cartesVisiteList'
-        const cartesVisiteList = document.getElementById('cartesVisiteList');
         //Classe carteVisiteCard
         class carteVisiteCard {
             constructor(id, prenom, nom, nomEntreprise, logoEntreprise, createdAt, description) {
@@ -149,37 +146,26 @@
             }
         }
 
-        function displayCartesVisite() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                cartesVisiteList.innerHTML = `<i style="margin: 60px auto;" class="notched circle loading icon"></i>`;
-            }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results);
-                    // Réinitialise la liste
-                    cartesVisiteList.innerHTML = '';
+        //Affiche les résultats dans 'cartesVisiteList'
+        const cartesVisiteList = document.getElementById('cartesVisiteList');
+        function displayCartesVisite(results) {
+            console.log(results);
+            // Réinitialise la liste
+            cartesVisiteList.innerHTML = '';
 
-                    // Il n'y a pas de résultats :
-                    if (results.cartes === undefined || results.cartes.length == 0) {
-                        cartesVisiteList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
-                    }
-
-                    // Il y a des résultats :
-                    // Pour chaque cv du tableau annonces
-                    results.cartes.forEach(carte => {
-                        let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
-                        cartesVisiteList.innerHTML += card.cardTemplate;
-                    })
-                } else {
-                    cartesVisiteList.innerHTML = `<div style="margin: 60px auto;">Il y a eu un problème avec la requête.</div>`;
-                }
+            // Il n'y a pas de résultats :
+            if (results.cartes === undefined || results.cartes.length == 0) {
+                cartesVisiteList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
+
+            // Il y a des résultats :
+            results.cartes.forEach(carte => {
+                let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
+                cartesVisiteList.innerHTML += card.cardTemplate;
+            })
         }
 
+        // Cherche quand on appuie sur la touche entrée dans la barre de recherche
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
@@ -202,21 +188,9 @@
             if (nom != undefined && nom.length > 0) {
                 makeRequestFiltered(nom, secteur, distanceMax, limit, offset);
             } else {
-                makeRequestLoadAll();
+                loadCartesVisiteAll();
             }
         }
-
-        // Tronque les descriptions
-        function truncate(str, n, useWordBoundary
-        ) {
-            if (str.length <= n) {
-                return str;
-            }
-            const subString = str.substr(0, n - 1); // the original check
-            return (useWordBoundary
-                ? subString.substr(0, subString.lastIndexOf(" "))
-                : subString) + " &hellip;";
-        };
 
         function addFav(e) {
             $(e).transition('pulse');
@@ -229,6 +203,7 @@
             }
         };
 
+        // Roulette pour la distance
         const rangeLabel = document.getElementById('rangeLabel');
         function updateRangeLabel(value) {
             if (value == 0) {

@@ -1,0 +1,124 @@
+{% extends 'page.html.twig' %}
+{% block title %}Modifier une carte de Visite{% endblock %}
+{% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(114deg 50% 43%)" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(134deg 50% 43%)" fill-opacity="0.7"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="ui text justified container">
+        <h3 class="ui center aligned icon header">
+            <i class="address card outline icon"></i>
+            Modifier carte de visite
+        </h3>
+        <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <!-- Réalisation -->
+            <h3 class="ui dividing green header">Réalisations</h3>
+            <div style="margin-bottom: 10px;" id="realisationsList">
+                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
+                <div style="display: none;" class="ui segment realisations__item" id="realisationsItem">
+                    <div class="field">
+                        <textarea rows="8" name="description" class="description"
+                                  placeholder="Rajoutez des informations à propos de cette réalisation."
+                                  maxlength="800"></textarea>
+                    </div>
+                    <label class="ui blue labeled icon button imageLabel" for="image">
+                        <i class="plus icon"></i>
+                        <span id="image-label">Ajouter image</span>
+                        <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file"
+                               style="display: none;" class="image" id="image" name="image">
+                    </label>
+                </div>
+                {% for realisation in carte.realisations %}
+                    <div class="ui segment realisations__item">
+                        <div class="field">
+                        <textarea rows="8" name="description{{ loop.index-1 }}" class="description"
+                                  placeholder="Rajoutez des informations à propos de cette réalisation."
+                                  maxlength="800">{{ realisation.description|trim }}</textarea>
+                        </div>
+                        <img class="ui image large centered" src="{{ asset('uploads/realisations/' ~ realisation.image) }}" alt="realisation numéro {{ loop.index }}">
+                        <label class="ui blue labeled icon button imageLabel" for="image{{ loop.index-1 }}">
+                            <i class="plus icon"></i>
+                            <span id="image-label{{ loop.index-1 }}">Modifier image</span>
+                            <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file"
+                                   style="display: none;" class="image" id="image0" name="image{{ loop.index-1 }}">
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_realisation();" id="realPlus"></i>
+            </div>
+            <!-- Bio -->
+            <h3 class="ui dividing green header">Bio</h3>
+            <div class="field">
+                <textarea rows="8" name="description" class="description"
+                          placeholder="Saisissez des informations à votre sujet."
+                          maxlength="800">
+                    {{ carte.description|trim }}
+                </textarea>
+            </div>
+            <div style="display: none;" id="numberOfRows">
+                <input id="nbRealisationsInput" type="number" name="nbRealisations" value="{{ carte.realisations|length }}">
+            </div>
+            <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
+            <div class="ui negative message transition hidden">
+                <i class="close icon"></i>
+                <div class="header">
+                    Erreur !
+                </div>
+                <p>
+                    {% for message in app.flashes('fail') %}
+
+                    {% endfor %}
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('#image0').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#image0')[0].files[0].name;
+            $('#image-label0').text(file);
+        });
+
+        let nbRealisations = {{ carte.realisations|length-1 }};
+        const maxRealisations = 8;
+        const nbRealisationsInput = document.getElementById('nbRealisationsInput');
+
+        function add_realisation() {
+            if (nbRealisations < maxRealisations) {
+                $('#realPlus').transition('jiggle');
+                nbRealisations += 1;
+                nbRealisationsInput.setAttribute("value", nbRealisations + 1);
+                let newItem = document.createElement('div');
+
+                newItem.classList.add('ui');
+                newItem.classList.add('segment');
+                newItem.classList.add('transition');
+                newItem.classList.add('hidden');
+
+                newItem.innerHTML = document.getElementById('realisationsItem').innerHTML;
+
+                newItem.querySelector('.description').setAttribute("name", "description" + nbRealisations);
+                newItem.querySelector('.imageLabel').setAttribute("for", "image" + nbRealisations);
+                newItem.querySelector('.image').setAttribute("name", "image" + nbRealisations);
+                newItem.querySelector('.image').setAttribute("id", "image" + nbRealisations);
+
+                document.getElementById('realisationsList').appendChild(newItem);
+                $(newItem).transition('scale')
+            } else {
+                $('#realPlus').transition('shake');
+            }
+        }
+    </script>
+{% endblock %}

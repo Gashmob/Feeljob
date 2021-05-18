@@ -27,10 +27,11 @@
             <h3 class="ui dividing green header">Identité</h3>
             <div class="ui two column grid stackable">
                 <div class="ui four wide column middle aligned">
-                    <img {% if cv.employe.photo %}src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"{% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
+                    <img {% if cv.employe.photo %}src="{{ asset('uploads/photo/' ~ cv.employe.photo) }}"
+                         {% else %}src="{{ asset('img/placeholders/elyse.png') }}"{% endif %}
                          alt="photo de profil"
                          id="pdp"
-                         class="ui small circular centered image">
+                         class="ui circular centered image profileLogo profileLogo--120">
                 </div>
                 <div class="ui twelve wide column">
                     <div class="two fields">
@@ -46,7 +47,8 @@
                     <div class="two fields">
                         <div class="required field">
                             <label>Né le</label>
-                            <input type="date" name="naissance" placeholder="jj/mm/aaaa" value="{{ cv.naissance|date('Y-m-d') }}" required>
+                            <input type="date" name="naissance" placeholder="jj/mm/aaaa"
+                                   value="{{ cv.naissance|date('Y-m-d') }}" required>
                         </div>
                         <div class="field">
                             <label>Photo de profil</label>
@@ -91,13 +93,13 @@
                     </div>
                 </div>
                 <div class="two fields">
-                    <div class="field">
+                    {# <div class="field">
                         <label>Adresse</label>
                         <div class="ui left icon input">
                             <i class="icon home"></i>
                             <input type="text" name="adresse" placeholder="16 rue des Coquillages">
                         </div>
-                    </div>
+                    </div> #}
                     <div class="field">
                         <label>Situation familiale</label>
                         <select class="ui dropdown" name="situationFamille">
@@ -111,32 +113,63 @@
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
             <div style="margin-bottom: 10px;" id="formationsList">
-                <i style="display: none;" class='times circle outline icon red' onclick='removeItem(this, "form");'></i>
-                <div class="ui segment formation__item" id="formationsItem">
+                <div style="display: none;" class="ui segment formation__item" id="formationsItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du diplôme</label>
-                            <input type="text" class="nomDiplome" name="nomDiplome0" placeholder="Intitulé du diplôme">
+                            <input type="text" class="nomDiplome" name="nomDiplome" placeholder="Intitulé du diplôme"
+                                   maxlength="48">
                         </div>
                         <div class="field">
                             <label>Nom de l'établissement</label>
-                            <input type="text" class="etablissement" name="etablissement0"
-                                   placeholder="Nom de l'établissement">
+                            <input type="text" class="etablissement" name="etablissement"
+                                   placeholder="Nom de l'établissement" maxlength="48">
                         </div>
 
                     </div>
                     <div class="two fields">
                         <div class="field">
                             <label>Mention</label>
-                            <input type="text" class="mention" name="mention0"
-                                   placeholder="Laissez vide si inapplicable">
+                            <input type="text" class="mention" name="mention"
+                                   placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
                             <label>Date d'obtention</label>
-                            <input type="date" class="date" name="date0" placeholder="jj/mm/aaaa">
+                            <input type="date" class="date" name="date" placeholder="jj/mm/aaaa">
                         </div>
                     </div>
                 </div>
+                {% for diplome in cv.diplomes %}
+                    <div class="ui segment formation__item">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Intitulé du diplôme</label>
+                                <input type="text" class="nomDiplome" name="nomDiplome{{ loop.index-1 }}"
+                                       placeholder="Intitulé du diplôme" value="{{ diplome.diplome.nom }}">
+                            </div>
+                            <div class="field">
+                                <label>Nom de l'établissement</label>
+                                <input type="text" class="etablissement"
+                                       name="etablissement{{ loop.index-1 }}" value="{{ diplome.diplome.etablissement }}"
+                                       placeholder="Nom de l'établissement">
+                            </div>
+
+                        </div>
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Mention</label>
+                                <input type="text" class="mention" name="mention{{ loop.index-1 }}"
+                                       placeholder="Laissez vide si inapplicable"
+                                       value="{{ diplome.mention }}">
+                            </div>
+                            <div class="field">
+                                <label>Date d'obtention</label>
+                                <input type="date" class="date" name="date{{ loop.index-1 }}" placeholder="jj/mm/aaaa"
+                                       value="{{ diplome.date|date('Y-m-d') }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_formation();" id="feedPlus"></i>
@@ -144,7 +177,7 @@
             <!-- Expériences -->
             <h3 class="ui dividing green header">Expérience professionnelle</h3>
             <div style="margin-bottom: 10px;" class="experiences-list" id="experiencesList">
-                <div class="ui segment" id="experiencesItem">
+                <div style="display: none;" class="ui segment" id="experiencesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Intitulé du poste</label>
@@ -169,9 +202,41 @@
                             <label>Date fin</label>
                             <input type="date" class="dateFin" name="dateFin" placeholder="Date fin">
                         </div>
-
                     </div>
                 </div>
+                {% for metier in cv.metiers %}
+                    <div class="ui segment" id="experiencesItem">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Intitulé du poste</label>
+                                <div class="field">
+                                    <input type="text" class="nomMetier" name="nomMetier{{ loop.index-1 }}"
+                                           placeholder="Intitulé du poste" value="{{ metier.metier.nom }}">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Nom de l'entreprise</label>
+                                <div class="field">
+                                    <input type="text" class="nomEntreprise" name="nomEntreprise{{ loop.index-1 }}"
+                                           placeholder="Nom de l'entreprise" value="{{ metier.metier.nomEntreprise }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Date début</label>
+                                <input type="date" class="dateDebut" name="dateDebut{{ loop.index-1 }}"
+                                       placeholder="Date début" value="{{ metier.dateDebut|date('Y-m-d') }}">
+                            </div>
+                            <div class="field">
+                                <label>Date fin</label>
+                                <input type="date" class="dateFin" name="dateFin{{ loop.index-1 }}" placeholder="Date fin"
+                                       value="{{ metier.dateFin|date('Y-m-d') }}">
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_exp()" id="expPlus"></i>
@@ -180,17 +245,18 @@
             <h3 class="ui dividing green header">Description</h3>
             <div class="field">
                 <textarea rows="8" name="description"
-                          placeholder="Rajoutez des informations à votre sujet."></textarea>
+                          placeholder="Rajoutez des informations à votre sujet.">{{ cv.description|trim }}</textarea>
             </div>
             <!-- Langues -->
             <h3 class="ui dividing green header">Langues</h3>
             <div style="margin-bottom: 10px;" class="langues-list" id="languesList">
-                <div class="ui segment" id="languesItem">
+                <div style="display: none;" class="ui segment" id="languesItem">
                     <div class="two fields">
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
-                                <select class="ui dropdown nomLangue" name="nomLangue0">
+                                <select class="ui search selection dropdown nomLangue" name="nomLangue">
+                                    <option value="">Choisir</option>
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                     {% endfor %}
@@ -199,7 +265,7 @@
                         </div>
                         <div class="field">
                             <label>Niveau</label>
-                            <select class="ui dropdown niveauLangue" name="niveauLangue0">
+                            <select class="ui dropdown niveauLangue" name="niveauLangue">
                                 <option value="5" selected>Langue Maternelle</option>
                                 <option value="4">Bilingue</option>
                                 <option value="3">Avancé</option>
@@ -209,13 +275,42 @@
                         </div>
                     </div>
                 </div>
-                {% for i in 1..6 %}
+                {% for cvlangue in cv.langues %}
+                    <div class="ui segment">
+                        <div class="two fields">
+                            <div class="field">
+                                <label>Langue</label>
+                                <div class="field">
+                                    <select class="ui search selection dropdown nomLangue"
+                                            name="nomLangue{{ loop.index-1 }}">
+                                        <option value="{{ cvlangue.langue.nom }}">{{ cvlangue.langue.nom }}</option>
+                                        {% for langue in langues %}
+                                            <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Niveau</label>
+                                <select class="ui dropdown niveauLangue" name="niveauLangue{{ loop.index-1 }}">
+                                    <option value="5" selected>Langue Maternelle</option>
+                                    <option value="4">Bilingue</option>
+                                    <option value="3">Avancé</option>
+                                    <option value="2">Intermédiaire</option>
+                                    <option value="1">Basique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for i in cv.langues|length..6 %}
                     <div style="display: none;" class="ui segment hidden transition langueNb{{ i }}">
                         <div class="two fields">
                             <div class="field">
                                 <label>Langue</label>
                                 <div class="field">
                                     <select class="ui dropdown nomLangue" name="nomLangue{{ i }}">
+                                        <option value="">Choisir</option>
                                         {% for langue in langues %}
                                             <option value="{{ langue.nom }}">{{ langue.nom }}</option>
                                         {% endfor %}
@@ -242,19 +337,35 @@
             <!-- Compétences -->
             <h3 class="ui dividing green header">Compétences</h3>
             <div style="margin-bottom: 10px;" class="competences-list" id="competencesList">
-                <div class="ui segment" id="competencesItem">
+                <div style="display: none;" class="ui segment" id="competencesItem">
                     <div class="two fields">
                         <div class="field">
-                            <label>Nom compétence</label>
-                            <input type="text" class="nomCompetence" name="nomCompetence0" placeholder="Nom compétence">
+                            <label>Compétence</label>
+                            <input type="text" class="nomCompetence" name="nomCompetence" placeholder="Nom compétence">
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
-                            <input type="number" class="niveauCompetence" name="niveauCompetence0" min="1" max="5" value="5">
+                            <input type="number" class="niveauCompetence" name="niveauCompetence" min="1" max="5"
+                                   value="5">
                         </div>
                     </div>
                 </div>
             </div>
+            {% for competence in cv.competences %}
+                <div class="ui segment">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Compétence</label>
+                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index-1 }}" placeholder="Nom compétence" value="{{ competence.competence.nom }}">
+                        </div>
+                        <div class="field">
+                            <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
+                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index-1 }}" min="1" max="5"
+                                   value="{{ competence.niveau }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
             <div class="ui container center aligned">
                 <i class="icon plus circle big green" onclick="add_competence();" id="compPlus"></i>
             </div>
@@ -263,22 +374,22 @@
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" name="permis" class="hidden">
+                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="permis" class="hidden">
                         <label>Je dispose du permis B</label>
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" name="transport" class="hidden">
+                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="transport" class="hidden">
                         <label>J'ai un moyen de transport</label>
                     </div>
                 </div>
             </div>
             <div style="display: none;" id="numberOfRows">
-                <input id="nbFormInput" type="number" name="nbMetiers" value="1">
-                <input id="nbExpInput" type="number" name="nbDiplomes" value="1">
-                <input id="nbLangInput" type="number" name="nbLangues" value="1">
-                <input id="nbCompInput" type="number" name="nbCompetences" value="1">
+                <input id="nbFormInput" type="number" name="nbDiplomes" value="{{ cv.diplomes|length }}">
+                <input id="nbExpInput" type="number" name="nbMetiers" value="{{ cv.metiers|length }}">
+                <input id="nbLangInput" type="number" name="nbLangues" value="{{ cv.langues|length }}">
+                <input id="nbCompInput" type="number" name="nbCompetences" value="{{ cv.competences|length }}">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -309,10 +420,10 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = 0, nbExp = 0, nbLang = 0, nbComp = 0;
+        var nbForm = {{ cv.diplomes|length-1 }}, nbExp = {{ cv.metiers|length-1 }}, nbLang = {{ cv.langues|length-1 }}, nbComp = {{ cv.competences|length-1 }};
         const maxForm = 8;
         const maxExp = 12;
-        const maxLang = 8;
+        const maxLang = 6;
         const maxComp = 15;
         const nbFormInput = document.getElementById('nbFormInput');
         const nbExpInput = document.getElementById('nbExpInput');
@@ -323,7 +434,7 @@
             if (nbForm < maxForm) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
-                nbFormInput.setAttribute("value", nbForm+1);
+                nbFormInput.setAttribute("value", nbForm + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -349,7 +460,7 @@
             if (nbExp < maxExp) {
                 $('#expPlus').transition('jiggle');
                 nbExp += 1;
-                nbExpInput.setAttribute("value", nbExp+1);
+                nbExpInput.setAttribute("value", nbExp + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
@@ -375,9 +486,9 @@
             if (nbLang < maxLang) {
                 $('#langPlus').transition('jiggle');
                 nbLang += 1;
-                nbLangInput.setAttribute("value", nbLang+1);
+                nbLangInput.setAttribute("value", nbLang + 1);
 
-                let item = document.querySelector('.langueNb'+nbLang);
+                let item = document.querySelector('.langueNb' + nbLang);
                 $(item).transition('scale')
 
             } else {
@@ -389,7 +500,7 @@
             if (nbComp < maxComp) {
                 $('#compPlus').transition('jiggle');
                 nbComp += 1;
-                nbCompInput.setAttribute("value", nbComp+1);
+                nbCompInput.setAttribute("value", nbComp + 1);
                 let newItem = document.createElement('div');
 
                 newItem.classList.add('ui');

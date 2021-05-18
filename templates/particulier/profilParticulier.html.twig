@@ -11,26 +11,22 @@
             </h2>
             <div class="ui label">{{ app.session.get('userType') }}</div>
         </div>
-        <div class="four wide column">
-            <div>
-                <i class="icon green check circle outline"></i>
-                E-mail vérifié
-            </div>
-            <div>
-                <i class="icon grey question mark circle outline"></i>
-                Téléphone non vérifié
-            </div>
-        </div>
+        {# <div class="four wide column">
+            <div><i class="icon green check circle outline"></i>E-mail vérifié</div>
+            <div><i class="icon grey question mark circle outline"></i>Téléphone non vérifié</div>
+        </div> #}
     </div>
+    <a href="{{ path('particulier_contrats') }}" class="ui blue button">Contrats</a>
     <h3 class="ui header green">Vos annonces</h3>
     <div class="ui four stackable cards">
         {% for publication in publications %}
             <a href="{{ path('particulier_show_annonce', {'id': publication.identity}) }}" class="ui card">
                 <div class="content">
                     <div class="header">{{ publication.nom }}</div>
-                    <div class="meta">Créé le 12 novembre 2020</div>
+                    <div class="meta">Créé le {{ publication.updatedAt|date('d/m/Y') }}</div>
+                    <div class="meta">À {{ publication.updatedAt|date('H:i') }}</div>
                     <div class="description">
-                        <p>{{ publication.description > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
+                        <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                     </div>
                 </div>
                 <div class="extra content">
@@ -54,40 +50,168 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <div class="ui vertical segment">
-            <h3 class="ui header green">Vos contrats</h3>
-            <div class="ui segment">
-                {% for i in 1..2 %}
-                    <div class="ui vertical segment">
-                        <div class="content">
-                            <div class="header">
-                                <i class="icon green check"></i>
-                                Accepté
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
-                                    exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
-                                    unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                {% for i in 1..2 %}
-                    <div class="ui vertical segment">
-                        <div class="content">
-                            <div class="header">
-                                <i class="icon red times"></i>
-                                Refusé
-                            </div>
-                            <div class="description">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
-                                    dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
-                                    placeat praesentium rem velit. Harum nobis officia praesentium.</p>
+        <h3 class="ui header green">Vos contrats passés</h3>
+        <div class="ui segment" id="contratsList">
+            <div class="ui vertical segment">
+                <h3 class="ui header">Propositions envoyées acceptées</h3>
+                <div id="contratsList__prop">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui vertical segment">
+                <h3 class="ui header">Candidatures reçues acceptées</h3>
+                <div id="contratsList__cand">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            getAcceptedMyCandidatures();
+            getMyAcceptedPropositions();
+        })
+
+        function getAcceptedMyCandidatures() {
+            // /particulier/get/accepted/my/candidatures
+            // Le Particulier récupère toutes ses candidatures acceptées => {'candidatures': [Annonce => AutoEntrepreneur]}
+            $.ajax({
+                url: '/particulier/get/accepted/my/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidaturesAcceptees(results)
+                }
+            });
+        }
+
+        function getMyAcceptedPropositions() {
+            // /particulier/get/my/accepted/propositions
+            // Le Particulier récupère toutes ses propositions acceptées => {'propositions': [Annonce => AutoEntrepreneur]}
+            $.ajax({
+                url: '/particulier/get/my/accepted/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayPropositionsAcceptees(results)
+                }
+            });
+        }
+
+        class CandidaturesAcceptees {
+            constructor(id, nom, updatedAt, prenomAuto, nomAuto, nomEntrepriseAuto, emailAuto, telAuto) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                updatedAt = updatedAt.substr(0, 10).split('-');
+                updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
+                if (!emailAuto.length > 0) emailAuto = ''
+                if (!telAuto.length > 0) emailAuto = ''
+                this.cardTemplate = `
+                <div class="ui vertical segment">
+                    <div class="content">
+                        <div class="header">
+                            <i class="icon green check"></i>
+                            Acceptée - ${nom} pour ${prenomAuto} "${nomEntrepriseAuto}" ${nomAuto}
+                        </div>
+                        <div class="description">
+                            <p class="meta">${updatedAt}</p>
+                            <div>${emailAuto}</div>
+                            <div>${telAuto}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        var contratsList = document.getElementById('contratsList');
+        var candidaturesList = contratsList.querySelector('#contratsList__cand')
+        var propositionsList = contratsList.querySelector('#contratsList__prop')
+
+        function displayCandidaturesAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                candidaturesList.innerHTML = ''
+                results.candidatures.forEach(a => {
+                    let card = new CandidaturesAcceptees(
+                        a.annonce.identity,
+                        a.annonce.nom,
+                        a.annonce.updatedAt,
+                        a.auto.prenom,
+                        a.auto.nom,
+                        a.auto.nomEntreprise,
+                        a.auto.email,
+                        a.auto.telephone
+                        )
+                    ;
+                    candidaturesList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+
+        function displayPropositionsAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.propositions === undefined || results.propositions.length == 0) {
+                propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                propositionsList.innerHTML = ''
+                results.propositions.forEach(a => {
+                    let card = new CandidaturesAcceptees(
+                        a.annonce.identity,
+                        a.annonce.nom,
+                        a.annonce.updatedAt,
+                        a.auto.prenom,
+                        a.auto.nom,
+                        a.auto.nomEntreprise,
+                        a.auto.email,
+                        a.auto.telephone
+                        )
+                    ;
+                    propositionsList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+    </script>
 {% endblock %}

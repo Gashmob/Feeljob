@@ -15,11 +15,11 @@
             </a>
         {% else %}
             <div class="ui buttons">
-                <a href="#"
+                <a href="{{ path('particulier_modifier_annonce', {'id': annonce.identity}) }}"
                    class="ui blue basic button">
                     Éditer
                 </a>
-                <a href="#"
+                <a href="{{ path('particulier_delete_annonce', {'id': annonce.identity}) }}"
                    class="ui red basic button">
                     Supprimer
                 </a>
@@ -55,7 +55,7 @@
                     <p class="meta">** L'utilisateur n'a pas renseigné de description **</p>
                 {% endif %}
             </div>
-            <!-- Location carte -->
+            {# <!-- Location carte -->
             <div style="padding-top: 20px;" class="ui content annonce-location">
                 <h3 class="ui dividing header">
                     <i class="icon map pin"></i>
@@ -69,7 +69,7 @@
                     </div>
                     -->
                 </div>
-            </div>
+            </div> #}
         </div>
         {% if app.session.get('userType') == 'AutoEntrepreneur' %}
             <button id="applyBtn" class="ui green button" onclick="apply()">
@@ -80,51 +80,28 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        $('.ui.embed').embed();
-
-        if (httpRequest == undefined) {
-            let httpRequest
-        }
-        if (results == undefined) {
-            let results
-        }
-
         function apply() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = candidatureResponse;
-            httpRequest.open('POST', '/particulier/candidate/{{ annonce.identity }}');
-            httpRequest.send();
+            $.ajax({
+                url: '/particulier/candidate/{{ annonce.identity }}',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    candidatureResponse(results);
+                }
+            });
         }
 
-        const applyBtn = document.querySelector("#applyBtn")
+        const applyBtn = document.getElementById("applyBtn")
 
-        function candidatureResponse() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                applyBtn.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function candidatureResponse(results) {
+            console.log(results)
+            // Candidature posée
+            if (results.result) {
+                applyBtn.innerHTML = '<div>Validé</div>';
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    console.log(results)
-                    // Candidature posée
-                    if (results.result) {
-                        applyBtn.innerHTML = '<div>Validé</div>';
-                    }
-                    // Candidature retirée
-                    else {
-                        applyBtn.innerHTML = '<div>Déjà candidaté</div>';
-                    }
-                } else {
-                    applyBtn.innerHTML = `<div>Il y a eu un problème avec la requête.</div>`;
-                }
+            // Candidature retirée
+            else {
+                applyBtn.innerHTML = '<div>Déjà candidaté</div>';
             }
         }
     </script>

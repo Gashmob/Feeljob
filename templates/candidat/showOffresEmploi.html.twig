@@ -5,41 +5,53 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher">
+            <div class="ui basic floating dropdown button">
+                <div class="text">This Page</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">Secteur</div>
+                    {# {% for secteur in secteurs %}
+                        <div class="item">{{ secteur }}</div>
+                    {% endfor %} #}
+                </div>
+            </div>
             <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Type contrat</div>
+                    <div class="header">Distance max</div>
                     <div class="menu">
-                        <a class="item">CDI</a>
-                        <a class="item">CDD</a>
-                        <a class="item">Saisonnier</a>
-                        <a class="item">Intérim</a>
+                        <div class="item" id="rangeLabel">Désactivé</div>
+                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
+                                                 value="0" step="10"
+                                                 oninput="updateRangeLabel(this.value);"></div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">CMS Solutions</div>
+                    <div class="header">Secteur d'activité</div>
                     <div class="menu">
-                        <a class="item">Rails</a>
-                        <a class="item">Python</a>
-                        <a class="item">PHP</a>
+                        <div class="item">
+                            <select class="ui dropdown" id="secteurSelect">
+                                <option value="">Choisir</option>
+                                {# {% for secteur in secteurs %}
+                                        <option value="{{ secteur }}">{{ secteur }}</option>
+                                    {% endfor %} #}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">Hosting</div>
+                    <div class="header">Favoris</div>
                     <div class="menu">
-                        <a class="item">Shared</a>
-                        <a class="item">Dedicated</a>
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input id="favorisCheckbox" type="checkbox" name="favoris" class="hidden">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="header">Support</div>
-                    <div class="menu">
-                        <a class="item">E-mail Support</a>
-                        <a class="item">FAQs</a>
-                    </div>
-                </div>
+                <div class="item"></div>
             </div>
             <div class="ui center aligned">
                 <div id="offresList" class="ui two stackable cards">
@@ -81,85 +93,128 @@
 {% block javascripts %}
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
-            makeRequest()
+            makeRequest();
+            searchInput.focus();
         });
 
         // Cherche tous les résultats
         function makeRequest() {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayOffres;
-            httpRequest.open('POST', '/entreprise/get/offres_emploi');
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/offres_emploi',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayOffres(results, false)
+                }
+            });
         }
 
         //Cherche les résultats par le nom entré barre recherche
         function makeRequestByName(name) {
-            httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Abandon :( Impossible de créer une instance de XMLHTTP');
-                return false;
-            }
-            httpRequest.onreadystatechange = displayOffres;
-            httpRequest.open('POST', '/entreprise/get/offres_emploi/' + name);
-            httpRequest.send();
+            $.ajax({
+                url: '/entreprise/get/offres_emploi',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayOffres(results)
+                }
+            });
         }
 
         //Affiche les résultats dans 'offresList'
         var offresList = document.getElementById('offresList');
 
-        function displayOffres() {
-            //En cours de chargement
-            if (httpRequest.readyState === XMLHttpRequest.LOADING) {
-                offresList.innerHTML = `<i class="notched circle loading icon"></i>`;
+        function displayOffres(results) {
+            // Réinitialise la liste
+            offresList.innerHTML = '';
+
+            console.log(results)
+
+            // Il n'y a pas de résultats :
+            if (results.offres === undefined || results.offres.length == 0) {
+                offresList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
-            //Chargé
-            else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    // stocke les résultats parsé en JSON dans une variable
-                    results = JSON.parse(httpRequest.responseText)
-                    // Réinitialise la liste
-                    offresList.innerHTML = '';
-                    // Pour chaque offre du tableau offres
-                    for (var i = 0; i < results.offres.length; i++) {
-                        var card = `
-            <div class="card annonceCard">
-                <i onclick="addFav(this);" class="icon star outline"></i>
-                <div class="content">
-                    <div class="header">` + results.offres[i].nom + `</div>
-                    <div class="meta">
-                        <span>
-                            <i class="icon map pin"></i>
-                            ` + results.offres[i].lieu.ville + `,
-                        </span>
-                        <br>
-                        <span>du 12/06 au 12/07</span>
-                    </div>
-                    <div class="description">
-                        <p>` + truncate(results.offres[i].description, MAX_DESCRIPTION_LENGTH, true) + `</p>
-                    </div>
-                    <div class="extra">
-                        <div class="ui label">` + results.offres[i].salaire + `€/mois</div>
-                        <div class="ui label">` + results.offres[i].heures + `h/semaine</div>
-                        <a href="{{ path('entreprise_show_offre_emploi', {'id': 1}) }}`.slice(0, -1) + results.offres[i].identity + `"
-                           class="ui right floated green button">
-                            Voir l'annonce
-                            <i class="right chevron icon"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            `;
-                        offresList.innerHTML += card;
-                    }
-                } else {
-                    alert('Il y a eu un problème avec la requête.');
+
+            results.offres.forEach(o => {
+                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                offresList.innerHTML += card.cardTemplate;
+            })
+        }
+
+        function displayFavoris(results, favori) {
+            // Réinitialise la liste
+            offresList.innerHTML = '';
+
+            console.log(results)
+
+            // Il n'y a pas de résultats :
+            if (results.favoris === undefined || results.favoris.length == 0) {
+                offresList.innerHTML = `<div style="margin: 60px auto;">Pas de favoris trouvés.</div>`;
+            }
+
+            // Pour chaque favori du tableau favoris
+            results.favoris.forEach(o => {
+                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
+                offresList.innerHTML += card.cardTemplate;
+            })
+        }
+
+        class OffreCard {
+            constructor(id, nom, rue, codeP, ville, salaire, heures, createdAt, description, debut, fin, teletravail, loge, favori) {
+                var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var date = ''
+                debut = debut.substr(0, 10).split('-');
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                fin = fin.substr(0, 10).split('-');
+                fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+
+                if (!nom.length > 0) {
+                    nom = 'Annonce n°' + id;
                 }
+                if (description.length > 0) {
+                    description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                } else {
+                    description = "** Pas de description renseignée **";
+                }
+                if (ville.length > 0) {
+                    ville =
+                        `<span>
+                        <i class="icon map pin"></i>
+                            ${ville}
+                        </span>
+                    <br>`
+                }
+                if (fin.length > 0) {
+                    date = `<span>Du ${debut} au ${fin}</span>`
+                } else if (debut.length > 0) {
+                    date = `<span>À partir du ${debut}</span>`
+                }
+                var favoriStar = ''
+                if (favori) favoriStar = 'yellow'
+
+                this.cardTemplate = `
+                <div class="card annonceCard">
+                    <i class="icon star outline addFavBtn ${favoriStar}" onclick='addFav(this, ${id})'></i>
+                    <div class="content">
+                        <div class="header">${nom}</div>
+                        <div class="meta">
+                            ${ville}
+                            ${date}
+                        </div>
+                        <div class="description">
+                            <p>${description}</p>
+                        </div>
+                        <div class="extra">
+                            <div class="ui label">${salaire}€/mois</div>
+                            <div class="ui label">${heures}h/semaine</div>
+                            <a href="${url}"
+                               class="ui right floated green button">
+                                Voir l'annonce
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </div>
+            </div>`;
             }
         }
 
@@ -181,15 +236,56 @@
             }
         }
 
-        function addFav(e) {
+        function addFav(e, id) {
             $(e).transition('pulse');
+            // Retirer des favoris
             if (e.classList.contains('yellow')) {
                 e.classList.remove('yellow');
                 e.classList.add('outline');
-            } else {
+                $.ajax({
+                    url: '/entreprise/remove/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function () {
+                        console.log('retiré des favoris')
+                    }
+                });
+            } else
+                // Ajouter aux favoris
+            {
                 e.classList.add('yellow');
                 e.classList.remove('outline');
+                $.ajax({
+                    url: '/entreprise/add/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function () {
+                        console.log('ajouté aux favoris')
+                    }
+                });
             }
         };
+
+        $('#favorisCheckbox').on('change', function () {
+            if (this.checked) {
+                $.ajax({
+                    url: '/entreprise/get/favoris',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayFavoris(results, true)
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/entreprise/get/offres_emploi',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayOffres(results, false)
+                    }
+                });
+            }
+        });
     </script>
 {% endblock %}

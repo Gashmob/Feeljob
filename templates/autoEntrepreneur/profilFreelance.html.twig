@@ -3,7 +3,12 @@
 {% block body %}
     <div class="ui segment grid identity stackable">
         <div class="two wide column">
-            <img class="ui small centered circular image" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% if app.session.get('userImage') %}
+                <img class="ui small centered circular image profileLogo profileLogo--100"
+                     src="{{ asset("uploads/logo/" ~ app.session.get('userImage')) }}">
+            {% else %}
+                <img class="ui small centered circular image profileLogo profileLogo--100" src="{{ asset('img/placeholders/elyse.png') }}">
+            {% endif %}
         </div>
         <div class="ten wide column">
             <h2 class="ui header">
@@ -11,17 +16,12 @@
             </h2>
             <div class="ui label">Freelance</div>
         </div>
-        <div class="four wide column">
-            <div>
-                <i class="icon green check circle outline"></i>
-                E-mail vérifié
-            </div>
-            <div>
-                <i class="icon green check circle outline"></i>
-                Téléphone vérifié
-            </div>
-        </div>
+        {# <div class="four wide column">
+            <div><i class="icon green check circle outline"></i>E-mail vérifié</div>
+            <div><i class="icon green check circle outline"></i>Téléphone vérifié</div>
+        </div> #}
     </div>
+    <a href="{{ path('particulier_contrats') }}" class="ui blue button">Contrats</a>
     <div class="ui vertical segment">
         <h3 class="ui header green">Votre carte de visite</h3>
         <div class="ui two stackable cards">
@@ -32,7 +32,7 @@
                         <div class="meta">À {{ publications.createdAt|date('H:i') }}</div>
                         <div class="description">
                             {% if publications.description|length %}
-                                <p>{{ publications.description > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
+                                <p>{{ publications.description|length > 200 ? publications.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publications.description }}</p>
                             {% else %}
                                 <p class="meta">** Pas de description **</p>
                             {% endif %}
@@ -58,38 +58,146 @@
         </div>
     </div>
     <div class="ui vertical segment">
-        <h3 class="ui header green">Vos contrats</h3>
-        <div class="ui segment">
-            {% for i in 1..2 %}
+        <h3 class="ui header green">Vos contrats passés</h3>
+        <div class="ui segment" id="contratsList">
+            <div class="ui vertical segment">
+                <h3 class="ui header">Candidatures envoyées acceptées</h3>
+                <div id="contratsList__cand">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui vertical segment">
+                <h3 class="ui header">Propositions reçues acceptées</h3>
+                <div id="contratsList__prop">
+                    {% for i in 1..2 %}
+                        <div class="ui vertical segment">
+                            <div class="content">
+                                <div class="ui placeholder">
+                                    <div class="header">
+                                        <div class="short line"></div>
+                                    </div>
+                                    <div class="paragraph">
+                                        <div class="ui placeholder">
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            getAcceptedCandidatures();
+            getAcceptedPropositions();
+        })
+
+        function getAcceptedCandidatures() {
+            // /particulier/get/accepted/candidatures
+            // L'AutoEntrepreneur récupère toutes ses candidatures acceptées => {'candidatures': Annonce[]}
+            $.ajax({
+                url: '/particulier/get/accepted/candidatures',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayCandidaturesAcceptees(results)
+                }
+            });
+        }
+
+        function getAcceptedPropositions() {
+            // /particulier/get/accepted/propositions
+            // L'AutoEntrepreneur récupère toute ses propositions acceptées => {'propositions': Annonce[]}
+            $.ajax({
+                url: '/particulier/get/accepted/propositions',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayPropositionsAcceptees(results)
+                }
+            });
+        }
+
+        class CandidatureAcceptee {
+            constructor(id, nom, description, updatedAt) {
+                if (!nom.length > 0) nom = 'Annonce n°' + id;
+                updatedAt = updatedAt.substr(0, 10).split('-');
+                updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
+                if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
+                else description = "** Pas de description renseignée **";
+                this.cardTemplate = `
                 <div class="ui vertical segment">
                     <div class="content">
                         <div class="header">
                             <i class="icon green check"></i>
-                            Accepté
+                            Acceptée - ${nom}
                         </div>
                         <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, atque delectus
-                                exercitationem fuga illo maiores mollitia non placeat provident quia quibusdam
-                                unde? Autem fuga illo numquam quidem tempora vel voluptates.</p>
+                            <p class="meta">${updatedAt}</p>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            {% for i in 1..2 %}
-                <div class="ui vertical segment">
-                    <div class="content">
-                        <div class="header">
-                            <i class="icon red times"></i>
-                            Refusé
-                        </div>
-                        <div class="description">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque autem culpa
-                                dolor ea eveniet excepturi exercitationem illo, libero minus mollitia omnis,
-                                placeat praesentium rem velit. Harum nobis officia praesentium.</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+                </div>`;
+            }
+        }
+
+        var contratsList = document.getElementById('contratsList');
+        var candidaturesList = contratsList.querySelector('#contratsList__cand')
+        var propositionsList = contratsList.querySelector('#contratsList__prop')
+
+        function displayCandidaturesAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.candidatures === undefined || results.candidatures.length == 0) {
+                candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                candidaturesList.innerHTML = ''
+                results.candidatures.forEach(a => {
+                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    candidaturesList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+
+        function displayPropositionsAcceptees(results) {
+            console.log(results);
+
+            // Il n'y a pas de résultats :
+            if (results.propositions === undefined || results.propositions.length == 0) {
+                propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
+            } else {
+                // Il y a des résultats :
+                propositionsList.innerHTML = ''
+                results.propositions.forEach(a => {
+                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    propositionsList.innerHTML += card.cardTemplate;
+                })
+            }
+        }
+    </script>
 {% endblock %}

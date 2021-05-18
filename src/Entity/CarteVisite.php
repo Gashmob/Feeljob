@@ -41,7 +41,7 @@ class CarteVisite
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=AutoEntrepreneur::class, mappedBy="carteVisite", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=AutoEntrepreneur::class, mappedBy="carteVisite")
      */
     private $autoEntrepreneur;
 
@@ -94,6 +94,15 @@ class CarteVisite
             if ($realisation->getCarteVisite() === $this) {
                 $realisation->setCarteVisite(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function clearRealisation(): self
+    {
+        foreach ($this->realisations as $realisation) {
+            $this->removeRealisation($realisation);
         }
 
         return $this;

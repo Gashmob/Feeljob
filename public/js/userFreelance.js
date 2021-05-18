@@ -7,27 +7,22 @@
  * classe correspondant à l'event affiché lorsqu'on survole la mallette dans la navigation
  */
 class ContratEvent {
-    constructor(id, nom, ville, prenomEmploye, nomEmploye) {
-        if (!nom.length > 0) {
-            nom = 'Offre n°' + id;
-        }
-        if (!ville.length > 0) {
-            ville = ''
-        } else {
-            ville = ' à ' + ville;
-        }
-        let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+    constructor(id, nom, ville, date) {
+        if (!nom.length > 0) nom = 'Annonce n°' + id;
+        date = date.substr(0, 10).split('-');
+        date = date[2] + '-' + date[1] + '-' + date[0];
+        let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
         this.contratEventTemplate = `
         <div class="event">
             <div class="label">
             </div>
             <div class="content">
-                <div class="">
-                   ${prenomEmploye} ${nomEmploye}
+                <div class="date">
+                    ${date}
                 </div>
                 <div class="summary">
-                    ${nom}${ville}
+                    ${nom} à ${ville}.
                 </div>
             </div>
         </div>`;
@@ -42,12 +37,11 @@ window.addEventListener("load", function () {
 // Charge le nombre de contrats en pending
 function loadContratsAmount() {
     $.ajax({
-        url: '/entreprise/get/my/candidatures',
+        url: '/particulier/get/propositions',
         type: 'POST',
         dataType: 'json',
         success: function (results) {
-            console.log(results)
-            displayContratsFeed(results)
+            displayContratsFeed(results);
         }
     });
 }
@@ -65,26 +59,27 @@ function truncate(str, n, useWordBoundary) {
         : subString) + " &hellip;";
 };
 
-// Affiche les candidatures de contrat dans la nav au survol de la mallette
+// Affiche les propositions de contrat dans la nav au survol de la mallette
 const notificationsFeed = document.getElementById('notifications');
 const contratsAmount = document.getElementById('contratsAmount');
 
 function displayContratsFeed(results) {
     console.log(results)
-    // Change la quantité de candidatures de contrat dans la case
-    contratsAmount.innerHTML = results.candidatures.length;
+
+    // Change la quantité de propositions de contrat dans la case
+    contratsAmount.innerHTML = results.propositions.length;
+
     // Réinitialise la liste
     notificationsFeed.innerHTML = '';
 
     // Il n'y a pas de résultats :
-    if (results.candidatures === undefined || results.candidatures.length == 0) {
-        notificationsFeed.innerHTML = `<div>Pas de nouvelle candidature.</div>`;
+    if (results.propositions === undefined || results.propositions.length == 0) {
+        notificationsFeed.innerHTML = `<div>Pas de nouvelle proposition de contrat.</div>`;
     }
 
     // Il y a des résultats :
-    // Pour chaque candidature
-    results.candidatures.forEach(candidature => {
-        let card = new ContratEvent(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.ville, candidature.employe.prenom, candidature.employe.nom);
+    results.propositions.forEach(candidature => {
+        let card = new ContratEvent(candidature.identity, candidature.nom, candidature.adresse.ville, candidature.createdAt);
         notificationsFeed.innerHTML += card.contratEventTemplate;
     })
 }

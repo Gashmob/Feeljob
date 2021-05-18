@@ -82,6 +82,33 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/refuse/candidature/{idO}/{idE}", methods={"POST"})
+     * @param $idO
+     * @param $idE
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectCandidature($idO, $idE, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new OffreEmploiManager())->uncandidate($idO, $idE);
+            return $this->json([
+                'result' => true
+            ]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/propose/{idO}/{idE}", methods={"POST"})
      * @param $idO
      * @param $idE
@@ -280,6 +307,81 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
+     * @Route("/get/my/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new OffreEmploiManager())->getMyCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/accepted/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new OffreEmploiManager())->getAcceptedCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/my/accepted/candidatures", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyAcceptedCandidatures(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'candidatures' => (new OffreEmploiManager())->getMyAcceptedCandidature($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/get/propositions", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -298,6 +400,81 @@ class AjaxEntrepriseController extends AbstractController
         if ($request->isMethod('POST')) {
             return $this->json([
                 'propositions' => (new OffreEmploiManager())->getPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/my/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new OffreEmploiManager())->getMyPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/accepted/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAcceptedPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new OffreEmploiManager())->getAcceptedPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/my/accepted/propositions", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getMyAcceptedPropositions(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'propositions' => (new OffreEmploiManager())->getMyAcceptedPropositions($em, $this->session->get('user'))
             ]);
         }
 
@@ -394,8 +571,9 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/offres_emploi/{nom}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
      * @param $nom
+     * @param $metier
      * @param $typeContrat
      * @param $salaire
      * @param $heures
@@ -408,7 +586,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getOffresEmploi($nom, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $metier, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -419,9 +597,10 @@ class AjaxEntrepriseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratFromPreResult(
+            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierFromPreResult(
                 $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
-                $typeContrat);
+                $typeContrat,
+                $metier);
 
             return $this->json([
                 'offres' => array_slice(
