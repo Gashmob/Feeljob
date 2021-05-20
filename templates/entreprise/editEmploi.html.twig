@@ -48,8 +48,14 @@
                                 <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden" checked>
                             </div>
                         </div>
-                        <div class="fourteen wide field" id="lieuField">
-                            <input type="text" name="ville" placeholder="ex : Chambéry" value="{{ offre.lieu.ville }}">
+                        <div class="six wide field disabled" id="rueField">
+                            <input type="text" name="rue" placeholder="Rue" maxlength="48" value="{{ offre.lieu.codePostal }}">
+                        </div>
+                        <div class="four wide field disabled" id="cpField">
+                            <input type="text" name="codePostal" placeholder="Code Postal" maxlength="5" value="{{ offre.lieu.rue }}">
+                        </div>
+                        <div class="four wide field disabled" id="lieuField">
+                            <input type="text" name="ville" placeholder="Ville" maxlength="48" value="{{ offre.lieu.ville }}">
                         </div>
                     {% else %}
                         <div style="padding-top: 6px;" class="two wide field">
@@ -57,8 +63,14 @@
                                 <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
                             </div>
                         </div>
-                        <div class="fourteen wide field disabled" id="lieuField">
-                            <input type="text" name="ville" placeholder="ex : Chambéry">
+                        <div class="six wide field disabled" id="rueField">
+                            <input type="text" name="rue" placeholder="Rue" maxlength="48">
+                        </div>
+                        <div class="four wide field disabled" id="cpField">
+                            <input type="text" name="codePostal" placeholder="Code Postal" maxlength="5">
+                        </div>
+                        <div class="four wide field disabled" id="lieuField">
+                            <input type="text" name="ville" placeholder="Ville" maxlength="48">
                         </div>
                     {% endif %}
                 </div>

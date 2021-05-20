@@ -40,14 +40,20 @@
             <div class="field">
                 <label>Localisation</label>
                 <p>Si votre emploi est fixe, cliquez sur le bouton ci-dessous.</p>
-                <div class="two fields">
+                <div class="three fields">
                     <div style="padding-top: 6px;" class="two wide field">
                         <div style="padding-left: 10px;" class="ui toggle checkbox">
                             <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
                         </div>
                     </div>
-                    <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="ville" placeholder="ex : Chambéry" minlength="2" maxlength="48">
+                    <div class="six wide field disabled" id="rueField">
+                        <input type="text" name="rue" placeholder="Rue" maxlength="48">
+                    </div>
+                    <div class="four wide field disabled" id="cpField">
+                        <input type="text" name="codePostal" placeholder="Code Postal" maxlength="5">
+                    </div>
+                    <div class="four wide field disabled" id="lieuField">
+                        <input type="text" name="ville" placeholder="Ville" maxlength="48">
                     </div>
                 </div>
             </div>
@@ -125,11 +131,17 @@
         //Lieu
         const lieuBtn = document.getElementById('lieuBtn')
         const lieuField = document.getElementById('lieuField')
+        const cpField = document.getElementById('cpField')
+        const rueField = document.getElementById('rueField')
         lieuBtn.addEventListener('change', (event) => {
             if (event.currentTarget.checked) {
                 lieuField.classList.remove("disabled");
+                cpField.classList.remove("disabled");
+                rueField.classList.remove("disabled");
             } else {
                 lieuField.classList.add("disabled");
+                cpField.classList.add("disabled");
+                rueField.classList.add("disabled");
             }
         })
         //Date fin
