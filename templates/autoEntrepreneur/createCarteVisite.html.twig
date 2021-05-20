@@ -19,6 +19,57 @@
             Nouvelle carte de visite
         </h3>
         <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <!-- Métiers -->
+            <h3 class="ui dividing green header">Métiers</h3>
+            <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
+                <div class="ui segment" id="metiersItem">
+                    {% for id, secteurs in metiers %}
+                        {% for secteur, metiersSecteur in secteurs %}
+                            <div class="two fields">
+                                <div class="field required">
+                                    <label>Secteur d'activité</label>
+                                    <select class="ui search dropdown nomSecteur" name="nomSecteur0">
+                                        <option value="{{ secteur }}">{{ secteur }}</option>
+                                    </select>
+                                </div>
+                                <div class="field required">
+                                    <label>Métier</label>
+                                    <select class="ui search dropdown nomMetier" name="nomMetier0">
+                                        {% for id, metierSecteur in metiersSecteur %}
+                                            <option value="{{ metierSecteur }}">{{ metierSecteur }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {# {% for i in 1..6 %}
+                        <div style="display: none;" class="ui segment hidden transition metierNb{{ i }}">
+                            <div class="two fields">
+                                <div class="field required">
+                                    <label>Secteur d'activité</label>
+                                    <select class="ui search dropdown nomSecteur" name="nomSecteur{{ i }}">
+                                        {% for metier in metiers %}
+                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="field required">
+                                    <label>Métier</label>
+                                    <select class="ui search dropdown nomMetier" name="nomMetier{{ i }}">
+                                        {% for metier in metiers %}
+                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} #}
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_metier()" id="metierPlus"></i>
+            </div>
             <!-- Réalisation -->
             <h3 class="ui dividing green header">Réalisations</h3>
             <div style="margin-bottom: 10px;" id="realisationsList">

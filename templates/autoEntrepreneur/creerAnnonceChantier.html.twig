@@ -23,18 +23,18 @@
                 <label>Intitulé de l'annonce</label>
                 <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
             </div>
-            {# <div class="field">
-                <label>Secteur d'activité</label>
-                <select class="ui dropdown" name="secteurActivite">
-                    <option value="">Choisir</option>
-                    {% for secteur in secteurs %}
-                        <option value="{{ secteur }}">{{ secteur }}</option>
+            <div class="required field">
+                <label>Métier destiné</label>
+                <select required class="ui search dropdown" name="metier">
+                    <option value="">Choisissez</option>
+                    {% for id, secteurs in metiers %}
+                        {% for secteur, metiersSecteur in secteurs %}
+                            {% for id, metierSecteur in metiersSecteur %}
+                                <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                            {% endfor %}
+                        {% endfor %}
                     {% endfor %}
                 </select>
-            </div>  #}
-            <div class="disabled field">
-                <label>Métier</label>
-                <input type="text" class="ui dropdown" name="metier" value="Technicien">
             </div>
             <div class="two fields">
                 <div class="required field">
