@@ -4,25 +4,29 @@
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
+            <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Distance max</div>
+                    <div class="header">Département</div>
                     <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
+                        <div class="item">
+                            <select class="ui search dropdown" id="departementSelect">
+                                <option value="0">Désactivé</option>
+                                {% for i in 1..95 %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="header">Secteur d'activité</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
+                            <select class="ui search dropdown" id="secteurSelect">
                                 <option value="">Choisir</option>
                                 {# {% for secteur in secteurs %}
                                         <option value="{{ secteur }}">{{ secteur }}</option>

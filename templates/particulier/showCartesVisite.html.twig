@@ -4,7 +4,17 @@
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
+            <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
+            <div class="ui basic dropdown button">
+                <div class="text">Secteur</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">Secteur</div>
+                    {# {% for secteur in secteurs %}
+                        <div class="item">{{ secteur }}</div>
+                    {% endfor %} #}
+                </div>
+            </div>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
