@@ -25,7 +25,7 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input required type="text" name="nom" placeholder="Intitulé du poste" value="{{ offre.nom }}">
+                <input required type="text" name="nom" placeholder="Intitulé du poste" maxlength="48" minlength="3" value="{{ offre.nom }}">
             </div>
             <div class="field required">
                 <label>Type de contrat :</label>
@@ -74,23 +74,34 @@
                     <input name="fin" placeholder="jj/mm/aaaa" type="date" value="{{ offre.fin|date('Y-m-d') }}">
                 </div>
             </div>
+            <div class="required field">
+                <label>Métier destiné</label>
+                <select required class="ui search dropdown" name="metier">
+                    <option value="{{ offre.metier }}">{{ offre.secteur }} - {{ offre.metier }}</option>
+                    {% for id, secteurs in metiers %}
+                        {% for secteur, metiersSecteur in secteurs %}
+                            {% for id, metierSecteur in metiersSecteur %}
+                                <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
             <div class="two fields">
                 <div class="field required">
                     <label>Nombre de postes à pourvoir</label>
-                    <input required type="number" min="1" name="nbPostes" placeholder="Nombre"
+                    <input required type="number" min="1" max="20" name="nbPostes" placeholder="Nombre"
                            value="{{ offre.nbPostes }}">
                 </div>
                 <div class="field">
                     <label>Nombre d'heures travaillées/semaine</label>
-                    <input type="number" min="0" name="heures" placeholder="Nombre" value="{{ offre.heures }}">
+                    <input type="number" min="0" max="60" name="heures" placeholder="Nombre" value="{{ offre.heures }}">
                 </div>
             </div>
             <div class="field">
                 <label>Description de l'offre</label>
                 <textarea rows="8" name="description"
-                          placeholder="La description de votre offre d'emploi.">
-                    {{ offre.description }}
-                </textarea>
+                          placeholder="La description de votre offre d'emploi." maxlength="5000" required>{{ offre.description }}</textarea>
             </div>
             <div class="two fields">
                 <div class="field">

@@ -21,7 +21,7 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé de l'annonce</label>
-                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48">
+                <input required type="text" name="nom" placeholder="Intitulé de l'annonce" maxlength="48" minlength="3">
             </div>
             <div class="required field">
                 <label>Métier destiné</label>
@@ -39,11 +39,11 @@
             <div class="two fields">
                 <div class="required field">
                     <label>Ville</label>
-                    <input required type="text" name="ville" placeholder="Localisation" maxlength="48">
+                    <input required type="text" name="ville" placeholder="Ville" maxlength="48">
                 </div>
                 <div class="required field">
                     <label>Code Postal</label>
-                    <input required type="number" name="codePostal" placeholder="Code Postal" maxlength="5" min="0" max="99999">
+                    <input required type="text" name="codePostal" placeholder="Code Postal" pattern="[0-9]{5}" minlength="5" maxlength="5">
                 </div>
             </div>
             <div class="two fields">
@@ -53,12 +53,12 @@
                 </div>
                 <div class="field required">
                     <label>Date début</label>
-                    <input required name="date" placeholder="jj/mm/aaaa" type="date">
+                    <input required name="date" placeholder="jj/mm/aaaa" type="date" value="{{ "now"|date("Y-m-d") }}">
                 </div>
             </div>
             <div class="required field">
                 <label>Description</label>
-                <textarea name="description" cols="30" rows="12" required maxlength="3000"></textarea>
+                <textarea placeholder="Description de votre offre." name="description" cols="30" rows="12" required maxlength="5000"></textarea>
             </div>
             <button class="ui fluid large green submit button" type="submit">Créer</button>
         </form>
