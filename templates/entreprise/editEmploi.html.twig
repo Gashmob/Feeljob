@@ -120,7 +120,7 @@
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="number" min="0" placeholder="Montant" id="montant"
+                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant" id="montant"
                                value="{{ offre.salaire }}">
                         <div class="ui basic label">.00</div>
                     </div>
