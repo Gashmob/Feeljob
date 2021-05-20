@@ -50,12 +50,12 @@
                 </div>
                 <div class="extra content">
                     <div class="ui two buttons">
-                        <a href="{{ path('particulier_inscription_particulier') }}"
+                        <a href="{{ path('show', {type:'Particulier'}) }}"
                            class="ui green icon button">
                             Particulier
                             <i class="right arrow icon"></i>
                         </a>
-                        <a href="{{ path('particulier_inscription_auto') }}"
+                        <a href="{{ path('show', {type:'AutoEntrepreneur'}) }}"
                            class="ui green basic icon button">
                             Freelance
                             <i class="right arrow icon"></i>
@@ -82,12 +82,12 @@
                 </div>
                 <div class="extra content">
                     <div class="ui two buttons">
-                        <a href="{{ path('entreprise_inscription_employeur') }}"
+                        <a href="{{ path('show', {type:'Employeur'}) }}"
                            class="ui green button">
                             Entreprise
                             <i class="right arrow icon"></i>
                         </a>
-                        <a href="{{ path('entreprise_inscription_employe') }}" class="ui green basic button">
+                        <a href="{{ path('show', {type:'Employe'}) }}" class="ui green basic button">
                             Candidat
                             <i class="right arrow icon"></i>
                         </a>

@@ -4,10 +4,10 @@
             <img class="logo" src="{{ asset('img/FJ200.png') }}">
             FeelJob
         </a>
+        <a href="{{ path('show', {type:'Particulier'}) }}" class="item">Particuliers</a>
+        <a href="{{ path('show', {type:'AutoEntrepreneur'}) }}" class="item">Freelances</a>
         <a href="{{ path('show', {type:'Employeur'}) }}" class="item">Entreprises</a>
         <a href="{{ path('show', {type:'Employe'}) }}" class="item">Candidats</a>
-        <a href="{{ path('show', {type:'AutoEntrepreneur'}) }}" class="item">Freelances</a>
-        <a href="{{ path('show', {type:'Particulier'}) }}" class="item">Particuliers</a>
     </div>
     <div class="right item">
         <a href="{{ path('connexion') }}" class="item">Connexion</a>
