@@ -61,9 +61,19 @@
                     <input name="fin" placeholder="jj/mm/aaaa" type="date">
                 </div>
             </div>
-            <div class="disabled field">
-                <label>Métier</label>
-                <input type="text" class="ui dropdown" name="metier" value="Technicien">
+            <div class="required field">
+                <label>Métier destiné</label>
+                <select required class="ui search dropdown" name="metier">
+                    <option value="">Choisissez</option>
+                    {% for id, secteurs in metiers %}
+                        {% for secteur, metiersSecteur in secteurs %}
+                            {% for id, metierSecteur in metiersSecteur %}
+                                <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                    {# <input type="text" class="ui dropdown" name="metier" value="Technicien"> #}
             </div>
             <div class="two fields">
                 <div class="field required">
@@ -85,7 +95,8 @@
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant" id="montant">
+                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant"
+                               id="montant">
                         <div class="ui basic label">.00</div>
                     </div>
                 </div>
@@ -109,7 +120,7 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        document.addEventListener("DOMContentLoaded", function(){
+        document.addEventListener("DOMContentLoaded", function () {
             checkDateFin();
         });
         //Lieu
@@ -126,7 +137,8 @@
         const selectTypeContrat = document.getElementById('selectTypeContrat')
         const dateFinField = document.getElementById('dateFinField')
         selectTypeContrat.addEventListener('change', checkDateFin)
-        function checkDateFin(){
+
+        function checkDateFin() {
             if (selectTypeContrat.value == 'CDI') {
                 dateFinField.classList.add("disabled");
             } else {
