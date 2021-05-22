@@ -37,10 +37,9 @@
             <div style="padding-top: 20px;" class="ui content annonce-content">
                 <p>
                     <i class="icon map pin"></i>
-                    {{ annonce.adresse.ville }}
+                    {{ annonce.adresse.ville }} {{ annonce.adresse.codePostal }}
                 </p>
                 <p>{{ annonce.adresse.rue }}</p>
-                <p>{{ annonce.adresse.codePostal }}</p>
                 <p>
                     <i class="icon calendar alternate"></i>
                     Pour le {{ annonce.date|date('d/m/Y') }}

@@ -75,53 +75,95 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>E-mail</label>
-                        <div class="ui left icon input">
-                            <i class="icon envelope"></i>
-                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Téléphone</label>
-                        <div class="ui left icon input">
-                            <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}">
-                        </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>E-mail</label>
+                    <div class="ui left icon input">
+                        <i class="icon envelope"></i>
+                        <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}">
                     </div>
                 </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Ville</label>
-                        <div class="ui input">
-                            <input type="text" name="ville" placeholder="Ville">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Code Postal</label>
-                        <div class="ui input">
-                            <input type="text" name="codePostal" placeholder="Code Postal">
-                        </div>
+                <div class="field">
+                    <label>Téléphone</label>
+                    <div class="ui left icon input">
+                        <i class="icon phone"></i>
+                        <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}">
                     </div>
                 </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Rue</label>
-                        <div class="ui input">
-                            <input type="text" name="rue" placeholder="Rue">
-                        </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Ville</label>
+                    <div class="ui input">
+                        <input type="text" name="ville" placeholder="Ville">
                     </div>
-                    <div class="field">
-                        <label>Situation familiale</label>
-                        <select class="ui dropdown" name="situationFamille">
-                            {% for situation in situations %}
-                                <option value="{{ situation.nom }}">{{ situation.nom }}</option>
+                </div>
+                <div class="field">
+                    <label>Code Postal</label>
+                    <div class="ui input">
+                        <input type="text" name="codePostal" placeholder="Code Postal">
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Rue</label>
+                    <div class="ui input">
+                        <input type="text" name="rue" placeholder="Rue">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Situation familiale</label>
+                    <select class="ui dropdown" name="situationFamille">
+                        {% for situation in situations %}
+                            <option value="{{ situation.nom }}">{{ situation.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <!-- Métiers -->
+            <h3 class="ui dividing green header">Métiers</h3>
+            <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
+                <div class="ui segment" id="metiersItem">
+                    <div class="field required">
+                        <label>Métier</label>
+                        <select class="ui search dropdown nomMetier" name="nomMetier0">
+                            {% for id, secteurs in metiers %}
+                                {% for secteur, metiersSecteur in secteurs %}
+                                    {% for id, metierSecteur in metiersSecteur %}
+                                        <option value="{{ metierSecteur }}">{{ secteur }}
+                                            - {{ metierSecteur }}</option>
+                                    {% endfor %}
+                                {% endfor %}
                             {% endfor %}
                         </select>
                     </div>
                 </div>
+                {# {% for i in 1..6 %}
+                        <div style="display: none;" class="ui segment hidden transition metierNb{{ i }}">
+                            <div class="two fields">
+                                <div class="field required">
+                                    <label>Secteur d'activité</label>
+                                    <select class="ui search dropdown nomSecteur" name="nomSecteur{{ i }}">
+                                        {% for metier in metiers %}
+                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="field required">
+                                    <label>Métier</label>
+                                    <select class="ui search dropdown nomMetier" name="nomMetier{{ i }}">
+                                        {% for metier in metiers %}
+                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} #}
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_metier()" id="metierPlus"></i>
             </div>
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
@@ -163,7 +205,8 @@
                             <div class="field">
                                 <label>Nom de l'établissement</label>
                                 <input type="text" class="etablissement"
-                                       name="etablissement{{ loop.index-1 }}" value="{{ diplome.diplome.etablissement }}"
+                                       name="etablissement{{ loop.index-1 }}"
+                                       value="{{ diplome.diplome.etablissement }}"
                                        placeholder="Nom de l'établissement">
                             </div>
 
@@ -243,7 +286,8 @@
                             </div>
                             <div class="field">
                                 <label>Date fin</label>
-                                <input type="date" class="dateFin" name="dateFin{{ loop.index-1 }}" placeholder="Date fin"
+                                <input type="date" class="dateFin" name="dateFin{{ loop.index-1 }}"
+                                       placeholder="Date fin"
                                        value="{{ metier.dateFin|date('Y-m-d') }}">
                             </div>
 
@@ -369,11 +413,13 @@
                     <div class="two fields">
                         <div class="field">
                             <label>Compétence</label>
-                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index-1 }}" placeholder="Nom compétence" value="{{ competence.competence.nom }}">
+                            <input type="text" class="nomCompetence" name="nomCompetence{{ loop.index-1 }}"
+                                   placeholder="Nom compétence" value="{{ competence.competence.nom }}">
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : meilleur, 1 : faible)</label>
-                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index-1 }}" min="1" max="5"
+                            <input type="number" class="niveauCompetence" name="niveauCompetence{{ loop.index-1 }}"
+                                   min="1" max="5"
                                    value="{{ competence.niveau }}">
                         </div>
                     </div>
@@ -387,13 +433,13 @@
             <div class="ui segment">
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="permis" class="hidden">
+                        <input {% if cv.permis %}checked{% endif %} type="checkbox" name="permis" class="hidden">
                         <label>Je dispose du permis B</label>
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input {% if cv.permis %}checked{% endif%} type="checkbox" name="transport" class="hidden">
+                        <input {% if cv.permis %}checked{% endif %} type="checkbox" name="transport" class="hidden">
                         <label>J'ai un moyen de transport</label>
                     </div>
                 </div>
@@ -433,7 +479,8 @@
             $('#pdp').attr('src', '{{ asset('img/placeholders/elyse.png') }}');
         });
 
-        var nbForm = {{ cv.diplomes|length-1 }}, nbExp = {{ cv.metiers|length-1 }}, nbLang = {{ cv.langues|length-1 }}, nbComp = {{ cv.competences|length-1 }};
+        var nbForm = {{ cv.diplomes|length-1 }}, nbExp = {{ cv.metiers|length-1 }}, nbLang = {{ cv.langues|length-1 }},
+            nbComp = {{ cv.competences|length-1 }};
         const maxForm = 8;
         const maxExp = 12;
         const maxLang = 6;

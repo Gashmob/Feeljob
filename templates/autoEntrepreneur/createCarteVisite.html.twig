@@ -23,26 +23,19 @@
             <h3 class="ui dividing green header">Métiers</h3>
             <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
                 <div class="ui segment" id="metiersItem">
-                    {% for id, secteurs in metiers %}
-                        {% for secteur, metiersSecteur in secteurs %}
-                            <div class="two fields">
-                                <div class="field required">
-                                    <label>Secteur d'activité</label>
-                                    <select class="ui search dropdown nomSecteur" name="nomSecteur0">
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    </select>
-                                </div>
-                                <div class="field required">
-                                    <label>Métier</label>
-                                    <select class="ui search dropdown nomMetier" name="nomMetier0">
-                                        {% for id, metierSecteur in metiersSecteur %}
-                                            <option value="{{ metierSecteur }}">{{ metierSecteur }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
+                    <div class="field required">
+                        <label>Métier</label>
+                        <select class="ui search dropdown nomMetier" name="nomMetier0">
+                            {% for id, secteurs in metiers %}
+                                {% for secteur, metiersSecteur in secteurs %}
+                                    {% for id, metierSecteur in metiersSecteur %}
+                                        <option value="{{ metierSecteur }}">{{ secteur }}
+                                            - {{ metierSecteur }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 {# {% for i in 1..6 %}
                         <div style="display: none;" class="ui segment hidden transition metierNb{{ i }}">
@@ -82,7 +75,7 @@
                     </div>
                     <label class="ui blue labeled icon button imageLabel" for="image0">
                         <i class="plus icon"></i>
-                        <span id="image-label0">Ajouter image</span>
+                        <span class="image-label-span" id="image-label-span0">Ajouter image</span>
                         <input onchange="readURL(this);" href="{{ path('particulier_create_carte') }}" type="file"
                                style="display: none;" class="image" id="image0" name="image0">
                     </label>
@@ -118,11 +111,6 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $('#image0').change(function () {
-            var i = $(this).prev('label').clone();
-            var file = $('#image0')[0].files[0].name;
-            $('#image-label0').text(file);
-        });
 
         let nbRealisations = 0;
         const maxRealisations = 8;
@@ -144,6 +132,8 @@
 
                 newItem.querySelector('.description').setAttribute("name", "description" + nbRealisations);
                 newItem.querySelector('.imageLabel').setAttribute("for", "image" + nbRealisations);
+                newItem.querySelector('.image-label-span').setAttribute("id", "image-label-span" + nbRealisations);
+                newItem.querySelector('.image-label-span').innerHTML = "Ajouter image";
                 newItem.querySelector('.image').setAttribute("name", "image" + nbRealisations);
                 newItem.querySelector('.image').setAttribute("id", "image" + nbRealisations);
 
@@ -152,6 +142,13 @@
             } else {
                 $('#realPlus').transition('shake');
             }
+        }
+
+        function readURL(target) {
+            var label = '#image-label-span' + $(target).attr('id').slice(-1)
+            console.log(label)
+            var file = $(target)[0].files[0].name;
+            $(label).text(file);
         }
     </script>
 {% endblock %}

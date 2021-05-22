@@ -28,9 +28,9 @@
                         <div class="item">
                             <select class="ui search dropdown" id="secteurSelect">
                                 <option value="0">Désactivé</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur }}">{{ secteur }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -95,6 +95,23 @@
         function makeRequestLoadAll() {
             $.ajax({
                 url: '/particulier/get/annonces',
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayAnnonces(results)
+                }
+            });
+        }
+
+        // Résultats filtrés
+        // particulier/get/annonces/{metier}/{distanceMax}/{limit}/{offset}
+        // L'AutoEntrepreneur récupère toutes les annonces de Metier dans un rayon de distanceMax autour de lui.
+        // Il récupère limit annonces avec un offset => {'annonces': Annonce[]}
+        function makeRequestFiltered(metier, distanceMax) {
+            distanceMax = -1;
+
+            $.ajax({
+                url: '/particulier/get/annonces/' + metier + '/' + distanceMax,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -182,7 +199,7 @@
             let offset = 0;
             inputValue = inputValue.trim();
             if (inputValue != undefined && inputValue.length > 0) {
-                makeRequestFiltered(inputValue, distanceMax, limit, offset);
+                makeRequestFiltered(inputValue, distanceMax);
             } else {
                 makeRequestLoadAll();
             }

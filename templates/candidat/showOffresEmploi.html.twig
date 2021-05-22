@@ -9,9 +9,9 @@
                 <div class="text">Secteur</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    {# {% for secteur in secteurs %}
+                    {% for secteur in secteurs %}
                         <div class="item">{{ secteur }}</div>
-                    {% endfor %} #}
+                    {% endfor %}
                 </div>
             </div>
             <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
@@ -37,9 +37,9 @@
                         <div class="item">
                             <select class="ui search dropdown" id="secteurSelect">
                                 <option value="0">Désactivé</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur }}">{{ secteur }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

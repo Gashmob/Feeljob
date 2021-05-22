@@ -59,80 +59,72 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>E-mail</label>
-                        <div class="ui left icon input">
-                            <i class="icon envelope"></i>
-                            <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}" max="250">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Téléphone</label>
-                        <div class="ui left icon input">
-                            <i class="icon phone"></i>
-                            <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}"
-                                   max="48">
-                        </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>E-mail</label>
+                    <div class="ui left icon input">
+                        <i class="icon envelope"></i>
+                        <input type="text" name="mail" placeholder="Email" value="{{ employe.email }}" max="250">
                     </div>
                 </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Ville</label>
-                        <div class="ui input">
-                            <input type="text" name="ville" placeholder="Ville">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Code Postal</label>
-                        <div class="ui input">
-                            <input type="text" name="codePostal" placeholder="Code Postal">
-                        </div>
+                <div class="field">
+                    <label>Téléphone</label>
+                    <div class="ui left icon input">
+                        <i class="icon phone"></i>
+                        <input type="text" name="telephone" placeholder="Téléphone" value="{{ employe.telephone }}"
+                               max="48">
                     </div>
                 </div>
-                <div class="two fields">
-                    <div class="field">
-                        <label>Rue</label>
-                        <div class="ui input">
-                            <input type="text" name="rue" placeholder="Rue">
-                        </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Ville</label>
+                    <div class="ui input">
+                        <input type="text" name="ville" placeholder="Ville">
                     </div>
-                    <div class="field">
-                        <label>Situation familiale</label>
-                        <select class="ui dropdown" name="situationFamille">
-                            {% for situation in situations %}
-                                <option value="{{ situation.nom }}">{{ situation.nom }}</option>
+                </div>
+                <div class="field">
+                    <label>Code Postal</label>
+                    <div class="ui input">
+                        <input type="text" name="codePostal" placeholder="Code Postal">
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Rue</label>
+                    <div class="ui input">
+                        <input type="text" name="rue" placeholder="Rue">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Situation familiale</label>
+                    <select class="ui dropdown" name="situationFamille">
+                        {% for situation in situations %}
+                            <option value="{{ situation.nom }}">{{ situation.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <!-- Métiers -->
+            <h3 class="ui dividing green header">Métiers</h3>
+            <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
+                <div class="ui segment" id="metiersItem">
+                    <div class="field required">
+                        <label>Métier</label>
+                        <select class="ui search dropdown nomMetier" name="nomMetier0">
+                            {% for id, secteurs in metiers %}
+                                {% for secteur, metiersSecteur in secteurs %}
+                                    {% for id, metierSecteur in metiersSecteur %}
+                                        <option value="{{ metierSecteur }}">{{ secteur }}
+                                            - {{ metierSecteur }}</option>
+                                    {% endfor %}
+                                {% endfor %}
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-                <!-- Métiers -->
-                <h3 class="ui dividing green header">Métiers</h3>
-                <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
-                    <div class="ui segment" id="metiersItem">
-                        {% for id, secteurs in metiers %}
-                            {% for secteur, metiersSecteur in secteurs %}
-                                <div class="two fields">
-                                    <div class="field required">
-                                        <label>Secteur d'activité</label>
-                                        <select class="ui search dropdown nomSecteur" name="nomSecteur0">
-                                            <option value="{{ secteur }}">{{ secteur }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="field required">
-                                        <label>Métier</label>
-                                        <select class="ui search dropdown nomMetier" name="nomMetier0">
-                                            {% for id, metierSecteur in metiersSecteur %}
-                                                <option value="{{ metierSecteur }}">{{ metierSecteur }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                    </div>
-                    {# {% for i in 1..6 %}
+                {# {% for i in 1..6 %}
                         <div style="display: none;" class="ui segment hidden transition metierNb{{ i }}">
                             <div class="two fields">
                                 <div class="field required">
@@ -154,10 +146,9 @@
                             </div>
                         </div>
                     {% endfor %} #}
-                </div>
-                <div class="ui container center aligned">
-                    <i class="icon plus circle big green" onclick="add_metier()" id="metierPlus"></i>
-                </div>
+            </div>
+            <div class="ui container center aligned">
+                <i class="icon plus circle big green" onclick="add_metier()" id="metierPlus"></i>
             </div>
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>

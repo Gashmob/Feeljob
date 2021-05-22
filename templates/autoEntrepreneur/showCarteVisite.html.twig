@@ -10,7 +10,6 @@
             </a>
         {% endif %}
         <h2 class="ui center aligned icon header">
-            <i class="address card outline icon"></i>
             Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
         </h2>
         <div>
@@ -30,7 +29,6 @@
         <form class="ui form segment">
             <!-- Identité -->
             <h3 class="ui dividing header">
-                <i class="icon user"></i>
                 <div class="content">Identité</div>
             </h3>
             <div class="ui two column grid">
@@ -51,17 +49,28 @@
             <!-- Bio -->
             {% if carte.description %}
                 <h3 class="ui dividing header">
-                    <i class="icon info"></i>
                     <div class="content">Biographie</div>
                 </h3>
                 <div class="ui segment">
                     <p>{{ carte.description }}</p>
                 </div>
             {% endif %}
-            {% if carte.realisations %}
-                <!-- Réalisations -->
+            <!-- Métiers -->
+            {# {% if cv.metiers is not empty %}
                 <h3 class="ui dividing header">
-                    <i class="icon pencil alternate"></i>
+                    <div class="content">Métier(s)</div>
+                </h3>
+                <div class="ui segments">
+                    {% for metier in cv.metiers %}
+                        <div class="ui segment metier">
+                            <h4 class="ui header">{{ metier.id }}</h4>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}  #}
+            <!-- Réalisations -->
+            {% if carte.realisations %}
+                <h3 class="ui dividing header">
                     <div class="content">Réalisations</div>
                 </h3>
                 <div class="ui divided items">

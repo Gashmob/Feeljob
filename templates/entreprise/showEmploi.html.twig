@@ -49,9 +49,8 @@
                 {% if not offre.deplacement %}
                     <p>
                         <i class="icon map pin"></i>
-                        {{ offre.lieu.ville }}
+                        {{ offre.lieu.ville }} {{ offre.lieu.codePostal }}
                     </p>
-                    <p>{{ offre.lieu.codePostal }}</p>
                     <p>{{ offre.lieu.rue }}</p>
                 {% endif %}
                 <p>
@@ -79,7 +78,6 @@
             <!-- Location carte -->
             <div style="padding-top: 20px;" class="ui content annonce-location">
                 <h3 class="ui dividing header">
-                    <i class="icon map pin"></i>
                     <div class="content">Location sur la carte</div>
                 </h3>
                 <div>
@@ -93,7 +91,6 @@
             </div>
             <!-- Autres -->
             <h3 class="ui dividing header">
-                <i class="icon question circle outline"></i>
                 <div class="content">Informations additionnelles</div>
             </h3>
             <div class="ui segment">

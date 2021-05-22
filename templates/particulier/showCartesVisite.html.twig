@@ -32,11 +32,11 @@
                     <div class="header">Secteur d'activité</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
+                            <select class="ui search dropdown" id="secteurSelect">
                                 <option value="0">Désactivé</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur }}">{{ secteur }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -109,19 +109,38 @@
             });
         }
 
-        /*
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestFiltered(nom, secteur, distanceMax, limit, offset) {
+        const searchInput = document.getElementById('searchInput');
+        const secteurSelect = document.getElementById('secteurSelect');
+        // /particulier/get/cartes/{nom}/{secteur}/{distanceMax}/{limit}/{offset}
+        // Le particulier récupère toutes les CarteVisite selon le nomEntreprise nom, le SecteurActivite secteur et la distanceMax.
+        // Il en récupère limit avec un offset => {'cartes': CarteVisite[]}
+        function makeRequestFiltered() {
+            var nom = searchInput.value;
+            var secteur = secteurSelect.value;
+            var distanceMax = -1;
+            var limit = 25;
+            var offset = 0;
+
+            nom = nom.trim();
+
+            if (nom != undefined && nom.length > 0) {
+                console.log('ok')
+            } else {
+                nom = 'none'
+            }
+
+            if (secteur == 0) {
+                secteur = 'none'
+            }
             $.ajax({
-                url: '/entreprise/get/cvs/' + nom + secteur + distanceMax + limit + offset,
+                url: '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
-                    displayCVS(results)
+                    displayCartesVisite(results)
                 }
             });
         }
-        */
 
         //Classe carteVisiteCard
         class carteVisiteCard {
@@ -158,6 +177,7 @@
 
         //Affiche les résultats dans 'cartesVisiteList'
         const cartesVisiteList = document.getElementById('cartesVisiteList');
+
         function displayCartesVisite(results) {
             console.log(results);
             // Réinitialise la liste
@@ -175,33 +195,6 @@
             })
         }
 
-        // Cherche quand on appuie sur la touche entrée dans la barre de recherche
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                searchCartes();
-            }
-        });
-
-        function searchCartes() {
-            // String nom
-            let nom = searchInput.value;
-            // String secteur
-            let secteur = 'none';
-            // Float distance max
-            let distanceMax = -1;
-            // Int limit
-            let limit = 25;
-            // Int offset
-            let offset = 0;
-            nom = nom.trim();
-            if (nom != undefined && nom.length > 0) {
-                makeRequestFiltered(nom, secteur, distanceMax, limit, offset);
-            } else {
-                loadCartesVisiteAll();
-            }
-        }
-
         function addFav(e) {
             $(e).transition('pulse');
             if (e.classList.contains('yellow')) {
@@ -215,6 +208,7 @@
 
         // Roulette pour la distance
         const rangeLabel = document.getElementById('rangeLabel');
+
         function updateRangeLabel(value) {
             if (value == 0) {
                 rangeLabel.innerHTML = 'Désactivé';
@@ -223,5 +217,17 @@
             }
             ;
         }
+
+        // Cherche quand on appuie sur la touche entrée dans la barre de recherche
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                makeRequestFiltered();
+            }
+        });
+
+        // Cherche quand on change la valeur du secteur
+        secteurSelect.addEventListener('change', function (e) {
+            makeRequestFiltered();
+        });
     </script>
 {% endblock %}

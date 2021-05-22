@@ -22,11 +22,11 @@
                     <div class="header">Secteur d'activité</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
+                            <select class="ui search dropdown" id="secteurSelect">
                                 <option value="0">Désactivé</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur }}">{{ secteur }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -99,8 +99,7 @@
                 <div class="ui card cvCard">
                     <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
-                        <div class="ui left floated profileLogo profileLogo--35"
-                                 style="background-image: url('${photo}'); -moz-background-image: url('${photo}'); -o-background-image: url('${photo}'); -webkit-background-image: url('${photo}');"></div>
+                        {# <img src="${photo}" class="ui left floated circular image profileLogo profileLogo--35"/> #}
                         <div class="header">${prenom} ${nom}</div>
                         <div class="meta">
                             <span class="category">Métier</span>
@@ -141,14 +140,35 @@
             });
         }
 
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestByCompetence(competence) {
+        const searchInput = document.getElementById('searchInput');
+        const secteurSelect = document.getElementById('secteurSelect');
+        // /particulier/get/cartes/{nom}/{secteur}/{distanceMax}/{limit}/{offset}
+        // Le particulier récupère toutes les CarteVisite selon le nomEntreprise nom, le SecteurActivite secteur et la distanceMax.
+        // Il en récupère limit avec un offset => {'cartes': CarteVisite[]}
+        function makeRequestFiltered() {
+            var nom = searchInput.value;
+            var secteur = secteurSelect.value;
+            var distanceMax = -1;
+            var limit = 25;
+            var offset = 0;
+
+            nom = nom.trim();
+
+            if (nom != undefined && nom.length > 0) {
+                console.log('ok')
+            } else {
+                nom = 'none'
+            }
+
+            if (secteur == 0) {
+                secteur = 'none'
+            }
             $.ajax({
-                url: '/entreprise/get/cvs',
+                url: '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
-                    displayCVS(results)
+                    displayCartesVisite(results)
                 }
             });
         }
@@ -177,19 +197,9 @@
         var searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchCVS();
+                makeRequestFiltered();
             }
         });
-
-        // Cherche les CV
-        function searchCVS() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestByCompetence(inputValue);
-            } else {
-                makeRequest();
-            }
-        }
 
         function addFav(e) {
             $(e).transition('pulse');

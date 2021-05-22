@@ -122,7 +122,8 @@
                 fin = fin.substr(0, 10).split('-');
                 fin = fin[2] + '-' + fin[1] + '-' + fin[0];
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
+                let urlCVEmploye = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + idEmploye;
                 // TODO : lien disabled vers cv employe si employe n'a pas de CV
 
                 this.candidatureTemplate = `
@@ -139,7 +140,7 @@
                             <div class="ui right floated buttons">
                                 <button id="denyBtn${id}to${idEmploye}" class="ui red basic button denyBtn" onclick="refuseCandidature(${id}, ${idEmploye})">Refuser</button>
                                 <button id="acceptBtn${id}to${idEmploye}" class="ui green basic button acceptBtn" onclick="acceptCandidature(${id}, ${idEmploye})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <a href="${urlCVEmploye}" class="ui blue basic button btnAccept">Voir CV</a>
                             </div>
                         </div>
                     </div>
