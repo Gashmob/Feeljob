@@ -270,7 +270,9 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig', [
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite()
+        ]);
     }
 
     /**
