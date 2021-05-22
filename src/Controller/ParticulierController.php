@@ -547,7 +547,9 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('autoEntrepreneur/showAnnonces.html.twig');
+        return $this->render('autoEntrepreneur/showAnnonces.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+        ]);
     }
 
     /**
@@ -587,7 +589,9 @@ class ParticulierController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('particulier/showCartesVisite.html.twig');
+        return $this->render('particulier/showCartesVisite.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+        ]);
     }
 
     /**

@@ -672,7 +672,9 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('entreprise/showProfiles.html.twig');
+        return $this->render('entreprise/showProfiles.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+        ]);
     }
 
     /**
@@ -960,7 +962,9 @@ class EntrepriseController extends AbstractController
             return $this->redirectToRoute('userSpace');
         }
 
-        return $this->render('candidat/showOffresEmploi.html.twig');
+        return $this->render('candidat/showOffresEmploi.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+        ]);
     }
 
     /**
