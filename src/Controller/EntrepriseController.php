@@ -735,6 +735,8 @@ class EntrepriseController extends AbstractController
             $deplacement = $request->get('deplacement') == null;
 
             $ville = $request->get('ville') == null ? '' : $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $teletravail = $request->get('teletravail') != null;
 
@@ -756,8 +758,8 @@ class EntrepriseController extends AbstractController
 
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $adresse = (new Adresse())
-                    ->setRue('')
-                    ->setCodePostal('')
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
@@ -849,6 +851,8 @@ class EntrepriseController extends AbstractController
             $deplacement = $request->get('deplacement') == null;
 
             $ville = $request->get('ville') == null ? '' : $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $teletravail = $request->get('teletravail') == null;
 
@@ -869,7 +873,10 @@ class EntrepriseController extends AbstractController
             $metier = $request->get('metier');
 
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
-                $offre->getLieu()->setVille($ville);
+                $offre->getLieu()
+                    ->setVille($ville)
+                    ->setCodePostal($codePostal)
+                    ->setRue($rue);
                 $offre->setNom($nom)
                     ->setDebut(new DateTime($debut))
                     ->setFin(new DateTime($fin))
