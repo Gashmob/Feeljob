@@ -312,9 +312,11 @@ class ParticulierController extends AbstractController
                 $em->flush();
 
                 for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
-                    $image = Utils::uploadImage('realisations', 'image' . $i);
+                    $image = $request->get('change' . $i);
+                    if ($image == 'none') {
+                        $image = Utils::uploadImage('realisations', 'image' . $i);
+                    }
                     $descriptionR = $request->get('description' . $i);
-
                     if ($image != '' && $descriptionR != '') {
                         $r = (new Realisation())
                             ->setImage($image)
