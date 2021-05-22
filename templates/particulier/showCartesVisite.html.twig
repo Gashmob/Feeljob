@@ -41,16 +41,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="header">Favoris</div>
-                    <div class="menu">
-                        <div class="item field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="item"></div>
             </div>
             <div class="ui center aligned">
@@ -94,7 +84,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadCartesVisiteAll();
-            searchInput.focus();
         });
 
         //Cherche tous les résultats
@@ -152,7 +141,6 @@
 
                 this.cardTemplate = `
                 <div class="card carteVisiteCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
                         <div class="header">${prenom} ${nom}</div>
                         <div class="meta">
@@ -194,17 +182,6 @@
                 cartesVisiteList.innerHTML += card.cardTemplate;
             })
         }
-
-        function addFav(e) {
-            $(e).transition('pulse');
-            if (e.classList.contains('yellow')) {
-                e.classList.remove('yellow');
-                e.classList.add('outline');
-            } else {
-                e.classList.add('yellow');
-                e.classList.remove('outline');
-            }
-        };
 
         // Roulette pour la distance
         const rangeLabel = document.getElementById('rangeLabel');

@@ -31,16 +31,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="header">Favoris</div>
-                    <div class="menu">
-                        <div class="item field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="item"></div>
             </div>
             <div class="ui center aligned">
@@ -97,7 +87,6 @@
 
                 this.cardTemplate = `
                 <div class="ui card cvCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
                         {# <img src="${photo}" class="ui left floated circular image profileLogo profileLogo--35"/> #}
                         <div class="header">${prenom} ${nom}</div>
@@ -142,33 +131,31 @@
 
         const searchInput = document.getElementById('searchInput');
         const secteurSelect = document.getElementById('secteurSelect');
-        // /particulier/get/cartes/{nom}/{secteur}/{distanceMax}/{limit}/{offset}
-        // Le particulier récupère toutes les CarteVisite selon le nomEntreprise nom, le SecteurActivite secteur et la distanceMax.
-        // Il en récupère limit avec un offset => {'cartes': CarteVisite[]}
+        // /entreprise/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}
+        // L'Employeur récupère tout les CV selons le nom, les competences, langues et permis.
+        // Il récupère limit CV avec un offset => {'cvs': CV[], 'quantity': Int}
         function makeRequestFiltered() {
             var nom = searchInput.value;
-            var secteur = secteurSelect.value;
-            var distanceMax = -1;
+            var competences = 'none';
+            var langues = 'none';
+            var permis = 'none';
             var limit = 25;
             var offset = 0;
 
             nom = nom.trim();
 
             if (nom != undefined && nom.length > 0) {
-                console.log('ok')
+                console.log('nom défini')
             } else {
                 nom = 'none'
             }
 
-            if (secteur == 0) {
-                secteur = 'none'
-            }
             $.ajax({
-                url: '/particulier/get/cartes/' + nom + '/' + secteur + '/' + distanceMax + '/' + limit + '/' + offset,
+                url: '/entreprise/get/cvs/' + nom + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
-                    displayCartesVisite(results)
+                    displayCVS(results)
                 }
             });
         }
@@ -194,22 +181,15 @@
         }
 
         // Cherche les CV lorsqu'on appuie sur la touche entrée dans la barre de recherche
-        var searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 makeRequestFiltered();
             }
         });
 
-        function addFav(e) {
-            $(e).transition('pulse');
-            if (e.classList.contains('yellow')) {
-                e.classList.remove('yellow');
-                e.classList.add('outline');
-            } else {
-                e.classList.add('yellow');
-                e.classList.remove('outline');
-            }
-        };
+        // Cherche quand on change la valeur du secteur
+        secteurSelect.addEventListener('change', function (e) {
+            makeRequestFiltered();
+        });
     </script>
 {% endblock %}

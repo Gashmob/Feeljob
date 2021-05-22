@@ -45,6 +45,29 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="header">Type contrat</div>
+                    <div class="menu">
+                        <div class="item">
+                            <select class="ui search dropdown" id="typeContratSelect">
+                                <option value="none">Désactivé</option>
+                                {# {% for type in typeContrat %}
+                                    <option value="{{ type }}">{{ type }}</option>
+                                {% endfor %} #}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Télétravail</div>
+                    <div class="menu">
+                        <div class="item field">
+                            <div class="ui toggle checkbox">
+                                <input id="teletravailCheckbox" type="checkbox" name="teletravail" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
                     <div class="header">Favoris</div>
                     <div class="menu">
                         <div class="item field">
@@ -97,7 +120,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequest();
-            searchInput.focus();
         });
 
         // Cherche tous les résultats
@@ -112,10 +134,33 @@
             });
         }
 
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestByName(name) {
+        var searchInput = document.getElementById('searchInput');
+
+        // /entreprise/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}
+        // L'Employe récupère toutes les OffreEmploi selon le typeContrat, metier, min salaire, max heures, loge, deplacement, teletravail.
+        // Il en récupère limit avec un offset => {'offres': OffreEmploi[], 'quantity': Int}
+        function makeRequestFiltered() {
+            var nom = searchInput.value;
+            var metier = 'none';
+            var typeContrat = 'none';
+            var salaire = 'none';
+            var heures = 'none';
+            var loge = 'none';
+            var deplacement = 'none';
+            var teletravail = 'none';
+            var limit = 25;
+            var offset = 0;
+
+            nom = nom.trim();
+
+            if (nom != undefined && nom.length > 0) {
+                console.log('ok')
+            } else {
+                nom = 'none'
+            }
+
             $.ajax({
-                url: '/entreprise/get/offres_emploi',
+                url: '/entreprise/get/offres_emploi/' + nom + '/' + metier + '/' + typeContrat + '/' + salaire + '/' + heures + '/' + loge + '/' + deplacement + '/' + teletravail + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -222,22 +267,11 @@
         }
 
         // Event listener barre de recherche
-        var searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchOffres();
+                makeRequestFiltered()
             }
         });
-
-        // Fonction liée au event listener de la barre de recherche
-        function searchOffres() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestByName(inputValue);
-            } else {
-                makeRequest();
-            }
-        }
 
         function addFav(e, id) {
             $(e).transition('pulse');

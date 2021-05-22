@@ -40,7 +40,7 @@
                     <div class="menu">
                         <div class="item field">
                             <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
+                                <input id="favorisCheckbox" type="checkbox" name="favoris" class="hidden">
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequestLoadAll()
-            searchInput.focus();
         });
 
         //Cherche tous les résultats
@@ -103,15 +102,20 @@
             });
         }
 
+        const searchInput = document.getElementById('searchInput');
+
         // Résultats filtrés
         // particulier/get/annonces/{metier}/{distanceMax}/{limit}/{offset}
         // L'AutoEntrepreneur récupère toutes les annonces de Metier dans un rayon de distanceMax autour de lui.
         // Il récupère limit annonces avec un offset => {'annonces': Annonce[]}
-        function makeRequestFiltered(metier, distanceMax) {
-            distanceMax = -1;
+        function makeRequestFiltered() {
+            var metier = searchInput.value;
+            var distanceMax = -1;
+            var limit = 25;
+            var offset = 0;
 
             $.ajax({
-                url: '/particulier/get/annonces/' + metier + '/' + distanceMax,
+                url: '/particulier/get/annonces/' + metier + '/' + distanceMax + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -135,7 +139,7 @@
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
+                    <i class="icon star outline addFavBtn ${favoriStar}" onclick='addFav(this, ${id})'></i>
                     <div class="content">
                         <div class="header">${nom}</div>
                         <div class="meta">
@@ -181,40 +185,11 @@
             })
         }
 
-        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchAnnonces();
+                makeRequestFiltered();
             }
         });
-
-        function searchAnnonces() {
-            // String secteur
-            let inputValue = searchInput.value;
-            // Float distance max
-            let distanceMax = -1;
-            // Int limit
-            let limit = 25;
-            // Int offset
-            let offset = 0;
-            inputValue = inputValue.trim();
-            if (inputValue != undefined && inputValue.length > 0) {
-                makeRequestFiltered(inputValue, distanceMax);
-            } else {
-                makeRequestLoadAll();
-            }
-        }
-
-        function addFav(e) {
-            $(e).transition('pulse');
-            if (e.classList.contains('yellow')) {
-                e.classList.remove('yellow');
-                e.classList.add('outline');
-            } else {
-                e.classList.add('yellow');
-                e.classList.remove('outline');
-            }
-        };
 
         const rangeLabel = document.getElementById('rangeLabel');
 
@@ -226,5 +201,57 @@
             }
             ;
         }
+
+        function addFav(e, id) {
+            $(e).transition('pulse');
+            // Retirer des favoris
+            if (e.classList.contains('yellow')) {
+                e.classList.remove('yellow');
+                e.classList.add('outline');
+                $.ajax({
+                    url: '/particulier/remove/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function () {
+                        console.log('retiré des favoris')
+                    }
+                });
+            } else
+                // Ajouter aux favoris
+            {
+                e.classList.add('yellow');
+                e.classList.remove('outline');
+                $.ajax({
+                    url: '/particulier/add/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function () {
+                        console.log('ajouté aux favoris')
+                    }
+                });
+            }
+        };
+
+        $('#favorisCheckbox').on('change', function () {
+            if (this.checked) {
+                $.ajax({
+                    url: '/particulier/get/favoris',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayFavoris(results, true)
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/particulier/get/offres_emploi',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayAnnonces(results, false)
+                    }
+                });
+            }
+        });
     </script>
 {% endblock %}
