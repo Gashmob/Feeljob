@@ -185,6 +185,53 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/add/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json(['result' => (new AnnonceManager())->addToFavoris($id, $this->session->get('user'))]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/remove/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new AnnonceManager())->removeFavoris($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
@@ -429,6 +476,31 @@ class AjaxParticulierController extends AbstractController
         if ($request->isMethod('POST')) {
             return $this->json([
                 'propositions' => (new AnnonceManager())->getMyAcceptedPropositions($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/favoris", methods={"POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getFavoris(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json([]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json([]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json([
+                'favoris' => (new AnnonceManager())->getFavoris($em, $this->session->get('user'))
             ]);
         }
 

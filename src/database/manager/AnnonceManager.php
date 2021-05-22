@@ -131,6 +131,63 @@ class AnnonceManager extends Manager
      * @param int $idAutoEntrepreneur
      * @return bool
      */
+    public function addToFavoris(int $idAnnonce, int $idAutoEntrepreneur): bool
+    {
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[f:' . EntityManager::FAVORI . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN f'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run()
+            ->getOneOrNullResult();
+
+        if (is_null($result)) {
+            (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . '), (o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO CREATE (a)-[:' . EntityManager::FAVORI . ']->(o)'))
+                ->setInteger('idA', $idAutoEntrepreneur)
+                ->setInteger('idO', $idAnnonce)
+                ->run();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param int $idAutoEntrepreneur
+     * @return Annonce[]
+     */
+    public function getFavoris(EntityManagerInterface $em, int $idAutoEntrepreneur): array
+    {
+        $results = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[:' . EntityManager::FAVORI . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA RETURN id(o) as id'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->run()
+            ->getResult();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $em->getRepository(Annonce::class)->findOneBy(['identity' => $result['id']]);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     */
+    public function removeFavoris(int $idAnnonce, int $idAutoEntrepreneur)
+    {
+        (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[f:' . EntityManager::FAVORI . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO DELETE f'))
+            ->setInteger('idA', $idAutoEntrepreneur)
+            ->setInteger('idO', $idAnnonce)
+            ->run();
+    }
+
+    /**
+     * @param int $idAnnonce
+     * @param int $idAutoEntrepreneur
+     * @return bool
+     */
     public function candidate(int $idAnnonce, int $idAutoEntrepreneur): bool
     {
         $result1 = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')-[c:' . EntityManager::CANDIDATURE . ']->(o:' . EntityManager::ANNONCE . ') WHERE id(a)=$idA AND id(o)=$idO RETURN c'))
