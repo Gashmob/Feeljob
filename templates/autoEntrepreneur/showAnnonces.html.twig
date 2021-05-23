@@ -129,13 +129,15 @@
 
         //Classe AnnonceCard
         class AnnonceCard {
-            constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
+            constructor(id, nom, rue, codeP, ville, createdAt, date, description, favori) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
                 let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                var favoriStar = ''
+                if (favori) favoriStar = 'yellow'
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
@@ -181,6 +183,24 @@
             // Pour chaque cv du tableau annonces
             results.annonces.forEach(a => {
                 let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                annoncesList.innerHTML += card.cardTemplate;
+            })
+        }
+
+        function displayFavoris(results, favori) {
+            // Réinitialise la liste
+            annoncesList.innerHTML = '';
+
+            console.log(results)
+
+            // Il n'y a pas de résultats :
+            if (results.favoris === undefined || results.favoris.length == 0) {
+                annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de favoris trouvés.</div>`;
+            }
+
+            // Pour chaque favori du tableau favoris
+            results.favoris.forEach(a => {
+                let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description, favori);
                 annoncesList.innerHTML += card.cardTemplate;
             })
         }
@@ -244,7 +264,7 @@
                 });
             } else {
                 $.ajax({
-                    url: '/particulier/get/offres_emploi',
+                    url: '/particulier/get/annonces',
                     type: 'POST',
                     dataType: 'json',
                     success: function (results) {

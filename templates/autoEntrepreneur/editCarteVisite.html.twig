@@ -19,6 +19,24 @@
             Modifier carte de visite
         </h3>
         <form class="ui form segment" method="post" enctype="multipart/form-data">
+            <!-- Métier -->
+            <h3 class="ui dividing green header">Métier</h3>
+            <div class="ui segment" id="metiersItem">
+                <div class="field required">
+                    <label>Métier</label>
+                    <select class="ui search dropdown nomSecteur" name="secteur">
+                        <option value="{{ secteur }}">{{ secteur }}</option>
+                        {% for id, secteurs in metiers %}
+                            {% for secteur, metiersSecteur in secteurs %}
+                                {% for id, metierSecteur in metiersSecteur %}
+                                    <option value="{{ metierSecteur }}">{{ secteur }}
+                                        - {{ metierSecteur }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
             <!-- Réalisation -->
             <h3 class="ui dividing green header">Réalisations</h3>
             <div style="margin-bottom: 10px;" id="realisationsList">

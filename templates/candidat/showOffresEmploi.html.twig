@@ -48,11 +48,11 @@
                     <div class="header">Type contrat</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui search dropdown" id="typeContratSelect">
+                            <select class="ui dropdown" id="typeContratSelect">
                                 <option value="none">Désactivé</option>
-                                {# {% for type in typeContrat %}
+                                {% for type in typeContrats %}
                                     <option value="{{ type }}">{{ type }}</option>
-                                {% endfor %} #}
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -135,6 +135,10 @@
         }
 
         var searchInput = document.getElementById('searchInput');
+        var departementSelect = document.getElementById('departementSelect');
+        var secteurSelect = document.getElementById('secteurSelect');
+        var typeContratSelect = document.getElementById('typeContratSelect');
+        var teleTravailCheckbox = document.getElementById('teletravailCheckbox');
 
         // /entreprise/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}
         // L'Employe récupère toutes les OffreEmploi selon le typeContrat, metier, min salaire, max heures, loge, deplacement, teletravail.
@@ -142,12 +146,12 @@
         function makeRequestFiltered() {
             var nom = searchInput.value;
             var metier = 'none';
-            var typeContrat = 'none';
+            var typeContrat = typeContratSelect.value;
             var salaire = 'none';
             var heures = 'none';
             var loge = 'none';
             var deplacement = 'none';
-            var teletravail = 'none';
+            var teletravail = teleTravailCheckbox.value;
             var limit = 25;
             var offset = 0;
 
@@ -324,5 +328,8 @@
                 });
             }
         });
+
+        $('#typeContratSelect').change(makeRequestFiltered);
+        $('#teletravailCheckbox').change(makeRequestFiltered);
     </script>
 {% endblock %}
