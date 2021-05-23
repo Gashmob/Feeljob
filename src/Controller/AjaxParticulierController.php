@@ -575,7 +575,7 @@ class AjaxParticulierController extends AbstractController
             $filterNom = $nom == 'none' ? $em->getRepository(AutoEntrepreneur::class)->findAll() :
                 $em->getRepository(AutoEntrepreneur::class)->findBy(['nomEntreprise' => $nom]);
 
-            $filterMetier = (new AutoEntrepreneurManager())->findByMetiersFromPreResult($filterNom, $metiers);
+            $filterMetier = (new AutoEntrepreneurManager())->findByMetiersFromPreResult($filterNom, $metier);
 
             $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $particulier->getAdresse();
