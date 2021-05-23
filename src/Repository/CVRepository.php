@@ -33,17 +33,17 @@ class CVRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('cv');
 
         if ($nom != 'none') {
-            $query->leftJoin('cv.employe', 'employe')
+            $query = $query->leftJoin('cv.employe', 'employe')
                 ->andWhere('employe.prenom + employe.nom = :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
 
         if (count($competences) > 0) {
-            $query->leftJoin('cv.competences', 'cv_competences')
+            $query = $query->leftJoin('cv.competences', 'cv_competences')
                 ->leftJoin('cv_competences.competence', 'competence');
 
             foreach ($competences as $competence) {
-                $query->andWhere('competence.nom = :nom')
+                $query = $query->andWhere('competence.nom = :nom')
                     ->setParameter('nom', substr($competence, 0, -1))
                     ->andWhere('cv_competences.niveau >= :niveau')
                     ->setParameter('niveau', substr($competence, -1));
@@ -51,11 +51,11 @@ class CVRepository extends ServiceEntityRepository
         }
 
         if (count($langues) > 0) {
-            $query->leftJoin('cv.langues', 'cv_langues')
+            $query = $query->leftJoin('cv.langues', 'cv_langues')
                 ->leftJoin('cv_langues.langue', 'langue');
 
             foreach ($langues as $langue) {
-                $query->andWhere('langue.nom = :nom')
+                $query = $query->andWhere('langue.nom = :nom')
                     ->setParameter('nom', substr($langue, 0, -1))
                     ->andWhere('cv_langues.niveau >= :niveau')
                     ->setParameter('niveau', substr($langue, -1));
@@ -63,7 +63,7 @@ class CVRepository extends ServiceEntityRepository
         }
 
         if ($permis != 'none') {
-            $query->andWhere('cv.permis = :permis')
+            $query = $query->andWhere('cv.permis = :permis')
                 ->setParameter('permis', $permis);
         }
 
