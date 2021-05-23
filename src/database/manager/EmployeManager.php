@@ -117,6 +117,10 @@ class EmployeManager extends Manager
         return $res == null ? $res : $res['nom'];
     }
 
+    /**
+     * @param int $id
+     * @param string $metier
+     */
     public function setMetier(int $id, string $metier)
     {
         $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m'))

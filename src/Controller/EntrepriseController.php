@@ -356,7 +356,7 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $metier = $request->get('metier');
+            $metier = $request->get('secteur');
 
             $transport = $request->get('transport') != null;
 
