@@ -274,7 +274,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -337,7 +338,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -443,7 +445,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -506,7 +509,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
