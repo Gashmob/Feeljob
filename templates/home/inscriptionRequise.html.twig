@@ -1,0 +1,14 @@
+{% extends 'page.html.twig' %}
+{% block title %}Inscription requise{% endblock %}
+{% block body %}
+    <div style="padding-top: 20px;" class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui center aligned icon header">
+                <i class="icon pencil alternate"></i>
+                Vous devez vous inscrire pour voir cette page.
+            </h2>
+            <a href="{{ path('inscription') }}" class="ui large green button">S'inscrire</a>
+            <div>L'inscription est gratuite pour les particuliers et chercheurs d'emploi.</div>
+        </div>
+    </div>
+{% endblock %}

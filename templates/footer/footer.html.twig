@@ -51,9 +51,11 @@
         <script type='text/javascript' src='{{ asset('js/userEntreprise.js') }}'></script>
     {% elseif app.session.get('userType') == 'Employe' %}
         <script type='text/javascript' src='{{ asset('js/userCandidat.js') }}'></script>
-        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
+    {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
         <script type='text/javascript' src='{{ asset('js/userFreelance.js') }}'></script>
     {% elseif app.session.get('userType') == 'Particulier' %}
         <script type='text/javascript' src='{{ asset('js/userParticulier.js') }}'></script>
+    {% else %}
+        <script type='text/javascript' src='{{ asset('js/visiteur.js') }}'></script>
     {% endif %}
 </footer>
