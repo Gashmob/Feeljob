@@ -568,11 +568,6 @@ class AjaxEntrepriseController extends AbstractController
         ]);
     }
 
-    public function test($t)
-    {
-        return is_bool($t);
-    }
-
     /**
      * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{secteurActivite}/{departement}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "secteurActivite":"none", "departement":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
      * @param $nom
@@ -592,8 +587,6 @@ class AjaxEntrepriseController extends AbstractController
     public
     function getOffresEmploi($nom, $metier, $typeContrat, $secteurActivite, $departement, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        return $this->json(['test' => $this->test($teletravail)]);
-
         if ($request->isMethod('POST')) {
             $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierSecteurActiviteFromPreResult(
                 $em->getRepository(OffreEmploi::class)->findByDepartementLogeDeplacementTeletravailNom($nom, $departement, $loge, $deplacement, $teletravail),

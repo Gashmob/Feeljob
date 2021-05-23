@@ -42,15 +42,15 @@ class OffreEmploiRepository extends ServiceEntityRepository
         }
         if ($loge != 'none') {
             $query = $query->andWhere('o.loge = :loge')
-                ->setParameter('loge', $loge);
+                ->setParameter('loge', $loge == 'true');
         }
         if ($deplacement != 'none') {
             $query = $query->andWhere('o.deplacement = :deplacement')
-                ->setParameter('deplacement', $deplacement);
+                ->setParameter('deplacement', $deplacement == 'true');
         }
         if ($teletravail != 'none') {
             $query = $query->andWhere('o.teletravail = :teletravail')
-                ->setParameter('teletravail', $teletravail);
+                ->setParameter('teletravail', $teletravail == 'true');
         }
 
         $query = $query->andWhere('o.nbPostes > 0');
