@@ -507,7 +507,8 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cvs/{metiers}/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"metiers":"none", "nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @param $metiers
      * @param $nom
      * @param $competences
      * @param $langues
@@ -518,17 +519,14 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCVs($nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCVs($metiers, $nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if (!($this->session->get('user'))) {
-            return $this->json([]);
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
-            return $this->json([]);
-        }
-
         $separator = '_';
+
+        $metier = [];
+        if ($metiers != 'none') {
+            $metier = explode($separator, $metiers);
+        }
 
         $comps = [];
         if ($competences != 'none') {
@@ -545,7 +543,7 @@ class AjaxEntrepriseController extends AbstractController
             $perm = $permis == 'on';
         }
 
-        $results = array_slice($em->getRepository(CV::class)->findByNomCompetencesLanguesPermis($nom, $comps, $langs, $perm), $offset, $limit);
+        $results = array_slice($em->getRepository(CV::class)->findByMetiersNomCompetencesLanguesPermis($metier, $nom, $comps, $langs, $perm), $offset, $limit);
         foreach ($results as $result) {
             if (!is_null($result->getEmploye())) {
                 $result->getEmploye()->setCV(null);

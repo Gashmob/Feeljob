@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\database\manager\EmployeManager;
 use App\Entity\CV;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,13 +21,14 @@ class CVRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array $metiers
      * @param string $nom
      * @param string[] $competences
      * @param string[] $langues
      * @param string|bool $permis
      * @return CV[]
      */
-    public function findByNomCompetencesLanguesPermis(string $nom, array $competences, array $langues, string $permis): array
+    public function findByMetiersNomCompetencesLanguesPermis(array $metiers, string $nom, array $competences, array $langues, string $permis): array
     {
         $query = $this->createQueryBuilder('cv');
 
@@ -65,7 +67,15 @@ class CVRepository extends ServiceEntityRepository
                 ->setParameter('permis', $permis);
         }
 
-        return $query->getQuery()->getResult();
+        $results = $query->getQuery()->getResult();
+        $res = [];
+        foreach ($results as $result) {
+            if (in_array((new EmployeManager())->getMetier($result->getEmploye()->getIdentity()), $metiers) || count($metiers) == 0) {
+                $res[] = $result;
+            }
+        }
+
+        return $res;
     }
 
     /**
