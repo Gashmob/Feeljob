@@ -5,15 +5,6 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
-            <div class="ui basic floating dropdown button">
-                <div class="text">Secteur</div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    {% for secteur in secteurs %}
-                        <div class="item">{{ secteur }}</div>
-                    {% endfor %}
-                </div>
-            </div>
             <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
