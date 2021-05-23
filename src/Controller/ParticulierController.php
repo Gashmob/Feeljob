@@ -580,7 +580,7 @@ class ParticulierController extends AbstractController
     public function listCarteVisite(): Response
     {
         return $this->render('particulier/showCartesVisite.html.twig', [
-            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
             'connected' => ($this->session->get('user')),
         ]);
     }
