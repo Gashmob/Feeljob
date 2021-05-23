@@ -23,7 +23,7 @@
                     <div class="menu">
                         <div class="item">
                             <select class="ui search dropdown" id="departementSelect">
-                                <option value="0">Désactivé</option>
+                                <option value="none">Désactivé</option>
                                 {% for i in 1..95 %}
                                     <option value="{{ i }}">{{ i }}</option>
                                 {% endfor %}
@@ -36,7 +36,7 @@
                     <div class="menu">
                         <div class="item">
                             <select class="ui search dropdown" id="secteurSelect">
-                                <option value="0">Désactivé</option>
+                                <option value="none">Désactivé</option>
                                 {% for secteur in secteurs %}
                                     <option value="{{ secteur }}">{{ secteur }}</option>
                                 {% endfor %}
@@ -61,8 +61,8 @@
                     <div class="header">Télétravail</div>
                     <div class="menu">
                         <div class="item field">
-                            <div class="ui toggle checkbox">
-                                <input id="teletravailCheckbox" type="checkbox" name="teletravail" class="hidden">
+                            <div class="ui toggle checkbox" id="teletravailCheckboxValue">
+                                <input id="teletravailCheckboxInput" type="checkbox" name="teletravail" class="hidden">
                             </div>
                         </div>
                     </div>
@@ -138,22 +138,26 @@
         var departementSelect = document.getElementById('departementSelect');
         var secteurSelect = document.getElementById('secteurSelect');
         var typeContratSelect = document.getElementById('typeContratSelect');
-        var teleTravailCheckbox = document.getElementById('teletravailCheckbox');
+        var teletravailCheckboxValue = document.getElementById('teletravailCheckboxValue');
+        var teletravailCheckboxInput = document.getElementById('teletravailCheckboxInput');
+        var salaireMinInput = document.getElementById('salaireMinInput');
 
-        // /entreprise/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}
-        // L'Employe récupère toutes les OffreEmploi selon le typeContrat, metier, min salaire, max heures, loge, deplacement, teletravail.
+        // /entreprise/get/offres_emploi/{nom}/{metier}/{typeContrat}/{secteurActivite}/{departement}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}
+        // L'Employe récupère toutes les OffreEmploi selon le nom, typeContrat, metier, secteur, departement, loge, deplacement, teletravail.
         // Il en récupère limit avec un offset => {'offres': OffreEmploi[], 'quantity': Int}
         function makeRequestFiltered() {
             var nom = searchInput.value;
             var metier = 'none';
             var typeContrat = typeContratSelect.value;
-            var salaire = 'none';
-            var heures = 'none';
+            var secteur = secteurSelect.value;
+            var departement = departementSelect.value;
             var loge = 'none';
             var deplacement = 'none';
-            var teletravail = teleTravailCheckbox.value;
+            var teletravail = teletravailCheckboxInput.checked;
             var limit = 25;
             var offset = 0;
+
+            console.log(teletravail)
 
             nom = nom.trim();
 
@@ -164,7 +168,7 @@
             }
 
             $.ajax({
-                url: '/entreprise/get/offres_emploi/' + nom + '/' + metier + '/' + typeContrat + '/' + salaire + '/' + heures + '/' + loge + '/' + deplacement + '/' + teletravail + '/' + limit + '/' + offset,
+                url: '/entreprise/get/offres_emploi/' + nom + '/' + metier + '/' + typeContrat + '/' + secteur + '/' + departement + '/' + loge + '/' + deplacement + '/' + teletravail + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -330,6 +334,8 @@
         });
 
         $('#typeContratSelect').change(makeRequestFiltered);
-        $('#teletravailCheckbox').change(makeRequestFiltered);
+        $('#teletravailCheckboxInput').change(makeRequestFiltered);
+        $('#departementSelect').change(makeRequestFiltered);
+        $('#secteurSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}
