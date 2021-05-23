@@ -38,6 +38,7 @@ class AnnonceRepository extends ServiceEntityRepository
             $query = $query->andWhere('a.nom LIKE :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
+        $query = $query->orderBy('a.updatedAt', 'DESC');
 
         return $query->getQuery()->getResult();
     }
