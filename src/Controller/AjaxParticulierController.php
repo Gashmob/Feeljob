@@ -549,9 +549,9 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/cartes/{nom}/{secteur}/{distanceMax}/{limit}/{offset}", methods={"POST"}, defaults={"nom":"none", "secteur":"none", "distanceMax":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cartes/{nom}/{metiers}/{distanceMax}/{limit}/{offset}", methods={"POST"}, defaults={"nom":"none", "metiers":"none", "distanceMax":"none", "limit":"25", "offset":"0"})
      * @param $nom
-     * @param $secteur
+     * @param $metiers
      * @param $distanceMax
      * @param $limit
      * @param $offset
@@ -559,27 +559,25 @@ class AjaxParticulierController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCartesVisite($nom, $secteur, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCartesVisite($nom, $metiers, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if (!($this->session->get('user'))) {
-            return $this->json([]);
-        }
+        $separator = '_';
 
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->json([]);
+        $metier = [];
+        if ($metiers != 'none') {
+            $metier = explode($separator, $metiers);
         }
 
         if ($request->isMethod('POST')) {
             $filterNom = $nom == 'none' ? $em->getRepository(AutoEntrepreneur::class)->findAll() :
                 $em->getRepository(AutoEntrepreneur::class)->findBy(['nomEntreprise' => $nom]);
 
-            $filterSecteur = $secteur == 'none' ? $filterNom :
-                (new AutoEntrepreneurManager())->findBySecteurActiviteFromPreResult($filterNom, $secteur);
+            $filterMetier = (new AutoEntrepreneurManager())->findByMetiersFromPreResult($filterNom, $metiers);
 
             $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $particulier->getAdresse();
-            $filterDistance = $distanceMax == 'none' || is_null($adresse) ? $filterSecteur :
-                $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterSecteur, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
+            $filterDistance = $distanceMax == 'none' || is_null($adresse) ? $filterMetier :
+                $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterMetier, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
 
             $results = array_slice(
                 $em->getRepository(CarteVisite::class)->findByAutoEntrepreneur($filterDistance),

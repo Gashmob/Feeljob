@@ -116,23 +116,43 @@ class AutoEntrepreneurManager extends Manager
 
     /**
      * @param AutoEntrepreneur[] $preResult
-     * @param string $secteur
+     * @param string[] $metiers
      * @return AutoEntrepreneur[]
      */
-    public function findBySecteurActiviteFromPreResult(array $preResult, string $secteur): array
+    public function findByMetiersFromPreResult(array $preResult, array $metiers): array
     {
         $res = [];
 
-        foreach ($preResult as $result) {
-            if ((new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')--(s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$nom}) WHERE id(a)=$id RETURN a'))
-                    ->setString('nom', $secteur)
-                    ->setInteger('id', $result->getIdentity())
-                    ->run()
-                    ->getOneOrNullResult() != null) {
-                $res[] = $result;
+        if (count($metiers) > 0) {
+            foreach ($preResult as $result) {
+                $ok = false;
+                foreach ($metiers as $metier) {
+                    if ((new MetierManager())->isInSecteurActivite($metier, $this->getSecteurActivite($result->getIdentity()))) {
+                        $ok = true;
+                    }
+                }
+                if ($ok) {
+                    $res[] = $result;
+                }
             }
+
+            return $res;
         }
 
-        return $res;
+        return $preResult;
+    }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function getSecteurActivite(int $id): ?string
+    {
+        $result = (new PreparedQuery('MATCH (a:' . EntityManager::AUTO_ENTREPRENEUR . ')--(s:' . EntityManager::SECTEUR_ACTIVITE . ') WHERE id(a)=$idA RETURN s.nom as nom'))
+            ->setInteger('idA', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        return $result ? $result['nom'] : null;
     }
 }
