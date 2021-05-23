@@ -358,11 +358,14 @@ class EntrepriseController extends AbstractController
 
             $metier = $request->get('metier');
 
+            $transport = $request->get('transport') != null;
+
             if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
+                    ->setTransport($transport)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
                 $em->persist($cv);
                 $em->flush();
@@ -547,11 +550,14 @@ class EntrepriseController extends AbstractController
 
             $metier = $request->get('metier');
 
+            $transport = $request->get('transport') != null;
+
             if ($naissanceB) {
                 $cv = $cv
                     ->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
+                    ->setTransport($transport)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
                 $em->persist($cv);
                 $em->flush();

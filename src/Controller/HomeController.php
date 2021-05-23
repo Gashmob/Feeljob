@@ -226,7 +226,7 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             if ($user) {
                 $email = (new TemplatedEmail())
-                    ->from('no-reply@fealjob.com')
+                    ->from('no-reply@feeljob.com')
                     ->to($user->getEmail())
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([
