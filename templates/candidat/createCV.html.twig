@@ -106,50 +106,23 @@
                     </select>
                 </div>
             </div>
-            <!-- Métiers -->
-            <h3 class="ui dividing green header">Métiers</h3>
-            <div style="margin-bottom: 10px;" class="metiers-list" id="metiersList">
-                <div class="ui segment" id="metiersItem">
-                    <div class="field required">
-                        <label>Métier</label>
-                        <select class="ui search dropdown nomSecteur" name="secteur0">
-                            <option value="">Choisissez</option>
-                            {% for id, secteurs in metiers %}
-                                {% for secteur, metiersSecteur in secteurs %}
-                                    {% for id, metierSecteur in metiersSecteur %}
-                                        <option value="{{ metierSecteur }}">{{ secteur }}
-                                            - {{ metierSecteur }}</option>
-                                    {% endfor %}
+            <!-- Métier -->
+            <h3 class="ui dividing green header">Métier</h3>
+            <div class="ui segment" id="metiersItem">
+                <div class="field required">
+                    <label>Métier</label>
+                    <select class="ui search dropdown nomSecteur" name="secteur">
+                        <option value="">Choisissez</option>
+                        {% for id, secteurs in metiers %}
+                            {% for secteur, metiersSecteur in secteurs %}
+                                {% for id, metierSecteur in metiersSecteur %}
+                                    <option value="{{ metierSecteur }}">{{ secteur }}
+                                        - {{ metierSecteur }}</option>
                                 {% endfor %}
                             {% endfor %}
-                        </select>
-                    </div>
+                        {% endfor %}
+                    </select>
                 </div>
-                {# {% for i in 1..6 %}
-                        <div style="display: none;" class="ui segment hidden transition metierNb{{ i }}">
-                            <div class="two fields">
-                                <div class="field required">
-                                    <label>Secteur d'activité</label>
-                                    <select class="ui search dropdown nomSecteur" name="nomSecteur{{ i }}">
-                                        {% for metier in metiers %}
-                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="field required">
-                                    <label>Métier</label>
-                                    <select class="ui search dropdown nomSecteur" name="nomSecteur{{ i }}">
-                                        {% for metier in metiers %}
-                                            <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %} #}
-            </div>
-            <div class="ui container center aligned">
-                <i class="icon plus circle big green" onclick="add_metier()" id="metierPlus"></i>
             </div>
             <!-- Formations -->
             <h3 class="ui dividing green header">Formation</h3>
@@ -297,7 +270,8 @@
                         </div>
                         <div class="field">
                             <label>Niveau compétence (5 : plus élevé, 1 : plus faible)</label>
-                            <input type="number" class="ui dropdown niveauCompetence" name="niveauCompetence0" min="1" max="5">
+                            <input type="number" class="ui dropdown niveauCompetence" name="niveauCompetence0" min="1"
+                                   max="5">
                         </div>
                     </div>
                 </div>
@@ -326,7 +300,6 @@
                 <input id="nbExpInput" type="number" name="nbMetiers" value="1">
                 <input id="nbLangInput" type="number" name="nbLangues" value="1">
                 <input id="nbCompInput" type="number" name="nbCompetences" value="1">
-                <input id="nbMetiersInput" type="number" name="nbSecteurs" value="1">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
@@ -362,12 +335,10 @@
         const maxExp = 12;
         const maxLang = 8;
         const maxComp = 15;
-        const maxMetiers = 4;
         const nbFormInput = document.getElementById('nbFormInput');
         const nbExpInput = document.getElementById('nbExpInput');
         const nbLangInput = document.getElementById('nbLangInput');
         const nbCompInput = document.getElementById('nbCompInput');
-        const nbMetiersInput = document.getElementById('nbMetiersInput');
 
         function add_formation() {
             if (nbForm < maxForm) {
@@ -432,20 +403,6 @@
 
             } else {
                 $('#langPlus').transition('shake');
-            }
-        }
-
-        function add_metier() {
-            if (nbMetiers < maxMetiers) {
-                $('#metierPlus').transition('jiggle');
-                nbMetiers += 1;
-                nbMetiersInput.setAttribute("value", nbMetiers + 1);
-
-                let item = document.querySelector('.metierNb' + nbMetiers);
-                $(item).transition('scale')
-
-            } else {
-                $('#metierPlus').transition('shake');
             }
         }
 
