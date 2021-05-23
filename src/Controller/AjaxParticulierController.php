@@ -508,33 +508,21 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/annonces/{metier}/{distanceMax}/{limit}/{offset}", defaults={"metier":"none", "distanceMax":"-1", "limit":25, "offset":0})
+     * @Route("/get/annonces/{nom}/{metier}/{departement}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "departement":"none", "limit":25, "offset":0})
+     * @param $nom
      * @param $metier
-     * @param $distanceMax
+     * @param $departement
      * @param $limit
      * @param $offset
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getAnnonces($metier, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getAnnonces($nom, $metier, $departement, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $connected = false;
-        if ($this->session->get('user')) {
-            $connected = true;
-        }
-
         if ($request->isMethod('POST')) {
-            $results = [];
-            if ($connected) {
-                $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
-                $adresse = $auto_entrepreneur->getAdresse();
-                $results = $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
-            } else {
-                $results = $em->getRepository(Annonce::class)->findAll();
-            }
             $results = (new AnnonceManager())->getAnnoncesByMetierFromPreResult(
-                $results,
+                $em->getRepository(Annonce::class)->findByDepartementNom($departement, $nom),
                 $metier
             );
 
