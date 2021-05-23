@@ -20,12 +20,34 @@
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Distance max</div>
+                    <div class="header">Langue</div>
                     <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
+                        <div class="item field">
+                            <select class="ui search dropdown" name="langues" id="languesSelect">
+                                <option value="none">Désactivé</option>
+                                {# {% for langue in langues %}
+                                    <option value="{{ langue.nom }}">{{ langue.nom }}</option>
+                                {% endfor %} #}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Compétence</div>
+                    <div class="menu">
+                        <div class="ui item field input">
+                            <input type="text" id="competencesInput">
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Permis</div>
+                    <div class="menu">
+                        <div class="item field">
+                            <div class="ui toggle checkbox" id="permisCheckboxValue">
+                                <input id="permisCheckboxInput" type="checkbox" name="permis" class="hidden">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="item"></div>
@@ -76,11 +98,16 @@
                 else description = "** Pas de description renseignée **";
                 let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
                 if (photo.length > 0) photo = '{{ asset('uploads/photo/') }}' + photo;
-                if (permis) permis = `
+                if (permis) {
+                    permis = `
                 <p>
                     <i class="icon circle outline check"></i>
                     Dispose du permis
-                </p>`
+                </p>`;
+                }
+                else {
+                    permis = '';
+                }
 
                 this.cardTemplate = `
                 <div class="ui card cvCard">
@@ -96,8 +123,8 @@
                         <div style="margin-top: 10px;" class="description">
                             <p>${description}</p>
                             ${diplomes.map(diplome =>
-                    `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
-                ).join('')}
+                            `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
+                        ).join('')}
                             ${permis}
                         </div>
                     </div>
@@ -127,6 +154,9 @@
         }
 
         var searchInput = document.getElementById('searchInput');
+        var languesSelect = document.getElementById('languesSelect');
+        var competencesInput = document.getElementById('competencesInput');
+        var permisCheckboxInput = document.getElementById('permisCheckboxInput');
         // /entreprise/get/cvs/{metiers}/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}
         // L'Employeur récupère tout les CV selons le nom, les competences, langues et permis.
         // Il récupère limit CV avec un offset => {'cvs': CV[], 'quantity': Int}
@@ -134,14 +164,18 @@
             var metier = searchInput.value
             // Chaque métier et langue doit être séparé par un _
             var nom = 'none';
-            var competences = 'none';
-            var langues = 'none';
+            var competences = competencesInput.value;
+            var langues = languesSelect.value;
+            //var permis = permisCheckboxInput.checked;
             var permis = 'none';
             var limit = 25;
             var offset = 0;
 
             metier = metier.trim();
             if (metier.length == 0) { metier = 'none' }
+
+            competences = competences.trim();
+            if (competences.length == 0) { competences = 'none' }
 
             $.ajax({
                 url: '/entreprise/get/cvs/' + metier + '/' + nom + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
@@ -179,7 +213,15 @@
                 makeRequestFiltered();
             }
         });
+
+        competencesInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                makeRequestFiltered();
+            }
+        });
+
         $('#searchInput').change(makeRequestFiltered)
+        $('#permisCheckboxInput').change(makeRequestFiltered);
 
     </script>
 {% endblock %}

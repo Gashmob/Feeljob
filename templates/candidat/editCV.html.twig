@@ -4,16 +4,12 @@
     <div class="background fixed">
         <div class="relative">
             <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path fill="#0099ff" fill-opacity="1"
+                <path fill="hsl(114deg 50% 43%)" fill-opacity="1"
                       d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
             </svg>
             <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path fill="#0069fa" fill-opacity="1"
+                <path fill="hsl(134deg 50% 43%)" fill-opacity="0.7"
                       d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-            </svg>
-            <svg class="layer no3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path fill="#0029f8" fill-opacity="1"
-                      d="M0,320L48,293.3C96,267,192,213,288,197.3C384,181,480,203,576,197.3C672,192,768,160,864,128C960,96,1056,64,1152,53.3C1248,43,1344,53,1392,58.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
             </svg>
         </div>
     </div>
@@ -62,16 +58,6 @@
                                 <div class="ui button" id="pdpClear"><i class="times icon"></i></div>
                             </div>
                         </div>
-                        {#
-                        <div class="field">
-                            <label>Profil</label>
-                            <select class="ui dropdown" name="metier">
-                                {% for metier in metiers %}
-                                    <option>{{ metier }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        #}
                     </div>
                 </div>
             </div>
@@ -286,7 +272,7 @@
                         <div class="field">
                             <label>Langue</label>
                             <div class="field">
-                                <select class="ui search selection dropdown nomLangue" name="nomLangue">
+                                <select class="ui search dropdown nomLangue" name="nomLangue">
                                     <option value="">Choisir</option>
                                     {% for langue in langues %}
                                         <option value="{{ langue.nom }}">{{ langue.nom }}</option>
@@ -312,7 +298,7 @@
                             <div class="field">
                                 <label>Langue</label>
                                 <div class="field">
-                                    <select class="ui search selection dropdown nomLangue"
+                                    <select class="ui search dropdown nomLangue"
                                             name="nomLangue{{ loop.index-1 }}">
                                         <option value="{{ cvlangue.langue.nom }}">{{ cvlangue.langue.nom }}</option>
                                         {% for langue in langues %}
@@ -340,7 +326,7 @@
                             <div class="field">
                                 <label>Langue</label>
                                 <div class="field">
-                                    <select class="ui dropdown nomLangue" name="nomLangue{{ i }}">
+                                    <select class="ui search dropdown nomLangue" name="nomLangue{{ i }}">
                                         <option value="">Choisir</option>
                                         {% for langue in langues %}
                                             <option value="{{ langue.nom }}">{{ langue.nom }}</option>
@@ -413,7 +399,7 @@
                 </div>
                 <div class="field">
                     <div class="ui toggle checkbox">
-                        <input {% if cv.permis %}checked{% endif %} type="checkbox" name="transport" class="hidden">
+                        <input {% if cv.transport %}checked{% endif %} type="checkbox" name="transport" class="hidden">
                         <label>J'ai un moyen de transport</label>
                     </div>
                 </div>

@@ -39,25 +39,26 @@
                             {% for diplome in publications.diplomes %}
                                 <p><i class="icon bookmark"></i>{{ diplome.diplome.nom }}</p>
                             {% endfor %}
+                            {% for competence in publications.competences %}
+                                <p><i class="icon angle right"></i>{{ competence.competence.nom }}</p>
+                            {% endfor %}
+                            {% if publications.permis %}
+                                <p><i class="icon circle outline check"></i>Dispose du permis</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="extra content">
-                        <i class="check icon"></i>
-                        Vu {{ publications.id }} fois
+                        {% if publications.langues %}
+                            {% for langue in publications.langues %}
+                                <div class="ui label">{{ langue.langue.nom }}</div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </a>
             {% else %}
                 <div style="border: none; width: auto; box-shadow: none;"
                      class="ui card grid middle aligned center aligned">
                     <div class="column">
-                        {# <div class="ui row labeled icon">
-                            <label class="ui labeled icon button" for="profile-cv">
-                                <i class="download icon"></i>
-                                Télécharger
-                                <input type="file" style="display: none;" id="profile-cv" name="cv">
-                            </label>
-                        </div>
-                        <div style="margin: .5em 0;" class="row">Ou</div> #}
                         <a href="{{ path('entreprise_create_cv') }}" class="ui row labeled icon">
                             <button class="ui blue labeled icon button">
                                 <i class="plus icon"></i>
@@ -202,7 +203,7 @@
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
-                propositionsList.innerHTML = `<div style="margin: 10px auto;">Pas de propositions acceptées.</div>`;
+                propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
             } else {
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
