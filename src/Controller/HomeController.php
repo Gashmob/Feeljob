@@ -14,7 +14,6 @@ use App\Entity\AutoEntrepreneur;
 use App\Entity\Employe;
 use App\Entity\Employeur;
 use App\Entity\Particulier;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -85,7 +84,6 @@ class HomeController extends AbstractController
                         } elseif ($this->session->get('userType') == EntityManager::EMPLOYE) {
                             $this->session->set('userImage', $user->getPhoto());
                         }
-                        $user->setUpdatedAt(new DateTime());
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 

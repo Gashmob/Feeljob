@@ -310,8 +310,7 @@ class ParticulierController extends AbstractController
                 $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
 
                 $carte->setDescription($description)
-                    ->clearRealisation()
-                    ->setUpdatedAt(new DateTime());
+                    ->clearRealisation();
                 $em->flush();
 
                 for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
@@ -492,8 +491,7 @@ class ParticulierController extends AbstractController
                 $annonce->setNom($nom)
                     ->setDescription($description)
                     ->setAdresse($adresse)
-                    ->setDate(new DateTime($date))
-                    ->setUpdatedAt(new DateTime());
+                    ->setDate(new DateTime($date));
 
                 (new AnnonceManager())->update($em, $annonce->getIdentity(), $metier);
                 $this->addFlash('success', 'Votre annonce a été modifiée !');
