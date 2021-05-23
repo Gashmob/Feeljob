@@ -675,7 +675,7 @@ class EntrepriseController extends AbstractController
     public function listCVs(): Response
     {
         return $this->render('entreprise/showProfiles.html.twig', [
-            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
             'connected' => ($this->session->get('user')),
         ]);
     }
