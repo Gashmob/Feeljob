@@ -960,6 +960,7 @@ class EntrepriseController extends AbstractController
     {
         return $this->render('candidat/showOffresEmploi.html.twig', [
             'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'typeContrats' => (new TypeContratManager())->findAllNames(),
             'connected' => ($this->session->get('user')),
         ]);
     }
