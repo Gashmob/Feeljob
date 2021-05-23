@@ -29,6 +29,9 @@ class OffreEmploiRepository extends ServiceEntityRepository
      */
     public function findByDepartementLogeDeplacementTeletravailNom(string $nom, string $departement, $loge, $deplacement, $teletravail): array
     {
+        var_dump($teletravail);
+        die();
+
         $query = $this->createQueryBuilder('o');
 
         if ($nom != 'none') {
