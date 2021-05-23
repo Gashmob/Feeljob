@@ -114,6 +114,13 @@
             var limit = 25;
             var offset = 0;
 
+            metier = metier.trim();
+            if (metier != undefined && metier.length > 0) {
+                console.log('ok')
+            } else {
+                metier = 'none'
+            }
+
             $.ajax({
                 url: '/particulier/get/annonces/' + metier + '/' + distanceMax + '/' + limit + '/' + offset,
                 type: 'POST',
@@ -273,5 +280,8 @@
                 });
             }
         });
+
+        $('#departementSelect').change(makeRequestFiltered);
+        $('#secteurSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}
