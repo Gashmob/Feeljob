@@ -652,10 +652,12 @@ class EntrepriseController extends AbstractController
             $offres = (new OffreEmploiManager())->findOffresEmploiByEmployeur($em, $this->session->get('user'));
         }
 
+        $cv = $em->getRepository(CV::class)->findOneBy(['id' => $id]);
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id]),
+            'cv' => $cv,
             'owner' => $owner,
-            'offres' => $offres
+            'offres' => $offres,
+            'metier' => (new EmployeManager())->getMetier($cv->getEmploye()->getIdentity()),
         ]);
     }
 

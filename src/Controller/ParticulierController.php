@@ -612,7 +612,8 @@ class ParticulierController extends AbstractController
         return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
             'carte' => $carte,
             'annonces' => $annonces,
-            'owner' => $owner
+            'owner' => $owner,
+            'secteur' => (new AutoEntrepreneurManager())->getSecteurActivite($carte->getAutoEntrepreneur()->getIdentity()),
         ]);
     }
 
