@@ -558,7 +558,8 @@ class EntrepriseController extends AbstractController
                     ->setPermis($permis)
                     ->setDescription($description)
                     ->setTransport($transport)
-                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
+                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]))
+                    ->setUpdatedAt(new DateTime());
                 $em->persist($cv);
                 $em->flush();
 
@@ -888,7 +889,8 @@ class EntrepriseController extends AbstractController
                     ->setDeplacement($deplacement)
                     ->setTeletravail($teletravail)
                     ->setDescription($description)
-                    ->setNbPostes($nbPostes);
+                    ->setNbPostes($nbPostes)
+                    ->setUpdatedAt(new DateTime());
 
                 (new OffreEmploiManager())->update($em, $offre, $typeContrat, $metier);
                 return $this->redirectToRoute('userSpace');
