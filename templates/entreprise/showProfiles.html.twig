@@ -4,7 +4,17 @@
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
+            {# <input id="searchInput" type="text" placeholder="Rechercher" autofocus> #}
+            <select class="ui fluid search dropdown" multiple="" id="searchInput">
+                <option value="none">Désactivé</option>
+                {% for id, secteurs in metiers %}
+                    {% for secteur, metiersSecteur in secteurs %}
+                        {% for id, metierSecteur in metiersSecteur %}
+                            <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
@@ -16,19 +26,6 @@
                         <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
                                                  value="0" step="10"
                                                  oninput="updateRangeLabel(this.value);"></div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">Secteur d'activité</div>
-                    <div class="menu">
-                        <div class="item">
-                            <select class="ui search dropdown" id="secteurSelect">
-                                <option value="none">Désactivé</option>
-                                {% for secteur in secteurs %}
-                                    <option value="{{ secteur }}">{{ secteur }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
                     </div>
                 </div>
                 <div class="item"></div>
@@ -129,14 +126,14 @@
             });
         }
 
-        const searchInput = document.getElementById('searchInput');
-        const secteurSelect = document.getElementById('secteurSelect');
+        var searchInput = document.getElementById('searchInput');
         // /entreprise/get/cvs/{metiers}/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}
         // L'Employeur récupère tout les CV selons le nom, les competences, langues et permis.
         // Il récupère limit CV avec un offset => {'cvs': CV[], 'quantity': Int}
         function makeRequestFiltered() {
-            var nom = 'none';
             var metier = searchInput.value
+            // Chaque métier et langue doit être séparé par un _
+            var nom = 'none';
             var competences = 'none';
             var langues = 'none';
             var permis = 'none';
@@ -144,11 +141,10 @@
             var offset = 0;
 
             metier = metier.trim();
-
             if (metier.length == 0) { metier = 'none' }
 
             $.ajax({
-                url: '/entreprise/get/cvs/' + nom + '/' + metier + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
+                url: '/entreprise/get/cvs/' + metier + '/' + nom + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -183,10 +179,7 @@
                 makeRequestFiltered();
             }
         });
+        $('#searchInput').change(makeRequestFiltered)
 
-        // Cherche quand on change la valeur du secteur
-        secteurSelect.addEventListener('change', function (e) {
-            makeRequestFiltered();
-        });
     </script>
 {% endblock %}
