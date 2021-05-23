@@ -633,7 +633,11 @@ class OffreEmploiManager extends Manager
 
             if ($secteur != 'none') {
                 $m = (new OffreEmploiManager())->getMetier($result->getIdentity());
-                $secteurB = (new MetierManager())->isInSecteurActivite($m, $secteur);
+                if ($m) {
+                    $secteurB = (new MetierManager())->isInSecteurActivite($m, $secteur);
+                } else {
+                    $secteurB = true;
+                }
             } else {
                 $secteurB = true;
             }
@@ -717,11 +721,11 @@ class OffreEmploiManager extends Manager
      */
     public function getMetier(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m'))
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m.nom as nom'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
 
-        return $result ? $result['m']['nom'] : null;
+        return $result != null ? $result['nom'] : null;
     }
 }
