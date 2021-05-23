@@ -23,19 +23,6 @@
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">Secteur d'activité</div>
-                    <div class="menu">
-                        <div class="item">
-                            <select class="ui search dropdown" id="secteurSelect">
-                                <option value="0">Désactivé</option>
-                                {% for secteur in secteurs %}
-                                    <option value="{{ secteur }}">{{ secteur }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
                     <div class="header">Favoris</div>
                     <div class="menu">
                         <div class="item field">
@@ -102,27 +89,31 @@
             });
         }
 
-        const searchInput = document.getElementById('searchInput');
+        var searchInput = document.getElementById('searchInput');
+        var departementSelect = document.getElementById('departementSelect');
 
         // Résultats filtrés
-        // particulier/get/annonces/{metier}/{distanceMax}/{limit}/{offset}
-        // L'AutoEntrepreneur récupère toutes les annonces de Metier dans un rayon de distanceMax autour de lui.
+        // particulier/get/annonces/{nom}/{metier}/{departement}/{limit}/{offset}
+        // L'AutoEntrepreneur récupère toutes les annonces se nommant nom de Metier dans un départament.
         // Il récupère limit annonces avec un offset => {'annonces': Annonce[]}
         function makeRequestFiltered() {
-            var metier = searchInput.value;
-            var distanceMax = -1;
+            var nom = searchInput.value;
+            var metier = 'none';
+            var departement = departementSelect.value;
             var limit = 25;
             var offset = 0;
 
-            metier = metier.trim();
-            if (metier != undefined && metier.length > 0) {
-                console.log('ok')
-            } else {
-                metier = 'none'
+            nom = nom.trim();
+            if (nom.length == 0) {
+                nom = 'none'
+            }
+
+            if (departement == 0) {
+                departement = 'none'
             }
 
             $.ajax({
-                url: '/particulier/get/annonces/' + metier + '/' + distanceMax + '/' + limit + '/' + offset,
+                url: '/particulier/get/annonces/' + nom + '/' + metier + '/' + departement + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -282,6 +273,5 @@
         });
 
         $('#departementSelect').change(makeRequestFiltered);
-        $('#secteurSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}
