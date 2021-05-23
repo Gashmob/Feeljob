@@ -476,6 +476,8 @@ class ParticulierController extends AbstractController
             }
 
             $ville = $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $date = $request->get('date');
 
@@ -483,8 +485,8 @@ class ParticulierController extends AbstractController
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
-                    ->setRue('')
-                    ->setCodePostal('')
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
