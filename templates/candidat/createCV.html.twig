@@ -112,7 +112,8 @@
                 <div class="ui segment" id="metiersItem">
                     <div class="field required">
                         <label>Métier</label>
-                        <select class="ui search dropdown nomMetier" name="nomMetier0">
+                        <select class="ui search dropdown nomSecteur" name="secteur0">
+                            <option value="">Choisissez</option>
                             {% for id, secteurs in metiers %}
                                 {% for secteur, metiersSecteur in secteurs %}
                                     {% for id, metierSecteur in metiersSecteur %}
@@ -137,7 +138,7 @@
                                 </div>
                                 <div class="field required">
                                     <label>Métier</label>
-                                    <select class="ui search dropdown nomMetier" name="nomMetier{{ i }}">
+                                    <select class="ui search dropdown nomSecteur" name="nomSecteur{{ i }}">
                                         {% for metier in metiers %}
                                             <option value="{{ dump(metier) }}">{{ dump(metier) }}</option>
                                         {% endfor %}
@@ -295,14 +296,8 @@
                                    maxlength="48">
                         </div>
                         <div class="field">
-                            <label>Niveau compétence</label>
-                            <select class="ui dropdown niveauCompetence" name="niveauCompetence0">
-                                <option value="5" selected>5/5 - Très élevé</option>
-                                <option value="4">4/5 - Élevé</option>
-                                <option value="3">3/5 - Avancé</option>
-                                <option value="2">2/5 - Moyen</option>
-                                <option value="1">1/5 - Basique</option>
-                            </select>
+                            <label>Niveau compétence (5 : plus élevé, 1 : plus faible)</label>
+                            <input type="number" class="ui dropdown niveauCompetence" name="niveauCompetence0" min="1" max="5">
                         </div>
                     </div>
                 </div>
@@ -331,7 +326,7 @@
                 <input id="nbExpInput" type="number" name="nbMetiers" value="1">
                 <input id="nbLangInput" type="number" name="nbLangues" value="1">
                 <input id="nbCompInput" type="number" name="nbCompetences" value="1">
-                <input id="nbMetiersInput" type="number" name="nbMetiers" value="1">
+                <input id="nbMetiersInput" type="number" name="nbSecteurs" value="1">
             </div>
             <button type="submit" class="ui fluid large green submit button">Enregistrer</button>
             <div class="ui negative message transition hidden">
