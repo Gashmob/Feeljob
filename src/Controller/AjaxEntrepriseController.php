@@ -569,12 +569,12 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{secteurActivite}/{departement}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "secteurActivite":"none", "departement":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
      * @param $nom
      * @param $metier
      * @param $typeContrat
-     * @param $salaire
-     * @param $heures
+     * @param $secteurActivite
+     * @param $departement
      * @param $loge
      * @param $deplacement
      * @param $teletravail
@@ -584,13 +584,14 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getOffresEmploi($nom, $metier, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $metier, $typeContrat, $secteurActivite, $departement, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if ($request->isMethod('POST')) {
-            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierFromPreResult(
-                $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
+            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierSecteurActiviteFromPreResult(
+                $em->getRepository(OffreEmploi::class)->findByDepartementLogeDeplacementTeletravailNom($nom, $departement, $loge, $deplacement, $teletravail),
                 $typeContrat,
-                $metier);
+                $metier,
+                $secteurActivite);
 
             return $this->json([
                 'offres' => array_slice(
