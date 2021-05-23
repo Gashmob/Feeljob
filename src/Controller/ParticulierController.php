@@ -535,20 +535,13 @@ class ParticulierController extends AbstractController
 
     /**
      * @Route("/annonces", name="particulier_annonces")
-     * @return Response|RedirectResponse
+     * @return Response
      */
-    public function annonces()
+    public function annonces(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         return $this->render('autoEntrepreneur/showAnnonces.html.twig', [
             'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
         ]);
     }
 
@@ -578,19 +571,13 @@ class ParticulierController extends AbstractController
 
     /**
      * @Route("/cartes", name="particulier_cartes")
+     * @return Response
      */
-    public function listCarteVisite()
+    public function listCarteVisite(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         return $this->render('particulier/showCartesVisite.html.twig', [
             'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
         ]);
     }
 

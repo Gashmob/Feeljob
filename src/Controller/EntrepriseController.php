@@ -661,19 +661,13 @@ class EntrepriseController extends AbstractController
 
     /**
      * @Route("/cvs", name="entreprise_cvs")
+     * @return Response
      */
-    public function listCVs()
+    public function listCVs(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         return $this->render('entreprise/showProfiles.html.twig', [
             'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
         ]);
     }
 
@@ -958,19 +952,13 @@ class EntrepriseController extends AbstractController
 
     /**
      * @Route("/offres_emploi", name="entreprise_offres_emploi")
+     * @return Response
      */
-    public function listOffreEmplois()
+    public function listOffreEmplois(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
-            return $this->redirectToRoute('userSpace');
-        }
-
         return $this->render('candidat/showOffresEmploi.html.twig', [
             'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
         ]);
     }
 
