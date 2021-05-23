@@ -356,13 +356,7 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $secteurs = [];
-            for ($i = 0; $i < $request->get('nbSecteurs'); $i++) {
-                $secteur = $request->get('secteur' . $i);
-                if ($secteur != '') {
-                    $secteurs[] = $secteur;
-                }
-            }
+            $metier = $request->get('metier');
 
             $transport = $request->get('transport') != null;
 
@@ -404,7 +398,7 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
-                (new EmployeManager())->addMetiers($this->session->get('user'), $secteurs);
+                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
 
                 return $this->redirectToRoute('userSpace');
             }
@@ -554,13 +548,7 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $secteurs = [];
-            for ($i = 0; $i < $request->get('nbSecteurs'); $i++) {
-                $secteur = $request->get('secteur' . $i);
-                if ($secteur != '') {
-                    $secteurs[] = $secteur;
-                }
-            }
+            $metier = $request->get('metier');
 
             $transport = $request->get('transport') != null;
 
@@ -602,7 +590,7 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
-                (new EmployeManager())->addMetiers($this->session->get('user'), $secteurs);
+                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
 
                 return $this->redirectToRoute('userSpace');
             }
@@ -614,7 +602,7 @@ class EntrepriseController extends AbstractController
             'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
             'cv' => $cv,
             'employe' => $employe,
-            'metier' => (new EmployeManager())->getMetiers($this->session->get('user')),
+            'metier' => (new EmployeManager())->getMetier($this->session->get('user')),
         ]);
     }
 
@@ -675,7 +663,7 @@ class EntrepriseController extends AbstractController
             'cv' => $cv,
             'owner' => $owner,
             'offres' => $offres,
-            'metier' => (new EmployeManager())->getMetiers($cv->getEmploye()->getIdentity()),
+            'metier' => (new EmployeManager())->getMetier($cv->getEmploye()->getIdentity()),
         ]);
     }
 
