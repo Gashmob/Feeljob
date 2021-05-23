@@ -56,20 +56,15 @@
                     {% endif %}
                 </div>
             </div>
-            {{ dump(metier) }}
-            <!-- Métiers -->
-            {% if cv.metiers is not empty %}
-                <h3 class="ui dividing header">
-                    <div class="content">Métier(s)</div>
-                </h3>
-                <div class="ui segments">
-                    {% for metier in cv.metiers %}
-                        <div class="ui segment metier">
-                            <h4 class="ui header">{{ metier.id }}</h4>
-                        </div>
-                    {% endfor %}
+            <!-- Métier -->
+            <h3 class="ui dividing header">
+                <div class="content">Métier</div>
+            </h3>
+            <div class="ui segments">
+                <div class="ui segment metier">
+                    <h4 class="ui header">{{ metier }}</h4>
                 </div>
-            {% endif %}
+            </div>
             <!-- Formation -->
             {% if cv.diplomes is not empty %}
                 <h3 class="ui dividing header">
