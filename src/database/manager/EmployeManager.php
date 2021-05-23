@@ -105,57 +105,34 @@ class EmployeManager extends Manager
 
     /**
      * @param int $id
-     * @return string[]
+     * @return string|null
      */
-    public function getMetiers(int $id): array
+    public function getMetier(int $id): ?string
     {
-        $results = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m.nom as nom'))
+        $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m'))
             ->setInteger('id', $id)
-            ->run()
-            ->getResult();
-
-        $res = [];
-        foreach ($results as $result) {
-            $res[] = $result['nom'];
-        }
-
-        return $res;
-    }
-
-    private function addMetier(int $id, string $metier)
-    {
-        $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(e)=$id RETURN m'))
-            ->setInteger('id', $id)
-            ->setString('nom', $metier)
             ->run()
             ->getOneOrNullResult();
 
-        if ($res != null) {
-            (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . '), (m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(e)=$id CREATE (e)-[:' . EntityManager::EST_DANS . ']->(m)'))
+        return $res == null ? $res : $res['nom'];
+    }
+
+    public function setMetier(int $id, string $metier)
+    {
+        $res = (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')--(m:' . EntityManager::METIER . ') WHERE id(e)=$id RETURN m'))
+            ->setInteger('id', $id)
+            ->run()
+            ->getOneOrNullResult();
+
+        if ($res != null) { // If there is already a metier
+            (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[r]-(:' . EntityManager::METIER . ') WHERE id(e)=$id DELETE r'))
                 ->setInteger('id', $id)
-                ->setString('nom', $metier)
-                ->run();
+                ->run(); // Delete it
         }
-    }
 
-    /**
-     * @param int $id
-     * @param array $metiers
-     */
-    public function addMetiers(int $id, array $metiers)
-    {
-        foreach ($metiers as $metier) {
-            $this->addMetier($id, $metier);
-        }
-    }
-
-    /**
-     * @param int $id
-     */
-    public function clearMetiers(int $id)
-    {
-        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . ')-[r]-(:' . EntityManager::METIER . ') WHERE id(e)=$idE DELETE r'))
-            ->setInteger('idE', $id)
+        (new PreparedQuery('MATCH (e:' . EntityManager::EMPLOYE . '), (m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(e)=$id CREATE (e)-[:' . EntityManager::EST_DANS . ']->(m)'))
+            ->setInteger('id', $id)
+            ->setString('nom', $metier)
             ->run();
     }
 }
