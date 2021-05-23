@@ -21,7 +21,7 @@ class CVRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $metiers
+     * @param string[] $metiers
      * @param string $nom
      * @param string[] $competences
      * @param string[] $langues

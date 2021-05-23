@@ -579,7 +579,7 @@ class AjaxParticulierController extends AbstractController
 
             $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
             $adresse = $particulier->getAdresse();
-            $filterDistance = $distanceMax == 'none' || is_null($adresse) ? $filterMetier :
+            $filterDistance = $distanceMax == 'none' || ($adresse->getRue() == '' && $adresse->getCodePostal() == '' && $adresse->getVille() == '') ? $filterMetier :
                 $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterMetier, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
 
             $results = array_slice(
