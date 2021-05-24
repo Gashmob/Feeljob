@@ -149,8 +149,8 @@
                                    placeholder="Laissez vide si inapplicable" maxlength="48">
                         </div>
                         <div class="field">
-                            <label>Date d'obtention</label>
-                            <input type="date" class="date" name="date" placeholder="jj/mm/aaaa">
+                            <label>Année d'obtention</label>
+                            <input type="number" class="date" name="date" placeholder="aaaa">
                         </div>
                     </div>
                 </div>
@@ -180,8 +180,8 @@
                             </div>
                             <div class="field">
                                 <label>Date d'obtention</label>
-                                <input type="date" class="date" name="date{{ loop.index-1 }}" placeholder="jj/mm/aaaa"
-                                       value="{{ diplome.date|date('Y-m-d') }}">
+                                <input type="number" class="date" name="date{{ loop.index-1 }}" placeholder="aaaa"
+                                       value="{{ diplome.date|date('Y') }}">
                             </div>
                         </div>
                     </div>
