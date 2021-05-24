@@ -670,12 +670,14 @@ class EntrepriseController extends AbstractController
 
     /**
      * @Route("/cvs", name="entreprise_cvs")
+     * @param EntityManagerInterface $em
      * @return Response
      */
-    public function listCVs(): Response
+    public function listCVs(EntityManagerInterface $em): Response
     {
         return $this->render('entreprise/showProfiles.html.twig', [
             'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'langues' => $em->getRepository(Langue::class)->findAllNames(),
             'connected' => ($this->session->get('user')),
         ]);
     }
