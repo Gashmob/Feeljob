@@ -34,7 +34,7 @@ class CVRepository extends ServiceEntityRepository
 
         if ($nom != 'none') {
             $query = $query->leftJoin('cv.employe', 'employe')
-                ->andWhere('employe.prenom + employe.nom = :nom')
+                ->andWhere('employe.prenom + employe.nom LIKE :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
 
@@ -43,7 +43,7 @@ class CVRepository extends ServiceEntityRepository
                 ->leftJoin('cv_competences.competence', 'competence');
 
             foreach ($competences as $competence) {
-                $query = $query->andWhere('competence.nom = :nom')
+                $query = $query->andWhere('competence.nom LIKE :nom')
                     ->setParameter('nom', '%' . substr($competence, 0, -1) . '%')
                     ->andWhere('cv_competences.niveau >= :niveau')
                     ->setParameter('niveau', substr($competence, -1));
