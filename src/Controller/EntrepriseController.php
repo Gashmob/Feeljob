@@ -360,6 +360,10 @@ class EntrepriseController extends AbstractController
 
             $transport = $request->get('transport') != null;
 
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
+            $ville = $request->get('ville');
+
             if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance(new DateTime($naissance))
@@ -367,6 +371,10 @@ class EntrepriseController extends AbstractController
                     ->setDescription($description)
                     ->setTransport($transport)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
+                $employe->getAdresse()
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
+                    ->setVille($ville);
                 $em->persist($cv);
                 $em->flush();
 
@@ -552,15 +560,21 @@ class EntrepriseController extends AbstractController
 
             $transport = $request->get('transport') != null;
 
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
+            $ville = $request->get('ville');
+
             if ($naissanceB) {
-                $cv = $cv
-                    ->setNaissance(new DateTime($naissance))
+                $cv->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
                     ->setTransport($transport)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]))
                     ->setUpdatedAt(new DateTime());
-                $em->persist($cv);
+                $employe->getAdresse()
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
+                    ->setVille($ville);
                 $em->flush();
 
                 foreach ($diplomes as $diplome) {
