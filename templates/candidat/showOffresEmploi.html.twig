@@ -139,7 +139,7 @@
             var nom = searchInput.value;
             var metier = 'none';
             var typeContrat = typeContratSelect.value;
-            var secteur = secteurSelect.value;
+            var secteur = encodeURIComponent(secteurSelect.value);
             var departement = departementSelect.value;
             var loge = 'none';
             var deplacement = 'none';
@@ -147,7 +147,9 @@
             var limit = 25;
             var offset = 0;
 
-            console.log(teletravail)
+            if (teletravail == false) {
+                teletravail = 'none'
+            }
 
             nom = nom.trim();
 
@@ -211,8 +213,14 @@
                 var date = ''
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '/' + debut[1] + '/' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span>Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span>À partir du ${debut}</span>`
+                }
 
                 if (!nom.length > 0) {
                     nom = 'Annonce n°' + id;
@@ -230,11 +238,7 @@
                         </span>
                     <br>`
                 }
-                if (fin.length > 0) {
-                    date = `<span>Du ${debut} au ${fin}</span>`
-                } else if (debut.length > 0) {
-                    date = `<span>À partir du ${debut}</span>`
-                }
+
                 var favoriStar = ''
                 if (favori) favoriStar = 'yellow'
 
@@ -327,5 +331,11 @@
         $('#teletravailCheckboxInput').change(makeRequestFiltered);
         $('#departementSelect').change(makeRequestFiltered);
         $('#secteurSelect').change(makeRequestFiltered);
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                makeRequestFiltered();
+            }
+        });
     </script>
 {% endblock %}

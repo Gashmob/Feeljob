@@ -81,13 +81,13 @@
                 <div class="field">
                     <label>Ville</label>
                     <div class="ui input">
-                        <input type="text" name="ville" placeholder="Ville">
+                        <input type="text" name="ville" placeholder="Ville" value="{{ employe.adresse.ville }}">
                     </div>
                 </div>
                 <div class="field">
                     <label>Code Postal</label>
                     <div class="ui input">
-                        <input type="text" name="codePostal" placeholder="Code Postal">
+                        <input type="text" name="codePostal" placeholder="Code Postal" value="{{ employe.adresse.codePostal }}">
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 <div class="field">
                     <label>Rue</label>
                     <div class="ui input">
-                        <input type="text" name="rue" placeholder="Rue">
+                        <input type="text" name="rue" placeholder="Rue" value="{{ employe.adresse.rue }}">
                     </div>
                 </div>
                 <div class="field">
