@@ -69,6 +69,7 @@
                 </div>
             </div>
             <!-- Métier -->
+            {% if metier %}
             <h3 class="ui dividing header">
                 <div class="content">Métier</div>
             </h3>
@@ -77,6 +78,7 @@
                     <h4 class="ui header">{{ metier }}</h4>
                 </div>
             </div>
+            {% endif %}
             <!-- Formation -->
             {% if cv.diplomes is not empty %}
                 <h3 class="ui dividing header">
@@ -119,6 +121,7 @@
                 </div>
             {% endif %}
             <!-- Langues parlées -->
+            {% if cv.langues is not empty %}
             <h3 class="ui dividing header">
                 <i class="icon globe"></i>
                 <div class="content">Langues parlées</div>
@@ -128,6 +131,7 @@
                     <li>{{ langue.langue.nom }} - {{ langue.niveau }}</li>
                 {% endfor %}
             </ul>
+            {% endif %}
             <!-- Compétences -->
             {% if cv.competences is not empty %}
                 <h3 class="ui dividing header">
