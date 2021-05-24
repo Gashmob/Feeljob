@@ -177,7 +177,11 @@
 
             competences = competences.trim();
             if (competences.length == 0) {
-                competences = 'none'
+                competences = 'none';
+            }
+            else {
+                // Correspond au niveau minimum exigé pour la compétence
+                competences += '1';
             }
 
             if (permis == false) {
@@ -229,6 +233,6 @@
 
         $('#searchInput').change(makeRequestFiltered)
         $('#permisCheckboxInput').change(makeRequestFiltered);
-
+        $('#languesSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}
