@@ -43,8 +43,8 @@ class CVRepository extends ServiceEntityRepository
                 ->leftJoin('cv_competences.competence', 'competence');
 
             foreach ($competences as $competence) {
-                $query = $query->andWhere('competence.nom LIKE :nom')
-                    ->setParameter('nom', '%' . substr($competence, 0, -1) . '%')
+                $query = $query->andWhere('competence.nom LIKE :nomC')
+                    ->setParameter('nomC', '%' . substr($competence, 0, -1) . '%')
                     ->andWhere('cv_competences.niveau >= :niveauC')
                     ->setParameter('niveauC', substr($competence, -1));
             }
@@ -55,8 +55,8 @@ class CVRepository extends ServiceEntityRepository
                 ->leftJoin('cv_langues.langue', 'langue');
 
             foreach ($langues as $langue) {
-                $query = $query->andWhere('langue.nom LIKE :nom')
-                    ->setParameter('nom', '%' . substr($langue, 0, -1) . '%')
+                $query = $query->andWhere('langue.nom LIKE :nomL')
+                    ->setParameter('nomL', '%' . substr($langue, 0, -1) . '%')
                     ->andWhere('cv_langues.niveau >= :niveauL')
                     ->setParameter('niveauL', substr($langue, -1));
             }
