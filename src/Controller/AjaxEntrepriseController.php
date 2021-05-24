@@ -584,8 +584,7 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public
-    function getOffresEmploi($nom, $metier, $typeContrat, $secteurActivite, $departement, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $metier, $typeContrat, $secteurActivite, $departement, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
         if ($request->isMethod('POST')) {
             $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierSecteurActiviteFromPreResult(
