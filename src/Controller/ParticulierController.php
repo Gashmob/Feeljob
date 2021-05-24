@@ -558,7 +558,7 @@ class ParticulierController extends AbstractController
     public function voirAnnonce($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = (new AnnonceManager())->isOwner($id, $this->session->get('user'));
@@ -594,7 +594,7 @@ class ParticulierController extends AbstractController
     public function voirCarteVisite($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $carte = $em->getRepository(CarteVisite::class)->findOneBy(['id' => $id]);

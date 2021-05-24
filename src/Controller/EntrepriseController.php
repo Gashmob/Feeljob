@@ -660,7 +660,7 @@ class EntrepriseController extends AbstractController
     public function showCV($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = $em->getRepository(CV::class)->isOwner($id, $this->session->get('user'));
@@ -958,7 +958,7 @@ class EntrepriseController extends AbstractController
     public function showOffreEmploi($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = (new OffreEmploiManager())->isOwner($this->session->get('user'), $id);
