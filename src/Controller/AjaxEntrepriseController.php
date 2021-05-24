@@ -538,12 +538,7 @@ class AjaxEntrepriseController extends AbstractController
             $langs = explode($separator, $langues);
         }
 
-        $perm = $permis;
-        if ($permis != 'none') {
-            $perm = $permis == 'on';
-        }
-
-        $results = array_slice($em->getRepository(CV::class)->findByMetiersNomCompetencesLanguesPermis($metier, $nom, $comps, $langs, $perm), $offset, $limit);
+        $results = array_slice($em->getRepository(CV::class)->findByMetiersNomCompetencesLanguesPermis($metier, $nom, $comps, $langs, $permis), $offset, $limit);
         foreach ($results as $result) {
             if (!is_null($result->getEmploye())) {
                 $result->getEmploye()->setCV(null);
