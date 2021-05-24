@@ -25,9 +25,9 @@
                         <div class="item field">
                             <select class="ui search dropdown" name="langues" id="languesSelect">
                                 <option value="none">Désactivé</option>
-                                {# {% for langue in langues %}
-                                    <option value="{{ langue.nom }}">{{ langue.nom }}</option>
-                                {% endfor %} #}
+                                {% for langue in langues %}
+                                    <option value="{{ langue }}">{{ langue }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -104,8 +104,7 @@
                     <i class="icon circle outline check"></i>
                     Dispose du permis
                 </p>`;
-                }
-                else {
+                } else {
                     permis = '';
                 }
 
@@ -123,8 +122,8 @@
                         <div style="margin-top: 10px;" class="description">
                             <p>${description}</p>
                             ${diplomes.map(diplome =>
-                            `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
-                        ).join('')}
+                    `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
+                ).join('')}
                             ${permis}
                         </div>
                     </div>
@@ -166,16 +165,24 @@
             var nom = 'none';
             var competences = competencesInput.value;
             var langues = languesSelect.value;
-            //var permis = permisCheckboxInput.checked;
-            var permis = 'none';
+            var permis = permisCheckboxInput.checked;
+            //var permis = 'none';
             var limit = 25;
             var offset = 0;
 
             metier = metier.trim();
-            if (metier.length == 0) { metier = 'none' }
+            if (metier.length == 0) {
+                metier = 'none'
+            }
 
             competences = competences.trim();
-            if (competences.length == 0) { competences = 'none' }
+            if (competences.length == 0) {
+                competences = 'none'
+            }
+
+            if (permis == false) {
+                permis = 'none'
+            }
 
             $.ajax({
                 url: '/entreprise/get/cvs/' + metier + '/' + nom + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
