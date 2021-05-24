@@ -556,7 +556,7 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $metier = $request->get('secteur');
+            $secteur = $request->get('secteur');
 
             $transport = $request->get('transport') != null;
 
@@ -605,7 +605,7 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
-                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
+                (new EmployeManager())->setMetier($this->session->get('user'), $secteur);
 
                 return $this->redirectToRoute('userSpace');
             }
