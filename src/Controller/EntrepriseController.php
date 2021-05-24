@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function Composer\Autoload\includeFile;
 
 /**
  * Class EntrepriseController
@@ -786,7 +787,6 @@ class EntrepriseController extends AbstractController
                 $offre = (new OffreEmploi())
                     ->setNom($nom)
                     ->setDebut(new DateTime($debut))
-                    ->setFin(new DateTime($fin))
                     ->setLoge($loge)
                     ->setHeures($heures)
                     ->setSalaire($salaire)
@@ -795,6 +795,9 @@ class EntrepriseController extends AbstractController
                     ->setTeletravail($teletravail)
                     ->setDescription($description)
                     ->setNbPostes($nbPostes);
+                if ($fin != null) {
+                    $offre->setFin(new DateTime($fin));
+                }
 
                 (new OffreEmploiManager())->create($em, $offre, $this->session->get('user'), $typeContrat, $metier);
                 $this->addFlash('success', 'Votre offre d\'emploi a été publiée');
@@ -898,7 +901,6 @@ class EntrepriseController extends AbstractController
                     ->setRue($rue);
                 $offre->setNom($nom)
                     ->setDebut(new DateTime($debut))
-                    ->setFin(new DateTime($fin))
                     ->setLoge($loge)
                     ->setHeures($heures)
                     ->setSalaire($salaire)
@@ -907,6 +909,9 @@ class EntrepriseController extends AbstractController
                     ->setDescription($description)
                     ->setNbPostes($nbPostes)
                     ->setUpdatedAt(new DateTime());
+                if ($fin != null) {
+                    $offre->setFin(new DateTime($fin));
+                }
 
                 (new OffreEmploiManager())->update($em, $offre, $typeContrat, $metier);
                 return $this->redirectToRoute('userSpace');
