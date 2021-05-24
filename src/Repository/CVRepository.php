@@ -64,7 +64,7 @@ class CVRepository extends ServiceEntityRepository
 
         if ($permis != 'none') {
             $query = $query->andWhere('cv.permis = :permis')
-                ->setParameter('permis', $permis);
+                ->setParameter('permis', $permis == 'true');
         }
 
         $results = $query->getQuery()->getResult();
