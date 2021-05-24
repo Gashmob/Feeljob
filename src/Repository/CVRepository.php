@@ -55,8 +55,8 @@ class CVRepository extends ServiceEntityRepository
                 ->leftJoin('cv_langues.langue', 'langue');
 
             foreach ($langues as $langue) {
-                $query = $query->andWhere('langue.nom = :nom')
-                    ->setParameter('nom', substr($langue, 0, -1))
+                $query = $query->andWhere('langue.nom LIKE :nom')
+                    ->setParameter('nom', '%' . substr($langue, 0, -1) . '%')
                     ->andWhere('cv_langues.niveau >= :niveau')
                     ->setParameter('niveau', substr($langue, -1));
             }
