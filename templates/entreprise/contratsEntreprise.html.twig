@@ -257,7 +257,7 @@
                     contratsList.innerHTML += card.contratTemplate;
                 }
                 else {
-                    let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, null);
+                    let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, null);
                     contratsList.innerHTML += card.contratTemplate;
                 }
             })
