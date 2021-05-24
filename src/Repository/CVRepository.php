@@ -44,7 +44,7 @@ class CVRepository extends ServiceEntityRepository
 
             foreach ($competences as $competence) {
                 $query = $query->andWhere('competence.nom = :nom')
-                    ->setParameter('nom', substr($competence, 0, -1))
+                    ->setParameter('nom', '%' . substr($competence, 0, -1) . '%')
                     ->andWhere('cv_competences.niveau >= :niveau')
                     ->setParameter('niveau', substr($competence, -1));
             }
