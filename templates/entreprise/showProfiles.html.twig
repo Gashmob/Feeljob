@@ -179,9 +179,18 @@
             if (competences.length == 0) {
                 competences = 'none';
             }
-            else {
+            else if (competences != 'none') {
                 // Correspond au niveau minimum exigé pour la compétence
                 competences += '1';
+            }
+
+            langues = langues.trim();
+            if (langues.length == 0) {
+                langues = 'none';
+            }
+            else if (langues != 'none') {
+                // Correspond au niveau minimum exigé pour la compétence
+                langues += '1';
             }
 
             if (permis == false) {
