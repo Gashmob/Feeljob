@@ -84,10 +84,17 @@
                 } else {
                     ville = ' à ' + ville;
                 }
+
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
@@ -97,7 +104,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -120,10 +127,16 @@
             constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
                 if (ville.length > 0) ville = ' à ' + ville;
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
@@ -133,7 +146,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
