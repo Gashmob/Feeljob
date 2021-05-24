@@ -559,16 +559,25 @@ class AjaxParticulierController extends AbstractController
             $metier = explode($separator, $metiers);
         }
 
+        $connected = false;
+        if ($this->session->get('user')) {
+            $connected = true;
+        }
+
         if ($request->isMethod('POST')) {
             $filterNom = $nom == 'none' ? $em->getRepository(AutoEntrepreneur::class)->findAll() :
                 $em->getRepository(AutoEntrepreneur::class)->findBy(['nomEntreprise' => $nom]);
 
             $filterMetier = (new AutoEntrepreneurManager())->findByMetiersFromPreResult($filterNom, $metier);
 
-            $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
-            $adresse = $particulier->getAdresse();
-            $filterDistance = $distanceMax == 'none' || ($adresse->getRue() == '' && $adresse->getCodePostal() == '' && $adresse->getVille() == '') ? $filterMetier :
-                $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterMetier, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
+            if ($connected) {
+                $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
+                $adresse = $particulier->getAdresse();
+                $filterDistance = $distanceMax == 'none' || ($adresse->getRue() == '' && $adresse->getCodePostal() == '' && $adresse->getVille() == '') ? $filterMetier :
+                    $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterMetier, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
+            } else {
+                $filterDistance = $filterMetier;
+            }
 
             $results = array_slice(
                 $em->getRepository(CarteVisite::class)->findByAutoEntrepreneur($filterDistance),
