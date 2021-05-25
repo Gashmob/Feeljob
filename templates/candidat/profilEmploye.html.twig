@@ -39,9 +39,6 @@
                             {% for diplome in publications.diplomes %}
                                 <p><i class="icon bookmark"></i>{{ diplome.diplome.nom }}</p>
                             {% endfor %}
-                            {% for competence in publications.competences %}
-                                <p><i class="icon angle right"></i>{{ competence.competence.nom }}</p>
-                            {% endfor %}
                             {% if publications.permis %}
                                 <p><i class="icon circle outline check"></i>Dispose du permis</p>
                             {% endif %}
