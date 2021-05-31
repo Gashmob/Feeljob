@@ -28,7 +28,6 @@ $(document)
             $('.dimmable.image').dimmer({
                 on: 'hover'
             });
-            //if ($('.message .content div').html().trim()) $('.message').removeClass('hidden');
             $('.message .close')
                 .on('click', function () {
                     $(this)
@@ -37,6 +36,9 @@ $(document)
                     ;
                 })
             ;
+            if ($('.message .content div').length > 0) {
+                if ($('.message .content div').html().trim()) $('.message').removeClass('hidden');
+            }
         }
     )
 ;
