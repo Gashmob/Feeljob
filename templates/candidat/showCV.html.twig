@@ -51,9 +51,11 @@
                              class="ui small circular image profileLogo">
                     {% endif %}
                 </div>
-                <div class="column ten wide">
-                    <div>{{ cv.employe.prenom }} {{ cv.employe.nom }}</div>
-                    <div>Né le {{ cv.naissance|date('d/m/Y') }}</div>
+                <div class="column ten wide" style="padding-top: 2em;">
+                    <h4 class="ui header">{{ cv.employe.prenom }} {{ cv.employe.nom }}</h4>
+                    {% if cv.naissance %}
+                    <div>Né en {{ cv.naissance|date('Y') }}</div>
+                    {% endif %}
                     <div>{{ cv.situationFamille.nom }}</div>
                     <div class="ui divider"></div>
                     <div>{{ metier }}</div>
