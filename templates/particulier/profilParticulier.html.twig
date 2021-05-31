@@ -168,7 +168,7 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.annonce.identity,
                         a.annonce.nom,
                         a.annonce.updatedAt,
@@ -194,7 +194,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.annonce.identity,
                         a.annonce.nom,
                         a.annonce.updatedAt,

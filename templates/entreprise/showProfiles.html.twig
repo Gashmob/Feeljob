@@ -95,7 +95,7 @@
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
                 <div class="ui card cvCard">
@@ -201,7 +201,7 @@
 
             // Il y a des résultats :
             results.cvs.forEach(cv => {
-                let card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
+                var card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
                 cvsList.innerHTML += card.cardTemplate;
             })
         }

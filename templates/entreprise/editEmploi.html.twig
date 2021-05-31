@@ -145,8 +145,8 @@
             checkDateFin();
         });
         //Lieu
-        const lieuBtn = document.getElementById('lieuBtn')
-        const lieuField = document.getElementById('lieuField')
+        var lieuBtn = document.getElementById('lieuBtn')
+        var lieuField = document.getElementById('lieuField')
         lieuBtn.addEventListener('change', (event) => {
             if (event.currentTarget.checked) {
                 lieuField.classList.remove("disabled");
@@ -155,8 +155,8 @@
             }
         })
         //Date fin
-        const selectTypeContrat = document.getElementById('selectTypeContrat')
-        const dateFinField = document.getElementById('dateFinField')
+        var selectTypeContrat = document.getElementById('selectTypeContrat')
+        var dateFinField = document.getElementById('dateFinField')
         selectTypeContrat.addEventListener('change', checkDateFin)
 
         function checkDateFin() {

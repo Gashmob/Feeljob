@@ -133,7 +133,7 @@
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
                 var favoriStar = ''
                 if (favori) favoriStar = 'yellow'
 
@@ -179,7 +179,7 @@
             // Il y a des résultats :
             // Pour chaque cv du tableau annonces
             results.annonces.forEach(a => {
-                let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                var card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 annoncesList.innerHTML += card.cardTemplate;
             })
         }
@@ -195,7 +195,7 @@
 
             // Pour chaque favori du tableau favoris
             results.favoris.forEach(a => {
-                let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description, favori);
+                var card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description, favori);
                 annoncesList.innerHTML += card.cardTemplate;
             })
         }

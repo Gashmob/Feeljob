@@ -182,7 +182,7 @@
             }
 
             results.offres.forEach(o => {
-                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                var card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
@@ -198,7 +198,7 @@
 
             // Pour chaque favori du tableau favoris
             results.favoris.forEach(o => {
-                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
+                var card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
                 offresList.innerHTML += card.cardTemplate;
             })
         }

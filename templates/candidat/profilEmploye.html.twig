@@ -189,7 +189,7 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
+                    var card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
                     candidaturesList.innerHTML += card.cardTemplate;
                 })
             }
@@ -205,7 +205,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
+                    var card = new CandidaturesAcceptees(a.identity, a.nom, a.description, a.updatedAt, a.lieu.rue, a.lieu.codePostal, a.lieu.ville);
                     propositionsList.innerHTML += card.cardTemplate;
                 })
             }

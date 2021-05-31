@@ -129,7 +129,7 @@
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('particulier_show_carte', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('particulier_show_carte', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
                 <div class="card carteVisiteCard">
@@ -156,7 +156,7 @@
         }
 
         //Affiche les résultats dans 'cartesVisiteList'
-        const cartesVisiteList = document.getElementById('cartesVisiteList');
+        var cartesVisiteList = document.getElementById('cartesVisiteList');
 
         function displayCartesVisite(results) {
             // Réinitialise la liste
@@ -169,13 +169,13 @@
 
             // Il y a des résultats :
             results.cartes.forEach(carte => {
-                let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
+                var card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
                 cartesVisiteList.innerHTML += card.cardTemplate;
             })
         }
 
         // Roulette pour la distance
-        const rangeLabel = document.getElementById('rangeLabel');
+        var rangeLabel = document.getElementById('rangeLabel');
 
         function updateRangeLabel(value) {
             if (value == 0) {

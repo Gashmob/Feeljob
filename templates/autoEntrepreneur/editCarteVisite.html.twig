@@ -90,16 +90,16 @@
             $('#image-label0').text(file);
         });
 
-        let nbRealisations = {{ carte.realisations|length-1 }};
-        const maxRealisations = 8;
-        const nbRealisationsInput = document.getElementById('nbRealisationsInput');
+        var nbRealisations = {{ carte.realisations|length-1 }};
+        var maxRealisations = 8;
+        var nbRealisationsInput = document.getElementById('nbRealisationsInput');
 
         function add_realisation() {
             if (nbRealisations < maxRealisations) {
                 $('#realPlus').transition('jiggle');
                 nbRealisations += 1;
                 nbRealisationsInput.setAttribute("value", nbRealisations + 1);
-                let newItem = document.createElement('div');
+                var newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
                 newItem.classList.add('segment');

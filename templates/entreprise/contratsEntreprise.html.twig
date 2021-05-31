@@ -189,8 +189,8 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'undoBtn' + idO +'to' + idE
-                    let btn = document.getElementById(btnNo)
+                    var btnNo = 'undoBtn' + idO +'to' + idE
+                    var btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
                 }
             });
@@ -205,10 +205,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
-                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    var btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnDeny.innerHTML = 'Refusée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -225,10 +225,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
-                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    var btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnAccept.innerHTML = 'Acceptée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -237,7 +237,7 @@
         }
 
         // Affiche la liste des propositions de contrat envoyées dans la vue contrats
-        const contratsList = document.getElementById('contratsList');
+        var contratsList = document.getElementById('contratsList');
 
         function displayContrats(results) {
             // Réinitialise la liste
@@ -253,18 +253,18 @@
             // Il y a des résultats :
             results.propositions.forEach(proposition => {
                 if (proposition.cv != undefined) {
-                    let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, proposition.cv.id);
+                    var card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, proposition.cv.id);
                     contratsList.innerHTML += card.contratTemplate;
                 }
                 else {
-                    let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, null);
+                    var card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, null);
                     contratsList.innerHTML += card.contratTemplate;
                 }
             })
         }
 
         // Affiche la liste des candidatures reçues dans la vue contrats
-        const candidaturesList = document.getElementById('candidaturesList');
+        var candidaturesList = document.getElementById('candidaturesList');
 
         function displayCandidatures(results) {
             // Réinitialise la liste
@@ -279,11 +279,11 @@
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
                 if (candidature.cv != undefined) {
-                    let card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, candidature.cv.id);
+                    var card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, candidature.cv.id);
                     candidaturesList.innerHTML += card.candidatureTemplate;
                 }
                 else {
-                    let card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, null);
+                    var card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, null);
                     candidaturesList.innerHTML += card.candidatureTemplate;
                 }
             })

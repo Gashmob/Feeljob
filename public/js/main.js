@@ -54,7 +54,7 @@ function menuDisplay() {
     var navList = document.getElementsByClassName("nav-item")
     var delay = 80
 
-    for (let i = 0; i < navList.length; i++) {
+    for (var i = 0; i < navList.length; i++) {
         setTimeout(function () {
             navList[i].classList.toggle('nav-item-display')
         }, delay)

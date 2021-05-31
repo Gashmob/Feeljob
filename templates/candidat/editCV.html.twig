@@ -441,21 +441,21 @@
 
         var nbForm = {{ cv.diplomes|length-1 }}, nbExp = {{ cv.metiers|length-1 }}, nbLang = {{ cv.langues|length-1 }},
             nbComp = {{ cv.competences|length-1 }};
-        const maxForm = 8;
-        const maxExp = 12;
-        const maxLang = 6;
-        const maxComp = 15;
-        const nbFormInput = document.getElementById('nbFormInput');
-        const nbExpInput = document.getElementById('nbExpInput');
-        const nbLangInput = document.getElementById('nbLangInput');
-        const nbCompInput = document.getElementById('nbCompInput');
+        var maxForm = 8;
+        var maxExp = 12;
+        var maxLang = 6;
+        var maxComp = 15;
+        var nbFormInput = document.getElementById('nbFormInput');
+        var nbExpInput = document.getElementById('nbExpInput');
+        var nbLangInput = document.getElementById('nbLangInput');
+        var nbCompInput = document.getElementById('nbCompInput');
 
         function add_formation() {
             if (nbForm < maxForm) {
                 $('#feedPlus').transition('jiggle');
                 nbForm += 1;
                 nbFormInput.setAttribute("value", nbForm + 1);
-                let newItem = document.createElement('div');
+                var newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
                 newItem.classList.add('segment');
@@ -481,7 +481,7 @@
                 $('#expPlus').transition('jiggle');
                 nbExp += 1;
                 nbExpInput.setAttribute("value", nbExp + 1);
-                let newItem = document.createElement('div');
+                var newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
                 newItem.classList.add('segment');
@@ -508,7 +508,7 @@
                 nbLang += 1;
                 nbLangInput.setAttribute("value", nbLang + 1);
 
-                let item = document.querySelector('.langueNb' + nbLang);
+                var item = document.querySelector('.langueNb' + nbLang);
                 $(item).transition('scale')
 
             } else {
@@ -521,7 +521,7 @@
                 $('#compPlus').transition('jiggle');
                 nbComp += 1;
                 nbCompInput.setAttribute("value", nbComp + 1);
-                let newItem = document.createElement('div');
+                var newItem = document.createElement('div');
 
                 newItem.classList.add('ui');
                 newItem.classList.add('segment');
