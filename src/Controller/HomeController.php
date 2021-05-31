@@ -171,6 +171,19 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/preferences", name="preferences")
+     * @return Response
+     */
+    public function preferences(): Response
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('utilisateurs/preferences.html.twig');
+    }
+
+    /**
      * @Route("/userspace", name="userSpace")
      * @return RedirectResponse
      */
