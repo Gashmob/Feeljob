@@ -20,10 +20,6 @@
                 Retour aux CV
             </a>
         {% endif %}
-        <h2 class="ui center aligned icon header">
-            <i class="address card outline icon"></i>
-            CV de {{ cv.employe.prenom }} {{ cv.employe.nom }}
-        </h2>
         <div>
             <div class="ui buttons">
                 {% if owner %}
@@ -40,8 +36,7 @@
         </div>
         <form class="ui form segment">
             <!-- Identité -->
-            <h3 class="ui dividing header">
-                <i class="icon user"></i>
+            <h3 class="ui dividing green header">
                 <div class="content">Identité</div>
             </h3>
             <div class="ui two column stackable grid">
@@ -61,27 +56,12 @@
                     <div>Né le {{ cv.naissance|date('d/m/Y') }}</div>
                     <div>{{ cv.situationFamille.nom }}</div>
                     <div class="ui divider"></div>
-                    {% if app.session.get('user') %}
-                        <div>{{ cv.employe.email }}</div>
-                        <div>{{ cv.employe.telephone }}</div>
-                    {% endif %}
+                    <div>{{ metier }}</div>
                 </div>
             </div>
-            <!-- Métier -->
-            {% if metier %}
-            <h3 class="ui dividing header">
-                <div class="content">Métier</div>
-            </h3>
-            <div class="ui segments">
-                <div class="ui segment metier">
-                    <h4 class="ui header">{{ metier }}</h4>
-                </div>
-            </div>
-            {% endif %}
             <!-- Formation -->
             {% if cv.diplomes is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon university"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Formation</div>
                 </h3>
                 <div class="ui segments">
@@ -96,8 +76,7 @@
             {% endif %}
             <!-- Expérience -->
             {% if cv.metiers is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon dolly"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Expérience professionnelle</div>
                 </h3>
                 <div class="ui segments">
@@ -111,8 +90,7 @@
             {% endif %}
             <!-- Bio -->
             {% if cv.description %}
-                <h3 class="ui dividing header">
-                    <i class="icon info"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Biographie</div>
                 </h3>
                 <div class="ui segment">
@@ -121,8 +99,7 @@
             {% endif %}
             <!-- Langues parlées -->
             {% if cv.langues is not empty %}
-            <h3 class="ui dividing header">
-                <i class="icon globe"></i>
+            <h3 class="ui dividing green header">
                 <div class="content">Langues parlées</div>
             </h3>
             <ul>
@@ -133,8 +110,7 @@
             {% endif %}
             <!-- Compétences -->
             {% if cv.competences is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon settings"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Compétences</div>
                 </h3>
                 <ul>
@@ -144,8 +120,7 @@
                 </ul>
             {% endif %}
             <!-- Autres -->
-            <h3 class="ui dividing header">
-                <i class="icon question circle outline"></i>
+            <h3 class="ui dividing green header">
                 <div class="content">Autres informations</div>
             </h3>
             <div class="ui segment">
@@ -160,9 +135,9 @@
             </div>
         </form>
         {% if app.session.get('userType') == 'Employeur' %}
-            <div class="ui vertical segment left aligned">
+            <div class="ui segment left aligned">
                 <h3 class="ui header">Proposer à {{ cv.employe.prenom }} une de vos offres d'emploi</h3>
-                <select class="ui dropdown" name="offreEmploiTarget" id="offreEmploiTarget">
+                <select class="ui search fluid dropdown" name="offreEmploiTarget" id="offreEmploiTarget">
                     {% if offres %}
                         <option value="">Choisir</option>
                         {% for offre in offres %}
@@ -172,7 +147,7 @@
                         <option value="">Pas d'annonce postée !</option>
                     {% endif %}
                 </select>
-                <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                <button style="margin-top: 0.6em;" id="applyBtn" class="ui green button" onclick="offreContrat()">
                     Recruter
                 </button>
             </div>
