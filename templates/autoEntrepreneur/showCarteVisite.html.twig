@@ -59,15 +59,15 @@
                 {% endif %}
             </div>
             <!-- Réalisations -->
-            {% if carte.realisations %}
+            {% if carte.realisations is not empty %}
                 <h3 class="ui dividing green header">
                     <div class="content">Réalisations</div>
                 </h3>
-                <div class="ui divided items">
+                <div class="ui">
                     {% for realisation in carte.realisations %}
-                        <div class="ui item">
+                        <div class="ui vertical segment">
                             <div class="ui justified content">{{ realisation.description|nl2br }}</div>
-                            <img class="ui image medium right floated"
+                            <img style="margin: 1em 0;" class="ui image large"
                                  src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
                         </div>
                     {% endfor %}
@@ -75,9 +75,9 @@
             {% endif %}
         </div>
         {% if app.session.get('userType') == 'Particulier' %}
-            <div class="ui vertical segment left aligned">
+            <div class="ui segment left aligned">
                 <h3 class="ui header">Proposer à {{ carte.autoEntrepreneur.prenom }} une de vos annonces</h3>
-                <select class="ui dropdown" name="annonceTarget" id="annonceTarget">
+                <select class="ui search dropdown fluid" name="annonceTarget" id="annonceTarget">
                     {% if annonces %}
                         <option value="">Choisir</option>
                         {% for annonce in annonces %}
@@ -87,7 +87,7 @@
                         <option value="">Pas d'annonce postée !</option>
                     {% endif %}
                 </select>
-                <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                <button style="margin-top: 0.6em;" id="applyBtn" class="ui green button" onclick="offreContrat()">
                     Recruter
                 </button>
             </div>

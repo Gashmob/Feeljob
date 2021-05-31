@@ -5,7 +5,7 @@
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
             {# <input id="searchInput" type="text" placeholder="Rechercher" autofocus> #}
-            <select class="ui fluid search dropdown" multiple="" id="searchInput">
+            <select class="ui fluid search dropdown" id="searchInput">
                 <option value="none">Désactivé</option>
                 {% for id, secteurs in metiers %}
                     {% for secteur, metiersSecteur in secteurs %}
