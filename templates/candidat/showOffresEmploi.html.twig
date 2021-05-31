@@ -154,7 +154,7 @@
             nom = nom.trim();
 
             if (nom != undefined && nom.length > 0) {
-                console.log('ok')
+                console.log('rad')
             } else {
                 nom = 'none'
             }
@@ -176,8 +176,6 @@
             // Réinitialise la liste
             offresList.innerHTML = '';
 
-            console.log(results)
-
             // Il n'y a pas de résultats :
             if (results.offres === undefined || results.offres.length == 0) {
                 offresList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
@@ -192,8 +190,6 @@
         function displayFavoris(results, favori) {
             // Réinitialise la liste
             offresList.innerHTML = '';
-
-            console.log(results)
 
             // Il n'y a pas de résultats :
             if (results.favoris === undefined || results.favoris.length == 0) {
