@@ -359,8 +359,14 @@
 }
 
 .flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
     flex-direction: row;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 
@@ -393,6 +399,7 @@
 .profileLogo {
     height:140px !important;
     width:140px !important;
+    -o-object-fit:cover !important;
     object-fit:cover !important;
 }
 
@@ -417,7 +424,11 @@
 }
 
 .flex {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
 }
 .textBlue {
@@ -449,6 +460,8 @@
         position: absolute !important;
         top: 20px !important;
         left: -20px !important;
+        -webkit-transform: translateX(-100%) !important;
+        -ms-transform: translateX(-100%) !important;
         transform: translateX(-100%) !important;
     }
 }
