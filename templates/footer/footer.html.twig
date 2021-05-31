@@ -3,7 +3,7 @@
         <div class="ui container">
             <div class="ui inverted stackable divided grid">
                 <div class="row">
-                    <div class="three wide column">
+                    <div class="four wide column">
                         <h4 class="ui inverted header">À propos</h4>
                         <div role="list" class="ui inverted link list">
                             <a href="{{ path('contact') }}" role="listitem" class="item">Nous contacter</a>
@@ -11,7 +11,7 @@
                             <a href="{{ path('developers') }}" role="listitem" class="item">Développeurs</a>
                         </div>
                     </div>
-                    <div class="three wide column">
+                    <div class="four wide column">
                         <h4 class="ui inverted header">Mentions légales</h4>
                         <div role="list" class="ui inverted link list">
                             <a href="{{ path('conditions') }}" role="listitem" class="item">Conditions d'utilisation</a>
@@ -20,21 +20,21 @@
                             <a role="listitem" class="item">Mentions légales</a>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <a href="https://facebook.com" class="ui facebook button">
-                        <i class="facebook icon"></i>
-                        Facebook
-                    </a>
-                    <a href="https://linkedin.com" class="ui linkedin button">
-                        <i class="linkedin icon"></i>
-                        LinkedIn
-                    </a>
+                    <div class="four wide column">
+                        <a href="https://facebook.com" class="ui facebook button">
+                            <i class="facebook icon"></i>
+                            Facebook
+                        </a>
+                        <a href="https://linkedin.com" class="ui linkedin button">
+                            <i class="linkedin icon"></i>
+                            LinkedIn
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="ui inverted vertical segment center aligned footer-2 ">
+    <div class="ui inverted vertical segment center aligned footer-2">
         Copyright &#169; {{ "now"|date("Y") }}, FeelJob est une marque déposée, tous droits réservés.
     </div>
     <!-- Scripts -->
@@ -43,11 +43,11 @@
     <script type='text/javascript' src='{{ asset('js/main.js') }}'></script>
     {% if app.session.get('userType') == 'Employeur' %}
         <script type='text/javascript' src='{{ asset('js/userEntreprise.js') }}'></script>
-    {% elseif app.session.get('userType') == 'Employe' %}
+        {% elseif app.session.get('userType') == 'Employe' %}
         <script type='text/javascript' src='{{ asset('js/userCandidat.js') }}'></script>
-    {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
+        {% elseif app.session.get('userType') == 'AutoEntrepreneur' %}
         <script type='text/javascript' src='{{ asset('js/userFreelance.js') }}'></script>
-    {% elseif app.session.get('userType') == 'Particulier' %}
+        {% elseif app.session.get('userType') == 'Particulier' %}
         <script type='text/javascript' src='{{ asset('js/userParticulier.js') }}'></script>
     {% else %}
         <script type='text/javascript' src='{{ asset('js/visiteur.js') }}'></script>

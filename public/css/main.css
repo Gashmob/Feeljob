@@ -497,3 +497,25 @@
 .textGreen {
     color: #016936;
 }
+
+.homeBtn {
+    width: 250px;
+    margin: 6px !important;
+}
+
+.footer-2 {
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+}
+
+@media screen and (max-width: 770px) {
+    #homepageSegment {
+        min-height: 840px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    #homepageSegment {
+        min-height: 1000px;
+    }
+}
