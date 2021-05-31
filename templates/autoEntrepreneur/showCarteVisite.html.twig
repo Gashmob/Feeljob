@@ -21,9 +21,6 @@
                 Retour aux cartes
             </a>
         {% endif %}
-        <h2 class="ui center aligned icon header">
-            Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
-        </h2>
         <div>
             <div class="ui buttons">
                 {% if owner %}
@@ -38,47 +35,32 @@
                 {% endif %}
             </div>
         </div>
-        <form class="ui form segment">
-            <!-- Identité -->
-            <h3 class="ui dividing header">
-                <div class="content">Identité</div>
-            </h3>
-            <div class="ui two column grid">
-                <div class="column ten wide">
-                    <div class="flex">
-                        {% if carte.autoEntrepreneur.logo %}
-                            <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
-                                 alt="logo du freelance"
-                                 class="ui small circular image profileLogo">
-                        {% endif %}
-                        <div>
-                            <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
-                            <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Métier -->
-            <h3 class="ui dividing header">
-                <div class="content">Secteur d'activité</div>
-            </h3>
-            <div class="ui segments">
-                <div class="ui segment metier">
-                    <h4 class="ui header">{{ secteur }}</h4>
-                </div>
-            </div>
-            <!-- Bio -->
-            {% if carte.description %}
-                <h3 class="ui dividing header">
+        <div class="ui form segment">
+            <!-- Biographie -->
+            <div>
+                <h3 class="ui dividing green header">
                     <div class="content">Biographie</div>
                 </h3>
-                <div class="ui segment">
-                    <p>{{ carte.description }}</p>
+                <div class="ui item" style="min-height: 120px;">
+                    {% if carte.autoEntrepreneur.logo %}
+                        <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                             alt="logo du freelance"
+                             style="margin-right: 2em;"
+                             class="ui small circular left floated image profileLogo profileLogo--100">
+                    {% endif %}
+                    <div style="padding-top: 1em; margin-left: 2em;">
+                        <h4 class="ui header">{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</h4>
+                        <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
+                        <div class="meta">{{ secteur }}</div>
+                    </div>
                 </div>
-            {% endif %}
+                {% if carte.description %}
+                    <p>{{ carte.description }}</p>
+                {% endif %}
+            </div>
             <!-- Réalisations -->
             {% if carte.realisations %}
-                <h3 class="ui dividing header">
+                <h3 class="ui dividing green header">
                     <div class="content">Réalisations</div>
                 </h3>
                 <div class="ui divided items">
@@ -91,7 +73,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
-        </form>
+        </div>
         {% if app.session.get('userType') == 'Particulier' %}
             <div class="ui vertical segment left aligned">
                 <h3 class="ui header">Proposer à {{ carte.autoEntrepreneur.prenom }} une de vos annonces</h3>
