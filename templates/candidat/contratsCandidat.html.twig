@@ -227,7 +227,7 @@
             if (results.propositions == undefined || results.propositions.length == 0) {
                 contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
-            console.log(results)
+
             // Il y a des résultats :
             // Pour chaque proposition
             results.propositions.forEach(proposition => {
@@ -241,7 +241,7 @@
 
         function displayCandidatures(results) {
             // Réinitialise la liste
-            console.log(results)
+
             candidaturesList.innerHTML = '';
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {

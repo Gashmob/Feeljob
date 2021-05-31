@@ -169,8 +169,6 @@
         var propositionsList = contratsList.querySelector('#contratsList__prop')
 
         function displayCandidaturesAcceptees(results) {
-            console.log(results);
-
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
                 candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
@@ -185,8 +183,6 @@
         }
 
         function displayPropositionsAcceptees(results) {
-            console.log(results);
-
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
                 propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
