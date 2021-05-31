@@ -19,15 +19,6 @@
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
-                <div class="item">
-                    <div class="header">Distance max</div>
-                    <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
-                    </div>
-                </div>
                 <div class="item"></div>
             </div>
             <div class="ui center aligned">
@@ -87,14 +78,13 @@
 
         var searchInput = document.getElementById('searchInput');
         var secteurSelect = document.getElementById('secteurSelect');
-        var rangeInput = document.getElementById('rangeInput')
         // /particulier/get/cartes/{nom}/{metier}/{distanceMax}/{limit}/{offset}
         // Le particulier récupère toutes les CarteVisite selon le nomEntreprise nom, le metier et la distanceMax.
         // Il en récupère limit avec un offset => {'cartes': CarteVisite[]}
         function makeRequestFiltered() {
             var nom = 'none';
             var metier = searchInput.value;
-            var distanceMax = rangeInput.value;
+            var distanceMax = -1;
             var limit = 25;
             var offset = 0;
 
@@ -186,7 +176,6 @@
             ;
         }
 
-        $('#rangeInput').change(makeRequestFiltered)
         $('#searchButton').change(makeRequestFiltered)
         $('#searchInput').change(makeRequestFiltered)
     </script>
