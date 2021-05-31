@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}Voir un CV{% endblock %}
+{% block title %}{{ cv.employe.prenom }} {{ cv.employe.nom }}{% endblock %}
 {% block body %}
     <div class="background fixed">
         <div class="relative">
@@ -15,8 +15,7 @@
     </div>
     <div style="position: relative" class="ui text justified container">
         {% if not owner %}
-            <a href="{{ path('entreprise_cvs') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+            <a href="{{ path('entreprise_cvs') }}" class="ui compact labeled icon button backToResultsBtn">
                 <i class="left arrow icon"></i>
                 Retour aux CV
             </a>

@@ -444,6 +444,16 @@
 
 /* Media queries */
 
+@media screen and (min-width: 1200px) {
+    .backToResultsBtn {
+        position: absolute !important;
+        top: 20px !important;
+        left: -20px !important;
+        transform: translateX(-100%) !important;
+    }
+}
+
+
 @media screen and (max-width: 800px) {
     #nav-icon {
         display: block;
