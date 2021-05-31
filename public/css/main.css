@@ -385,22 +385,6 @@
     border-radius: 10px;
 }
 
-.particulierCard {
-    /*background-color: #21ba2b !important;*/
-}
-
-.particulierCard:hover {
-    /*background-color: #1da526 !important;*/
-}
-
-.entrepriseCard {
-    background-color: #2caf76 !important;
-}
-
-.entrepriseCard:hover {
-    background-color: #279b69 !important;
-}
-
 .choiceCardBtn i {
     margin: 0 !important;
 }
