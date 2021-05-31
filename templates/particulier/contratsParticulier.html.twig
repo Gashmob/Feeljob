@@ -213,10 +213,6 @@
                 contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
             // Il y a des résultats :
-            // Pour chaque proposition
-            if (results.length == 0) {
-                console.log('pas de propositions')
-            }
             results.propositions.forEach(proposition => {
                 let card = new Contrat(proposition.annonce.identity, proposition.annonce.nom, proposition.annonce.adresse.ville, proposition.annonce.updatedAt, proposition.annonce.date, proposition.annonce.description, proposition.auto.identity, proposition.auto.prenom, proposition.auto.nom, proposition.auto.nomEntreprise);
                 contratsList.innerHTML += card.contratTemplate;
