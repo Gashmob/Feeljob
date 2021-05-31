@@ -168,60 +168,6 @@
     margin-right: 4px;
 }
 
-@media screen and (max-width: 800px) {
-    #nav-icon {
-        display: block;
-    }
-
-    #nav.menu {
-        font-size: 1.2em;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        position: fixed;
-        height: 100vh;
-        width: 200px !important;
-        max-width: 70vw;
-        padding-top: 70px;
-        top: 0;
-        background: #fafbfc;
-        margin: 0;
-    }
-
-    #nav .right {
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -webkit-box-align: start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-    }
-
-    .primaryNav.menu {
-        left: -100%;
-        -webkit-transition: 400ms;
-        -o-transition: 400ms;
-        transition: 400ms;
-        font-size: 1.4em;
-    }
-
-    #nav .item img {
-        margin-right: .5em;
-    }
-
-    .primaryNav .item:before {
-        display: none !important;
-    }
-
-    .nav-displayed.menu {
-        left: 0 !important;
-    }
-}
-
 #homepageSegment {
     min-height:640px;
     max-height: 880px;
@@ -490,6 +436,66 @@
 .footer-2 {
     padding-left: 1em !important;
     padding-right: 1em !important;
+}
+
+.fileInputLabel {
+    line-break: anywhere !important;
+}
+
+/* Media queries */
+
+@media screen and (max-width: 800px) {
+    #nav-icon {
+        display: block;
+    }
+
+    #nav.menu {
+        font-size: 1.2em;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        width: 200px !important;
+        max-width: 70vw;
+        padding-top: 70px;
+        top: 0;
+        background: #fafbfc;
+        margin: 0;
+    }
+
+    #nav .right {
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+    }
+
+    .primaryNav.menu {
+        left: -100%;
+        -webkit-transition: 400ms;
+        -o-transition: 400ms;
+        transition: 400ms;
+        font-size: 1.4em;
+    }
+
+    #nav .item img {
+        margin-right: .5em;
+    }
+
+    .primaryNav .item:before {
+        display: none !important;
+    }
+
+    .nav-displayed.menu {
+        left: 0 !important;
+    }
 }
 
 @media screen and (max-width: 770px) {
