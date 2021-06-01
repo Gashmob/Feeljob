@@ -1,32 +1,23 @@
 {% extends 'page.html.twig' %}
 {% block title %}Résultats annonces{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px; min-height: 600px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
+            <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Distance max</div>
-                    <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">Secteur d'activité</div>
+                    <div class="header">Département</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
-                                <option value="">Choisir</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                            <select class="ui search dropdown" id="departementSelect">
+                                <option value="0">Désactivé</option>
+                                {% for i in 1..95 %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -36,7 +27,7 @@
                     <div class="menu">
                         <div class="item field">
                             <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
+                                <input id="favorisCheckbox" type="checkbox" name="favoris" class="hidden">
                             </div>
                         </div>
                     </div>
@@ -84,7 +75,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequestLoadAll()
-            searchInput.focus();
         });
 
         //Cherche tous les résultats
@@ -99,22 +89,57 @@
             });
         }
 
+        var searchInput = document.getElementById('searchInput');
+        var departementSelect = document.getElementById('departementSelect');
+
+        // Résultats filtrés
+        // particulier/get/annonces/{nom}/{metier}/{departement}/{limit}/{offset}
+        // L'AutoEntrepreneur récupère toutes les annonces se nommant nom de Metier dans un départament.
+        // Il récupère limit annonces avec un offset => {'annonces': Annonce[]}
+        function makeRequestFiltered() {
+            var nom = searchInput.value;
+            var metier = 'none';
+            var departement = departementSelect.value;
+            var limit = 25;
+            var offset = 0;
+
+            nom = nom.trim();
+            if (nom.length == 0) {
+                nom = 'none'
+            }
+
+            if (departement == 0) {
+                departement = 'none'
+            }
+
+            $.ajax({
+                url: '/particulier/get/annonces/' + nom + '/' + metier + '/' + departement + '/' + limit + '/' + offset,
+                type: 'POST',
+                dataType: 'json',
+                success: function (results) {
+                    displayAnnonces(results)
+                }
+            });
+        }
+
         //Affiche les résultats dans 'annoncesList'
-        const annoncesList = document.getElementById('annoncesList');
+        var annoncesList = document.getElementById('annoncesList');
 
         //Classe AnnonceCard
         class AnnonceCard {
-            constructor(id, nom, rue, codeP, ville, createdAt, date, description) {
+            constructor(id, nom, rue, codeP, ville, createdAt, date, description, favori) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
                 date = date.substr(0, 10).split('-');
                 date = date[2] + '-' + date[1] + '-' + date[0];
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+                var favoriStar = ''
+                if (favori) favoriStar = 'yellow'
 
                 this.cardTemplate = `
                 <div class="card annonceCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
+                    <i class="icon star outline addFavBtn ${favoriStar}" onclick='addFav(this, ${id})'></i>
                     <div class="content">
                         <div class="header">${nom}</div>
                         <div class="meta">
@@ -143,7 +168,6 @@
         }
 
         function displayAnnonces(results) {
-            console.log(results);
             // Réinitialise la liste
             annoncesList.innerHTML = '';
 
@@ -155,55 +179,79 @@
             // Il y a des résultats :
             // Pour chaque cv du tableau annonces
             results.annonces.forEach(a => {
-                let card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
+                var card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description);
                 annoncesList.innerHTML += card.cardTemplate;
             })
         }
 
-        const searchInput = document.getElementById('searchInput');
+        function displayFavoris(results, favori) {
+            // Réinitialise la liste
+            annoncesList.innerHTML = '';
+
+            // Il n'y a pas de résultats :
+            if (results.favoris === undefined || results.favoris.length == 0) {
+                annoncesList.innerHTML = `<div style="margin: 60px auto;">Pas de favoris trouvés.</div>`;
+            }
+
+            // Pour chaque favori du tableau favoris
+            results.favoris.forEach(a => {
+                var card = new AnnonceCard(a.identity, a.nom, a.adresse.rue, a.adresse.codePostal, a.adresse.ville, a.createdAt, a.date, a.description, favori);
+                annoncesList.innerHTML += card.cardTemplate;
+            })
+        }
+
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchAnnonces();
+                makeRequestFiltered();
             }
         });
 
-        function searchAnnonces() {
-            // String secteur
-            let inputValue = searchInput.value;
-            // Float distance max
-            let distanceMax = -1;
-            // Int limit
-            let limit = 25;
-            // Int offset
-            let offset = 0;
-            inputValue = inputValue.trim();
-            if (inputValue != undefined && inputValue.length > 0) {
-                makeRequestFiltered(inputValue, distanceMax, limit, offset);
-            } else {
-                makeRequestLoadAll();
-            }
-        }
-
-        function addFav(e) {
+        function addFav(e, id) {
             $(e).transition('pulse');
+            // Retirer des favoris
             if (e.classList.contains('yellow')) {
                 e.classList.remove('yellow');
                 e.classList.add('outline');
-            } else {
+                $.ajax({
+                    url: '/particulier/remove/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json'
+                });
+            } else
+                // Ajouter aux favoris
+            {
                 e.classList.add('yellow');
                 e.classList.remove('outline');
+                $.ajax({
+                    url: '/particulier/add/favoris/' + id,
+                    type: 'POST',
+                    dataType: 'json'
+                });
             }
         };
 
-        const rangeLabel = document.getElementById('rangeLabel');
-
-        function updateRangeLabel(value) {
-            if (value == 0) {
-                rangeLabel.innerHTML = 'Désactivé';
+        $('#favorisCheckbox').on('change', function () {
+            if (this.checked) {
+                $.ajax({
+                    url: '/particulier/get/favoris',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayFavoris(results, true)
+                    }
+                });
             } else {
-                rangeLabel.innerHTML = value + ' km.'
+                $.ajax({
+                    url: '/particulier/get/annonces',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (results) {
+                        displayAnnonces(results, false)
+                    }
+                });
             }
-            ;
-        }
+        });
+
+        $('#departementSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}

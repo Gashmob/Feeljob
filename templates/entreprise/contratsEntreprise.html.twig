@@ -79,15 +79,31 @@
          * classe correspondant à l'item proposition de contrat affiché dans la vue contrats
          */
         class Contrat {
-            constructor(id, nom, ville, updatedAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye) {
+            constructor(id, nom, ville, updatedAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye, idCV) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
                 if (ville.length > 0) ville = ' à ' + ville;
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var urlCVEmploye = "";
+                var etatCV = "Voir CV";
+                var etatCVButton = "";
+                if (idCV != undefined) {
+                    urlCVEmploye = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + idCV;
+                }
+                else {
+                    urlCVEmploye = "#";
+                    etatCV = "Pas de CV";
+                    etatCVButton = "disabled";
+                }
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
@@ -95,14 +111,14 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom}${ville} pour ${prenomEmploye} ${nomEmploye}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
                         <div class="extra">
                             <div class="ui right floated buttons">
                                 <button id="undoBtn${id}to${idEmploye}" class="ui red basic button undoBtn" onclick="removeProposition(${id}, ${idEmploye})">Annuler</button>
-                                <a href="${url}" class="ui blue basic button">Voir</a>
+                                <a href="${urlCVEmploye}" class="ui blue basic button btnAccept ${etatCVButton}">${etatCV}</a>
                             </div>
                         </div>
                     </div>
@@ -114,16 +130,32 @@
          * classe correspondant à l'item candidature dans la vue contrats
          */
         class Candidature {
-            constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye) {
+            constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description, prenomEmploye, nomEmploye, idEmploye, idCV) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
                 if (ville.length > 0) ville = ' à ' + ville;
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
-                // TODO : lien disabled vers cv employe si employe n'a pas de CV
+
+                var urlCVEmploye = "";
+                var etatCV = "Voir CV";
+                var etatCVButton = "";
+                if (idCV != undefined) {
+                    urlCVEmploye = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + idCV;
+                }
+                else {
+                    urlCVEmploye = "#";
+                    etatCV = "Pas de CV";
+                    etatCVButton = "disabled";
+                }
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
@@ -131,7 +163,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${prenomEmploye} ${nomEmploye} pour ${nom}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -139,7 +171,7 @@
                             <div class="ui right floated buttons">
                                 <button id="denyBtn${id}to${idEmploye}" class="ui red basic button denyBtn" onclick="refuseCandidature(${id}, ${idEmploye})">Refuser</button>
                                 <button id="acceptBtn${id}to${idEmploye}" class="ui green basic button acceptBtn" onclick="acceptCandidature(${id}, ${idEmploye})">Accepter</button>
-                                <a href="${url}" class="ui blue basic button btnAccept">Voir</a>
+                                <a href="${urlCVEmploye}" class="ui blue basic button btnAccept ${etatCVButton}">${etatCV}</a>
                             </div>
                         </div>
                     </div>
@@ -157,8 +189,8 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'undoBtn' + idO +'to' + idE
-                    let btn = document.getElementById(btnNo)
+                    var btnNo = 'undoBtn' + idO +'to' + idE
+                    var btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée'
                 }
             });
@@ -173,10 +205,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
-                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    var btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnDeny.innerHTML = 'Refusée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -193,10 +225,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
-                    let btnDenyNo = 'denyBtn' + idO + 'to' + idE
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnAcceptNo = 'acceptBtn' + idO + 'to' + idE
+                    var btnDenyNo = 'denyBtn' + idO + 'to' + idE
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnAccept.innerHTML = 'Acceptée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -205,7 +237,7 @@
         }
 
         // Affiche la liste des propositions de contrat envoyées dans la vue contrats
-        const contratsList = document.getElementById('contratsList');
+        var contratsList = document.getElementById('contratsList');
 
         function displayContrats(results) {
             // Réinitialise la liste
@@ -216,17 +248,23 @@
                 contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
 
-            console.log(results)
+
 
             // Il y a des résultats :
             results.propositions.forEach(proposition => {
-                let card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity);
-                contratsList.innerHTML += card.contratTemplate;
+                if (proposition.cv != undefined) {
+                    var card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, proposition.cv.id);
+                    contratsList.innerHTML += card.contratTemplate;
+                }
+                else {
+                    var card = new Contrat(proposition.offre.identity, proposition.offre.nom, proposition.offre.lieu.ville, proposition.offre.updatedAt, proposition.offre.debut, proposition.offre.fin, proposition.offre.description, proposition.employe.prenom, proposition.employe.nom, proposition.employe.identity, null);
+                    contratsList.innerHTML += card.contratTemplate;
+                }
             })
         }
 
         // Affiche la liste des candidatures reçues dans la vue contrats
-        const candidaturesList = document.getElementById('candidaturesList');
+        var candidaturesList = document.getElementById('candidaturesList');
 
         function displayCandidatures(results) {
             // Réinitialise la liste
@@ -236,12 +274,18 @@
                 candidaturesList.innerHTML = `<div>Pas de candidatures.</div>`;
             }
 
-            console.log(results)
+
 
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
-                let card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity);
-                candidaturesList.innerHTML += card.candidatureTemplate;
+                if (candidature.cv != undefined) {
+                    var card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, candidature.cv.id);
+                    candidaturesList.innerHTML += card.candidatureTemplate;
+                }
+                else {
+                    var card = new Candidature(candidature.offre.identity, candidature.offre.nom, candidature.offre.lieu.rue, candidature.offre.lieu.codePostal, candidature.offre.lieu.ville, candidature.offre.createdAt, candidature.offre.debut, candidature.offre.fin, candidature.offre.description, candidature.employe.prenom, candidature.employe.nom, candidature.employe.identity, null);
+                    candidaturesList.innerHTML += card.candidatureTemplate;
+                }
             })
         }
     </script>

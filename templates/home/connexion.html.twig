@@ -84,7 +84,7 @@
         //Oeil mdp
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            let eyeIcon = obj.getElementsByTagName('i')[0]
+            var eyeIcon = obj.getElementsByTagName('i')[0]
             if (eyeIcon.classList.contains('slash')) {
                 eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';

@@ -1,43 +1,60 @@
 {% extends 'page.html.twig' %}
 {% block title %}Offres d'emploi{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px  !important; margin-bottom: 40px;">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px; min-height: 600px;">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
-            <div class="ui basic floating dropdown button">
-                <div class="text">This Page</div>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <div class="item">Secteur</div>
-                    {# {% for secteur in secteurs %}
-                        <div class="item">{{ secteur }}</div>
-                    {% endfor %} #}
-                </div>
-            </div>
+            <input id="searchInput" type="text" placeholder="Rechercher" autofocus>
             <div onclick="searchOffres()" id="searchBtn" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Distance max</div>
+                    <div class="header">Département</div>
                     <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
+                        <div class="item">
+                            <select class="ui search dropdown" id="departementSelect">
+                                <option value="none">Désactivé</option>
+                                {% for i in 1..95 %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="header">Secteur d'activité</div>
                     <div class="menu">
                         <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
-                                <option value="">Choisir</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                            <select class="ui search dropdown" id="secteurSelect">
+                                <option value="none">Désactivé</option>
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur }}">{{ secteur }}</option>
+                                {% endfor %}
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Type contrat</div>
+                    <div class="menu">
+                        <div class="item">
+                            <select class="ui dropdown" id="typeContratSelect">
+                                <option value="none">Désactivé</option>
+                                {% for type in typeContrats %}
+                                    <option value="{{ type }}">{{ type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Télétravail</div>
+                    <div class="menu">
+                        <div class="item field">
+                            <div class="ui toggle checkbox" id="teletravailCheckboxValue">
+                                <input id="teletravailCheckboxInput" type="checkbox" name="teletravail" class="hidden">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +111,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             makeRequest();
-            searchInput.focus();
         });
 
         // Cherche tous les résultats
@@ -109,10 +125,42 @@
             });
         }
 
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestByName(name) {
+        var searchInput = document.getElementById('searchInput');
+        var departementSelect = document.getElementById('departementSelect');
+        var secteurSelect = document.getElementById('secteurSelect');
+        var typeContratSelect = document.getElementById('typeContratSelect');
+        var teletravailCheckboxInput = document.getElementById('teletravailCheckboxInput');
+        var salaireMinInput = document.getElementById('salaireMinInput');
+
+        // /entreprise/get/offres_emploi/{nom}/{metier}/{typeContrat}/{secteurActivite}/{departement}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}
+        // L'Employe récupère toutes les OffreEmploi selon le nom, typeContrat, metier, secteur, departement, loge, deplacement, teletravail.
+        // Il en récupère limit avec un offset => {'offres': OffreEmploi[], 'quantity': Int}
+        function makeRequestFiltered() {
+            var nom = searchInput.value;
+            var metier = 'none';
+            var typeContrat = typeContratSelect.value;
+            var secteur = encodeURIComponent(secteurSelect.value);
+            var departement = departementSelect.value;
+            var loge = 'none';
+            var deplacement = 'none';
+            var teletravail = teletravailCheckboxInput.checked;
+            var limit = 25;
+            var offset = 0;
+
+            if (teletravail == false) {
+                teletravail = 'none'
+            }
+
+            nom = nom.trim();
+
+            if (nom != undefined && nom.length > 0) {
+                console.log('rad')
+            } else {
+                nom = 'none'
+            }
+
             $.ajax({
-                url: '/entreprise/get/offres_emploi',
+                url: '/entreprise/get/offres_emploi/' + nom + '/' + metier + '/' + typeContrat + '/' + secteur + '/' + departement + '/' + loge + '/' + deplacement + '/' + teletravail + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -128,15 +176,13 @@
             // Réinitialise la liste
             offresList.innerHTML = '';
 
-            console.log(results)
-
             // Il n'y a pas de résultats :
             if (results.offres === undefined || results.offres.length == 0) {
                 offresList.innerHTML = `<div style="margin: 60px auto;">Pas de résultat trouvé.</div>`;
             }
 
             results.offres.forEach(o => {
-                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
+                var card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
@@ -145,8 +191,6 @@
             // Réinitialise la liste
             offresList.innerHTML = '';
 
-            console.log(results)
-
             // Il n'y a pas de résultats :
             if (results.favoris === undefined || results.favoris.length == 0) {
                 offresList.innerHTML = `<div style="margin: 60px auto;">Pas de favoris trouvés.</div>`;
@@ -154,7 +198,7 @@
 
             // Pour chaque favori du tableau favoris
             results.favoris.forEach(o => {
-                let card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
+                var card = new OffreCard(o.identity, o.nom, o.lieu.rue, o.lieu.codePostal, o.lieu.ville, o.salaire, o.heures, o.createdAt, o.description, o.debut, o.fin, o.teletravail, o.loge, favori);
                 offresList.innerHTML += card.cardTemplate;
             })
         }
@@ -165,8 +209,14 @@
                 var date = ''
                 debut = debut.substr(0, 10).split('-');
                 debut = debut[2] + '/' + debut[1] + '/' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span>Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span>À partir du ${debut}</span>`
+                }
 
                 if (!nom.length > 0) {
                     nom = 'Annonce n°' + id;
@@ -184,11 +234,7 @@
                         </span>
                     <br>`
                 }
-                if (fin.length > 0) {
-                    date = `<span>Du ${debut} au ${fin}</span>`
-                } else if (debut.length > 0) {
-                    date = `<span>À partir du ${debut}</span>`
-                }
+
                 var favoriStar = ''
                 if (favori) favoriStar = 'yellow'
 
@@ -219,22 +265,11 @@
         }
 
         // Event listener barre de recherche
-        var searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchOffres();
+                makeRequestFiltered()
             }
         });
-
-        // Fonction liée au event listener de la barre de recherche
-        function searchOffres() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestByName(inputValue);
-            } else {
-                makeRequest();
-            }
-        }
 
         function addFav(e, id) {
             $(e).transition('pulse');
@@ -285,6 +320,17 @@
                         displayOffres(results, false)
                     }
                 });
+            }
+        });
+
+        $('#typeContratSelect').change(makeRequestFiltered);
+        $('#teletravailCheckboxInput').change(makeRequestFiltered);
+        $('#departementSelect').change(makeRequestFiltered);
+        $('#secteurSelect').change(makeRequestFiltered);
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                makeRequestFiltered();
             }
         });
     </script>

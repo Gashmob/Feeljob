@@ -19,6 +19,21 @@ class LangueRepository extends ServiceEntityRepository
         parent::__construct($registry, Langue::class);
     }
 
+    /**
+     * @return string[]
+     */
+    public function findAllNames(): array
+    {
+        $results = $this->findAll();
+
+        $res = [];
+        foreach ($results as $result) {
+            $res[] = $result->getNom();
+        }
+
+        return $res;
+    }
+
     // /**
     //  * @return Langue[] Returns an array of Langue objects
     //  */

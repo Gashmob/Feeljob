@@ -1,0 +1,13 @@
+{% extends 'page.html.twig' %}
+{% block title %}Compte créé{% endblock %}
+{% block body %}
+    <div style="padding-top: 20px;" class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui center aligned icon header">
+                <i class="envelope open outline icon"></i>
+                Votre compte a bien été créé.
+            </h2>
+            <a href="{{ path('connexion') }}" class="ui large green button">Se connecter</a>
+        </div>
+    </div>
+{% endblock %}

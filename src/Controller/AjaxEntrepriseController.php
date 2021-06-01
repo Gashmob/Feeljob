@@ -507,7 +507,8 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/cvs/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cvs/{metiers}/{nom}/{competences}/{langues}/{permis}/{limit}/{offset}", defaults={"metiers":"none", "nom":"none", "competences":"none", "langues":"none", "permis":"none", "limit":"25", "offset":"0"})
+     * @param $metiers
      * @param $nom
      * @param $competences
      * @param $langues
@@ -518,17 +519,14 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCVs($nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCVs($metiers, $nom, $competences, $langues, $permis, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if (!($this->session->get('user'))) {
-            return $this->json([]);
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
-            return $this->json([]);
-        }
-
         $separator = '_';
+
+        $metier = [];
+        if ($metiers != 'none') {
+            $metier = explode($separator, $metiers);
+        }
 
         $comps = [];
         if ($competences != 'none') {
@@ -540,12 +538,7 @@ class AjaxEntrepriseController extends AbstractController
             $langs = explode($separator, $langues);
         }
 
-        $perm = $permis;
-        if ($permis != 'none') {
-            $perm = $permis == 'on';
-        }
-
-        $results = array_slice($em->getRepository(CV::class)->findByNomCompetencesLanguesPermis($nom, $comps, $langs, $perm), $offset, $limit);
+        $results = array_slice($em->getRepository(CV::class)->findByMetiersNomCompetencesLanguesPermis($metier, $nom, $comps, $langs, $permis), $offset, $limit);
         foreach ($results as $result) {
             if (!is_null($result->getEmploye())) {
                 $result->getEmploye()->setCV(null);
@@ -571,12 +564,12 @@ class AjaxEntrepriseController extends AbstractController
     }
 
     /**
-     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{salaire}/{heures}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "salaire":"none", "heures":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
+     * @Route("/get/offres_emploi/{nom}/{metier}/{typeContrat}/{secteurActivite}/{departement}/{loge}/{deplacement}/{teletravail}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "typeContrat":"none", "secteurActivite":"none", "departement":"none", "loge":"none", "deplacement":"none", "teletravail":"none", "limit":"25", "offset":"0"}, methods={"POST"})
      * @param $nom
      * @param $metier
      * @param $typeContrat
-     * @param $salaire
-     * @param $heures
+     * @param $secteurActivite
+     * @param $departement
      * @param $loge
      * @param $deplacement
      * @param $teletravail
@@ -586,21 +579,14 @@ class AjaxEntrepriseController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getOffresEmploi($nom, $metier, $typeContrat, $salaire, $heures, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getOffresEmploi($nom, $metier, $typeContrat, $secteurActivite, $departement, $loge, $deplacement, $teletravail, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if (!($this->session->get('user'))) {
-            return $this->json([]);
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
-            return $this->json([]);
-        }
-
         if ($request->isMethod('POST')) {
-            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierFromPreResult(
-                $em->getRepository(OffreEmploi::class)->findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail),
+            $results = (new OffreEmploiManager())->findOffreEmploiByTypeContratMetierSecteurActiviteFromPreResult(
+                $em->getRepository(OffreEmploi::class)->findByDepartementLogeDeplacementTeletravailNom($nom, $departement, $loge, $deplacement, $teletravail),
                 $typeContrat,
-                $metier);
+                $metier,
+                $secteurActivite);
 
             return $this->json([
                 'offres' => array_slice(

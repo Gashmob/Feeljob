@@ -270,7 +270,9 @@ class ParticulierController extends AbstractController
             }
         }
 
-        return $this->render('autoEntrepreneur/createCarteVisite.html.twig');
+        return $this->render('autoEntrepreneur/createCarteVisite.html.twig', [
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite()
+        ]);
     }
 
     /**
@@ -308,13 +310,16 @@ class ParticulierController extends AbstractController
                 $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
 
                 $carte->setDescription($description)
-                    ->clearRealisation();
+                    ->clearRealisation()
+                    ->setUpdatedAt(new DateTime());
                 $em->flush();
 
                 for ($i = 0; $i < $request->get('nbRealisations'); $i++) {
-                    $image = Utils::uploadImage('realisations', 'image' . $i);
+                    $image = $request->get('change' . $i);
+                    if ($image == 'none') {
+                        $image = Utils::uploadImage('realisations', 'image' . $i);
+                    }
                     $descriptionR = $request->get('description' . $i);
-
                     if ($image != '' && $descriptionR != '') {
                         $r = (new Realisation())
                             ->setImage($image)
@@ -398,6 +403,8 @@ class ParticulierController extends AbstractController
             }
 
             $ville = $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $date = $request->get('date');
 
@@ -405,8 +412,8 @@ class ParticulierController extends AbstractController
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
-                    ->setRue('')
-                    ->setCodePostal('')
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
@@ -469,6 +476,8 @@ class ParticulierController extends AbstractController
             }
 
             $ville = $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $date = $request->get('date');
 
@@ -476,8 +485,8 @@ class ParticulierController extends AbstractController
 
             if ($nomB && $descriptionB) {
                 $adresse = (new Adresse())
-                    ->setRue('')
-                    ->setCodePostal('')
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
@@ -485,7 +494,8 @@ class ParticulierController extends AbstractController
                 $annonce->setNom($nom)
                     ->setDescription($description)
                     ->setAdresse($adresse)
-                    ->setDate(new DateTime($date));
+                    ->setDate(new DateTime($date))
+                    ->setUpdatedAt(new DateTime());
 
                 (new AnnonceManager())->update($em, $annonce->getIdentity(), $metier);
                 $this->addFlash('success', 'Votre annonce a été modifiée !');
@@ -529,19 +539,14 @@ class ParticulierController extends AbstractController
 
     /**
      * @Route("/annonces", name="particulier_annonces")
-     * @return Response|RedirectResponse
+     * @return Response
      */
-    public function annonces()
+    public function annonces(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
-            return $this->redirectToRoute('userSpace');
-        }
-
-        return $this->render('autoEntrepreneur/showAnnonces.html.twig');
+        return $this->render('autoEntrepreneur/showAnnonces.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
+        ]);
     }
 
     /**
@@ -553,7 +558,7 @@ class ParticulierController extends AbstractController
     public function voirAnnonce($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = (new AnnonceManager())->isOwner($id, $this->session->get('user'));
@@ -570,18 +575,14 @@ class ParticulierController extends AbstractController
 
     /**
      * @Route("/cartes", name="particulier_cartes")
+     * @return Response
      */
-    public function listCarteVisite()
+    public function listCarteVisite(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->redirectToRoute('userSpace');
-        }
-
-        return $this->render('particulier/showCartesVisite.html.twig');
+        return $this->render('particulier/showCartesVisite.html.twig', [
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'connected' => ($this->session->get('user')),
+        ]);
     }
 
     /**
@@ -593,7 +594,7 @@ class ParticulierController extends AbstractController
     public function voirCarteVisite($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $carte = $em->getRepository(CarteVisite::class)->findOneBy(['id' => $id]);
@@ -615,7 +616,8 @@ class ParticulierController extends AbstractController
         return $this->render('autoEntrepreneur/showCarteVisite.html.twig', [
             'carte' => $carte,
             'annonces' => $annonces,
-            'owner' => $owner
+            'owner' => $owner,
+            'secteur' => (new AutoEntrepreneurManager())->getSecteurActivite($carte->getAutoEntrepreneur()->getIdentity()),
         ]);
     }
 

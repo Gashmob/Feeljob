@@ -1,18 +1,25 @@
 {% extends 'page.html.twig' %}
-{% block title %}Voir un CV{% endblock %}
+{% block title %}{{ cv.employe.prenom }} {{ cv.employe.nom }}{% endblock %}
 {% block body %}
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(114deg 50% 43%)" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(134deg 50% 43%)" fill-opacity="0.7"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
     <div style="position: relative" class="ui text justified container">
         {% if not owner %}
-            <a href="{{ path('entreprise_cvs') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+            <a href="{{ path('entreprise_cvs') }}" class="ui compact labeled icon button backToResultsBtn">
                 <i class="left arrow icon"></i>
                 Retour aux CV
             </a>
         {% endif %}
-        <h2 class="ui center aligned icon header">
-            <i class="address card outline icon"></i>
-            CV de {{ cv.employe.prenom }} {{ cv.employe.nom }}
-        </h2>
         <div>
             <div class="ui buttons">
                 {% if owner %}
@@ -29,8 +36,7 @@
         </div>
         <form class="ui form segment">
             <!-- Identité -->
-            <h3 class="ui dividing header">
-                <i class="icon user"></i>
+            <h3 class="ui dividing green header">
                 <div class="content">Identité</div>
             </h3>
             <div class="ui two column stackable grid">
@@ -45,27 +51,24 @@
                              class="ui small circular image profileLogo">
                     {% endif %}
                 </div>
-                <div class="column ten wide">
-                    <div>{{ cv.employe.prenom }} {{ cv.employe.nom }}</div>
-                    <div>Homme</div>
-                    <div>Né le {{ cv.naissance|date('d/m/Y') }}</div>
+                <div class="column ten wide" style="padding-top: 2em;">
+                    <h4 class="ui header">{{ cv.employe.prenom }} {{ cv.employe.nom }}</h4>
+                    {% if cv.naissance %}
+                    <div>Né en {{ cv.naissance|date('Y') }}</div>
+                    {% endif %}
                     <div>{{ cv.situationFamille.nom }}</div>
                     <div class="ui divider"></div>
-                    {% if app.session.get('user') %}
-                        <div>{{ cv.employe.email }}</div>
-                        <div>{{ cv.employe.telephone }}</div>
-                    {% endif %}
+                    <div>{{ metier }}</div>
                 </div>
             </div>
             <!-- Formation -->
             {% if cv.diplomes is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon university"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Formation</div>
                 </h3>
                 <div class="ui segments">
                     {% for diplome in cv.diplomes %}
-                        <div class="ui segment formation1">
+                        <div class="ui segment">
                             <h4 class="ui header">{{ diplome.diplome.nom }} à {{ diplome.diplome.etablissement }}</h4>
                             <div>{{ diplome.date|date('d/m/Y') }}</div>
                             <div>{{ diplome.mention }}</div>
@@ -75,8 +78,7 @@
             {% endif %}
             <!-- Expérience -->
             {% if cv.metiers is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon dolly"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Expérience professionnelle</div>
                 </h3>
                 <div class="ui segments">
@@ -90,8 +92,7 @@
             {% endif %}
             <!-- Bio -->
             {% if cv.description %}
-                <h3 class="ui dividing header">
-                    <i class="icon info"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Biographie</div>
                 </h3>
                 <div class="ui segment">
@@ -99,8 +100,8 @@
                 </div>
             {% endif %}
             <!-- Langues parlées -->
-            <h3 class="ui dividing header">
-                <i class="icon globe"></i>
+            {% if cv.langues is not empty %}
+            <h3 class="ui dividing green header">
                 <div class="content">Langues parlées</div>
             </h3>
             <ul>
@@ -108,10 +109,10 @@
                     <li>{{ langue.langue.nom }} - {{ langue.niveau }}</li>
                 {% endfor %}
             </ul>
+            {% endif %}
             <!-- Compétences -->
             {% if cv.competences is not empty %}
-                <h3 class="ui dividing header">
-                    <i class="icon settings"></i>
+                <h3 class="ui dividing green header">
                     <div class="content">Compétences</div>
                 </h3>
                 <ul>
@@ -121,8 +122,7 @@
                 </ul>
             {% endif %}
             <!-- Autres -->
-            <h3 class="ui dividing header">
-                <i class="icon question circle outline"></i>
+            <h3 class="ui dividing green header">
                 <div class="content">Autres informations</div>
             </h3>
             <div class="ui segment">
@@ -131,15 +131,15 @@
                     Dispose du permis B
                 </div>
                 <div class="ui left float icon">
-                    <i class="icon {% if cv.permis %}check{% else %}times{% endif %}"></i>
+                    <i class="icon {% if cv.transport %}check{% else %}times{% endif %}"></i>
                     Dispose d'un moyen de transport
                 </div>
             </div>
         </form>
         {% if app.session.get('userType') == 'Employeur' %}
-            <div class="ui vertical segment left aligned">
+            <div class="ui segment left aligned">
                 <h3 class="ui header">Proposer à {{ cv.employe.prenom }} une de vos offres d'emploi</h3>
-                <select class="ui dropdown" name="offreEmploiTarget" id="offreEmploiTarget">
+                <select class="ui search fluid dropdown" name="offreEmploiTarget" id="offreEmploiTarget">
                     {% if offres %}
                         <option value="">Choisir</option>
                         {% for offre in offres %}
@@ -149,7 +149,7 @@
                         <option value="">Pas d'annonce postée !</option>
                     {% endif %}
                 </select>
-                <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                <button style="margin-top: 0.6em;" id="applyBtn" class="ui green button" onclick="offreContrat()">
                     Recruter
                 </button>
             </div>
@@ -177,10 +177,10 @@
             }
         }
 
-        const applyBtn = document.querySelector("#applyBtn")
+        var applyBtn = document.querySelector("#applyBtn")
 
         function offreContratResponse(results) {
-            console.log(results)
+
             // Candidature posée
             if (results.result) {
                 applyBtn.innerHTML = '<div>Validé</div>';

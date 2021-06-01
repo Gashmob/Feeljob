@@ -1,42 +1,50 @@
 {% extends 'page.html.twig' %}
 {% block title %}Résultats profils{% endblock %}
 {% block body %}
-    <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
+    <div style="margin-top: 20px  !important; margin-bottom: 40px; min-height: 600px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
+            <select class="ui fluid search dropdown" id="searchInput">
+                <option value="none">Désactivé</option>
+                {% for id, secteurs in metiers %}
+                    {% for secteur, metiersSecteur in secteurs %}
+                        {% for id, metierSecteur in metiersSecteur %}
+                            <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
             <div id="searchInput" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
                 <div class="item">
-                    <div class="header">Distance max</div>
+                    <div class="header">Langue</div>
                     <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">Secteur d'activité</div>
-                    <div class="menu">
-                        <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
-                                <option value="">Choisir</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
+                        <div class="item field">
+                            <select class="ui search dropdown" name="langues" id="languesSelect">
+                                <option value="none">Désactivé</option>
+                                {% for langue in langues %}
+                                    <option value="{{ langue }}">{{ langue }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="header">Favoris</div>
+                    <div class="header">Compétence</div>
+                    <div class="menu">
+                        <div class="ui item field input">
+                            <input type="text" id="competencesInput">
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Permis de conduire</div>
                     <div class="menu">
                         <div class="item field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
+                            <div class="ui toggle checkbox" id="permisCheckboxValue">
+                                <input id="permisCheckboxInput" type="checkbox" name="permis" class="hidden">
                             </div>
                         </div>
                     </div>
@@ -87,24 +95,12 @@
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
-                if (photo.length > 0) photo = '{{ asset('uploads/photo/') }}' + photo;
-                if (permis) permis = `
-                <p>
-                    <i class="icon circle outline check"></i>
-                    Dispose du permis
-                </p>`
+                var url = "{{ path('entreprise_show_cv', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
                 <div class="ui card cvCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
-                        <div class="ui left floated profileLogo profileLogo--35"
-                                 style="background-image: url('${photo}'); -moz-background-image: url('${photo}'); -o-background-image: url('${photo}'); -webkit-background-image: url('${photo}');"></div>
                         <div class="header">${prenom} ${nom}</div>
-                        <div class="meta">
-                            <span class="category">Métier</span>
-                        </div>
                         <div style="margin-top: 10px;" class="contract">
                             ${langues.map(langue => `<div class="ui label">${langue.langue.nom}</div>`).join('')}
                         </div>
@@ -113,14 +109,15 @@
                             ${diplomes.map(diplome =>
                     `<p><i class="icon bookmark"></i>${diplome.diplome.nom} à ${diplome.diplome.etablissement}</p>`
                 ).join('')}
-                            ${permis}
                         </div>
                     </div>
-                    <a href="${url}"
-                       class="ui right floated green button">
-                        Voir le CV
-                        <i class="right chevron icon"></i>
-                    </a>
+                    <div class="extra">
+                        <a href="${url}"
+                           class="ui right floated green button">
+                            Voir le CV
+                            <i class="right chevron icon"></i>
+                        </a>
+                    </div>
                 </div>`;
             }
         }
@@ -141,10 +138,47 @@
             });
         }
 
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestByCompetence(competence) {
+        var searchInput = document.getElementById('searchInput');
+        var languesSelect = document.getElementById('languesSelect');
+        var competencesInput = document.getElementById('competencesInput');
+        var permisCheckboxInput = document.getElementById('permisCheckboxInput');
+        function makeRequestFiltered() {
+            var metier = searchInput.value
+            var nom = 'none';
+            var competences = competencesInput.value;
+            var langues = languesSelect.value;
+            var permis = permisCheckboxInput.checked;
+            //var permis = 'none';
+            var limit = 25;
+            var offset = 0;
+
+            metier = metier.trim();
+            if (metier.length == 0) {
+                metier = 'none'
+            }
+
+            competences = competences.trim();
+            if (competences.length == 0) {
+                competences = 'none';
+            } else if (competences != 'none') {
+                // Correspond au niveau minimum exigé pour la compétence /5
+                competences += '1';
+            }
+
+            langues = langues.trim();
+            if (langues.length == 0) {
+                langues = 'none';
+            } else if (langues != 'none') {
+                // Correspond au niveau minimum exigé pour la compétence /5
+                langues += '1';
+            }
+
+            if (permis == false) {
+                permis = 'none'
+            }
+
             $.ajax({
-                url: '/entreprise/get/cvs',
+                url: '/entreprise/get/cvs/' + metier + '/' + nom + '/' + competences + '/' + langues + '/' + permis + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
@@ -157,7 +191,6 @@
         var cvsList = document.getElementById('cvsList');
 
         function displayCVS(results) {
-            console.log(results);
             // Réinitialise la liste
             cvsList.innerHTML = '';
 
@@ -168,38 +201,26 @@
 
             // Il y a des résultats :
             results.cvs.forEach(cv => {
-                let card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
+                var card = new CVCard(cv.id, cv.employe.prenom, cv.employe.nom, cv.employe.photo, cv.diplomes, cv.langues, cv.createdAt, cv.description, cv.permis);
                 cvsList.innerHTML += card.cardTemplate;
             })
         }
 
         // Cherche les CV lorsqu'on appuie sur la touche entrée dans la barre de recherche
-        var searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                searchCVS();
+                makeRequestFiltered();
             }
         });
 
-        // Cherche les CV
-        function searchCVS() {
-            var inputValue = searchInput.value;
-            if (inputValue != '' && inputValue != null) {
-                makeRequestByCompetence(inputValue);
-            } else {
-                makeRequest();
+        competencesInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                makeRequestFiltered();
             }
-        }
+        });
 
-        function addFav(e) {
-            $(e).transition('pulse');
-            if (e.classList.contains('yellow')) {
-                e.classList.remove('yellow');
-                e.classList.add('outline');
-            } else {
-                e.classList.add('yellow');
-                e.classList.remove('outline');
-            }
-        };
+        $('#searchInput').change(makeRequestFiltered)
+        $('#permisCheckboxInput').change(makeRequestFiltered);
+        $('#languesSelect').change(makeRequestFiltered);
     </script>
 {% endblock %}

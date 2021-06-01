@@ -28,7 +28,6 @@ $(document)
             $('.dimmable.image').dimmer({
                 on: 'hover'
             });
-            //if ($('.message .content div').html().trim()) $('.message').removeClass('hidden');
             $('.message .close')
                 .on('click', function () {
                     $(this)
@@ -37,6 +36,9 @@ $(document)
                     ;
                 })
             ;
+            if ($('.message .content div').length > 0) {
+                if ($('.message .content div').html().trim()) $('.message').removeClass('hidden');
+            }
         }
     )
 ;
@@ -52,7 +54,7 @@ function menuDisplay() {
     var navList = document.getElementsByClassName("nav-item")
     var delay = 80
 
-    for (let i = 0; i < navList.length; i++) {
+    for (var i = 0; i < navList.length; i++) {
         setTimeout(function () {
             navList[i].classList.toggle('nav-item-display')
         }, delay)

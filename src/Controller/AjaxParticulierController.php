@@ -185,6 +185,53 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
+     * @Route("/add/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            return $this->json(['result' => (new AnnonceManager())->addToFavoris($id, $this->session->get('user'))]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
+     * @Route("/remove/favoris/{id}", methods={"POST"})
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeFavoris($id, Request $request): JsonResponse
+    {
+        if (!($this->session->get('user'))) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($this->session->get('userType') != EntityManager::AUTO_ENTREPRENEUR) {
+            return $this->json(['result' => false]);
+        }
+
+        if ($request->isMethod('POST')) {
+            (new AnnonceManager())->removeFavoris($id, $this->session->get('user'));
+            return $this->json(['result' => true]);
+        }
+
+        return $this->json(['result' => false]);
+    }
+
+    /**
      * @Route("/accept/proposition/{id}", methods={"POST"})
      * @param $id
      * @param Request $request
@@ -436,16 +483,12 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/annonces/{metier}/{distanceMax}/{limit}/{offset}", defaults={"metier":"none", "distanceMax":"-1", "limit":25, "offset":0})
-     * @param $metier
-     * @param $distanceMax
-     * @param $limit
-     * @param $offset
+     * @Route("/get/favoris", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getAnnonces($metier, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getFavoris(Request $request, EntityManagerInterface $em): JsonResponse
     {
         if (!($this->session->get('user'))) {
             return $this->json([]);
@@ -456,10 +499,30 @@ class AjaxParticulierController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $auto_entrepreneur = $em->getRepository(AutoEntrepreneur::class)->findOneBy(['identity' => $this->session->get('user')]);
-            $adresse = $auto_entrepreneur->getAdresse();
+            return $this->json([
+                'favoris' => (new AnnonceManager())->getFavoris($em, $this->session->get('user'))
+            ]);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/get/annonces/{nom}/{metier}/{departement}/{limit}/{offset}", defaults={"nom":"none", "metier":"none", "departement":"none", "limit":25, "offset":0})
+     * @param $nom
+     * @param $metier
+     * @param $departement
+     * @param $limit
+     * @param $offset
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function getAnnonces($nom, $metier, $departement, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        if ($request->isMethod('POST')) {
             $results = (new AnnonceManager())->getAnnoncesByMetierFromPreResult(
-                $em->getRepository(Annonce::class)->findByDistanceMax($distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()),
+                $em->getRepository(Annonce::class)->findByDepartementNom($departement, $nom),
                 $metier
             );
 
@@ -477,9 +540,9 @@ class AjaxParticulierController extends AbstractController
     }
 
     /**
-     * @Route("/get/cartes/{nom}/{secteur}/{distanceMax}/{limit}/{offset}", methods={"POST"}, defaults={"nom":"none", "secteur":"none", "distanceMax":"none", "limit":"25", "offset":"0"})
+     * @Route("/get/cartes/{nom}/{metiers}/{distanceMax}/{limit}/{offset}", methods={"POST"}, defaults={"nom":"none", "metiers":"none", "distanceMax":"none", "limit":"25", "offset":"0"})
      * @param $nom
-     * @param $secteur
+     * @param $metiers
      * @param $distanceMax
      * @param $limit
      * @param $offset
@@ -487,27 +550,34 @@ class AjaxParticulierController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    public function getCartesVisite($nom, $secteur, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCartesVisite($nom, $metiers, $distanceMax, $limit, $offset, Request $request, EntityManagerInterface $em): JsonResponse
     {
-        if (!($this->session->get('user'))) {
-            return $this->json([]);
+        $separator = '_';
+
+        $metier = [];
+        if ($metiers != 'none') {
+            $metier = explode($separator, $metiers);
         }
 
-        if ($this->session->get('userType') != EntityManager::PARTICULIER) {
-            return $this->json([]);
+        $connected = false;
+        if ($this->session->get('user')) {
+            $connected = true;
         }
 
         if ($request->isMethod('POST')) {
             $filterNom = $nom == 'none' ? $em->getRepository(AutoEntrepreneur::class)->findAll() :
                 $em->getRepository(AutoEntrepreneur::class)->findBy(['nomEntreprise' => $nom]);
 
-            $filterSecteur = $secteur == 'none' ? $filterNom :
-                (new AutoEntrepreneurManager())->findBySecteurActiviteFromPreResult($filterNom, $secteur);
+            $filterMetier = (new AutoEntrepreneurManager())->findByMetiersFromPreResult($filterNom, $metier);
 
-            $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
-            $adresse = $particulier->getAdresse();
-            $filterDistance = $distanceMax == 'none' || is_null($adresse) ? $filterSecteur :
-                $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterSecteur, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
+            if ($connected) {
+                $particulier = $em->getRepository(Particulier::class)->findOneBy(['identity' => $this->session->get('user')]);
+                $adresse = $particulier->getAdresse();
+                $filterDistance = $distanceMax == 'none' || ($adresse->getRue() == '' && $adresse->getCodePostal() == '' && $adresse->getVille() == '') ? $filterMetier :
+                    $em->getRepository(AutoEntrepreneur::class)->findByDistanceMaxFromPreResult($filterMetier, $distanceMax, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille());
+            } else {
+                $filterDistance = $filterMetier;
+            }
 
             $results = array_slice(
                 $em->getRepository(CarteVisite::class)->findByAutoEntrepreneur($filterDistance),

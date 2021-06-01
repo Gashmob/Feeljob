@@ -29,10 +29,6 @@
                         <p>{{ publication.description|length > 200 ? publication.description|slice(0, 201)|split(' ')|slice(0, -1)|join(' ') ~ ' …' : publication.description }}</p>
                     </div>
                 </div>
-                <div class="extra content">
-                    <i class="check icon"></i>
-                    Vu {{ publication.identity }} fois
-                </div>
             </a>
         {% endfor %}
         <div style="border: none; width: auto; box-shadow: none;"
@@ -163,7 +159,7 @@
         var propositionsList = contratsList.querySelector('#contratsList__prop')
 
         function displayCandidaturesAcceptees(results) {
-            console.log(results);
+
 
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
@@ -172,7 +168,7 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.annonce.identity,
                         a.annonce.nom,
                         a.annonce.updatedAt,
@@ -189,7 +185,7 @@
         }
 
         function displayPropositionsAcceptees(results) {
-            console.log(results);
+
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
@@ -198,7 +194,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.annonce.identity,
                         a.annonce.nom,
                         a.annonce.updatedAt,

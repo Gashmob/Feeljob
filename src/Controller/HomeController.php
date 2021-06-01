@@ -14,6 +14,7 @@ use App\Entity\AutoEntrepreneur;
 use App\Entity\Employe;
 use App\Entity\Employeur;
 use App\Entity\Particulier;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,6 +85,7 @@ class HomeController extends AbstractController
                         } elseif ($this->session->get('userType') == EntityManager::EMPLOYE) {
                             $this->session->set('userImage', $user->getPhoto());
                         }
+                        $user->setUpdatedAt(new DateTime());
 
                         $this->addFlash('success', 'Vous êtes connecté !');
 
@@ -169,6 +171,19 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/preferences", name="preferences")
+     * @return Response
+     */
+    public function preferences(): Response
+    {
+        if (!($this->session->get('user'))) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('utilisateurs/preferences.html.twig');
+    }
+
+    /**
      * @Route("/userspace", name="userSpace")
      * @return RedirectResponse
      */
@@ -226,7 +241,7 @@ class HomeController extends AbstractController
         if ($request->isMethod('POST')) {
             if ($user) {
                 $email = (new TemplatedEmail())
-                    ->from('no-reply@fealjob.com')
+                    ->from('no-reply@feeljob.com')
                     ->to($user->getEmail())
                     ->htmlTemplate('emails/verification.html.twig')
                     ->context([

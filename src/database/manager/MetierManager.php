@@ -148,4 +148,18 @@ class MetierManager extends Manager
 
         return $res;
     }
+
+    /**
+     * @param string $metier
+     * @param string $secteur
+     * @return bool
+     */
+    public function isInSecteurActivite(string $metier, string $secteur): bool
+    {
+        return (new PreparedQuery('MATCH (m:' . EntityManager::METIER . ' {nom:$metier})--(s:' . EntityManager::SECTEUR_ACTIVITE . ' {nom:$secteur}) RETURN m'))
+            ->setString('metier', $metier)
+            ->setString('secteur', $secteur)
+            ->run()
+            ->getOneOrNullResult() != null;
+    }
 }
