@@ -135,10 +135,10 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
-        const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-        const regexMdp = /^(?=.*[a-z])(?=.*[0-9]).{8,}$/
-        const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+        var regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
+        var regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
+        var regexMdp = /^(?=.*[a-z])(?=.*[0-9]).{8,}$/
+        var regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
 
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
@@ -159,7 +159,7 @@
 
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            let eyeIcon = obj.getElementsByTagName('i')[0]
+            var eyeIcon = obj.getElementsByTagName('i')[0]
             if (eyeIcon.classList.contains('slash')) {
                 eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';

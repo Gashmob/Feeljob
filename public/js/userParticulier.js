@@ -10,7 +10,7 @@ class ContratEvent {
         if (!nom.length > 0) nom = 'Annonce n°' + id;
         date = date.substr(0, 10).split('-');
         date = date[2] + '-' + date[1] + '-' + date[0];
-        let url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
+        var url = "{{ path('particulier_show_annonce', {'id': 1}) }}".slice(0, -1) + id;
 
         this.contratEventTemplate = `
         <div class="event">
@@ -45,13 +45,13 @@ function loadContratsAmount() {
 }
 
 // Tronque les descriptions
-const MAX_DESCRIPTION_LENGTH = 300;
+var MAX_DESCRIPTION_LENGTH = 300;
 
 function truncate(str, n, useWordBoundary) {
     if (str.length <= n) {
         return str;
     }
-    const subString = str.substr(0, n - 1); // the original check
+    var subString = str.substr(0, n - 1); // the original check
     return (useWordBoundary
         ? subString.substr(0, subString.lastIndexOf(" "))
         : subString) + " &hellip;";
@@ -77,7 +77,7 @@ function displayContratsFeed(results) {
 
     // Il y a des résultats :
     results.candidatures.forEach(candidature => {
-        let card = new ContratEvent(candidature.annonce.identity, candidature.annonce.nom, candidature.annonce.adresse.ville, candidature.annonce.createdAt);
+        var card = new ContratEvent(candidature.annonce.identity, candidature.annonce.nom, candidature.annonce.adresse.ville, candidature.annonce.createdAt);
         notificationsFeed.innerHTML += card.contratEventTemplate;
     })
 }

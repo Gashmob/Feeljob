@@ -4,43 +4,21 @@
     <div style="margin-top: 20px  !important; margin-bottom: 40px;" class="ui justified container">
         <div style="margin-bottom: 20px;" class="ui right action left icon fluid input">
             <i class="search icon"></i>
-            <input id="searchInput" type="text" placeholder="Rechercher">
-            <div id="searchInput" class="ui button">Rechercher</div>
+            {# <input id="searchInput" type="text" placeholder="Rechercher" autofocus> #}
+            <select class="ui fluid search dropdown" id="searchInput">
+                <option value="none">Désactivé</option>
+                {% for id, secteurs in metiers %}
+                    {% for secteur, metiersSecteur in secteurs %}
+                        {% for id, metierSecteur in metiersSecteur %}
+                            <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+            <div id="searchButton" class="ui button">Rechercher</div>
         </div>
         <div class="ui vertical segment stackable">
             <div class="ui vertical menu left floated">
-                <div class="item">
-                    <div class="header">Distance max</div>
-                    <div class="menu">
-                        <div class="item" id="rangeLabel">Désactivé</div>
-                        <div class="item"><input class="ui input" id="rangeInput" type="range" min="0" max="300"
-                                                 value="0" step="10"
-                                                 oninput="updateRangeLabel(this.value);"></div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">Secteur d'activité</div>
-                    <div class="menu">
-                        <div class="item">
-                            <select class="ui dropdown" id="secteurSelect">
-                                <option value="">Choisir</option>
-                                {# {% for secteur in secteurs %}
-                                        <option value="{{ secteur }}">{{ secteur }}</option>
-                                    {% endfor %} #}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">Favoris</div>
-                    <div class="menu">
-                        <div class="item field">
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" name="favoris" class="hidden">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="item"></div>
             </div>
             <div class="ui center aligned">
@@ -84,7 +62,6 @@
     <script type='text/javascript'>
         window.addEventListener("DOMContentLoaded", (event) => {
             loadCartesVisiteAll();
-            searchInput.focus();
         });
 
         //Cherche tous les résultats
@@ -99,19 +76,42 @@
             });
         }
 
-        /*
-        //Cherche les résultats par le nom entré barre recherche
-        function makeRequestFiltered(nom, secteur, distanceMax, limit, offset) {
+        var searchInput = document.getElementById('searchInput');
+        var secteurSelect = document.getElementById('secteurSelect');
+        // /particulier/get/cartes/{nom}/{metier}/{distanceMax}/{limit}/{offset}
+        // Le particulier récupère toutes les CarteVisite selon le nomEntreprise nom, le metier et la distanceMax.
+        // Il en récupère limit avec un offset => {'cartes': CarteVisite[]}
+        function makeRequestFiltered() {
+            var nom = 'none';
+            var metier = searchInput.value;
+            var distanceMax = -1;
+            var limit = 25;
+            var offset = 0;
+
+            nom = nom.trim();
+
+            if (nom != undefined && nom.length > 0) {
+                console.log('rad')
+            } else {
+                nom = 'none'
+            }
+
+            if (metier != undefined && metier.length > 0) {
+                console.log('rad')
+            } else {
+                metier = 'none'
+            }
+
+            if (distanceMax == 0) { distanceMax = -1 }
             $.ajax({
-                url: '/entreprise/get/cvs/' + nom + secteur + distanceMax + limit + offset,
+                url: '/particulier/get/cartes/' + nom + '/' + metier + '/' + distanceMax + '/' + limit + '/' + offset,
                 type: 'POST',
                 dataType: 'json',
                 success: function (results) {
-                    displayCVS(results)
+                    displayCartesVisite(results)
                 }
             });
         }
-        */
 
         //Classe carteVisiteCard
         class carteVisiteCard {
@@ -119,11 +119,10 @@
                 if (!nom.length > 0) nom = 'Carte n°' + id;
                 if (description.length > 0) description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
                 else description = "** Pas de description renseignée **";
-                let url = "{{ path('particulier_show_carte', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('particulier_show_carte', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.cardTemplate = `
                 <div class="card carteVisiteCard">
-                    <i onclick="addFav(this);" class="icon star outline"></i>
                     <div class="content">
                         <div class="header">${prenom} ${nom}</div>
                         <div class="meta">
@@ -147,9 +146,9 @@
         }
 
         //Affiche les résultats dans 'cartesVisiteList'
-        const cartesVisiteList = document.getElementById('cartesVisiteList');
+        var cartesVisiteList = document.getElementById('cartesVisiteList');
+
         function displayCartesVisite(results) {
-            console.log(results);
             // Réinitialise la liste
             cartesVisiteList.innerHTML = '';
 
@@ -160,51 +159,14 @@
 
             // Il y a des résultats :
             results.cartes.forEach(carte => {
-                let card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
+                var card = new carteVisiteCard(carte.id, carte.autoEntrepreneur.prenom, carte.autoEntrepreneur.nom, carte.autoEntrepreneur.nomEntreprise, carte.autoEntrepreneur.logo, carte.createdAt, carte.description);
                 cartesVisiteList.innerHTML += card.cardTemplate;
             })
         }
 
-        // Cherche quand on appuie sur la touche entrée dans la barre de recherche
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                searchCartes();
-            }
-        });
-
-        function searchCartes() {
-            // String nom
-            let nom = searchInput.value;
-            // String secteur
-            let secteur = 'none';
-            // Float distance max
-            let distanceMax = -1;
-            // Int limit
-            let limit = 25;
-            // Int offset
-            let offset = 0;
-            nom = nom.trim();
-            if (nom != undefined && nom.length > 0) {
-                makeRequestFiltered(nom, secteur, distanceMax, limit, offset);
-            } else {
-                loadCartesVisiteAll();
-            }
-        }
-
-        function addFav(e) {
-            $(e).transition('pulse');
-            if (e.classList.contains('yellow')) {
-                e.classList.remove('yellow');
-                e.classList.add('outline');
-            } else {
-                e.classList.add('yellow');
-                e.classList.remove('outline');
-            }
-        };
-
         // Roulette pour la distance
-        const rangeLabel = document.getElementById('rangeLabel');
+        var rangeLabel = document.getElementById('rangeLabel');
+
         function updateRangeLabel(value) {
             if (value == 0) {
                 rangeLabel.innerHTML = 'Désactivé';
@@ -213,5 +175,8 @@
             }
             ;
         }
+
+        $('#searchButton').change(makeRequestFiltered)
+        $('#searchInput').change(makeRequestFiltered)
     </script>
 {% endblock %}

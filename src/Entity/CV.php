@@ -76,6 +76,11 @@ class CV
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $transport;
+
     public function __construct()
     {
         $this->langues = new ArrayCollection();
@@ -338,6 +343,18 @@ class CV
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTransport(): ?bool
+    {
+        return $this->transport;
+    }
+
+    public function setTransport(bool $transport): self
+    {
+        $this->transport = $transport;
 
         return $this;
     }

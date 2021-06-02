@@ -42,36 +42,32 @@
                     <div class="ui row stackable">
                         <div class="ui eight wide column inscriptionChoiceCard">
                             <a href="{{ path('particulier_inscription_particulier') }}"
-                               class="ui green choiceCardBtn particulierCard button">
+                               class="ui basic green choiceCardBtn particulierCard button">
                                 <i class="icon bullhorn topIcon large"></i>
-                                Un Particulier en recherche d'un Auto-Entrepreneur/Freelance
-                                <i class="icon right arrow bottomIcon"></i>
+                                Un Particulier
                             </a>
                         </div>
                         <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('particulier_inscription_auto') }}"
-                               class="ui green choiceCardBtn particulierCard button">
-                                <i class="icon bullhorn topIcon large"></i>
-                                Un Auto-Entrepreneur/Freelance qui propose ses services
-                                <i class="icon right arrow bottomIcon"></i>
+                            <a href="{{ path('entreprise_inscription_employe') }}"
+                               class="ui basic teal choiceCardBtn entrepriseCard button">
+                                <i class="icon briefcase topIcon large"></i>
+                                En recherche d'emploi en entreprise
                             </a>
                         </div>
                     </div>
                     <div class="ui row stackable">
                         <div class="ui eight wide column inscriptionChoiceCard">
-                            <a href="{{ path('entreprise_inscription_employe') }}"
-                               class="ui green choiceCardBtn entrepriseCard button">
-                                <i class="icon briefcase topIcon large"></i>
-                                Une personne en recherche d'emploi dans une entreprise
-                                <i class="icon right arrow bottomIcon"></i>
+                            <a href="{{ path('particulier_inscription_auto') }}"
+                               class="ui basic green choiceCardBtn particulierCard button">
+                                <i class="icon bullhorn topIcon large"></i>
+                                Un Auto-Entrepreneur
                             </a>
                         </div>
                         <div class="ui eight wide column inscriptionChoiceCard">
                             <a href="{{ path('entreprise_inscription_employeur') }}"
-                               class="ui green choiceCardBtn entrepriseCard button">
+                               class="ui basic teal choiceCardBtn entrepriseCard button">
                                 <i class="icon briefcase topIcon large"></i>
-                                Une entreprise
-                                <i class="icon right arrow bottomIcon"></i>
+                                Une Entreprise
                             </a>
                         </div>
                     </div>
@@ -86,10 +82,10 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
-        const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-        const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
-        const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+        var regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
+        var regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
+        var regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
+        var regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
 
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
@@ -110,7 +106,7 @@
 
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            let eyeIcon = obj.getElementsByTagName('i')[0]
+            var eyeIcon = obj.getElementsByTagName('i')[0]
             if (eyeIcon.classList.contains('slash')) {
                 eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';

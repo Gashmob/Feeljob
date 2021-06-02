@@ -1,18 +1,25 @@
 {% extends 'page.html.twig' %}
-{% block title %}Voir carte de visite{% endblock %}
+{% block title %}{{ carte.autoEntrepreneur.nomEntreprise }}{% endblock %}
 {% block body %}
-    <div style="position: relative" class="ui justified container">
+    <div class="background fixed">
+        <div class="relative">
+            <svg class="layer no1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(114deg 50% 43%)" fill-opacity="1"
+                      d="M0,160L48,181.3C96,203,192,245,288,229.3C384,213,480,139,576,106.7C672,75,768,85,864,106.7C960,128,1056,160,1152,192C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+            <svg class="layer no2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="hsl(134deg 50% 43%)" fill-opacity="0.7"
+                      d="M0,64L48,58.7C96,53,192,43,288,53.3C384,64,480,96,576,106.7C672,117,768,107,864,96C960,85,1056,75,1152,85.3C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div style="position: relative" class="ui text justified container">
         {% if not owner %}
-            <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px;">
+            <a href="{{ path('particulier_cartes') }}" class="ui compact labeled icon button backToResultsBtn">
                 <i class="left arrow icon"></i>
                 Retour aux cartes
             </a>
         {% endif %}
-        <h2 class="ui center aligned icon header">
-            <i class="address card outline icon"></i>
-            Carte de Visite de {{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}
-        </h2>
         <div>
             <div class="ui buttons">
                 {% if owner %}
@@ -27,58 +34,49 @@
                 {% endif %}
             </div>
         </div>
-        <form class="ui form segment">
-            <!-- Identité -->
-            <h3 class="ui dividing header">
-                <i class="icon user"></i>
-                <div class="content">Identité</div>
-            </h3>
-            <div class="ui two column grid">
-                <div class="column ten wide">
-                    <div class="flex">
-                        {% if carte.autoEntrepreneur.logo %}
-                            <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
-                                 alt="logo du freelance"
-                                 class="ui small circular image profileLogo">
-                        {% endif %}
-                        <div>
-                            <div>{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</div>
-                            <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Bio -->
-            {% if carte.description %}
-                <h3 class="ui dividing header">
-                    <i class="icon info"></i>
+        <div class="ui form segment">
+            <!-- Biographie -->
+            <div>
+                <h3 class="ui dividing green header">
                     <div class="content">Biographie</div>
                 </h3>
-                <div class="ui segment">
-                    <p>{{ carte.description }}</p>
+                <div class="ui item" style="min-height: 120px;">
+                    {% if carte.autoEntrepreneur.logo %}
+                        <img src="{{ asset('uploads/logo/' ~ carte.autoEntrepreneur.logo) }}"
+                             alt="logo du freelance"
+                             style="margin-right: 2em;"
+                             class="ui small circular left floated image profileLogo profileLogo--100">
+                    {% endif %}
+                    <div style="padding-top: 1em; margin-left: 2em;">
+                        <h4 class="ui header">{{ carte.autoEntrepreneur.prenom }} {{ carte.autoEntrepreneur.nom }}</h4>
+                        <div>Entreprise : {{ carte.autoEntrepreneur.nomEntreprise }}</div>
+                        <div class="meta">{{ secteur }}</div>
+                    </div>
                 </div>
-            {% endif %}
-            {% if carte.realisations %}
-                <!-- Réalisations -->
-                <h3 class="ui dividing header">
-                    <i class="icon pencil alternate"></i>
+                {% if carte.description %}
+                    <p>{{ carte.description }}</p>
+                {% endif %}
+            </div>
+            <!-- Réalisations -->
+            {% if carte.realisations is not empty %}
+                <h3 class="ui dividing green header">
                     <div class="content">Réalisations</div>
                 </h3>
-                <div class="ui divided items">
+                <div class="ui">
                     {% for realisation in carte.realisations %}
-                        <div class="ui item">
+                        <div class="ui vertical segment">
                             <div class="ui justified content">{{ realisation.description|nl2br }}</div>
-                            <img class="ui image medium right floated"
+                            <img style="margin: 1em 0;" class="ui image large"
                                  src="{{ asset('uploads/realisations/' ~ realisation.image) }}">
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
-        </form>
+        </div>
         {% if app.session.get('userType') == 'Particulier' %}
-            <div class="ui vertical segment left aligned">
+            <div class="ui segment left aligned">
                 <h3 class="ui header">Proposer à {{ carte.autoEntrepreneur.prenom }} une de vos annonces</h3>
-                <select class="ui dropdown" name="annonceTarget" id="annonceTarget">
+                <select class="ui search dropdown fluid" name="annonceTarget" id="annonceTarget">
                     {% if annonces %}
                         <option value="">Choisir</option>
                         {% for annonce in annonces %}
@@ -88,7 +86,7 @@
                         <option value="">Pas d'annonce postée !</option>
                     {% endif %}
                 </select>
-                <button id="applyBtn" class="ui green button" onclick="offreContrat()">
+                <button style="margin-top: 0.6em;" id="applyBtn" class="ui green button" onclick="offreContrat()">
                     Recruter
                 </button>
             </div>
@@ -117,10 +115,10 @@
             }
         }
 
-        const applyBtn = document.querySelector("#applyBtn")
+        var applyBtn = document.querySelector("#applyBtn")
 
         function offreContratResponse() {
-            console.log(results)
+
             // Candidature posée
             if (results.result) {
                 applyBtn.innerHTML = '<div>Validé</div>';

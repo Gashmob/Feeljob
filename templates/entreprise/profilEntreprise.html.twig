@@ -156,7 +156,7 @@
         class CandidaturesAcceptees {
             constructor(id, nom, description, updatedAt, prenomEmploye, nomEmploye, emailEmploye, telEmploye) {
                 if (!nom.length > 0) nom = 'Annonce n°' + id;
-                let prenomNomEmploye = '';
+                var prenomNomEmploye = '';
                 if (prenomEmploye.length > 0 && nomEmploye.length > 0) prenomNomEmploye = ' pour ' + prenomEmploye + ' ' + nomEmploye;
                 updatedAt = updatedAt.substr(0, 10).split('-');
                 updatedAt = updatedAt[2] + '/' + updatedAt[1] + '/' + updatedAt[0];
@@ -184,7 +184,7 @@
         var propositionsList = contratsList.querySelector('#contratsList__prop')
 
         function displayCandidaturesAcceptees(results) {
-            console.log(results);
+
 
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
@@ -193,7 +193,7 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.offre.identity,
                         a.offre.nom,
                         a.offre.description,
@@ -208,7 +208,7 @@
         }
 
         function displayPropositionsAcceptees(results) {
-            console.log(results);
+
 
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
@@ -217,7 +217,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidaturesAcceptees(
+                    var card = new CandidaturesAcceptees(
                         a.offre.identity,
                         a.offre.nom,
                         a.offre.description,

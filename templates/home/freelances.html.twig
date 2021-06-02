@@ -1,49 +1,45 @@
 {% extends 'page.html.twig' %}
 {% block title %}Freelances{% endblock %}
 {% block body %}
-    <div style="padding:8em 0em" class="ui fluid container">
-        <div class="ui eight wide column">
-            <div class="ui container stackable middle aligned grid">
-                <div class="row">
-                    <div class="eight sixteen column">
-                        <h2 class="ui header">Mettre en relation des
-                            auto-entrepreneurs,<br>avec des particuliers.</h2>
-                        <p style="font-size:1.33em">We can give your company superpowers to do things that
-                            they
-                            never thought possible. Let us delight your customers and empower your needs...
-                            through
-                            pure data analytics.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="center aligned column">
-                        <button class="ui huge button">Check Them Out</button>
-                    </div>
+    <div style="padding:8em 0em" class="ui vertical segment">
+        <div class="ui container stackable middle aligned grid">
+            <div class="row">
+                <div class="left floated six wide column"><img
+                            src="{{ asset('img/show/Ae2.png') }}"
+                            class="ui large bordered rounded image"/></div>
+                <div class="eight wide column">
+                    <h3 style="font-size:2em" class="ui header">Soyez acteurs de votre évolution</h3>
+                    <p style="font-size:1.33em">
+                        Publier des photos de vos réalisations pour booster votre compte
+                    </p>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="ui container">
-        <div class="ui segment">
-            <div class="ui vertical segment">
-                <h2 class="ui header">
-                    <i class="question circle outline icon"></i>
-                    <div class="content">
-                        Comment sont gérées mes données
-                        <div class="sub header">Nous respectons la vie privée et la sécurité</div>
-                    </div>
-                </h2>
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 style="font-size:2em" class="ui header">Des Profil vérifiés par feeljob</h3>
+                    <p style="font-size:1.33em">
+                        100% des profils sont vérifiés par nos expert et vos recommandations
+                    </p>
+                </div>
+                <div class="right floated six wide column"><img
+                            src="{{ asset('img/show/Ae3.png') }}"
+                            class="ui large bordered rounded image"/></div>
             </div>
-            <div class="ui vertical segment">
-                <h4>Nous ne vendons pas vos données personnelles.</h4>
-                <p>Toutes nos données sont encryptées en SHA-256 puis stockées sur un serveur dédié en
-                    France.</p>
+            <div class="row">
+                <div class="left floated six wide column"><img
+                            src="{{ asset('img/show/Ae4.png') }}"
+                            class="ui large bordered rounded image"/></div>
+                <div class="eight wide column">
+                    <h3 style="font-size:2em" class="ui header">Montrez qui vous êtes grâce à votre profil personnalisé</h3>
+                    <p style="font-size:1.33em">
+                        Créez votre profil personnalisé et importez directement vos photos de réalisations
+                    </p>
+                </div>
             </div>
-            <div class="ui vertical segment">
-                <h4>Supprimer votre compte et toutes les données associées.</h4>
-                <p>En vertue du droit à l'oubli, <a href="https://www.gdpr-expert.eu/article.html?id=17">article
-                        17 de la RGPD</a>, Nous supprimerons définitivement toutes vos données lors de la
-                    suppression de votre compte ou après 700 jours d'inactivité.</p>
+            <div class="row">
+                <div class="center aligned column">
+                    <a href="{{ path('particulier_annonces') }}" class="ui huge button">Voir les annonces</a>
+                </div>
             </div>
         </div>
     </div>

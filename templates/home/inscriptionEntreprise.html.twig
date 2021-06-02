@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="field">
                                             <label>Logo de l'entreprise</label>
-                                            <label class="ui teal basic button" for="employeur-logo">
+                                            <label class="ui teal basic button fileInputLabel" for="employeur-logo">
                                                 <i class="paperclip icon"></i>
                                                 <span id="employeur-label">Logo de l'entreprise</span>
                                                 <input type="file" style="display: none;" id="employeur-logo"
@@ -95,12 +95,12 @@
                                     </div>
                                     <div class="two fields">
                                         <div class="required field">
-                                            <label>Ville</label>
-                                            <input type="text" name="adresse" maxlength="48" placeholder="Ville" required>
-                                        </div>
-                                        <div class="required field">
                                             <label>Code postal</label>
                                             <input type="text" name="adresse" maxlength="8" placeholder="Code postal" required>
+                                        </div>
+                                        <div class="required field">
+                                            <label>Ville</label>
+                                            <input type="text" name="adresse" maxlength="48" placeholder="Ville" required>
                                         </div>
                                     </div>
                                     <div class="required field">
@@ -197,11 +197,11 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        const regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
-        const regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
-        const regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
-        //const regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
-        const regexSIRET = /^[0-9]{14}$/
+        var regexMail = /^[^ ]+@[^ ]+\.[A-z]{2,3}$/
+        var regexPhone = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/
+        var regexMdp = /^(?=.*[a-z])(?=.*\d).{8,}$/
+        //var regexSIRET = /^(RCS )?(([0-9](\s)?){3}){3}(([0-9](\s)?){5})?$/
+        var regexSIRET = /^[0-9]{14}$/
 
         function checkField(sender, model) {
             if (!sender.value.match(model)) {
@@ -222,7 +222,7 @@
 
         function showPsswd(obj, psswdfield) {
             psswdfield = document.getElementById(psswdfield)
-            let eyeIcon = obj.getElementsByTagName('i')[0]
+            var eyeIcon = obj.getElementsByTagName('i')[0]
             if (eyeIcon.classList.contains('slash')) {
                 eyeIcon.classList.remove('slash');
                 psswdfield.type = 'text';

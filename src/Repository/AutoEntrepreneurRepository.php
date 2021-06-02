@@ -31,7 +31,7 @@ class AutoEntrepreneurRepository extends ServiceEntityRepository
         $res = [];
         foreach ($preResult as $result) {
             $adresse = $result->getAdresse();
-            if (!is_null($adresse)) {
+            if (!($adresse->getRue() == '' && $adresse->getCodePostal() == '' && $adresse->getVille() == '')) {
                 if (Utils::getDistance($addressFrom, $adresse->getRue() . ' ' . $adresse->getCodePostal() . ' ' . $adresse->getVille()) <= $distanceMax) {
                     $res[] = $result;
                 }

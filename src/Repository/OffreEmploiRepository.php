@@ -20,15 +20,14 @@ class OffreEmploiRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $nom
-     * @param float|string $salaire
-     * @param float|string $heures
+     * @param string $nom
+     * @param string $departement
      * @param bool|string $loge
      * @param bool|string $deplacement
      * @param bool|string $teletravail
      * @return OffreEmploi[]
      */
-    public function findBySalaireHeuresLogeDeplacementTeletravailNom($nom, $salaire, $heures, $loge, $deplacement, $teletravail): array
+    public function findByDepartementLogeDeplacementTeletravailNom(string $nom, string $departement, $loge, $deplacement, $teletravail): array
     {
         $query = $this->createQueryBuilder('o');
 
@@ -36,25 +35,22 @@ class OffreEmploiRepository extends ServiceEntityRepository
             $query = $query->andWhere('o.nom LIKE :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
-        if ($salaire != 'none') {
-            $query = $query->andWhere('o.salaire >= :salaire')
-                ->setParameter('salaire', $salaire);
-        }
-        if ($heures != 'none') {
-            $query = $query->andWhere('o.heures <= :heures')
-                ->setParameter('heures', $heures);
+        if ($departement != 'none') {
+            $query = $query->leftJoin('o.lieu', 'a')
+                ->andWhere('a.codePostal LIKE :departement')
+                ->setParameter('departement', $departement . '%');
         }
         if ($loge != 'none') {
             $query = $query->andWhere('o.loge = :loge')
-                ->setParameter('loge', $loge);
+                ->setParameter('loge', $loge == 'true');
         }
         if ($deplacement != 'none') {
             $query = $query->andWhere('o.deplacement = :deplacement')
-                ->setParameter('deplacement', $deplacement);
+                ->setParameter('deplacement', $deplacement == 'true');
         }
         if ($teletravail != 'none') {
             $query = $query->andWhere('o.teletravail = :teletravail')
-                ->setParameter('teletravail', $teletravail);
+                ->setParameter('teletravail', $teletravail == 'true');
         }
 
         $query = $query->andWhere('o.nbPostes > 0');

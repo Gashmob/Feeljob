@@ -274,7 +274,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -337,7 +338,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -443,7 +445,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -506,7 +509,8 @@ class OffreEmploiManager extends Manager
 
             $res[] = [
                 'offre' => $em->getRepository(OffreEmploi::class)->findOneBy(['identity' => $result['idO']]),
-                'employe' => $employe
+                'employe' => $employe,
+                'cv' => $cv,
             ];
         }
 
@@ -605,28 +609,40 @@ class OffreEmploiManager extends Manager
      * @param OffreEmploi[] $preResult
      * @param string $typeContrat
      * @param string $metier
+     * @param string $secteur
      * @return OffreEmploi[]
      */
-    public function findOffreEmploiByTypeContratMetierFromPreResult(array $preResult, string $typeContrat, string $metier): array
+    public function findOffreEmploiByTypeContratMetierSecteurActiviteFromPreResult(array $preResult, string $typeContrat, string $metier, string $secteur): array
     {
         $res = [];
 
         foreach ($preResult as $result) {
-            $contrat = $typeContrat == 'none' ||
+            $contratB = $typeContrat == 'none' ||
                 (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(t:' . EntityManager::TYPE_CONTRAT . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) AS id'))
                     ->setString('nom', $typeContrat)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
                     ->getOneOrNullResult() != null;
 
-            $metier = $metier == 'none' ||
+            $metierB = $metier == 'none' ||
                 (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ' {nom:$nom}) WHERE id(o)=$id RETURN id(o) as id'))
                     ->setString('nom', $metier)
                     ->setInteger('id', $result->getIdentity())
                     ->run()
                     ->getOneOrNullResult() != null;
 
-            if ($contrat && $metier) {
+            if ($secteur != 'none') {
+                $m = (new OffreEmploiManager())->getMetier($result->getIdentity());
+                if ($m) {
+                    $secteurB = (new MetierManager())->isInSecteurActivite($m, $secteur);
+                } else {
+                    $secteurB = true;
+                }
+            } else {
+                $secteurB = true;
+            }
+
+            if ($contratB && $metierB && $secteurB) {
                 $res[] = $result;
             }
         }
@@ -705,11 +721,11 @@ class OffreEmploiManager extends Manager
      */
     public function getMetier(int $id): ?string
     {
-        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m'))
+        $result = (new PreparedQuery('MATCH (o:' . EntityManager::OFFRE_EMPLOI . ')--(m:' . EntityManager::METIER . ') WHERE id(o)=$id RETURN m.nom as nom'))
             ->setInteger('id', $id)
             ->run()
             ->getOneOrNullResult();
 
-        return $result ? $result['m']['nom'] : null;
+        return $result != null ? $result['nom'] : null;
     }
 }

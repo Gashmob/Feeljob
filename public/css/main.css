@@ -168,60 +168,6 @@
     margin-right: 4px;
 }
 
-@media screen and (max-width: 800px) {
-    #nav-icon {
-        display: block;
-    }
-
-    #nav.menu {
-        font-size: 1.2em;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        position: fixed;
-        height: 100vh;
-        width: 200px !important;
-        max-width: 70vw;
-        padding-top: 70px;
-        top: 0;
-        background: #fafbfc;
-        margin: 0;
-    }
-
-    #nav .right {
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -webkit-box-align: start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-    }
-
-    .primaryNav.menu {
-        left: -100%;
-        -webkit-transition: 400ms;
-        -o-transition: 400ms;
-        transition: 400ms;
-        font-size: 1.4em;
-    }
-
-    #nav .item img {
-        margin-right: .5em;
-    }
-
-    .primaryNav .item:before {
-        display: none !important;
-    }
-
-    .nav-displayed.menu {
-        left: 0 !important;
-    }
-}
-
 #homepageSegment {
     min-height:640px;
     max-height: 880px;
@@ -256,7 +202,7 @@
 .page-content {
     padding-top: 1em;
     padding-bottom: 1em;
-    min-height: 60vh;
+    min-height: 64vh;
 }
 
 .segment.form--segment {
@@ -385,22 +331,6 @@
     border-radius: 10px;
 }
 
-.particulierCard {
-    /*background-color: #21ba2b !important;*/
-}
-
-.particulierCard:hover {
-    /*background-color: #1da526 !important;*/
-}
-
-.entrepriseCard {
-    background-color: #2caf76 !important;
-}
-
-.entrepriseCard:hover {
-    background-color: #279b69 !important;
-}
-
 .choiceCardBtn i {
     margin: 0 !important;
 }
@@ -429,8 +359,14 @@
 }
 
 .flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
     flex-direction: row;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 
@@ -463,6 +399,7 @@
 .profileLogo {
     height:140px !important;
     width:140px !important;
+    -o-object-fit:cover !important;
     object-fit:cover !important;
 }
 
@@ -487,7 +424,11 @@
 }
 
 .flex {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
 }
 .textBlue {
@@ -496,4 +437,98 @@
 
 .textGreen {
     color: #016936;
+}
+
+.homeBtn {
+    width: 250px;
+    margin: 6px !important;
+}
+
+.footer-2 {
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+}
+
+.fileInputLabel {
+    line-break: anywhere !important;
+}
+
+/* Media queries */
+
+@media screen and (min-width: 1200px) {
+    .backToResultsBtn {
+        position: absolute !important;
+        top: 20px !important;
+        left: -20px !important;
+        -webkit-transform: translateX(-100%) !important;
+        -ms-transform: translateX(-100%) !important;
+        transform: translateX(-100%) !important;
+    }
+}
+
+
+@media screen and (max-width: 800px) {
+    #nav-icon {
+        display: block;
+    }
+
+    #nav.menu {
+        font-size: 1.2em;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: fixed;
+        height: 100vh;
+        width: 200px !important;
+        max-width: 70vw;
+        padding-top: 70px;
+        top: 0;
+        background: #fafbfc;
+        margin: 0;
+    }
+
+    #nav .right {
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+    }
+
+    .primaryNav.menu {
+        left: -100%;
+        -webkit-transition: 400ms;
+        -o-transition: 400ms;
+        transition: 400ms;
+        font-size: 1.4em;
+    }
+
+    #nav .item img {
+        margin-right: .5em;
+    }
+
+    .primaryNav .item:before {
+        display: none !important;
+    }
+
+    .nav-displayed.menu {
+        left: 0 !important;
+    }
+}
+
+@media screen and (max-width: 770px) {
+    #homepageSegment {
+        min-height: 840px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    #homepageSegment {
+        min-height: 1000px;
+    }
 }

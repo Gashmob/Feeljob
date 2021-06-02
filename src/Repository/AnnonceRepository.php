@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Annonce;
 use App\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +18,29 @@ class AnnonceRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Annonce::class);
+    }
+
+    /**
+     * @param string $departement
+     * @param string $nom
+     * @return Annonce[]
+     */
+    public function findByDepartementNom(string $departement, string $nom): array
+    {
+        $query = $this->createQueryBuilder('a');
+
+        if ($departement != 'none') {
+            $query = $query->leftJoin('a.adresse', 'adresse')
+                ->andWhere('adresse.codePostal LIKE :departement')
+                ->setParameter('departement', $departement . '%');
+        }
+        if ($nom != 'none') {
+            $query = $query->andWhere('a.nom LIKE :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
+        $query = $query->orderBy('a.updatedAt', 'DESC');
+
+        return $query->getQuery()->getResult();
     }
 
     /**

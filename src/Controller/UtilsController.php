@@ -57,7 +57,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Responsable d\'élevage',
         ],
-        'Agro-alimentaire/Alimentation' => [
+        'Agro-alimentaire Alimentation' => [
             'Boucher',
             'Boulanger',
             'Brasseur malteur',
@@ -136,7 +136,7 @@ final class UtilsController extends AbstractController
             'Responsable',
             'Technicien',
         ],
-        'Architecture/Aménagement intérieur' => [
+        'Architecture Aménagement intérieur' => [
             'Aménageur d\'espace intérieur',
             'Animateur 2D',
             'Animateur 3D',
@@ -174,7 +174,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Artisanat/Métier d\'art' => [
+        'Artisanat Métier d\'art' => [
             'Acheteur d\'art',
             'Agent artistique',
             'Apiculteur',
@@ -358,7 +358,7 @@ final class UtilsController extends AbstractController
             'Vannier',
             'Verrier',
         ],
-        'Audiovisuel/Numérique/Multimédia' => [
+        'Audiovisuel Numérique Multimédia' => [
             'Accordeur (instrument)',
             'Acousticien',
             'Animateur radio',
@@ -450,7 +450,7 @@ final class UtilsController extends AbstractController
             'Violoniste',
             'Youtuber',
         ],
-        'Banque/Finance/Assurance' => [
+        'Banque Finance Assurance' => [
             'Agent d\'assurance',
             'Analyste crédit',
             'Analyste financier',
@@ -507,7 +507,7 @@ final class UtilsController extends AbstractController
             'Technicien de paie',
             'Conseiller en économie sociale',
         ],
-        'Bâtiment/Travaux public' => [
+        'Bâtiment Travaux public' => [
             'Carreleur',
             'Agent de distribution',
             'Agent de manutention',
@@ -551,7 +551,7 @@ final class UtilsController extends AbstractController
             'Peintre en bâtiment',
             'Plaquiste',
             'Plâtrier',
-            'Plombier/Chauffagiste',
+            'Plombier Chauffagiste',
             'Faïencier',
             'Entreposeur',
             'Ingénieur d\'étude',
@@ -566,7 +566,7 @@ final class UtilsController extends AbstractController
             'Responsable',
             'Technicien',
         ],
-        'Biologie/Chimie/Recherche' => [
+        'Biologie Chimie Recherche' => [
             'Biochimiste',
             'Biologiste',
             'Biologiste médical',
@@ -618,7 +618,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Commerce (Vendeur/Commercial)' => [
+        'Commerce (Vendeur Commercial)' => [
             'Acheteur',
             'Acheteur dans la mode',
             'Acheteur industriel',
@@ -714,7 +714,7 @@ final class UtilsController extends AbstractController
             'Visual merchandiser',
             'Yield manager',
         ],
-        'Communication/Information' => [
+        'Communication Information' => [
             'Assistant de communication',
             'Assistant marketing',
             'Analyste marketing',
@@ -778,7 +778,7 @@ final class UtilsController extends AbstractController
             'Visual merchandiser',
             'Youtubeur',
         ],
-        'Culture/Spectacle' => [
+        'Culture Spectacle' => [
             'Bruiteur',
             'Acteur',
             'Acrobate',
@@ -836,7 +836,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Défense/Sécurité/Secours' => [
+        'Défense Sécurité Secours' => [
             'Agent de police',
             'Agent de sécurité',
             'Adjoint de sécurité',
@@ -974,7 +974,7 @@ final class UtilsController extends AbstractController
             'Conseiller général',
             'Homme politique',
         ],
-        'Edition/Littérature/Imprimerie' => [
+        'Edition Littérature Imprimerie' => [
             'Biographe',
             'Bibliothécaire',
             'Bibliothécaire adjoint',
@@ -1044,7 +1044,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Enseignement/Formation' => [
+        'Enseignement Formation' => [
             'Assistant d\'éducation',
             'Chargé de formation',
             'ATSEM',
@@ -1099,7 +1099,7 @@ final class UtilsController extends AbstractController
             'Outplacer',
             'Responsable',
         ],
-        'Esthétique/Coiffure/Soins' => [
+        'Esthétique Coiffure Soins' => [
             'Coiffeur',
             'Barbier',
             'Conseiller en beauté',
@@ -1130,7 +1130,7 @@ final class UtilsController extends AbstractController
             'Spa manager',
             'Testeur',
         ],
-        'Environnement/Nature/Nettoyage' => [
+        'Environnement Nature Nettoyage' => [
             'Agent technique forestier',
             'Animateur nature',
             'Agent d\'entretien',
@@ -1185,7 +1185,7 @@ final class UtilsController extends AbstractController
             'Responsable',
             'Technicien',
         ],
-        'Gestion/RH' => [
+        'Gestion RH' => [
             'Assistant comptable',
             'Assistant de gestion PME-PMI',
             'Assistant RH',
@@ -1228,7 +1228,7 @@ final class UtilsController extends AbstractController
             'Superviseur',
             'Test manager',
         ],
-        'Histoire/Histoire de l\'art' => [
+        'Histoire Histoire de l\'art' => [
             'Archéologue',
             'Antiquaire',
             'Animateur du patrimoine',
@@ -1250,7 +1250,7 @@ final class UtilsController extends AbstractController
             'Régisseur d\'œuvre d\'art',
             'Responsable',
         ],
-        'Hôtellerie/Restauration/Tourisme' => [
+        'Hôtellerie Restauration Tourisme' => [
             'Barman',
             'Chef cuisinier',
             'Chef de partie',
@@ -1307,7 +1307,7 @@ final class UtilsController extends AbstractController
             'Responsable',
             'Technicien',
         ],
-        'Immobilier/Urbanisme' => [
+        'Immobilier Urbanisme' => [
             'Administrateur de biens',
             'Administrateur territorial',
             'Agent de location',
@@ -1339,7 +1339,7 @@ final class UtilsController extends AbstractController
             'Responsable',
             'Technicien',
         ],
-        'Informatique/Electronique' => [
+        'Informatique Electronique' => [
             'Analyste Web',
             'Architecte web',
             'Bio-informaticien',
@@ -1427,7 +1427,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Industrie/Usine' => [
+        'Industrie Usine' => [
             'Agent de distribution',
             'Agent de manutention',
             'Ajusteur-monteur',
@@ -1478,7 +1478,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Mécanique/Maintenance' => [
+        'Mécanique Maintenance' => [
             'Ascensoriste',
             'Agent de maintenance',
             'Carrossier',
@@ -1527,7 +1527,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Maths/Sciences/Physique' => [
+        'Maths Sciences Physique' => [
             'Anthropologue',
             'Astronome',
             'Astrophysicien',
@@ -1624,7 +1624,7 @@ final class UtilsController extends AbstractController
             'Paramédicaux',
             'Parapharmacien',
             'Pédiatre',
-            'Pédicure / podologue',
+            'Pédicure podologue',
             'Pédopsychiatre',
             'Pharmacien',
             'Physiothérapeute',
@@ -1680,7 +1680,7 @@ final class UtilsController extends AbstractController
             'Technicien',
             'Testeur',
         ],
-        'Secrétariat/Accueil' => [
+        'Secrétariat Accueil' => [
             'Adjoint administratif',
             'Agent d\'accueil',
             'Billettiste',
@@ -1705,9 +1705,9 @@ final class UtilsController extends AbstractController
             'Téléphoniste',
             'Télévendeur',
         ],
-        'Service à la personne/Social' => [
+        'Service à la personne Social' => [
             'Assistante sociale',
-            'Auxiliaire de puériculture / de crèche',
+            'Auxiliaire de puériculture de crèche',
             'Auxiliaire de vie',
             'Chargé de mission handicap',
             'Animateur de club de vacances',
@@ -1742,7 +1742,7 @@ final class UtilsController extends AbstractController
             'Accompagnateur de personnes à mobilité réduite',
             'Accompagnant d’élève en situation de handicap',
         ],
-        'Sport/Animation' => [
+        'Sport Animation' => [
             'Arbitre',
             'Athlète',
             'Agent de joueur sportif',
@@ -1803,7 +1803,7 @@ final class UtilsController extends AbstractController
             'Steward',
             'gv',
         ],
-        'Transport/Logistique' => [
+        'Transport Logistique' => [
             'Animateur logistique',
             'Agent de transit',
             'Agent logisticien',

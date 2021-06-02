@@ -4,22 +4,22 @@
     <div style="padding:8em 0em" class="ui vertical segment">
         <div class="ui container stackable middle aligned grid">
             <div class="row">
-                <div class="eight wide column">
-                    <h3 style="font-size:2em" class="ui header">We Help Companies and Companions</h3>
-                    <p style="font-size:1.33em">We can give your company superpowers to do things that they
-                        never thought possible. Let us delight your customers and empower your needs... through
-                        pure data analytics.</p>
-                    <h3 style="font-size:2em" class="ui header">We Make Bananas That Can Dance</h3>
-                    <p style="font-size:1.33em">Yes that&#x27;s right, you thought it was the stuff of dreams,
-                        but even bananas can be bioengineered.</p>
-                </div>
-                <div class="right floated six wide column"><img
-                            src="https://react.semantic-ui.com/images/wireframe/white-image.png"
+                <div class="left floated six wide column"><img
+                            src="{{ asset('img/show/entreprise1.png') }}"
                             class="ui large bordered rounded image"/></div>
+                <div class="eight wide column">
+                    <h3 style="font-size:2em" class="ui header">Ajoutez des profils de candidats dans vos favoris</h3>
+                    <p style="font-size:1.33em">
+                        <i class="icon check"></i>Rentrer en contact plus facilement
+                    </p>
+                    <p style="font-size:1.33em">
+                        <i class="icon check"></i>Pouvoir les notifiés et partager la fiche de poste
+                    </p>
+                </div>
             </div>
             <div class="row">
                 <div class="center aligned column">
-                    <button class="ui huge button">Check Them Out</button>
+                    <a href="{{ path('entreprise_cvs') }}" class="ui huge button">Voir les profils</a>
                 </div>
             </div>
         </div>

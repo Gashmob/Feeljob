@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function Composer\Autoload\includeFile;
 
 /**
  * Class EntrepriseController
@@ -356,14 +357,25 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $metier = $request->get('metier');
+            $secteur = $request->get('secteur');
+
+            $transport = $request->get('transport') != null;
+
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
+            $ville = $request->get('ville');
 
             if ($naissanceB) {
                 $cv = (new CV())
                     ->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
+                    ->setTransport($transport)
                     ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
+                $employe->getAdresse()
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
+                    ->setVille($ville);
                 $em->persist($cv);
                 $em->flush();
 
@@ -395,7 +407,7 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
-                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
+                (new EmployeManager())->setMetier($this->session->get('user'), $secteur);
 
                 return $this->redirectToRoute('userSpace');
             }
@@ -545,15 +557,25 @@ class EntrepriseController extends AbstractController
 
             $photo = Utils::uploadImage('photo');
 
-            $metier = $request->get('metier');
+            $secteur = $request->get('secteur');
+
+            $transport = $request->get('transport') != null;
+
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
+            $ville = $request->get('ville');
 
             if ($naissanceB) {
-                $cv = $cv
-                    ->setNaissance(new DateTime($naissance))
+                $cv->setNaissance(new DateTime($naissance))
                     ->setPermis($permis)
                     ->setDescription($description)
-                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]));
-                $em->persist($cv);
+                    ->setTransport($transport)
+                    ->setSituationFamille($em->getRepository(SituationFamille::class)->findOneBy(['nom' => $situationFamille]))
+                    ->setUpdatedAt(new DateTime());
+                $employe->getAdresse()
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
+                    ->setVille($ville);
                 $em->flush();
 
                 foreach ($diplomes as $diplome) {
@@ -584,7 +606,7 @@ class EntrepriseController extends AbstractController
                     ->setPhoto($photo);
                 $em->flush();
 
-                (new EmployeManager())->setMetier($this->session->get('user'), $metier);
+                (new EmployeManager())->setMetier($this->session->get('user'), $secteur);
 
                 return $this->redirectToRoute('userSpace');
             }
@@ -639,7 +661,7 @@ class EntrepriseController extends AbstractController
     public function showCV($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = $em->getRepository(CV::class)->isOwner($id, $this->session->get('user'));
@@ -652,27 +674,27 @@ class EntrepriseController extends AbstractController
             $offres = (new OffreEmploiManager())->findOffresEmploiByEmployeur($em, $this->session->get('user'));
         }
 
+        $cv = $em->getRepository(CV::class)->findOneBy(['id' => $id]);
         return $this->render('candidat/showCV.html.twig', [
-            'cv' => $em->getRepository(CV::class)->findOneBy(['id' => $id]),
+            'cv' => $cv,
             'owner' => $owner,
-            'offres' => $offres
+            'offres' => $offres,
+            'metier' => (new EmployeManager())->getMetier($cv->getEmploye()->getIdentity()),
         ]);
     }
 
     /**
      * @Route("/cvs", name="entreprise_cvs")
+     * @param EntityManagerInterface $em
+     * @return Response
      */
-    public function listCVs()
+    public function listCVs(EntityManagerInterface $em): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYEUR) {
-            return $this->redirectToRoute('userSpace');
-        }
-
-        return $this->render('entreprise/showProfiles.html.twig');
+        return $this->render('entreprise/showProfiles.html.twig', [
+            'metiers' => (new MetierManager())->findAllNamesWithSecteurActivite(),
+            'langues' => $em->getRepository(Langue::class)->findAllNames(),
+            'connected' => ($this->session->get('user')),
+        ]);
     }
 
     /**
@@ -733,6 +755,8 @@ class EntrepriseController extends AbstractController
             $deplacement = $request->get('deplacement') == null;
 
             $ville = $request->get('ville') == null ? '' : $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $teletravail = $request->get('teletravail') != null;
 
@@ -754,8 +778,8 @@ class EntrepriseController extends AbstractController
 
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
                 $adresse = (new Adresse())
-                    ->setRue('')
-                    ->setCodePostal('')
+                    ->setRue($rue)
+                    ->setCodePostal($codePostal)
                     ->setVille($ville);
                 $em->persist($adresse);
                 $em->flush();
@@ -763,7 +787,6 @@ class EntrepriseController extends AbstractController
                 $offre = (new OffreEmploi())
                     ->setNom($nom)
                     ->setDebut(new DateTime($debut))
-                    ->setFin(new DateTime($fin))
                     ->setLoge($loge)
                     ->setHeures($heures)
                     ->setSalaire($salaire)
@@ -772,6 +795,9 @@ class EntrepriseController extends AbstractController
                     ->setTeletravail($teletravail)
                     ->setDescription($description)
                     ->setNbPostes($nbPostes);
+                if ($fin != null) {
+                    $offre->setFin(new DateTime($fin));
+                }
 
                 (new OffreEmploiManager())->create($em, $offre, $this->session->get('user'), $typeContrat, $metier);
                 $this->addFlash('success', 'Votre offre d\'emploi a été publiée');
@@ -847,6 +873,8 @@ class EntrepriseController extends AbstractController
             $deplacement = $request->get('deplacement') == null;
 
             $ville = $request->get('ville') == null ? '' : $request->get('ville');
+            $rue = $request->get('rue');
+            $codePostal = $request->get('codePostal');
 
             $teletravail = $request->get('teletravail') == null;
 
@@ -867,17 +895,23 @@ class EntrepriseController extends AbstractController
             $metier = $request->get('metier');
 
             if ($nomB && $debutB && $heuresB && $salaireB && $nbPostesB) {
-                $offre->getLieu()->setVille($ville);
+                $offre->getLieu()
+                    ->setVille($ville)
+                    ->setCodePostal($codePostal)
+                    ->setRue($rue);
                 $offre->setNom($nom)
                     ->setDebut(new DateTime($debut))
-                    ->setFin(new DateTime($fin))
                     ->setLoge($loge)
                     ->setHeures($heures)
                     ->setSalaire($salaire)
                     ->setDeplacement($deplacement)
                     ->setTeletravail($teletravail)
                     ->setDescription($description)
-                    ->setNbPostes($nbPostes);
+                    ->setNbPostes($nbPostes)
+                    ->setUpdatedAt(new DateTime());
+                if ($fin != null) {
+                    $offre->setFin(new DateTime($fin));
+                }
 
                 (new OffreEmploiManager())->update($em, $offre, $typeContrat, $metier);
                 return $this->redirectToRoute('userSpace');
@@ -929,7 +963,7 @@ class EntrepriseController extends AbstractController
     public function showOffreEmploi($id, EntityManagerInterface $em)
     {
         if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
+            return $this->render('home/inscriptionRequise.html.twig');
         }
 
         $owner = (new OffreEmploiManager())->isOwner($this->session->get('user'), $id);
@@ -949,18 +983,15 @@ class EntrepriseController extends AbstractController
 
     /**
      * @Route("/offres_emploi", name="entreprise_offres_emploi")
+     * @return Response
      */
-    public function listOffreEmplois()
+    public function listOffreEmplois(): Response
     {
-        if (!($this->session->get('user'))) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        if ($this->session->get('userType') != EntityManager::EMPLOYE) {
-            return $this->redirectToRoute('userSpace');
-        }
-
-        return $this->render('candidat/showOffresEmploi.html.twig');
+        return $this->render('candidat/showOffresEmploi.html.twig', [
+            'secteurs' => (new SecteurActiviteManager())->findAllNames(),
+            'typeContrats' => (new TypeContratManager())->findAllNames(),
+            'connected' => ($this->session->get('user')),
+        ]);
     }
 
     /**

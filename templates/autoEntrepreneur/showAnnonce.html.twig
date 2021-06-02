@@ -1,5 +1,5 @@
 {% extends 'page.html.twig' %}
-{% block title %}Voir une annonce{% endblock %}
+{% block title %}{{ annonce.nom }}{% endblock %}
 {% block body %}
     <style type="text/css">
         body {
@@ -8,8 +8,7 @@
     </style>
     <div style="position: relative;" class="ui text justified container">
         {% if not owner %}
-            <a href="{{ path('particulier_annonces') }}" class="ui compact labeled icon button"
-               style="position: absolute; top: 20px; left: -20px; transform: translateX(-100%);">
+            <a href="{{ path('particulier_annonces') }}" class="ui compact labeled icon button backToResultsBtn">
                 <i class="left arrow icon"></i>
                 Retour aux annonces
             </a>
@@ -30,17 +29,16 @@
                 <div class="column ten wide">
                     <h2 class="ui header">{{ annonce.nom }}</h2>
                     <div>
-                        <div class="ui label">secteur activité</div>
+                        <div class="ui label">{{ metier }}</div>
                     </div>
                 </div>
             </div>
             <div style="padding-top: 20px;" class="ui content annonce-content">
                 <p>
                     <i class="icon map pin"></i>
-                    {{ annonce.adresse.ville }}
+                    {{ annonce.adresse.ville }} {{ annonce.adresse.codePostal }}
                 </p>
                 <p>{{ annonce.adresse.rue }}</p>
-                <p>{{ annonce.adresse.codePostal }}</p>
                 <p>
                     <i class="icon calendar alternate"></i>
                     Pour le {{ annonce.date|date('d/m/Y') }}
@@ -91,10 +89,10 @@
             });
         }
 
-        const applyBtn = document.getElementById("applyBtn")
+        var applyBtn = document.getElementById("applyBtn")
 
         function candidatureResponse(results) {
-            console.log(results)
+
             // Candidature posée
             if (results.result) {
                 applyBtn.innerHTML = '<div>Validé</div>';

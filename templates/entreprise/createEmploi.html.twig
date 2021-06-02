@@ -25,7 +25,7 @@
         <form class="ui form segment" method="post">
             <div class="required field">
                 <label>Intitulé du poste</label>
-                <input required type="text" name="nom" placeholder="Intitulé du poste" maxlength="48">
+                <input required type="text" name="nom" placeholder="Intitulé du poste" maxlength="48" minlength="3">
             </div>
             <div class="field required">
                 <label>Type de contrat :</label>
@@ -40,14 +40,20 @@
             <div class="field">
                 <label>Localisation</label>
                 <p>Si votre emploi est fixe, cliquez sur le bouton ci-dessous.</p>
-                <div class="two fields">
+                <div class="three fields">
                     <div style="padding-top: 6px;" class="two wide field">
                         <div style="padding-left: 10px;" class="ui toggle checkbox">
                             <input type="checkbox" name="deplacement" id="lieuBtn" class="hidden">
                         </div>
                     </div>
-                    <div class="fourteen wide field disabled" id="lieuField">
-                        <input type="text" name="ville" placeholder="ex : Chambéry" maxlength="48">
+                    <div class="six wide field disabled" id="rueField">
+                        <input type="text" name="rue" placeholder="Rue" maxlength="48">
+                    </div>
+                    <div class="four wide field disabled" id="cpField">
+                        <input type="text" name="codePostal" placeholder="Code Postal" maxlength="5">
+                    </div>
+                    <div class="four wide field disabled" id="lieuField">
+                        <input type="text" name="ville" placeholder="Ville" maxlength="48">
                     </div>
                 </div>
             </div>
@@ -61,9 +67,18 @@
                     <input name="fin" placeholder="jj/mm/aaaa" type="date">
                 </div>
             </div>
-            <div class="disabled field">
-                <label>Métier</label>
-                <input type="text" class="ui dropdown" name="metier" value="Technicien">
+            <div class="required field">
+                <label>Métier destiné</label>
+                <select required class="ui search dropdown" name="metier">
+                    <option value="">Choisissez</option>
+                    {% for id, secteurs in metiers %}
+                        {% for secteur, metiersSecteur in secteurs %}
+                            {% for id, metierSecteur in metiersSecteur %}
+                                <option value="{{ metierSecteur }}">{{ secteur }} - {{ metierSecteur }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
             </div>
             <div class="two fields">
                 <div class="field required">
@@ -85,7 +100,8 @@
                     <label>Montant du salaire</label>
                     <div class="ui right labeled input">
                         <label for="montant" class="ui label">€</label>
-                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant" id="montant">
+                        <input required name="salaire" type="number" min="0" max="999999" placeholder="Montant"
+                               id="montant">
                         <div class="ui basic label">.00</div>
                     </div>
                 </div>
@@ -109,24 +125,31 @@
 {% endblock %}
 {% block javascripts %}
     <script type='text/javascript'>
-        document.addEventListener("DOMContentLoaded", function(){
+        document.addEventListener("DOMContentLoaded", function () {
             checkDateFin();
         });
         //Lieu
-        const lieuBtn = document.getElementById('lieuBtn')
-        const lieuField = document.getElementById('lieuField')
+        var lieuBtn = document.getElementById('lieuBtn')
+        var lieuField = document.getElementById('lieuField')
+        var cpField = document.getElementById('cpField')
+        var rueField = document.getElementById('rueField')
         lieuBtn.addEventListener('change', (event) => {
             if (event.currentTarget.checked) {
                 lieuField.classList.remove("disabled");
+                cpField.classList.remove("disabled");
+                rueField.classList.remove("disabled");
             } else {
                 lieuField.classList.add("disabled");
+                cpField.classList.add("disabled");
+                rueField.classList.add("disabled");
             }
         })
         //Date fin
-        const selectTypeContrat = document.getElementById('selectTypeContrat')
-        const dateFinField = document.getElementById('dateFinField')
+        var selectTypeContrat = document.getElementById('selectTypeContrat')
+        var dateFinField = document.getElementById('dateFinField')
         selectTypeContrat.addEventListener('change', checkDateFin)
-        function checkDateFin(){
+
+        function checkDateFin() {
             if (selectTypeContrat.value == 'CDI') {
                 dateFinField.classList.add("disabled");
             } else {

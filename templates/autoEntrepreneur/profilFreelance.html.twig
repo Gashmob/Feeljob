@@ -169,8 +169,6 @@
         var propositionsList = contratsList.querySelector('#contratsList__prop')
 
         function displayCandidaturesAcceptees(results) {
-            console.log(results);
-
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
                 candidaturesList.innerHTML = `<div style="padding: 1em;">Pas de candidatures acceptées.</div>`;
@@ -178,15 +176,13 @@
                 // Il y a des résultats :
                 candidaturesList.innerHTML = ''
                 results.candidatures.forEach(a => {
-                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    var card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
                     candidaturesList.innerHTML += card.cardTemplate;
                 })
             }
         }
 
         function displayPropositionsAcceptees(results) {
-            console.log(results);
-
             // Il n'y a pas de résultats :
             if (results.propositions === undefined || results.propositions.length == 0) {
                 propositionsList.innerHTML = `<div style="padding: 1em;">Pas de propositions acceptées.</div>`;
@@ -194,7 +190,7 @@
                 // Il y a des résultats :
                 propositionsList.innerHTML = ''
                 results.propositions.forEach(a => {
-                    let card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
+                    var card = new CandidatureAcceptee(a.identity, a.nom, a.description, a.updatedAt);
                     propositionsList.innerHTML += card.cardTemplate;
                 })
             }

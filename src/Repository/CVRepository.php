@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\database\manager\EmployeManager;
 use App\Entity\CV;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,52 +21,61 @@ class CVRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string[] $metiers
      * @param string $nom
      * @param string[] $competences
      * @param string[] $langues
      * @param string|bool $permis
      * @return CV[]
      */
-    public function findByNomCompetencesLanguesPermis(string $nom, array $competences, array $langues, string $permis): array
+    public function findByMetiersNomCompetencesLanguesPermis(array $metiers, string $nom, array $competences, array $langues, string $permis): array
     {
         $query = $this->createQueryBuilder('cv');
 
         if ($nom != 'none') {
-            $query->leftJoin('cv.employe', 'employe')
-                ->andWhere('employe.prenom + employe.nom = :nom')
+            $query = $query->leftJoin('cv.employe', 'employe')
+                ->andWhere('employe.prenom + employe.nom LIKE :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
 
         if (count($competences) > 0) {
-            $query->leftJoin('cv.competences', 'cv_competences')
+            $query = $query->leftJoin('cv.competences', 'cv_competences')
                 ->leftJoin('cv_competences.competence', 'competence');
 
             foreach ($competences as $competence) {
-                $query->andWhere('competence.nom = :nom')
-                    ->setParameter('nom', substr($competence, 0, -1))
-                    ->andWhere('cv_competences.niveau >= :niveau')
-                    ->setParameter('niveau', substr($competence, -1));
+                $query = $query->andWhere('competence.nom LIKE :nomC')
+                    ->setParameter('nomC', '%' . substr($competence, 0, -1) . '%')
+                    ->andWhere('cv_competences.niveau >= :niveauC')
+                    ->setParameter('niveauC', substr($competence, -1));
             }
         }
 
         if (count($langues) > 0) {
-            $query->leftJoin('cv.langues', 'cv_langues')
+            $query = $query->leftJoin('cv.langues', 'cv_langues')
                 ->leftJoin('cv_langues.langue', 'langue');
 
             foreach ($langues as $langue) {
-                $query->andWhere('langue.nom = :nom')
-                    ->setParameter('nom', substr($langue, 0, -1))
-                    ->andWhere('cv_langues.niveau >= :niveau')
-                    ->setParameter('niveau', substr($langue, -1));
+                $query = $query->andWhere('langue.nom LIKE :nomL')
+                    ->setParameter('nomL', '%' . substr($langue, 0, -1) . '%')
+                    ->andWhere('cv_langues.niveau >= :niveauL')
+                    ->setParameter('niveauL', substr($langue, -1));
             }
         }
 
         if ($permis != 'none') {
-            $query->andWhere('cv.permis = :permis')
-                ->setParameter('permis', $permis);
+            $query = $query->andWhere('cv.permis = :permis')
+                ->setParameter('permis', $permis == 'true');
         }
 
-        return $query->getQuery()->getResult();
+        $results = $query->getQuery()->getResult();
+        $res = [];
+        foreach ($results as $result) {
+            if (in_array((new EmployeManager())->getMetier($result->getEmploye()->getIdentity()), $metiers) || count($metiers) == 0) {
+                $res[] = $result;
+            }
+        }
+
+        return $res;
     }
 
     /**

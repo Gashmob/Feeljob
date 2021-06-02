@@ -84,12 +84,19 @@
                 } else {
                     ville = ' à ' + ville;
                 }
+
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.contratTemplate = `
                 <div class="contrat ui item">
@@ -97,7 +104,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -120,12 +127,18 @@
             constructor(id, nom, rue, codePostal, ville, createdAt, debut, fin, description) {
                 if (!nom.length > 0) nom = 'Offre n°' + id;
                 if (ville.length > 0) ville = ' à ' + ville;
+                var date =''
                 debut = debut.substr(0, 10).split('-');
-                debut = debut[2] + '-' + debut[1] + '-' + debut[0];
-                fin = fin.substr(0, 10).split('-');
-                fin = fin[2] + '-' + fin[1] + '-' + fin[0];
+                debut = debut[2] + '/' + debut[1] + '/' + debut[0];
+                if (fin != undefined) {
+                    fin = fin.substr(0, 10).split('-');
+                    fin = fin[2] + '/' + fin[1] + '/' + fin[0];
+                    date = `<span class="date">Du ${debut} au ${fin}</span>`
+                } else {
+                    date = `<span class="date">À partir du ${debut}</span>`
+                }
                 description = truncate(description, MAX_DESCRIPTION_LENGTH, true)
-                let url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
+                var url = "{{ path('entreprise_show_offre_emploi', {'id': 1}) }}".slice(0, -1) + id;
 
                 this.candidatureTemplate = `
                 <div class="candidature ui item">
@@ -133,7 +146,7 @@
                         <div class="ui left floated">
                             <div class="ui header small">${nom}${ville}</div>
                             <div class="meta">
-                                <span class="date">Du ${debut} au ${fin}</span>
+                                ${date}
                             </div>
                         <div class="description">${description}</div>
                         </div>
@@ -157,8 +170,8 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnNo = 'undoBtn' + id
-                    let btn = document.getElementById(btnNo)
+                    var btnNo = 'undoBtn' + id
+                    var btn = document.getElementById(btnNo)
                     btn.innerHTML = 'Annulée';
                     btn.classList.add('disabled')
                 }
@@ -173,10 +186,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnDenyNo = 'denyBtn' + id
-                    let btnAcceptNo = 'acceptBtn' + id
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnDenyNo = 'denyBtn' + id
+                    var btnAcceptNo = 'acceptBtn' + id
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnDeny.innerHTML = 'Refusée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -192,10 +205,10 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function () {
-                    let btnAcceptNo = 'acceptBtn' + id
-                    let btnDenyNo = 'denyBtn' + id
-                    let btnAccept = document.getElementById(btnAcceptNo)
-                    let btnDeny = document.getElementById(btnDenyNo)
+                    var btnAcceptNo = 'acceptBtn' + id
+                    var btnDenyNo = 'denyBtn' + id
+                    var btnAccept = document.getElementById(btnAcceptNo)
+                    var btnDeny = document.getElementById(btnDenyNo)
                     btnAccept.innerHTML = 'Acceptée'
                     btnAccept.classList.add('disabled')
                     btnDeny.classList.add('disabled')
@@ -204,7 +217,7 @@
         }
 
         // Affiche la liste des contrats dans la vue contrats
-        const contratsList = document.getElementById('contratsList');
+        var contratsList = document.getElementById('contratsList');
 
         function displayContrats(results) {
             // Réinitialise la liste
@@ -214,21 +227,21 @@
             if (results.propositions == undefined || results.propositions.length == 0) {
                 contratsList.innerHTML = `<div>Pas de proposition de contrat.</div>`;
             }
-            console.log(results)
+
             // Il y a des résultats :
             // Pour chaque proposition
             results.propositions.forEach(proposition => {
-                let card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
+                var card = new Contrat(proposition.identity, proposition.nom, proposition.lieu.ville, proposition.updatedAt, proposition.debut, proposition.fin, proposition.description);
                 contratsList.innerHTML += card.contratTemplate;
             })
         }
 
         // Affiche la liste des candidatures dans la vue contrats
-        const candidaturesList = document.getElementById('candidaturesList');
+        var candidaturesList = document.getElementById('candidaturesList');
 
         function displayCandidatures(results) {
             // Réinitialise la liste
-            console.log(results)
+
             candidaturesList.innerHTML = '';
             // Il n'y a pas de résultats :
             if (results.candidatures === undefined || results.candidatures.length == 0) {
@@ -237,7 +250,7 @@
 
             // Il y a des résultats :
             results.candidatures.forEach(candidature => {
-                let card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
+                var card = new Candidature(candidature.identity, candidature.nom, candidature.lieu.rue, candidature.lieu.codePostal, candidature.lieu.ville, candidature.createdAt, candidature.debut, candidature.fin, candidature.description);
                 candidaturesList.innerHTML += card.candidatureTemplate;
             })
         }
